@@ -9,9 +9,6 @@ namespace UKControllerPlugin {
     } // namespace Dependency
 } // namespace UKControllerPlugin
 
-namespace UKControllerPlugin::Wake {
-
-    void BootstrapPlugin(
-        UKControllerPlugin::Bootstrap::PersistenceContainer& container,
-        UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies);
-} // namespace UKControllerPlugin::Wake
+namespace UKControllerPlugin::Aircraft {
+    void BootstrapPlugin(Bootstrap::PersistenceContainer& container, Dependency::DependencyLoaderInterface& loader);
+} // namespace UKControllerPlugin::Aircraft

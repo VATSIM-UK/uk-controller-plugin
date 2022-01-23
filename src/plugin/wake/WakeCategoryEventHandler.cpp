@@ -1,5 +1,9 @@
+#include "CacheItem.h"
+#include "WakeCategory.h"
 #include "WakeCategoryEventHandler.h"
+#include "WakeCategoryMapperInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "tag/TagData.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -8,7 +12,7 @@ using UKControllerPlugin::Tag::TagData;
 namespace UKControllerPlugin::Wake {
 
     WakeCategoryEventHandler::WakeCategoryEventHandler(
-        const WakeCategoryMapper ukMapper, const WakeCategoryMapper recatMapper) // NOLINT
+        WakeCategoryMapperInterface& ukMapper, WakeCategoryMapperInterface& recatMapper)
         : ukMapper(ukMapper), recatMapper(recatMapper)
     {
     }
@@ -63,11 +67,12 @@ namespace UKControllerPlugin::Wake {
     }
 
     auto WakeCategoryEventHandler::GetMappedCategory(
-        const WakeCategoryMapper& mapper, const std::string& aircraftType, const std::string& defaultValue)
-        -> std::string
+        WakeCategoryMapperInterface& mapper,
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        const std::string& defaultValue) -> std::string
     {
-        std::string mapping = mapper.GetCategoryForAircraftType(aircraftType);
-        return mapping == mapper.noCategory ? defaultValue : mapping;
+        const auto mapping = mapper.MapForFlightplan(flightplan);
+        return mapping == nullptr ? defaultValue : mapping->Code();
     }
 
     /*
@@ -78,8 +83,8 @@ namespace UKControllerPlugin::Wake {
         const auto& flightplan = tagData.GetFlightplan();
         CacheItem& cached = this->FirstOrNewCacheItem(flightplan.GetCallsign());
         if (cached.aircraftTypeUKCategoryItem == cached.noData) {
-            cached.aircraftTypeUKCategoryItem = this->GetAircraftTypeCategoryString(
-                flightplan.GetAircraftType(), this->ukMapper, flightplan.GetIcaoWakeCategory());
+            cached.aircraftTypeUKCategoryItem =
+                this->GetAircraftTypeCategoryString(flightplan, this->ukMapper, flightplan.GetIcaoWakeCategory());
         }
 
         return cached.aircraftTypeUKCategoryItem;
@@ -93,8 +98,8 @@ namespace UKControllerPlugin::Wake {
         const auto& flightplan = tagData.GetFlightplan();
         CacheItem& cached = this->FirstOrNewCacheItem(flightplan.GetCallsign());
         if (cached.aircraftTypeRecatCategoryItem == cached.noData) {
-            cached.aircraftTypeRecatCategoryItem = this->GetAircraftTypeCategoryString(
-                flightplan.GetAircraftType(), this->recatMapper, this->unknownTagItemString);
+            cached.aircraftTypeRecatCategoryItem =
+                this->GetAircraftTypeCategoryString(flightplan, this->recatMapper, this->unknownTagItemString);
         }
 
         return cached.aircraftTypeRecatCategoryItem;
@@ -108,8 +113,7 @@ namespace UKControllerPlugin::Wake {
         const auto& flightplan = tagData.GetFlightplan();
         CacheItem& cached = this->FirstOrNewCacheItem(flightplan.GetCallsign());
         if (cached.standaloneItem == cached.noData) {
-            cached.standaloneItem =
-                this->GetMappedCategory(this->ukMapper, flightplan.GetAircraftType(), this->unknownTagItemString);
+            cached.standaloneItem = this->GetMappedCategory(this->ukMapper, flightplan, this->unknownTagItemString);
         }
 
         return cached.standaloneItem;
@@ -123,8 +127,7 @@ namespace UKControllerPlugin::Wake {
         const auto& flightplan = tagData.GetFlightplan();
         CacheItem& cached = this->FirstOrNewCacheItem(flightplan.GetCallsign());
         if (cached.recatItem == cached.noData) {
-            cached.recatItem =
-                this->GetMappedCategory(this->recatMapper, flightplan.GetAircraftType(), this->unknownTagItemString);
+            cached.recatItem = this->GetMappedCategory(this->recatMapper, flightplan, this->unknownTagItemString);
         }
 
         return cached.recatItem;
@@ -143,12 +146,13 @@ namespace UKControllerPlugin::Wake {
      * category.
      */
     auto WakeCategoryEventHandler::GetAircraftTypeCategoryString(
-        const std::string& aircraftType, const WakeCategoryMapper& mapper, const std::string& defaultValue) const
-        -> std::string
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        WakeCategoryMapperInterface& mapper,
+        const std::string& defaultValue) const -> std::string
     {
-        std::string mappedCategory = this->GetMappedCategory(mapper, aircraftType, defaultValue);
-
-        std::string tagString = aircraftType + "/" + mappedCategory;
+        auto aircraftType = flightplan.GetAircraftType();
+        auto mappedCategory = this->GetMappedCategory(mapper, flightplan, defaultValue);
+        auto tagString = aircraftType + "/" + mappedCategory;
 
         // 15 characters is the max for tag functions, trim the aircraft type accordingly
         if (tagString.size() > this->maxItemSize) {

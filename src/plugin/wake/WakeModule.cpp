@@ -1,6 +1,9 @@
-#include "CreateWakeMappings.h"
+#include "FlightplanWakeCategoryMapper.h"
 #include "WakeCategoryEventHandler.h"
 #include "WakeModule.h"
+#include "WakeScheme.h"
+#include "WakeSchemeCollection.h"
+#include "WakeSchemeCollectionFactory.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
@@ -8,23 +11,36 @@
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
-using UKControllerPlugin::Wake::CreateWakeMappings;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
 
 namespace UKControllerPlugin::Wake {
+
+    std::unique_ptr<WakeScheme> defaultScheme; // NOLINT
+    std::unique_ptr<FlightplanWakeCategoryMapper> ukMapper;
+    std::unique_ptr<FlightplanWakeCategoryMapper> recatMapper;
+
     /*
         Bootstrap everything
     */
-    void BootstrapPlugin(const PersistenceContainer& container, DependencyLoaderInterface& dependencies)
+    void BootstrapPlugin(PersistenceContainer& container, DependencyLoaderInterface& dependencies)
     {
-        // Create the data
-        nlohmann::json data = dependencies.LoadDependency(GetWakeDependencyKey(), nlohmann::json::object());
-        nlohmann::json recatData = dependencies.LoadDependency(GetRecatDependencyKey(), nlohmann::json::object());
+        // Create the wake categories
+        container.wakeSchemes =
+            CollectionFromDependency(dependencies.LoadDependency("DEPENDENCY_WAKE_SCHEME", nlohmann::json::array()));
+
+        defaultScheme =
+            std::make_unique<WakeScheme>(-1, "DEF", "UK Default", std::list<std::shared_ptr<WakeCategory>>{});
+
+        // Create the mappers
+        const auto ukScheme = container.wakeSchemes->GetByKey("UK");
+        const auto recatScheme = container.wakeSchemes->GetByKey("RECAT_EU");
+        ukMapper = std::make_unique<FlightplanWakeCategoryMapper>(
+            ukScheme ? *ukScheme : *defaultScheme, *container.aircraftTypeMapper);
+        recatMapper = std::make_unique<FlightplanWakeCategoryMapper>(
+            recatScheme ? *recatScheme : *defaultScheme, *container.aircraftTypeMapper);
 
         // Create handler and register
-        std::shared_ptr<WakeCategoryEventHandler> handler = std::make_shared<WakeCategoryEventHandler>(
-            CreateWakeMappings(data, *container.userMessager),
-            CreateWakeMappings(recatData, *container.userMessager, "RECAT"));
+        auto handler = std::make_shared<WakeCategoryEventHandler>(*ukMapper, *recatMapper);
 
         container.flightplanHandler->RegisterHandler(handler);
         container.tagHandler->RegisterTagItem(handler->tagItemIdAircraftTypeCategory, handler);
@@ -32,15 +48,5 @@ namespace UKControllerPlugin::Wake {
         container.tagHandler->RegisterTagItem(handler->tagItemIdRecat, handler);
         container.tagHandler->RegisterTagItem(handler->tagItemIdUkRecatCombined, handler);
         container.tagHandler->RegisterTagItem(handler->tagItemIdAircraftTypeRecat, handler);
-    }
-
-    auto GetWakeDependencyKey() -> std::string
-    {
-        return "DEPENDENCY_WAKE";
-    }
-
-    auto GetRecatDependencyKey() -> std::string
-    {
-        return "DEPENDENCY_RECAT";
     }
 } // namespace UKControllerPlugin::Wake

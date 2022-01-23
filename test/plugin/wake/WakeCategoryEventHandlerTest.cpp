@@ -1,9 +1,11 @@
-#include "wake/WakeCategoryMapper.h"
+#include "tag/TagData.h"
+#include "wake/WakeCategory.h"
 #include "wake/WakeCategoryEventHandler.h"
 
 using UKControllerPlugin::Tag::TagData;
+using UKControllerPlugin::Wake::DepartureWakeInterval;
+using UKControllerPlugin::Wake::WakeCategory;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
-using UKControllerPlugin::Wake::WakeCategoryMapper;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 
@@ -58,11 +60,31 @@ namespace UKControllerPluginTest {
 
             void SetUp()
             {
-                this->mapper.AddCategoryMapping("B733", "LM");
-                this->mapper.AddCategoryMapping("B744", "H");
-                this->mapper.AddCategoryMapping("123456789012345678", "UM");
-                this->recatMapper.AddCategoryMapping("B733", "D");
-                this->recatMapper.AddCategoryMapping("B744", "B");
+                ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplan)))
+                    .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
+                        1, "LM", "Lower Medium", 15, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+
+                ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplan2)))
+                    .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
+                        1, "H", "Heavy", 20, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+
+                ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplanLongType)))
+                    .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
+                        1, "UM", "Upper Medium", 999, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+
+                ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplan3))).WillByDefault(testing::Return(nullptr));
+
+                ON_CALL(recatMapper, MapForFlightplan(testing::Ref(flightplan)))
+                    .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
+                        1, "D", "Category D", 15, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+
+                ON_CALL(recatMapper, MapForFlightplan(testing::Ref(flightplan2)))
+                    .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
+                        1, "B", "Category B", 15, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+
+                ON_CALL(recatMapper, MapForFlightplan(testing::Ref(flightplan3)))
+                    .WillByDefault(testing::Return(nullptr));
+
                 ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
                 ON_CALL(this->flightplan, GetAircraftType()).WillByDefault(Return("B733"));
                 ON_CALL(this->flightplan2, GetCallsign()).WillByDefault(Return("BAW123"));
@@ -89,8 +111,8 @@ namespace UKControllerPluginTest {
             TagData tagData2;
             TagData tagDataLong;
             TagData tagDataUnknownType;
-            WakeCategoryMapper mapper;
-            WakeCategoryMapper recatMapper;
+            testing::NiceMock<Wake::MockWakeCategoryMapper> mapper;
+            testing::NiceMock<Wake::MockWakeCategoryMapper> recatMapper;
             std::shared_ptr<WakeCategoryEventHandler> handler;
         };
 
