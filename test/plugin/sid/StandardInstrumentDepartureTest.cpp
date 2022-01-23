@@ -9,7 +9,7 @@ namespace UKControllerPluginTest::Sid {
     {
         public:
         StandardInstrumentDepartureTest()
-            : sid("EGGD", "WOTAN1Z", 6000, 55, 3, {1, 2}), sidWithDefaults("EGGD", "WOTAN1Z", 6000, 55, 3)
+            : sid(1, 2, "WOTAN1Z", 6000, 55, 3, {1, 2}), sidWithDefaults(2, 2, "WOTAN1Z", 6000, 55, 3)
         {
         }
 
@@ -17,9 +17,14 @@ namespace UKControllerPluginTest::Sid {
         StandardInstrumentDeparture sidWithDefaults;
     };
 
-    TEST_F(StandardInstrumentDepartureTest, ItHasAnAirfield)
+    TEST_F(StandardInstrumentDepartureTest, ItHasANId)
     {
-        EXPECT_EQ("EGGD", sid.Airfield());
+        EXPECT_EQ(1, sid.Id());
+    }
+
+    TEST_F(StandardInstrumentDepartureTest, ItHasARunwayId)
+    {
+        EXPECT_EQ(2, sid.RunwayId());
     }
 
     TEST_F(StandardInstrumentDepartureTest, ItHasAnIdentifier)
@@ -49,7 +54,7 @@ namespace UKControllerPluginTest::Sid {
 
     TEST_F(StandardInstrumentDepartureTest, ItDoesntHaveAHandoff)
     {
-        StandardInstrumentDeparture sid2("EGGD", "WOTAN1Z", 6000, 55, 0);
+        StandardInstrumentDeparture sid2(3, 3, "WOTAN1Z", 6000, 55, 0);
         EXPECT_FALSE(sid2.HasHandoff());
     }
 

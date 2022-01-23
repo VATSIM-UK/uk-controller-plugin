@@ -15,7 +15,8 @@ namespace UKControllerPlugin::Sid {
 
         for (auto sid : sidData) {
             sids->AddSid(std::make_shared<StandardInstrumentDeparture>(
-                sid.at("airfield").get<std::string>(),
+                sid.at("id").get<int>(),
+                sid.at("runway_id").get<int>(),
                 sid.at("identifier").get<std::string>(),
                 sid.at("initial_altitude").get<int>(),
                 sid.at("initial_heading").is_number_integer() ? sid.at("initial_heading").get<int>() : 0,
@@ -31,7 +32,8 @@ namespace UKControllerPlugin::Sid {
     {
         return sidData.is_array() &&
                std::find_if_not(sidData.cbegin(), sidData.cend(), [](const nlohmann::json& sid) -> bool {
-                   return sid.is_object() && sid.contains("airfield") && sid.at("airfield").is_string() &&
+                   return sid.is_object() && sid.contains("id") && sid.at("id").is_number_integer() &&
+                          sid.contains("runway_id") && sid.at("runway_id").is_number_integer() &&
                           sid.contains("identifier") && sid.at("identifier").is_string() &&
                           sid.contains("initial_altitude") && sid.at("initial_altitude").is_number_integer() &&
                           sid.contains("initial_heading") && InitialHeadingValid(sid) && sid.contains("handoff") &&

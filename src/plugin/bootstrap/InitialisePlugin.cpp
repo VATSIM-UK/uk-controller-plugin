@@ -1,3 +1,5 @@
+#include "aircraft/AircraftModule.h"
+#include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
 #include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
@@ -43,6 +45,7 @@
 #include "push/PushEventBootstrap.h"
 #include "regional/RegionalPressureModule.h"
 #include "releases/ReleaseModule.h"
+#include "runway/RunwayModule.h"
 #include "sectorfile/SectorFileBootstrap.h"
 #include "selcal/SelcalModule.h"
 #include "sid/SidModule.h"
@@ -183,10 +186,13 @@ namespace UKControllerPlugin {
         }
 
         Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate(), winsockInitialised);
+        Aircraft::BootstrapPlugin(*this->container);
 
         // Boostrap all the modules at a plugin level
         Controller::BootstrapPlugin(*this->container, loader);
+        Aircraft::BootstrapPlugin(*this->container, loader);
         Airfield::BootstrapPlugin(*this->container, loader);
+        Runway::BootstrapPlugin(*this->container, loader);
         CollectionBootstrap::BootstrapPlugin(*this->container, loader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
         FlightRules::BootstrapPlugin(*this->container, loader);

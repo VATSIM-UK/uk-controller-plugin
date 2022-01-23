@@ -17,7 +17,7 @@ dynamically to the plugin.
 - Estimated departure times
 - UK Wake Categories
 - [Pressure Monitor and Notifications](PressureMonitor.md)
-- Hold Manager, synced between controllers
+- [Hold Manager](Holds.md)
 - [Departure Handoff Indicator](Handoffs.md)
 - Altimeter setting regions and regional pressures
 - SRD Search

@@ -1,5 +1,4 @@
 #pragma once
-#include "hold/HoldingData.h"
 
 namespace UKControllerPlugin {
     namespace Hold {

@@ -1,19 +1,22 @@
 #pragma once
 #include "CompareHoldingAircraft.h"
-#include "CompareHolds.h"
-#include "HoldManager.h"
-#include "HoldingAircraft.h"
-#include "HoldingData.h"
-#include "api/ApiInterface.h"
-#include "task/TaskRunnerInterface.h"
 
-namespace UKControllerPlugin::Euroscope {
-    class EuroscopePluginLoopbackInterface;
-    class EuroScopeCFlightPlanInterface;
-    class EuroScopeCRadarTargetInterface;
-} // namespace UKControllerPlugin::Euroscope
+namespace UKControllerPlugin {
+    namespace Api {
+        class ApiInterface;
+    } // namespace Api
+    namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+        class EuroScopeCFlightPlanInterface;
+        class EuroScopeCRadarTargetInterface;
+    } // namespace Euroscope
+    namespace TaskManager {
+        class TaskRunnerInterface;
+    } // namespace TaskManager
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Hold {
+    class HoldingAircraft;
 
     /*
         A class that manages which aircraft are in which holds

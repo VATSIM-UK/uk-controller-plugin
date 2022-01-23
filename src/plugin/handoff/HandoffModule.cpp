@@ -31,7 +31,7 @@ namespace UKControllerPlugin::Handoff {
             *container.controllerHierarchyFactory,
             dependency.LoadDependency(GetHandoffDependencyKey(), nlohmann::json::array()));
         airfieldMapper = std::make_shared<FlightplanAirfieldHandoffMapper>(*handoffs, *container.airfields);
-        sidMapper = std::make_shared<FlightplanSidHandoffMapper>(*handoffs, *container.sids);
+        sidMapper = std::make_shared<FlightplanSidHandoffMapper>(*handoffs, *container.sidMapper);
 
         std::shared_ptr<HandoffEventHandler> handler = std::make_shared<HandoffEventHandler>(
             std::make_shared<DepartureHandoffResolver>(*sidMapper, *airfieldMapper, *container.activeCallsigns),

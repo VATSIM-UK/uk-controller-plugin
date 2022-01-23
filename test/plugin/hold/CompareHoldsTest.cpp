@@ -1,3 +1,5 @@
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldingData.h"
 #include "hold/CompareHolds.h"
 

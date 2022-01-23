@@ -1,9 +1,13 @@
 #pragma once
-#include "hold/HoldConfigurationMenuItem.h"
-#include "navaids/NavaidCollection.h"
+
+namespace UKControllerPlugin::Navaids {
+    class NavaidCollection;
+} // namespace UKControllerPlugin::Navaids
 
 namespace UKControllerPlugin {
     namespace Hold {
+
+        class HoldConfigurationMenuItem;
 
         /*
             A class that handles the hold configuration
@@ -13,23 +17,20 @@ namespace UKControllerPlugin {
         class HoldConfigurationDialog
         {
             public:
-                HoldConfigurationDialog(
-                    const UKControllerPlugin::Navaids::NavaidCollection& navaids
-                );
-                static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+            HoldConfigurationDialog(const UKControllerPlugin::Navaids::NavaidCollection& navaids);
+            static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             private:
+            LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+            void SaveDialog(HWND hwnd);
+            void InitDialog(HWND hwnd, LPARAM lParam);
 
-                LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-                void SaveDialog(HWND hwnd);
-                void InitDialog(HWND hwnd, LPARAM lParam);
+            // The ES menu item that triggered this dialog - it should be notified when changes occur
+            UKControllerPlugin::Hold::HoldConfigurationMenuItem* configurationItem = nullptr;
 
-                // The ES menu item that triggered this dialog - it should be notified when changes occur
-                UKControllerPlugin::Hold::HoldConfigurationMenuItem * configurationItem = nullptr;
-
-                // Contains all the navaids
-                const UKControllerPlugin::Navaids::NavaidCollection& navaids;
+            // Contains all the navaids
+            const UKControllerPlugin::Navaids::NavaidCollection& navaids;
         };
 
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

@@ -9,6 +9,21 @@ set(resource
 )
 source_group("resource" FILES ${resource})
 
+set(src__aircraft
+        aircraft/CallsignSelectionListInterface.h
+        aircraft/CallsignSelectionProviderInterface.h
+        aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h
+        aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h
+        aircraft/CallsignSelectionListFactoryBootstrap.cpp aircraft/CallsignSelectionListFactoryBootstrap.h
+        aircraft/AircraftType.cpp aircraft/AircraftType.h
+        aircraft/AircraftTypeCollection.cpp aircraft/AircraftTypeCollection.h
+        aircraft/AircraftTypeCollectionFactory.cpp aircraft/AircraftTypeCollectionFactory.h
+        aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h
+        aircraft/AircraftModule.cpp aircraft/AircraftModule.h
+        aircraft/FlightplanAircraftTypeMapper.cpp aircraft/FlightplanAircraftTypeMapper.h
+        aircraft/AircraftTypeMapperInterface.h)
+source_group("src\\aircraft" FILES ${src__aircraft})
+
 set(src__airfield
     "airfield/AirfieldCollection.cpp"
     "airfield/AirfieldCollection.h"
@@ -325,7 +340,7 @@ set(src__hold
     "hold/PublishedHoldCollection.h"
     "hold/PublishedHoldCollectionFactory.cpp"
     "hold/PublishedHoldCollectionFactory.h"
-)
+        hold/AssignHoldCommand.cpp hold/AssignHoldCommand.h hold/AddToHoldCallsignProvider.cpp hold/AddToHoldCallsignProvider.h)
 source_group("src\\hold" FILES ${src__hold})
 
 set(src__initialaltitude
@@ -745,6 +760,13 @@ set(src__releases
     releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
 source_group("src\\releases" FILES ${src__releases})
 
+set(src__runway
+        runway/Runway.cpp runway/Runway.h
+        runway/RunwayCollection.cpp runway/RunwayCollection.h
+        runway/RunwayCollectionFactory.cpp runway/RunwayCollectionFactory.h
+        runway/RunwayModule.cpp runway/RunwayModule.h)
+source_group("src\\runway" FILES ${src__runway})
+
 set(src__sectorfile
     "sectorfile/Runway.cpp"
     "sectorfile/Runway.h"
@@ -772,7 +794,8 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
-)
+    sid/FlightplanSidMapper.cpp sid/FlightplanSidMapper.h
+    sid/SidMapperInterface.h)
 source_group("src\\sid" FILES ${src__sid})
 
 set(src__squawk
@@ -852,19 +875,26 @@ source_group("src\\timer" FILES ${src__timer})
 
 set(src__wake
     "wake/CacheItem.h"
-    "wake/CreateWakeMappings.cpp"
-    "wake/CreateWakeMappings.h"
     "wake/WakeCategoryEventHandler.cpp"
     "wake/WakeCategoryEventHandler.h"
-    "wake/WakeCategoryMapper.cpp"
-    "wake/WakeCategoryMapper.h"
     "wake/WakeModule.cpp"
     "wake/WakeModule.h"
-)
+    wake/WakeScheme.cpp wake/WakeScheme.h
+    wake/WakeCategory.cpp wake/WakeCategory.h
+    wake/WakeCategoryFactory.cpp wake/WakeCategoryFactory.h
+    wake/DepartureWakeInterval.h
+    wake/DepartureWakeIntervalFactory.cpp wake/DepartureWakeIntervalFactory.h
+    wake/WakeSchemeFactory.cpp wake/WakeSchemeFactory.h wake/WakeSchemeCollection.cpp
+    wake/WakeSchemeCollection.h
+    wake/WakeSchemeCollectionFactory.cpp
+    wake/WakeSchemeCollectionFactory.h
+    wake/WakeCategoryMapperInterface.h
+    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
     ${resource}
+    ${src__aircraft}
     ${src__airfield}
     ${src__api}
     ${src__bootstrap}
@@ -904,6 +934,7 @@ set(ALL_FILES
     ${src__radarscreen}
     ${src__regional}
     ${src__releases}
+    ${src__runway}
     ${src__sectorfile}
     ${src__selcal}
     ${src__sid}
@@ -914,8 +945,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
-    ${src__wake}
-        missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h)
+    ${src__wake})
 
 ################################################################################
 # Target

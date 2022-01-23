@@ -1,3 +1,4 @@
+#include "HoldingAircraft.h"
 #include "HoldEventHandler.h"
 #include "HoldManager.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"

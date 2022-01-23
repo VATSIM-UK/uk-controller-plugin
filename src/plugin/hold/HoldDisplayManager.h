@@ -1,9 +1,8 @@
 #pragma once
-#include "HoldDisplay.h"
 #include "euroscope/AsrEventHandlerInterface.h"
 
 namespace UKControllerPlugin::Hold {
-
+    class HoldDisplay;
     class HoldDisplayFactory;
 
     /*
