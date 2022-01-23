@@ -445,6 +445,16 @@ set(src__intention
 )
 source_group("src\\intention" FILES ${src__intention})
 
+set(src__list
+        list/ListItemProviderInterface.h
+        list/PopupListInterface.h
+        list/PopupList.cpp list/PopupList.h
+        list/PopupListFactory.cpp list/PopupListFactory.h
+        list/ListItem.h
+        list/ListItemCheckedStatus.h
+        list/PopupListFactoryBootstrap.cpp list/PopupListFactoryBootstrap.h)
+source_group("src\\list" FILES ${src__list})
+
 set(src__login
     "login/Login.cpp"
     "login/Login.h"
@@ -918,6 +928,7 @@ set(ALL_FILES
     ${src__initialheading}
     ${src__integration}
     ${src__intention}
+    ${src__list}
     ${src__login}
     ${src__message}
     ${src__metar}

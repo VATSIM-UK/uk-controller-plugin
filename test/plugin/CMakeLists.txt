@@ -226,6 +226,10 @@ set(test__intention
 )
 source_group("test\\intention" FILES ${test__intention})
 
+set(test__list
+        list/PopupListTest.cpp list/PopupListFactoryTest.cpp list/PopupListFactoryBootstrapTest.cpp)
+source_group("test\\list" FILES ${test__list})
+
 set(test__login
     "login/LoginModuleTest.cpp"
     "login/LoginTest.cpp"
@@ -328,7 +332,8 @@ set(test__mock
     mock/MockCallsignSelectionProvider.h
     mock/MockCallsignSelectionList.h
     mock/MockAircraftTypeMapper.h
-    mock/MockWakeCategoryMapper.h)
+    mock/MockWakeCategoryMapper.h
+    mock/MockListItemProvider.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -566,6 +571,7 @@ set(ALL_FILES
     ${test__initialheading}
     ${test__integration}
     ${test__intention}
+    ${test__list}
     ${test__login}
     ${test__message}
     ${test__metar}
