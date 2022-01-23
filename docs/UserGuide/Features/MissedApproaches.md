@@ -76,11 +76,17 @@ you that has initiated the missed approach.
 ### Service provisions
 
 You may only be interested in missed approaches when you are providing a particular type of
-service, e.g. Final Approach. You may select which services you wish to be alerted for,
+service, e.g. Final Approach. You will be alerted to a missed approach at any airfield where you
+are providing the given type of service.
 
 ### Airfields
 
-Only airfields selected from the list will have their missed approaches alerted to you.
+In some instances, it may be prudent to be warned of missed approaches at airfields that you don't directly control.
+For example, Heathrow Director may want to know about missed approaches at Northolt and Farnborough, as this has a
+direct impact on their arrival stream.
+
+You may select any airfields recognised by the plugin. If a missed approach occurs at any of these airfields,
+you will be alerted.
 
 ## ASR-specific settings
 

@@ -1,6 +1,5 @@
 #include "ApproveDepartureReleaseDialog.h"
 #include "CompareEnrouteReleaseTypes.h"
-#include "DepartureReleaseDecisionList.h"
 #include "DepartureReleaseEventHandler.h"
 #include "DepartureReleaseRequestView.h"
 #include "EnrouteReleaseEventHandler.h"
@@ -8,18 +7,15 @@
 #include "RejectDepartureReleaseDialog.h"
 #include "ReleaseModule.h"
 #include "RequestDepartureReleaseDialog.h"
-#include "ToggleDepartureReleaseDecisionList.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "dialog/DialogManager.h"
-#include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
@@ -32,7 +28,6 @@ using UKControllerPlugin::Releases::ApproveDepartureReleaseDialog;
 using UKControllerPlugin::Releases::DepartureReleaseEventHandler;
 using UKControllerPlugin::Releases::DepartureReleaseRequestView;
 using UKControllerPlugin::Releases::RequestDepartureReleaseDialog;
-using UKControllerPlugin::Releases::ToggleDepartureReleaseDecisionList;
 using UKControllerPlugin::Tag::TagFunction;
 
 namespace UKControllerPlugin::Releases {
@@ -233,41 +228,14 @@ namespace UKControllerPlugin::Releases {
         container.timedHandler->RegisterEvent(departureHandler, departureReleaseEventFrequency);
     }
 
-    void BootstrapRadarScreen(
-        const PersistenceContainer& container,
-        RadarScreen::RadarRenderableCollection& renderables,
-        RadarScreen::ConfigurableDisplayCollection& configurables,
-        Euroscope::AsrEventHandlerCollection& asrHandlers)
+    void
+    BootstrapRadarScreen(const PersistenceContainer& container, RadarScreen::RadarRenderableCollection& renderables)
     {
         // Create the request view renderer
         auto releaseRequestView = std::make_shared<DepartureReleaseRequestView>(
             *container.departureReleaseHandler, *container.controllerPositions);
         renderables.RegisterRenderer(
             renderables.ReserveRendererIdentifier(), releaseRequestView, renderables.afterLists);
-
-        // Create the decision menu
-        const int decisionListRenderedId = renderables.ReserveRendererIdentifier();
-        const auto decisionList = std::make_shared<DepartureReleaseDecisionList>(
-            *container.departureReleaseHandler,
-            *container.plugin,
-            *container.controllerPositions,
-            renderables.ReserveScreenObjectIdentifier(decisionListRenderedId));
-        renderables.RegisterRenderer(decisionListRenderedId, decisionList, renderables.afterLists);
-        asrHandlers.RegisterHandler(decisionList);
-
-        // Create the configuration list item
-        const int requestListShowCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-        auto listItem = std::make_shared<ToggleDepartureReleaseDecisionList>(decisionList, requestListShowCallbackId);
-
-        CallbackFunction showReleaseRequestListCallback(
-            requestListShowCallbackId,
-            "Toggle Departure Release Request List",
-            [listItem](int functionId, std::string subject, RECT screenObjectArea) {
-                listItem->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-
-        container.pluginFunctionHandlers->RegisterFunctionCall(showReleaseRequestListCallback);
-        configurables.RegisterDisplay(listItem);
     }
 
     auto GetReleaseTypesDependencyKey() -> std::string

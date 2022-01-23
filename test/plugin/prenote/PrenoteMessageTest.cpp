@@ -75,4 +75,9 @@ namespace UKControllerPluginTest::Prenote {
         message->Acknowledge();
         EXPECT_EQ(TimeNow(), message->GetAcknowledgedAt());
     }
+
+    TEST_F(PrenoteMessageTest, AcknowledgingSetsTheCreatedTime)
+    {
+        EXPECT_EQ(TimeNow(), message->GetCreatedAt());
+    }
 } // namespace UKControllerPluginTest::Prenote

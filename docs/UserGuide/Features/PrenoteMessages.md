@@ -44,8 +44,8 @@ The controller callsign indicates the status of the prenote:
 
 There are two ways to respond to a prenote, if you are the target controller.
 
-Firstly, you can use the `Pending Prenote List` to acknowledge the message.
-This may be toggled on a per-ASR basis using the `OP` menu.
+Firstly, you can use the `Departure Coordination List` to acknowledge the message.
+This may be toggled on a per-ASR basis using the `OP` menu. A prenote will have `Pre` in the "Type" column.
 
 If there is a pending prenote for you, the header bar of the list will flash *_Red_*. You will also receive
 an audible ping to let you know that something has come in.

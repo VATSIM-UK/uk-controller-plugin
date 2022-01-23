@@ -53,8 +53,8 @@ In addition, there are two audible cues for when a release is accepted or reject
 
 ## How Do I Respond To A Release Request?
 
-If you are the target of a release request, you can use the `Departure Release Decision List` to make decisions on individual
-releases. This may be toggled on a per-ASR basis using the `OP` menu.
+If you are the target of a release request, you can use the `Departure Coordination List` to make decisions on individual
+releases. This may be toggled on a per-ASR basis using the `OP` menu. A release request will have `Rls` in the "Type" column.
 
 If there is a pending release request for you, the header bar of the list will flash *_Red_*. You will also receive
 an audible ping to let you know that something has come in.

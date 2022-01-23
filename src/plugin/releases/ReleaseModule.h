@@ -3,11 +3,9 @@
 namespace UKControllerPlugin {
     namespace RadarScreen {
         class RadarRenderableCollection;
-        class ConfigurableDisplayCollection;
     } // namespace RadarScreen
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-        class AsrEventHandlerCollection;
     } // namespace Euroscope
     namespace Dependency {
         class DependencyLoaderInterface;
@@ -24,10 +22,7 @@ namespace UKControllerPlugin {
             Dependency::DependencyLoaderInterface& dependencies);
 
         void BootstrapRadarScreen(
-            const Bootstrap::PersistenceContainer& container,
-            RadarScreen::RadarRenderableCollection& renderables,
-            RadarScreen::ConfigurableDisplayCollection& configurables,
-            Euroscope::AsrEventHandlerCollection& asrHandlers);
+            const Bootstrap::PersistenceContainer& container, RadarScreen::RadarRenderableCollection& renderables);
 
         [[nodiscard]] auto GetReleaseTypesDependencyKey() -> std::string;
     } // namespace Releases

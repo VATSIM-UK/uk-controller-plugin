@@ -83,6 +83,11 @@ set(test__datablock
 )
 source_group("test\\datablock" FILES ${test__datablock})
 
+set(test__departure
+        
+        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp)
+source_group("test\\departure" FILES ${test__departure})
+
 set(test__dependency
     "dependency/DependencyLoaderTest.cpp"
     "dependency/UpdateDependenciesTest.cpp"
@@ -408,8 +413,9 @@ set(test__prenote
         "prenote/SendPrenoteMenuTest.cpp"
         "prenote/TriggerPrenoteMessageStatusViewTest.cpp"
         "prenote/AcknowledgePrenoteMessageTest.cpp"
-        "prenote/TogglePendingPrenoteListTest.cpp"
-        "prenote/PendingPrenoteListTest.cpp" prenote/PublishedPrenoteCollectionTest.cpp prenote/PublishedPrenoteCollectionFactoryTest.cpp prenote/PublishedPrenoteMapperTest.cpp)
+        prenote/PublishedPrenoteCollectionTest.cpp
+        prenote/PublishedPrenoteCollectionFactoryTest.cpp
+        prenote/PublishedPrenoteMapperTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push
@@ -445,14 +451,13 @@ set(test__releases
     "releases/CompareDepartureReleasesTest.cpp"
     "releases/CompareEnrouteReleaseTypesTest.cpp"
     "releases/DepartureReleaseCountdownColoursTest.cpp"
-    "releases/DepartureReleaseDecisionListTest.cpp"
     "releases/DepartureReleaseEventHandlerTest.cpp"
     "releases/DepartureReleaseRequestTest.cpp"
     "releases/EnrouteReleaseEventHandlerTest.cpp"
     "releases/EnrouteReleaseTypesSerializerTest.cpp"
     "releases/ReleaseModuleTest.cpp"
-    "releases/ToggleDepartureReleaseDecisionListTest.cpp"
-        releases/ReleaseApprovalRemarksUserMessageTest.cpp releases/ReleaseRejectionRemarksUserMessageTest.cpp)
+    releases/ReleaseApprovalRemarksUserMessageTest.cpp
+    releases/ReleaseRejectionRemarksUserMessageTest.cpp)
 source_group("test\\releases" FILES ${test__releases})
 
 set(test__runway
@@ -557,6 +562,7 @@ set(ALL_FILES
     ${test__controller}
     ${test__countdown}
     ${test__datablock}
+    ${test__departure}
     ${test__dependency}
     ${test__euroscope}
     ${test__flightinformationservice}

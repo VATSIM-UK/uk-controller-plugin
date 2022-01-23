@@ -35,7 +35,9 @@ namespace UKControllerPlugin::MissedApproach {
      * 1. The user has elected to receive alerts for approaches created by them OR it the approach was not created by
      * them.
      * 2. The flightplan exists.
-     * 3. The user is providing a specified service at the aircrafts destination airfield.
+     * 3a. The destination airfield is an "Always Alert" airfield.
+     * OR
+     * 3b. The user is providing a specified service at the aircrafts destination airfield.
      * @param missedApproach
      * @return
      */
@@ -54,9 +56,26 @@ namespace UKControllerPlugin::MissedApproach {
             return false;
         }
 
-        const auto airfields =
-            this->airfieldServiceProvisions.GetAirfieldsWhereUserProvidingServices(this->options->ServiceProvisions());
+        return this->DestinationIsAlwaysAlert(*flightplan) || this->UserProvidingServicesAtDestination(*flightplan);
+    }
 
-        return std::find(airfields.cbegin(), airfields.cend(), flightplan->GetDestination()) != airfields.cend();
+    auto
+    MissedApproachAudioAlert::DestinationIsAlwaysAlert(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        -> bool
+    {
+        const auto alwaysAlertAirfields = this->options->Airfields();
+        return std::find(alwaysAlertAirfields.begin(), alwaysAlertAirfields.end(), flightplan.GetDestination()) !=
+               alwaysAlertAirfields.cend();
+    }
+
+    auto MissedApproachAudioAlert::UserProvidingServicesAtDestination(
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool
+    {
+        const auto airfieldsWhereProvidingService =
+            this->airfieldServiceProvisions.GetAirfieldsWhereUserProvidingServices(this->options->ServiceProvisions());
+        return std::find(
+                   airfieldsWhereProvidingService.cbegin(),
+                   airfieldsWhereProvidingService.cend(),
+                   flightplan.GetDestination()) != airfieldsWhereProvidingService.cend();
     }
 } // namespace UKControllerPlugin::MissedApproach

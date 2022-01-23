@@ -1,5 +1,48 @@
 # UK Controller Plugin Changelog
 
+# [4.0.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.14.0...4.0.0) (2022-01-23)
+
+
+* 4.0.0 release (#407) ([3503511](https://github.com/VATSIM-UK/uk-controller-plugin/commit/35035110b1ed6313b9c892088d4e12c24987266b)), closes [#407](https://github.com/VATSIM-UK/uk-controller-plugin/issues/407) [#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384) [#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384) [#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386) [#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386) [#388](https://github.com/VATSIM-UK/uk-controller-plugin/issues/388) [#388](https://github.com/VATSIM-UK/uk-controller-plugin/issues/388) [#395](https://github.com/VATSIM-UK/uk-controller-plugin/issues/395) [#399](https://github.com/VATSIM-UK/uk-controller-plugin/issues/399) [#397](https://github.com/VATSIM-UK/uk-controller-plugin/issues/397) [#406](https://github.com/VATSIM-UK/uk-controller-plugin/issues/406) [#412](https://github.com/VATSIM-UK/uk-controller-plugin/issues/412) [#409](https://github.com/VATSIM-UK/uk-controller-plugin/issues/409) [#404](https://github.com/VATSIM-UK/uk-controller-plugin/issues/404) [#402](https://github.com/VATSIM-UK/uk-controller-plugin/issues/402)
+
+
+### BREAKING CHANGES
+
+* The airfield selector for Missed Approach configuration now acts as an override
+to the service provision options, rather than a filter for which airfields to use.
+
+* Semantic release for beta
+
+* Remove modifier
+
+* Dump semantic release
+
+* Branch detect
+
+* chore(release): 4.0.0-beta.1 [skip ci]
+
+# [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
+
+### Features
+* The old lists are replaced by a single list. New ASR settings
+are also used for this list.
+
+* chore(release): 4.0.0-beta.2 [skip ci]
+
+# [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
+
+### Features
+
+* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
+
+# [4.0.0-beta.7](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.6...4.0.0-beta.7) (2022-01-23)
+
+
+### Features
+
+* **holds:** Hold Manager UX Improvements ([#404](https://github.com/VATSIM-UK/uk-controller-plugin/issues/404)) ([c0c999b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c0c999bcc9bd2a4014c1afcbb0ad3c0d1c6ec113))
+* **sid:** Allow duplicate SID identifiers when doing initial altitudes ([#402](https://github.com/VATSIM-UK/uk-controller-plugin/issues/402)) ([6aeacfc](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6aeacfcaaad773ef37faa9477586411cc3f785b9))
+
 # [3.14.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.4...3.14.0) (2022-01-21)
 
 
@@ -8,7 +51,7 @@
 * **holds:** Hold Manager UX Improvements ([#404](https://github.com/VATSIM-UK/uk-controller-plugin/issues/404)) ([c0c999b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c0c999bcc9bd2a4014c1afcbb0ad3c0d1c6ec113))
 * **sid:** Allow duplicate SID identifiers when doing initial altitudes ([#402](https://github.com/VATSIM-UK/uk-controller-plugin/issues/402)) ([6aeacfc](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6aeacfcaaad773ef37faa9477586411cc3f785b9))
 
-## [3.13.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.3...3.13.4) (2022-01-20)
+# [4.0.0-beta.6](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.5...4.0.0-beta.6) (2022-01-20)
 
 
 ### Bug Fixes
@@ -16,12 +59,26 @@
 * **handoffs:** Handoffs not repopulating when controllers log on ([#413](https://github.com/VATSIM-UK/uk-controller-plugin/issues/413)) ([d1d872e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d1d872e9fec27a166057a4832493d33d5436a420)), closes [#412](https://github.com/VATSIM-UK/uk-controller-plugin/issues/412)
 * **pressuremonitor:** Trigger pressure monitor updates correctly ([#411](https://github.com/VATSIM-UK/uk-controller-plugin/issues/411)) ([287d395](https://github.com/VATSIM-UK/uk-controller-plugin/commit/287d395fbb588e7809492fd9b83c1dca5b1856ea)), closes [#409](https://github.com/VATSIM-UK/uk-controller-plugin/issues/409)
 
-## [3.13.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.2...3.13.3) (2022-01-16)
+## [3.13.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.3...3.13.4) (2022-01-20)
 
+### Bug Fixes
+
+* **handoffs:** Handoffs not repopulating when controllers log on ([#413](https://github.com/VATSIM-UK/uk-controller-plugin/issues/413)) ([d1d872e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d1d872e9fec27a166057a4832493d33d5436a420)), closes [#412](https://github.com/VATSIM-UK/uk-controller-plugin/issues/412)
+* **pressuremonitor:** Trigger pressure monitor updates correctly ([#411](https://github.com/VATSIM-UK/uk-controller-plugin/issues/411)) ([287d395](https://github.com/VATSIM-UK/uk-controller-plugin/commit/287d395fbb588e7809492fd9b83c1dca5b1856ea)), closes [#409](https://github.com/VATSIM-UK/uk-controller-plugin/issues/409)
+
+
+# [4.0.0-beta.5](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.4...4.0.0-beta.5) (2022-01-17)
+
+### Bug Fixes
+* **intentioncode:** add GOREV as exit fix for K2 intention code ([#406](https://github.com/VATSIM-UK/uk-controller-plugin/issues/406)) ([4135248](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4135248ffd6beb25c107477beee36c7ac72502d7))
+
+## [3.13.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.2...3.13.3) (2022-01-16)
 
 ### Bug Fixes
 
 * **intentioncode:** add GOREV as exit fix for K2 intention code ([#406](https://github.com/VATSIM-UK/uk-controller-plugin/issues/406)) ([4135248](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4135248ffd6beb25c107477beee36c7ac72502d7))
+
+# [4.0.0-beta.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.3...4.0.0-beta.4) (2022-01-11)
 
 ## [3.13.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...3.13.2) (2022-01-11)
 
@@ -31,6 +88,48 @@
 * **metars:** metars not updating when they should ([#396](https://github.com/VATSIM-UK/uk-controller-plugin/issues/396)) ([4048974](https://github.com/VATSIM-UK/uk-controller-plugin/commit/40489741a88a02ebaf34707cdebf85efd038c426)), closes [#395](https://github.com/VATSIM-UK/uk-controller-plugin/issues/395)
 * **push-events:** data not synchronising on second instance startup ([#400](https://github.com/VATSIM-UK/uk-controller-plugin/issues/400)) ([7953627](https://github.com/VATSIM-UK/uk-controller-plugin/commit/7953627c147902e7cf3d38e475b81e075b44100c)), closes [#399](https://github.com/VATSIM-UK/uk-controller-plugin/issues/399)
 * **push-events:** Push events not proxying to second EuroScope instance ([#398](https://github.com/VATSIM-UK/uk-controller-plugin/issues/398)) ([e1920fd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e1920fdf2421932b216df43445c713cfc8cc33f9)), closes [#397](https://github.com/VATSIM-UK/uk-controller-plugin/issues/397)
+
+
+### Bug Fixes
+
+* **metars:** metars not updating when they should ([#396](https://github.com/VATSIM-UK/uk-controller-plugin/issues/396)) ([4048974](https://github.com/VATSIM-UK/uk-controller-plugin/commit/40489741a88a02ebaf34707cdebf85efd038c426)), closes [#395](https://github.com/VATSIM-UK/uk-controller-plugin/issues/395)
+* **push-events:** data not synchronising on second instance startup ([#400](https://github.com/VATSIM-UK/uk-controller-plugin/issues/400)) ([7953627](https://github.com/VATSIM-UK/uk-controller-plugin/commit/7953627c147902e7cf3d38e475b81e075b44100c)), closes [#399](https://github.com/VATSIM-UK/uk-controller-plugin/issues/399)
+* **push-events:** Push events not proxying to second EuroScope instance ([#398](https://github.com/VATSIM-UK/uk-controller-plugin/issues/398)) ([e1920fd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e1920fdf2421932b216df43445c713cfc8cc33f9)), closes [#397](https://github.com/VATSIM-UK/uk-controller-plugin/issues/397)
+
+# [4.0.0-beta.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.2...4.0.0-beta.3) (2022-01-08)
+
+
+### Bug Fixes
+
+* **updater:** Handle empty binaries during updates ([#388](https://github.com/VATSIM-UK/uk-controller-plugin/issues/388)) ([dc988b0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/dc988b07292838cd16f127f07da5d020c514aaee))
+
+# [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
+
+
+### Features
+
+* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
+* **departure:** Combine pending prenotes and releases into one list ([#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386)) ([531b687](https://github.com/VATSIM-UK/uk-controller-plugin/commit/531b6876f94a2e6284279efd4ce10c88f2bd92e3))
+
+
+### BREAKING CHANGES
+
+* **departure:** The old lists are replaced by a single list. New ASR settings
+are also used for this list.
+
+# [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
+
+
+### Features
+
+* **missedapproach:** Allow airfields to always alert regardless of service provision ([#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384)) ([5fe9fd7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5fe9fd797bfef1bea9fc47e1385ef999e8c6592b))
+* **misssedapproach:** Allow airfields to always alert regardless of service provision ([4398182](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4398182e685fc9f1c7ef9236aaeb6dc494aa28aa))
+
+
+### BREAKING CHANGES
+
+* **misssedapproach:** The airfield selector for Missed Approach configuration now acts as an override
+to the service provision options, rather than a filter for which airfields to use.
 
 ## [3.13.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.0...3.13.1) (2022-01-04)
 
