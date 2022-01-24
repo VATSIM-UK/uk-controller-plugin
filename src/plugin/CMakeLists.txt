@@ -900,7 +900,7 @@ set(src__wake
     wake/WakeCategoryMapperInterface.h
     wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h
     wake/WakeCalculatorDisplay.cpp wake/WakeCalculatorDisplay.h
-    wake/WakeCalculatorOptions.cpp wake/WakeCalculatorOptions.h wake/LeadWakeCallsignProvider.cpp wake/LeadWakeCallsignProvider.h wake/FollowingWakeCallsignProvider.cpp wake/FollowingWakeCallsignProvider.h wake/WakeSchemeProvider.cpp wake/WakeSchemeProvider.h)
+    wake/WakeCalculatorOptions.cpp wake/WakeCalculatorOptions.h wake/LeadWakeCallsignProvider.cpp wake/LeadWakeCallsignProvider.h wake/FollowingWakeCallsignProvider.cpp wake/FollowingWakeCallsignProvider.h wake/WakeSchemeProvider.cpp wake/WakeSchemeProvider.h wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES

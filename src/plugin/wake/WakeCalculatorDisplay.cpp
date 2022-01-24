@@ -1,7 +1,8 @@
-#include "WakeCalculatorDisplay.h"
 #include "WakeCategory.h"
+#include "WakeCalculatorDisplay.h"
 #include "WakeCategoryMapperInterface.h"
 #include "WakeCalculatorOptions.h"
+#include "WakeIntervalFormatter.h"
 #include "components/ClickableArea.h"
 #include "components/TitleBar.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
@@ -271,7 +272,7 @@ namespace UKControllerPlugin::Wake {
         }
 
         graphics.DrawString(
-            L"3 mins",
+            FormatInterval(*departureInterval),
             calculationResultArea,
             *resultBrush,
             Graphics::StringFormatManager::Instance().GetCentreAlign(),
