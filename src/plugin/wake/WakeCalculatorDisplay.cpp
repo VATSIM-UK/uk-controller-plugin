@@ -18,10 +18,12 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<WakeCalculatorOptions> options,
         std::shared_ptr<List::PopupListInterface> leadCallsignSelector,
         std::shared_ptr<List::PopupListInterface> followCallsignSelector,
+        std::shared_ptr<List::PopupListInterface> wakeSchemeSelector,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         int screenObjectId)
         : options(std::move(options)), leadCallsignSelector(std::move(leadCallsignSelector)),
-          followCallsignSelector(std::move(followCallsignSelector)), plugin(plugin), screenObjectId(screenObjectId),
+          followCallsignSelector(std::move(followCallsignSelector)), wakeSchemeSelector(std::move(wakeSchemeSelector)),
+          plugin(plugin), screenObjectId(screenObjectId),
           titleBar(Components::TitleBar::Create(L"Wake Turbulence Calculator", TitleBarArea())
                        ->WithDrag(this->screenObjectId)
                        ->WithDefaultBackgroundBrush()
@@ -32,7 +34,8 @@ namespace UKControllerPlugin::Wake {
           dividingLinePen(std::make_shared<Gdiplus::Pen>(TEXT_COLOUR)),
           leadClickspot(Components::ClickableArea::Create(leadTextArea, screenObjectId, "leadcallsign", false)),
           followingClickspot(
-              Components::ClickableArea::Create(followingTextArea, screenObjectId, "followcallsign", false))
+              Components::ClickableArea::Create(followingTextArea, screenObjectId, "followcallsign", false)),
+          schemeClickspot(Components::ClickableArea::Create(schemeTextArea, screenObjectId, "scheme", false))
     {
         this->Move({DEFAULT_WINDOW_POSITION.x, DEFAULT_WINDOW_POSITION.y, 0, 0}, "");
     }
@@ -60,6 +63,7 @@ namespace UKControllerPlugin::Wake {
         }
 
         if (objectDescription == "scheme") {
+            wakeSchemeSelector->Trigger(mousePos);
             return;
         }
 
@@ -79,6 +83,7 @@ namespace UKControllerPlugin::Wake {
         this->schemeStaticArea = {TEXT_INSET, TitleBarArea().GetBottom() + TEXT_INSET, 60, 20};
         this->schemeTextArea = {
             this->schemeStaticArea.GetRight() + TEXT_INSET, TitleBarArea().GetBottom() + TEXT_INSET, 75, 20};
+        this->schemeClickspot->WithPosition(this->schemeTextArea);
 
         // Intermediate
         this->intermediateStaticArea = {schemeTextArea.GetRight() + TEXT_INSET, schemeStaticArea.GetTop(), 105, 20};
@@ -161,6 +166,7 @@ namespace UKControllerPlugin::Wake {
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
+        this->schemeClickspot->Apply(graphics, radarScreen);
     }
 
     void WakeCalculatorDisplay::RenderLead(
@@ -228,7 +234,7 @@ namespace UKControllerPlugin::Wake {
         // Check for the mapper and required flightplans
         const auto mapper = options->SchemeMapper();
         const auto leadFlightplan = plugin.GetFlightplanForCallsign(options->LeadAircraft());
-        const auto followingFlightplan = plugin.GetFlightplanForCallsign(options->LeadAircraft());
+        const auto followingFlightplan = plugin.GetFlightplanForCallsign(options->FollowingAircraft());
         if (options->SchemeMapper() == nullptr || leadFlightplan == nullptr || followingFlightplan == nullptr) {
             return;
         }
@@ -251,6 +257,12 @@ namespace UKControllerPlugin::Wake {
         // Check for intervals and display if present
         const auto departureInterval = leadCategory->DepartureInterval(*followingCategory, options->Intermediate());
         if (departureInterval == nullptr) {
+            graphics.DrawString(
+                L"--",
+                calculationResultArea,
+                *resultBrush,
+                Graphics::StringFormatManager::Instance().GetCentreAlign(),
+                Graphics::FontManager::Instance().Get(16));
             return;
         }
 

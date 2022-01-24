@@ -29,4 +29,35 @@ namespace UKControllerPlugin::Wake {
 
         return scheme == schemes.cend() ? nullptr : scheme->second;
     }
+
+    auto WakeSchemeCollection::GetByName(const std::string& name) const -> std::shared_ptr<WakeScheme>
+    {
+        auto scheme = std::find_if(
+            schemes.cbegin(),
+            schemes.cend(),
+            [&name](const std::pair<int, std::shared_ptr<WakeScheme>>& schemePair) -> bool {
+                return schemePair.second->Name() == name;
+            });
+
+        return scheme == schemes.cend() ? nullptr : scheme->second;
+    }
+
+    auto WakeSchemeCollection::FirstWhere(const std::function<bool(const WakeScheme&)> predicate) const
+        -> std::shared_ptr<WakeScheme>
+    {
+        for (const auto& scheme : schemes) {
+            if (predicate(*scheme.second)) {
+                return scheme.second;
+            }
+        }
+
+        return nullptr;
+    }
+
+    void WakeSchemeCollection::ForEach(const std::function<void(const WakeScheme&)> callback) const
+    {
+        for (const auto& scheme : schemes) {
+            callback(*scheme.second);
+        }
+    }
 } // namespace UKControllerPlugin::Wake

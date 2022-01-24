@@ -26,6 +26,7 @@ namespace UKControllerPlugin::Wake {
             std::shared_ptr<WakeCalculatorOptions> options,
             std::shared_ptr<List::PopupListInterface> leadCallsignSelector,
             std::shared_ptr<List::PopupListInterface> followCallsignSelector,
+            std::shared_ptr<List::PopupListInterface> wakeSchemeSelector,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             int screenObjectId);
         auto IsVisible() const -> bool override;
@@ -71,6 +72,9 @@ namespace UKControllerPlugin::Wake {
         // For selecting callsigns
         const std::shared_ptr<List::PopupListInterface> leadCallsignSelector;
         const std::shared_ptr<List::PopupListInterface> followCallsignSelector;
+        
+        // For selecting wake schemes
+        const std::shared_ptr<List::PopupListInterface> wakeSchemeSelector;
 
         // For getting flightplans
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
@@ -108,5 +112,6 @@ namespace UKControllerPlugin::Wake {
         // Clickspot rects
         std::shared_ptr<Components::ClickableArea> leadClickspot;
         std::shared_ptr<Components::ClickableArea> followingClickspot;
+        std::shared_ptr<Components::ClickableArea> schemeClickspot;
     };
 } // namespace UKControllerPlugin::Wake

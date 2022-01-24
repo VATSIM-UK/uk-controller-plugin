@@ -28,18 +28,19 @@ namespace UKControllerPluginTest::Wake {
     class WakeModuleTest : public Test
     {
         public:
-        WakeModuleTest() : popupListFactory(functionCalls, mockPlugin)
+        WakeModuleTest()
         {
             container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             container.tagHandler = std::make_unique<TagItemCollection>();
-            container.callsignSelectionListFactory = std::make_unique<CallsignSelectionListFactory>(popupListFactory);
+            container.popupListFactory = std::make_unique<PopupListFactory>(functionCalls, mockPlugin);
+            container.callsignSelectionListFactory =
+                std::make_unique<CallsignSelectionListFactory>(*container.popupListFactory);
         }
 
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
         AsrEventHandlerCollection asrEventHandlers;
         RadarRenderableCollection radarRenderables;
         FunctionCallEventHandler functionCalls;
-        PopupListFactory popupListFactory;
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependencies;
     };
@@ -108,5 +109,23 @@ namespace UKControllerPluginTest::Wake {
     {
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers);
         EXPECT_EQ(1, asrEventHandlers.CountHandlers());
+    }
+
+    TEST_F(WakeModuleTest, ItRegistersLeadAircraftCallback)
+    {
+        BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers);
+        EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Lead Aircraft"));
+    }
+
+    TEST_F(WakeModuleTest, ItRegistersFollowingAircraftCallback)
+    {
+        BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers);
+        EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Following Aircraft"));
+    }
+
+    TEST_F(WakeModuleTest, ItRegistersSchemeCallback)
+    {
+        BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers);
+        EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Scheme"));
     }
 } // namespace UKControllerPluginTest::Wake
