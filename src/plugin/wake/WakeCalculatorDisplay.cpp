@@ -35,7 +35,9 @@ namespace UKControllerPlugin::Wake {
           leadClickspot(Components::ClickableArea::Create(leadTextArea, screenObjectId, "leadcallsign", false)),
           followingClickspot(
               Components::ClickableArea::Create(followingTextArea, screenObjectId, "followcallsign", false)),
-          schemeClickspot(Components::ClickableArea::Create(schemeTextArea, screenObjectId, "scheme", false))
+          schemeClickspot(Components::ClickableArea::Create(schemeTextArea, screenObjectId, "scheme", false)),
+          intermediateClickspot(
+              Components::ClickableArea::Create(intermediateTextArea, screenObjectId, "intermediate", false))
     {
         this->Move({DEFAULT_WINDOW_POSITION.x, DEFAULT_WINDOW_POSITION.y, 0, 0}, "");
     }
@@ -89,6 +91,7 @@ namespace UKControllerPlugin::Wake {
         this->intermediateStaticArea = {schemeTextArea.GetRight() + TEXT_INSET, schemeStaticArea.GetTop(), 105, 20};
         this->intermediateTextArea = {
             intermediateStaticArea.GetRight() + TEXT_INSET, schemeStaticArea.GetTop(), 30, 20};
+        this->intermediateClickspot->WithPosition(this->intermediateTextArea);
 
         // Lead
         this->leadStaticArea = {TEXT_INSET, schemeStaticArea.GetBottom() + TEXT_INSET, 45, 20};
@@ -222,6 +225,7 @@ namespace UKControllerPlugin::Wake {
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
+        this->intermediateClickspot->Apply(graphics, radarScreen);
     }
 
     void WakeCalculatorDisplay::RenderDividingLine(Windows::GdiGraphicsInterface& graphics)

@@ -113,5 +113,6 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<Components::ClickableArea> leadClickspot;
         std::shared_ptr<Components::ClickableArea> followingClickspot;
         std::shared_ptr<Components::ClickableArea> schemeClickspot;
+        std::shared_ptr<Components::ClickableArea> intermediateClickspot;
     };
 } // namespace UKControllerPlugin::Wake
