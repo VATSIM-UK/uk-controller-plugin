@@ -59,6 +59,32 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_EQ(std::set<std::string>({"BAW123", "BAW456"}), callsignProvider.GetCallsigns());
     }
 
+    TEST_F(LeadWakeCallsignProviderTest, ItReturnsRelevantCallsignsGroundControl)
+    {
+        serviceProviders.SetProvidersForAirfield(
+            "EGLL",
+            std::vector<std::shared_ptr<ServiceProvision>>{
+                std::make_shared<ServiceProvision>(ServiceType::Ground, callsign)});
+
+        plugin.AddAllFlightplansItem({flightplan1, radarTarget1});
+        plugin.AddAllFlightplansItem({flightplan2, radarTarget2});
+
+        EXPECT_EQ(std::set<std::string>({"BAW123", "BAW456"}), callsignProvider.GetCallsigns());
+    }
+
+    TEST_F(LeadWakeCallsignProviderTest, ItReturnsRelevantCallsignsDeliveryControl)
+    {
+        serviceProviders.SetProvidersForAirfield(
+            "EGLL",
+            std::vector<std::shared_ptr<ServiceProvision>>{
+                std::make_shared<ServiceProvision>(ServiceType::Delivery, callsign)});
+
+        plugin.AddAllFlightplansItem({flightplan1, radarTarget1});
+        plugin.AddAllFlightplansItem({flightplan2, radarTarget2});
+
+        EXPECT_EQ(std::set<std::string>({"BAW123", "BAW456"}), callsignProvider.GetCallsigns());
+    }
+
     TEST_F(LeadWakeCallsignProviderTest, ItSkipsCallsignsIfWrongService)
     {
         serviceProviders.SetProvidersForAirfield(

@@ -16,7 +16,8 @@ namespace UKControllerPlugin::Wake {
     auto LeadWakeCallsignProvider::GetCallsigns() -> std::set<std::string>
     {
         std::set<std::string> callsigns;
-        auto airfields = serviceProvisions.GetAirfieldsWhereUserProvidingServices(Ownership::ServiceType::Tower);
+        auto airfields = serviceProvisions.GetAirfieldsWhereUserProvidingServices(
+            Ownership::ServiceType::Delivery | Ownership::ServiceType::Ground | Ownership::ServiceType::Tower);
 
         plugin.ApplyFunctionToAllFlightplans(
             [&callsigns, &airfields](
