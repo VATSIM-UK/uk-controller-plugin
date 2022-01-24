@@ -50,7 +50,7 @@ namespace UKControllerPluginTest::List {
 
         std::list<std::shared_ptr<ListItem>> items;
         items.push_back(
-            std::make_shared<ListItem>("1first", "1second,", true, false, ListItemCheckedStatus::NoCheckbox));
+            std::make_shared<ListItem>("1first", "1second", true, false, ListItemCheckedStatus::NoCheckbox));
 
         EXPECT_CALL(*itemProvider, ListColumns).Times(1).WillOnce(testing::Return(2));
 

@@ -34,6 +34,7 @@ namespace UKControllerPlugin::List {
             popupItem.secondValue = item->secondColumn;
             popupItem.checked = static_cast<unsigned int>(item->checked);
             popupItem.disabled = item->disabled;
+            popupItem.fixedPosition = item->fixedPosition;
             popupItem.callbackFunctionId = callbackId;
 
             this->plugin.AddItemToPopupList(popupItem);

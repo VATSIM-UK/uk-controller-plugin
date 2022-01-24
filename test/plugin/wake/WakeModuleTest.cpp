@@ -1,16 +1,22 @@
+#include "aircraft/CallsignSelectionListFactory.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "list/PopupListFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagItemCollection.h"
 #include "wake/WakeModule.h"
 #include "wake/WakeSchemeCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
+using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::List::PopupListFactory;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::Wake::BootstrapPlugin;
@@ -22,14 +28,18 @@ namespace UKControllerPluginTest::Wake {
     class WakeModuleTest : public Test
     {
         public:
-        WakeModuleTest()
+        WakeModuleTest() : popupListFactory(functionCalls, mockPlugin)
         {
             container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             container.tagHandler = std::make_unique<TagItemCollection>();
+            container.callsignSelectionListFactory = std::make_unique<CallsignSelectionListFactory>(popupListFactory);
         }
 
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
         AsrEventHandlerCollection asrEventHandlers;
         RadarRenderableCollection radarRenderables;
+        FunctionCallEventHandler functionCalls;
+        PopupListFactory popupListFactory;
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependencies;
     };
@@ -89,14 +99,14 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeModuleTest, ItRegistersCalculatorForRenderers)
     {
-        BootstrapRadarScreen(radarRenderables, asrEventHandlers);
+        BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers);
         EXPECT_EQ(1, radarRenderables.CountRenderers());
         EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
     }
 
     TEST_F(WakeModuleTest, ItRegistersCalculatorForAsrEvents)
     {
-        BootstrapRadarScreen(radarRenderables, asrEventHandlers);
+        BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers);
         EXPECT_EQ(1, asrEventHandlers.CountHandlers());
     }
 } // namespace UKControllerPluginTest::Wake

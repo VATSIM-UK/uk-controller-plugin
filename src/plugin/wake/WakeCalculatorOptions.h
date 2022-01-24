@@ -28,7 +28,7 @@ namespace UKControllerPlugin::Wake {
             std::string followingAircraft;
             
             // Are we doing intermediate departures
-            bool intermediate;
+            bool intermediate = false;
             
             // What scheme we're using
             std::string scheme;

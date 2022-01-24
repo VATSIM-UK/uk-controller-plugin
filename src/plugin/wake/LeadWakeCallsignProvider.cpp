@@ -34,5 +34,6 @@ namespace UKControllerPlugin::Wake {
     void LeadWakeCallsignProvider::CallsignSelected(const std::string& callsign)
     {
         options->LeadAircraft(callsign);
+        options->FollowingAircraft("");
     }
 } // namespace UKControllerPlugin::Wake

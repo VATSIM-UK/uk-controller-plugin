@@ -549,7 +549,7 @@ set(test__wake
     wake/WakeSchemeFactoryTest.cpp
     wake/WakeSchemeCollectionTest.cpp
     wake/WakeSchemeCollectionFactoryTest.cpp
-    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp)
+    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES

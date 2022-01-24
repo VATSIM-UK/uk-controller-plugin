@@ -9,7 +9,6 @@ namespace UKControllerPlugin::Wake {
     void WakeCalculatorOptions::LeadAircraft(const std::string& leadAircraft)
     {
         this->leadAircraft = leadAircraft;
-        followingAircraft = "";
     }
 
     auto WakeCalculatorOptions::FollowingAircraft() const -> const std::string&

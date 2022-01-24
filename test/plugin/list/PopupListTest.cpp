@@ -22,7 +22,9 @@ namespace UKControllerPluginTest::List {
 
     TEST_F(PopupListTest, ItDoesntTriggerNoItems)
     {
-        EXPECT_CALL(*mockProvider, ListItems).Times(1).WillOnce(testing::Return(std::list<std::shared_ptr<ListItem>>));
+        EXPECT_CALL(*mockProvider, ListItems)
+            .Times(1)
+            .WillOnce(testing::Return(std::list<std::shared_ptr<ListItem>>()));
         EXPECT_CALL(plugin, TriggerPopupList(testing::_, testing::_, testing::_)).Times(0);
 
         list.Trigger({1, 2});
@@ -32,10 +34,10 @@ namespace UKControllerPluginTest::List {
     {
         std::list<std::shared_ptr<ListItem>> items;
         items.push_back(
-            std::make_shared<ListItem>("1first", "1second,", true, false, ListItemCheckedStatus::NoCheckbox));
+            std::make_shared<ListItem>("1first", "1second", true, false, ListItemCheckedStatus::NoCheckbox));
         items.push_back(
-            std::make_shared<ListItem>("2first", "2second,", false, true, ListItemCheckedStatus::NotChecked));
-        items.push_back(std::make_shared<ListItem>("3first", "3second,", false, false, ListItemCheckedStatus::Checked));
+            std::make_shared<ListItem>("2first", "2second", false, true, ListItemCheckedStatus::NotChecked));
+        items.push_back(std::make_shared<ListItem>("3first", "3second", false, false, ListItemCheckedStatus::Checked));
 
         EXPECT_CALL(*mockProvider, ListColumns).Times(1).WillOnce(testing::Return(2));
 
@@ -73,7 +75,7 @@ namespace UKControllerPluginTest::List {
 
         EXPECT_CALL(plugin, AddItemToPopupList(expectedItem2)).Times(1);
 
-        EXPECT_CALL(plugin, AddItemToPopupList(expectedItem2)).Times(1);
+        EXPECT_CALL(plugin, AddItemToPopupList(expectedItem3)).Times(1);
 
         list.Trigger({1, 2});
     }

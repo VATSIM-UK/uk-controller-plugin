@@ -78,7 +78,7 @@ namespace UKControllerPlugin::Wake {
             *container.plugin,
             renderables.ReserveScreenObjectIdentifier(rendererId));
 
-        renderables.RegisterRenderer(rendererId, renderer, renderables.afterLists);
+        renderables.RegisterRenderer(rendererId, renderer, RadarScreen::RadarRenderableCollection::afterLists);
         asrHandlers.RegisterHandler(renderer);
     }
 } // namespace UKControllerPlugin::Wake
