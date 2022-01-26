@@ -30,7 +30,7 @@ namespace UKControllerPlugin::Wake {
         private:
         // Whos providing what, where
         const Ownership::AirfieldServiceProviderCollection& serviceProvisions;
-        
+
         // Plugin for looping flightplans
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 

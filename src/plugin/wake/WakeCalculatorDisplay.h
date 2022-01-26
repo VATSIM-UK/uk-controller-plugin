@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "radarscreen/MenuToggleableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
@@ -128,7 +127,7 @@ namespace UKControllerPlugin::Wake {
         const std::string ASR_DESCRIPTION_X_POS = "Wake Calculator X Position";
         const std::string ASR_KEY_Y_POS = "wakeCalculatorYPosition";
         const std::string ASR_DESCRIPTION_Y_POS = "Wake Calculator Y Position";
-        
+
         // Visibility
         bool visible = false;
     };

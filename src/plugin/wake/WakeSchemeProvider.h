@@ -31,7 +31,7 @@ namespace UKControllerPlugin::Wake {
 
         // For getting the schemes
         const WakeSchemeCollection& schemes;
-        
+
         // Maps aircraft types for wake mapping
         const Aircraft::AircraftTypeMapperInterface& aircraftTypeMapper;
     };

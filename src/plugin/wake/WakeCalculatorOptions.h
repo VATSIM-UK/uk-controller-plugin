@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin::Wake {
     class WakeCategoryMapperInterface;
-    
+
     /**
      * Selected options in relation to the Wake Calculator Display
      */
@@ -21,19 +21,19 @@ namespace UKControllerPlugin::Wake {
         void Intermediate(bool intermediate);
 
         private:
-            // Who the lead aircraft is
-            std::string leadAircraft;
-            
-            // Who the following aircraft is
-            std::string followingAircraft;
-            
-            // Are we doing intermediate departures
-            bool intermediate = false;
-            
-            // What scheme we're using
-            std::string scheme;
-            
-            // For scheme mapping
-            std::shared_ptr<WakeCategoryMapperInterface> schemeMapper;
+        // Who the lead aircraft is
+        std::string leadAircraft;
+
+        // Who the following aircraft is
+        std::string followingAircraft;
+
+        // Are we doing intermediate departures
+        bool intermediate = false;
+
+        // What scheme we're using
+        std::string scheme;
+
+        // For scheme mapping
+        std::shared_ptr<WakeCategoryMapperInterface> schemeMapper;
     };
 } // namespace UKControllerPlugin::Wake

@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin::List {
     class PopupListInterface;
     class ListItemProviderInterface;
-    
+
     /**
      * For building popup lists.
      */
@@ -24,7 +24,7 @@ namespace UKControllerPlugin::List {
         [[nodiscard]] auto
         Create(std::shared_ptr<ListItemProviderInterface> provider, const std::string& description) const
             -> std::shared_ptr<PopupListInterface>;
-        
+
         private:
         // For registering the callback function
         Plugin::FunctionCallEventHandler& functionHandler;

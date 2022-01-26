@@ -1,11 +1,9 @@
 #pragma once
-#include <string>
-#include <windef.h>
 #include "radarscreen/ConfigurableDisplayInterface.h"
 
 namespace UKControllerPlugin::RadarScreen {
     class MenuToggleableDisplayInterface;
-    
+
     class ToggleDisplayFromMenu : public ConfigurableDisplayInterface
     {
         public:
@@ -14,11 +12,10 @@ namespace UKControllerPlugin::RadarScreen {
         auto GetConfigurationMenuItem() const -> UKControllerPlugin::Plugin::PopupMenuItem override;
 
         private:
-        
         // The display that we can toggle
         const std::shared_ptr<MenuToggleableDisplayInterface> display;
-        
+
         // The callback id
         int callbackId;
     };
-} //
+} // namespace UKControllerPlugin::RadarScreen
