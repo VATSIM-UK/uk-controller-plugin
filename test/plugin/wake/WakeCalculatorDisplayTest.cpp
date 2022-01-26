@@ -1,6 +1,8 @@
+#include "euroscope/UserSetting.h"
 #include "wake/WakeCalculatorDisplay.h"
 #include "wake/WakeCalculatorOptions.h"
 
+using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Wake::WakeCalculatorDisplay;
 using UKControllerPlugin::Wake::WakeCalculatorOptions;
 
@@ -9,7 +11,8 @@ namespace UKControllerPluginTest::Wake {
     {
         public:
         WakeCalculatorDisplayTest()
-            : leadCallsignSelector(std::make_shared<testing::NiceMock<List::MockPopupList>>()),
+            : userSettings(mockAsrProvider),
+              leadCallsignSelector(std::make_shared<testing::NiceMock<List::MockPopupList>>()),
               followingCallsignSelector(std::make_shared<testing::NiceMock<List::MockPopupList>>()),
               wakesSchemeSelector(std::make_shared<testing::NiceMock<List::MockPopupList>>()),
               options(std::make_shared<WakeCalculatorOptions>()),
@@ -17,6 +20,8 @@ namespace UKControllerPluginTest::Wake {
         {
         }
 
+        testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
+        UserSetting userSettings;
         testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         std::shared_ptr<testing::NiceMock<List::MockPopupList>> leadCallsignSelector;
@@ -25,6 +30,64 @@ namespace UKControllerPluginTest::Wake {
         std::shared_ptr<WakeCalculatorOptions> options;
         WakeCalculatorDisplay display;
     };
+
+    TEST_F(WakeCalculatorDisplayTest, ItHasADefaultPosition)
+    {
+        const auto position = display.Position();
+        EXPECT_EQ(200, position.x);
+        EXPECT_EQ(200, position.y);
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, ItCanBeMoved)
+    {
+        display.Move({300, 400, 500, 600}, "");
+        const auto position = display.Position();
+        EXPECT_EQ(300, position.x);
+        EXPECT_EQ(400, position.y);
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, ItCanHaveItsPositionResetToDefault)
+    {
+        display.Move({300, 400, 500, 600}, "");
+        display.ResetPosition();
+        const auto position = display.Position();
+        EXPECT_EQ(200, position.x);
+        EXPECT_EQ(200, position.y);
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsPosition)
+    {
+        EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorXPosition")).Times(1).WillOnce(testing::Return("250"));
+
+        EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorYPosition")).Times(1).WillOnce(testing::Return("150"));
+
+        display.AsrLoadedEvent(userSettings);
+        const auto position = display.Position();
+        EXPECT_EQ(250, position.x);
+        EXPECT_EQ(150, position.y);
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsDefaultPosition)
+    {
+        display.Move({300, 400, 500, 600}, "");
+        EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorXPosition")).Times(1).WillOnce(testing::Return(""));
+        EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorYPosition")).Times(1).WillOnce(testing::Return(""));
+
+        display.AsrLoadedEvent(userSettings);
+        const auto position = display.Position();
+        EXPECT_EQ(200, position.x);
+        EXPECT_EQ(200, position.y);
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, AsrClosingSavesPosition)
+    {
+        display.Move({300, 400, 500, 600}, "");
+        EXPECT_CALL(mockAsrProvider, SetKey("wakeCalculatorXPosition", "Wake Calculator X Position", "300")).Times(1);
+
+        EXPECT_CALL(mockAsrProvider, SetKey("wakeCalculatorYPosition", "Wake Calculator Y Position", "400")).Times(1);
+
+        display.AsrClosingEvent(userSettings);
+    }
 
     TEST_F(WakeCalculatorDisplayTest, LeadCallsignClickTriggersList)
     {
