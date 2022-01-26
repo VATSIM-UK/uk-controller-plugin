@@ -7,6 +7,7 @@
 #include "components/TitleBar.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
+#include "euroscope/UserSetting.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/StringFormatManager.h"
@@ -134,15 +135,22 @@ namespace UKControllerPlugin::Wake {
     void WakeCalculatorDisplay::ResetPosition()
     {
         this->Move({DEFAULT_WINDOW_POSITION.x, DEFAULT_WINDOW_POSITION.y, 0, 0}, "");
-        RadarRenderableInterface::ResetPosition();
     }
 
     void WakeCalculatorDisplay::AsrLoadedEvent(Euroscope::UserSetting& userSetting)
     {
+        this->Move(
+            {userSetting.GetIntegerEntry(ASR_KEY_X_POS, DEFAULT_WINDOW_POSITION.x),
+             userSetting.GetIntegerEntry(ASR_KEY_Y_POS, DEFAULT_WINDOW_POSITION.y),
+             0,
+             0},
+            "");
     }
 
     void WakeCalculatorDisplay::AsrClosingEvent(Euroscope::UserSetting& userSetting)
     {
+        userSetting.Save(ASR_KEY_X_POS, ASR_DESCRIPTION_X_POS, windowPosition.x);
+        userSetting.Save(ASR_KEY_Y_POS, ASR_DESCRIPTION_Y_POS, windowPosition.y);
     }
 
     auto WakeCalculatorDisplay::TitleBarArea() -> Gdiplus::Rect
@@ -277,5 +285,10 @@ namespace UKControllerPlugin::Wake {
             *resultBrush,
             Graphics::StringFormatManager::Instance().GetCentreAlign(),
             Graphics::FontManager::Instance().Get(16));
+    }
+
+    auto WakeCalculatorDisplay::Position() const -> const POINT&
+    {
+        return windowPosition;
     }
 } // namespace UKControllerPlugin::Wake

@@ -42,6 +42,7 @@ namespace UKControllerPlugin::Wake {
         void ResetPosition() override;
         void AsrLoadedEvent(Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(Euroscope::UserSetting& userSetting) override;
+        [[nodiscard]] auto Position() const -> const POINT&;
 
         private:
         [[nodiscard]] static auto TitleBarArea() -> Gdiplus::Rect;
@@ -72,7 +73,7 @@ namespace UKControllerPlugin::Wake {
         // For selecting callsigns
         const std::shared_ptr<List::PopupListInterface> leadCallsignSelector;
         const std::shared_ptr<List::PopupListInterface> followCallsignSelector;
-        
+
         // For selecting wake schemes
         const std::shared_ptr<List::PopupListInterface> wakeSchemeSelector;
 
@@ -108,11 +109,18 @@ namespace UKControllerPlugin::Wake {
         Gdiplus::Point dividingLineStart;
         Gdiplus::Point dividingLineEnd;
         Gdiplus::Rect calculationResultArea;
-        
+
         // Clickspot rects
         std::shared_ptr<Components::ClickableArea> leadClickspot;
         std::shared_ptr<Components::ClickableArea> followingClickspot;
         std::shared_ptr<Components::ClickableArea> schemeClickspot;
         std::shared_ptr<Components::ClickableArea> intermediateClickspot;
+
+        // ASR Things
+
+        const std::string ASR_KEY_X_POS = "wakeCalculatorXPosition";
+        const std::string ASR_DESCRIPTION_X_POS = "Wake Calculator X Position";
+        const std::string ASR_KEY_Y_POS = "wakeCalculatorYPosition";
+        const std::string ASR_DESCRIPTION_Y_POS = "Wake Calculator Y Position";
     };
 } // namespace UKControllerPlugin::Wake
