@@ -435,7 +435,7 @@ set(test__radarscreen
     "radarscreen/RadarRenderableCollectionTest.cpp"
     "radarscreen/ScreenControlsBootstrapTest.cpp"
     "radarscreen/ScreenControlsTest.cpp"
-)
+        radarscreen/ToggleDisplayFromMenuTest.cpp mock/MockMenuToggleableDisplay.h radarscreen/MenuToggleableDisplayFactoryTest.cpp)
 source_group("test\\radarscreen" FILES ${test__radarscreen})
 
 set(test__regional

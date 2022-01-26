@@ -43,6 +43,7 @@
 #include "../mock/MockHistoryTrailRepository.h"
 #include "../mock/MockIntegrationActionProcessor.h"
 #include "../mock/MockListItemProvider.h"
+#include "../mock/MockMenuToggleableDisplay.h"
 #include "../mock/MockMetarEventHandler.h"
 #include "../mock/MockOutboundIntegrationEventHandler.h"
 #include "../mock/MockPopupList.h"
