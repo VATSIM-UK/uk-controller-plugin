@@ -1,5 +1,7 @@
 #pragma once
+#include <string>
 #include "euroscope/AsrEventHandlerInterface.h"
+#include "radarscreen/MenuToggleableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
 
 namespace UKControllerPlugin {
@@ -19,6 +21,7 @@ namespace UKControllerPlugin::Wake {
     class WakeCalculatorOptions;
 
     class WakeCalculatorDisplay : public RadarScreen::RadarRenderableInterface,
+                                  public RadarScreen::MenuToggleableDisplayInterface,
                                   public Euroscope::AsrEventHandlerInterface
     {
         public:
@@ -29,7 +32,7 @@ namespace UKControllerPlugin::Wake {
             std::shared_ptr<List::PopupListInterface> wakeSchemeSelector,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             int screenObjectId);
-        auto IsVisible() const -> bool override;
+        [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
@@ -43,6 +46,8 @@ namespace UKControllerPlugin::Wake {
         void AsrLoadedEvent(Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(Euroscope::UserSetting& userSetting) override;
         [[nodiscard]] auto Position() const -> const POINT&;
+        auto MenuItem() const -> std::string override;
+        void Toggle() override;
 
         private:
         [[nodiscard]] static auto TitleBarArea() -> Gdiplus::Rect;
@@ -117,10 +122,12 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<Components::ClickableArea> intermediateClickspot;
 
         // ASR Things
-
         const std::string ASR_KEY_X_POS = "wakeCalculatorXPosition";
         const std::string ASR_DESCRIPTION_X_POS = "Wake Calculator X Position";
         const std::string ASR_KEY_Y_POS = "wakeCalculatorYPosition";
         const std::string ASR_DESCRIPTION_Y_POS = "Wake Calculator Y Position";
+        
+        // Visibility
+        bool visible = false;
     };
 } // namespace UKControllerPlugin::Wake

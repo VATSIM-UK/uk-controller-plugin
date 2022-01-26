@@ -17,6 +17,7 @@
 #include "list/PopupList.h"
 #include "list/PopupListFactory.h"
 #include "plugin/UKPlugin.h"
+#include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
 
@@ -64,7 +65,8 @@ namespace UKControllerPlugin::Wake {
     void BootstrapRadarScreen(
         const Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& renderables,
-        Euroscope::AsrEventHandlerCollection& asrHandlers)
+        Euroscope::AsrEventHandlerCollection& asrHandlers,
+        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory)
     {
         auto options = std::make_shared<WakeCalculatorOptions>();
         options->Scheme("UK");
@@ -87,5 +89,6 @@ namespace UKControllerPlugin::Wake {
 
         renderables.RegisterRenderer(rendererId, renderer, RadarScreen::RadarRenderableCollection::afterLists);
         asrHandlers.RegisterHandler(renderer);
+        toggleableDisplayFactory.RegisterDisplay(renderer, "Toggle Wake Turbulence Calculator");
     }
 } // namespace UKControllerPlugin::Wake

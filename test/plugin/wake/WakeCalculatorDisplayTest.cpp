@@ -31,6 +31,20 @@ namespace UKControllerPluginTest::Wake {
         WakeCalculatorDisplay display;
     };
 
+    TEST_F(WakeCalculatorDisplayTest, ItHasAMenuItem)
+    {
+        EXPECT_EQ("Display Wake Turbulence Calculator", display.MenuItem());
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, ItCanBeViewToggled)
+    {
+        EXPECT_FALSE(display.IsVisible());
+        display.Toggle();
+        EXPECT_TRUE(display.IsVisible());
+        display.Toggle();
+        EXPECT_FALSE(display.IsVisible());
+    }
+
     TEST_F(WakeCalculatorDisplayTest, ItHasADefaultPosition)
     {
         const auto position = display.Position();

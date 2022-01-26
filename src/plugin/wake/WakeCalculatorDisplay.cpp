@@ -46,7 +46,7 @@ namespace UKControllerPlugin::Wake {
 
     bool WakeCalculatorDisplay::IsVisible() const
     {
-        return true;
+        return this->visible;
     }
 
     void WakeCalculatorDisplay::LeftClick(
@@ -290,5 +290,15 @@ namespace UKControllerPlugin::Wake {
     auto WakeCalculatorDisplay::Position() const -> const POINT&
     {
         return windowPosition;
+    }
+
+    auto WakeCalculatorDisplay::MenuItem() const -> std::string
+    {
+        return "Display Wake Turbulence Calculator";
+    }
+
+    void WakeCalculatorDisplay::Toggle()
+    {
+        this->visible = !this->visible;
     }
 } // namespace UKControllerPlugin::Wake

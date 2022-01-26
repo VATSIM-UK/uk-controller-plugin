@@ -1,4 +1,5 @@
 #include "ConfigurableDisplayCollection.h"
+#include "MenuToggleableDisplayFactory.h"
 #include "PositionResetCommand.h"
 #include "RadarScreenFactory.h"
 #include "ScreenControlsBootstrap.h"
@@ -53,6 +54,7 @@ namespace UKControllerPlugin::RadarScreen {
         AsrEventHandlerCollection userSettingHandlers;
         ConfigurableDisplayCollection configurableDisplays;
         CommandHandlerCollection commandHandlers;
+        MenuToggleableDisplayFactory displayFactory(*this->persistence.pluginFunctionHandlers, configurableDisplays);
 
         // Run bootstrap
         HelperBootstrap::BootstrapApiConfigurationItem(persistence, configurableDisplays);
@@ -108,7 +110,7 @@ namespace UKControllerPlugin::RadarScreen {
         PrenoteModule::BootstrapRadarScreen(this->persistence, renderers);
         Departure::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
-        Wake::BootstrapRadarScreen(this->persistence, renderers, userSettingHandlers);
+        Wake::BootstrapRadarScreen(this->persistence, renderers, userSettingHandlers, displayFactory);
 
         // Register command for position resets
         this->persistence.commandHandlers->RegisterHandler(std::make_shared<PositionResetCommand>(renderers));

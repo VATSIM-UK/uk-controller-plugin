@@ -11,6 +11,7 @@ namespace UKControllerPlugin {
         class AsrEventHandlerCollection;
     } // namespace Euroscope
     namespace RadarScreen {
+        class MenuToggleableDisplayFactory;
         class RadarRenderableCollection;
     } // namespace RadarScreen
 } // namespace UKControllerPlugin
@@ -24,5 +25,6 @@ namespace UKControllerPlugin::Wake {
     void BootstrapRadarScreen(
         const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& renderables,
-        Euroscope::AsrEventHandlerCollection& asrHandlers);
+        Euroscope::AsrEventHandlerCollection& asrHandlers,
+        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory);
 } // namespace UKControllerPlugin::Wake
