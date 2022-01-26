@@ -44,7 +44,7 @@ namespace UKControllerPlugin::Wake {
         this->Move({DEFAULT_WINDOW_POSITION.x, DEFAULT_WINDOW_POSITION.y, 0, 0}, "");
     }
 
-    bool WakeCalculatorDisplay::IsVisible() const
+    auto WakeCalculatorDisplay::IsVisible() const -> bool
     {
         return this->visible;
     }
@@ -145,12 +145,14 @@ namespace UKControllerPlugin::Wake {
              0,
              0},
             "");
+        this->visible = userSetting.GetBooleanEntry(ASR_KEY_VISIBILITY, false);
     }
 
     void WakeCalculatorDisplay::AsrClosingEvent(Euroscope::UserSetting& userSetting)
     {
         userSetting.Save(ASR_KEY_X_POS, ASR_DESCRIPTION_X_POS, windowPosition.x);
         userSetting.Save(ASR_KEY_Y_POS, ASR_DESCRIPTION_Y_POS, windowPosition.y);
+        userSetting.Save(ASR_KEY_VISIBILITY, ASR_DESCRIPTION_VISIBILITY, visible);
     }
 
     auto WakeCalculatorDisplay::TitleBarArea() -> Gdiplus::Rect

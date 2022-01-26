@@ -122,6 +122,8 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<Components::ClickableArea> intermediateClickspot;
 
         // ASR Things
+        const std::string ASR_KEY_VISIBILITY = "wakeCalculatorVisibility";
+        const std::string ASR_DESCRIPTION_VISIBILITY = "Wake Calculator Visibility";
         const std::string ASR_KEY_X_POS = "wakeCalculatorXPosition";
         const std::string ASR_DESCRIPTION_X_POS = "Wake Calculator X Position";
         const std::string ASR_KEY_Y_POS = "wakeCalculatorYPosition";
