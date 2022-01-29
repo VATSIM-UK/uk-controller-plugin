@@ -1,6 +1,8 @@
 #pragma once
+#include "CompareProximityHolds.h"
 
 namespace UKControllerPlugin::Hold {
+    struct ProximityHold;
 
     /*
         Data about a holding aircraft
@@ -9,13 +11,13 @@ namespace UKControllerPlugin::Hold {
     {
         public:
         HoldingAircraft(std::string callsign, std::string assignedHold);
-        HoldingAircraft(std::string callsign, std::set<std::string> proximityHolds);
-
-        void AddProximityHold(const std::string& hold);
+        HoldingAircraft(std::string callsign, std::shared_ptr<ProximityHold> proximityHold);
+        void AddProximityHold(std::shared_ptr<ProximityHold> hold);
         [[nodiscard]] auto GetAssignedHold() const -> std::string;
-        [[nodiscard]] auto GetAssignedHoldEntryTime() const -> const std::chrono::system_clock::time_point&;
         [[nodiscard]] auto GetCallsign() const -> std::string;
-        [[nodiscard]] auto GetProximityHolds() const -> std::set<std::string>;
+        [[nodiscard]] auto GetProximityHolds() const
+            -> const std::set<std::shared_ptr<ProximityHold>, CompareProximityHolds>&;
+        [[nodiscard]] auto GetProximityHold(const std::string& hold) const -> std::shared_ptr<ProximityHold>;
         [[nodiscard]] auto IsInAnyHold() const -> bool;
         [[nodiscard]] auto IsInHold(const std::string& hold) const -> bool;
         [[nodiscard]] auto IsInHoldProximity(const std::string& hold) const -> bool;
@@ -31,13 +33,10 @@ namespace UKControllerPlugin::Hold {
         // The callsign of the aircraft
         const std::string callsign;
 
-        // The time the aircraft entered the hold
-        std::chrono::system_clock::time_point entryTime;
-
         // The assigned hold of the aircraft (if any)
         std::string assignedHold = noHoldAssigned;
 
         // The holds against which the aircraft is the the vicinity
-        std::set<std::string> proximityHolds;
+        std::set<std::shared_ptr<ProximityHold>, CompareProximityHolds> proximityHolds;
     };
 } // namespace UKControllerPlugin::Hold

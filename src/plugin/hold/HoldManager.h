@@ -17,6 +17,7 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Hold {
     class HoldingAircraft;
+    struct ProximityHold;
 
     /*
         A class that manages which aircraft are in which holds
@@ -27,9 +28,9 @@ namespace UKControllerPlugin::Hold {
         HoldManager(
             const UKControllerPlugin::Api::ApiInterface& api,
             UKControllerPlugin::TaskManager::TaskRunnerInterface& taskRunner);
-        void AddAircraftToProximityHold(const std::string& callsign, const std::string& hold);
+        void AddAircraftToProximityHold(const std::shared_ptr<ProximityHold>& hold);
         void AssignAircraftToHold(const std::string& callsign, const std::string& hold, bool updateApi);
-        size_t CountHoldingAircraft(void) const;
+        size_t CountHoldingAircraft() const;
         const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
         GetAircraftForHold(const std::string& hold) const;
         const std::shared_ptr<HoldingAircraft>& GetHoldingAircraft(const std::string& callsign);
