@@ -1,5 +1,6 @@
 #include "AbstractHoldLevelRestriction.h"
 #include "AircraftEnteredHoldingAreaEventHandler.h"
+#include "AircraftExitedHoldingAreaEventHandler.h"
 #include "AssignHoldCommand.h"
 #include "DeemedSeparatedHold.h"
 #include "HoldConfigurationDialog.h"
@@ -176,6 +177,8 @@ namespace UKControllerPlugin::Hold {
         // Hold proximity detection handlers
         container.pushEventProcessors->AddProcessor(
             std::make_shared<AircraftEnteredHoldingAreaEventHandler>(*container.holdManager, *container.navaids));
+        container.pushEventProcessors->AddProcessor(
+            std::make_shared<AircraftExitedHoldingAreaEventHandler>(*container.holdManager, *container.navaids));
     }
 
     /*
