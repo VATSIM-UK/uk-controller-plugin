@@ -1,4 +1,5 @@
 #pragma once
+#include "http/HttpMethod.h"
 
 namespace UKControllerPlugin::Curl {
 
@@ -10,6 +11,7 @@ namespace UKControllerPlugin::Curl {
 
         public:
         CurlRequest(std::string uri, std::string method);
+        CurlRequest(std::string uri, UKControllerPluginUtils::Http::HttpMethod method);
         void AddHeader(const std::string& key, std::string value);
         [[nodiscard]] auto GetBody() const -> const char*;
         [[nodiscard]] auto GetMethod() const -> const char*;

@@ -45,7 +45,16 @@ set(api
     "api/ApiResponseValidator.h"
     "api/LocateApiSettings.cpp"
     "api/LocateApiSettings.h"
-)
+    api/ApiRequestFactory.cpp api/ApiRequestFactory.h
+    api/ApiSettings.cpp api/ApiSettings.h api/ApiRequestFactoryInterface.h
+    api/ApiRequestPerformerInterface.h
+    api/Response.cpp api/Response.h
+    api/ApiRequestData.h api/ApiRequestData.cpp
+    api/ApiRequestPerformer.cpp api/ApiRequestPerformer.h
+    api/ApiUrlBuilder.cpp api/ApiUrlBuilder.h
+    api/ApiHeaderApplicator.cpp api/ApiHeaderApplicator.h
+    api/ApiCurlRequestFactory.cpp api/ApiCurlRequestFactory.h
+    api/ApiRequest.cpp api/ApiRequest.h api/ApiRequestFactoryFactory.cpp api/ApiRequestFactoryFactory.h api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h)
 source_group("api" FILES ${api})
 
 set(curl
@@ -57,7 +66,7 @@ set(curl
     "curl/CurlResponse.cpp"
     "curl/CurlResponse.h"
     "curl/HttpException.h"
-        curl/CurlInterface.cpp)
+    curl/CurlInterface.cpp)
 source_group("curl" FILES ${curl})
 
 set(data
@@ -88,6 +97,11 @@ set(helper
     "helper/HelperFunctions.h"
 )
 source_group("helper" FILES ${helper})
+
+set(http
+        "http/HttpStatusCode.h"
+        http/HttpStatusCode.h http/HttpMethod.h http/HttpMethod.cpp)
+source_group("http" FILES ${http})
 
 set(log
     "log/LoggerBootstrap.cpp"
@@ -124,6 +138,10 @@ set(srd
 )
 source_group("srd" FILES ${srd})
 
+set(string
+        string/StringTrimFunctions.cpp string/StringTrimFunctions.h)
+source_group("string" FILES ${string})
+
 set(task
         "../utils/task/TaskRunner.cpp"
         "../utils/task/TaskRunner.h"
@@ -158,15 +176,17 @@ set(ALL_FILES
     ${dialog}
     ${duplicate}
     ${helper}
+    ${http}
     ${log}
     ${pch}
     ${setting}
     ${squawk}
     ${srd}
+    ${string}
     ${task}
     ${update}
     ${windows}
-)
+        api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h)
 
 ################################################################################
 # Target
@@ -204,6 +224,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/continuable/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/function2/include"
 )
 
 ################################################################################
