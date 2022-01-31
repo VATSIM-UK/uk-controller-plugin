@@ -1,8 +1,11 @@
 #include "HelperBootstrap.h"
 #include "PersistenceContainer.h"
 #include "api/ApiConfigurationMenuItem.h"
+#include "api/ApiFactory.h"
 #include "api/ApiHelper.h"
+#include "api/CurlApiRequestPerformerFactory.h"
 #include "api/LocateApiSettings.h"
+#include "curl/CurlApi.h"
 #include "euroscope/CallbackFunction.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
@@ -14,11 +17,14 @@ using UKControllerPlugin::Api::ApiConfigurationMenuItem;
 using UKControllerPlugin::Api::ApiHelper;
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Curl::CurlApi;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Setting::SettingRepository;
 using UKControllerPlugin::Setting::SettingRepositoryFactory;
 using UKControllerPlugin::TaskManager::TaskRunner;
+using UKControllerPluginUtils::Api::ApiFactory;
+using UKControllerPluginUtils::Api::CurlApiRequestPerformerFactory;
 
 namespace UKControllerPlugin::Bootstrap {
 
@@ -31,6 +37,9 @@ namespace UKControllerPlugin::Bootstrap {
 
         // Prompt for a settings file, if one isn't there.
         Api::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
+
+        persistence.apiFactory = std::make_unique<ApiFactory>(
+            std::make_unique<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()), true);
 
         ApiRequestBuilder requestBuilder(
             persistence.settingsRepository->GetSetting("api-url", "https://ukcp.vatsim.uk"),
