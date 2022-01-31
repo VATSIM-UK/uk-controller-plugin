@@ -1,8 +1,9 @@
 #include "ApiCurlRequestFactory.h"
 #include "ApiHeaderApplicator.h"
+#include "ApiUrlBuilder.h"
 #include "CurlApiRequestPerformer.h"
 #include "CurlApiRequestPerformerFactory.h"
-#include "ApiUrlBuilder.h"
+#include "curl/CurlInterface.h"
 
 using UKControllerPlugin::Curl::CurlInterface;
 
@@ -12,6 +13,8 @@ namespace UKControllerPluginUtils::Api {
         : curl(std::move(curl))
     {
     }
+
+    CurlApiRequestPerformerFactory::~CurlApiRequestPerformerFactory() = default;
 
     ApiRequestPerformerInterface& CurlApiRequestPerformerFactory::Make(const ApiSettings& apiSettings)
     {

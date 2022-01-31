@@ -11,6 +11,7 @@ namespace UKControllerPluginUtils::Api {
     class AbstractApiRequestPerformerFactory
     {
         public:
+        virtual ~AbstractApiRequestPerformerFactory() = default;
         [[nodiscard]] virtual auto Make(const ApiSettings& apiSettings) -> ApiRequestPerformerInterface& = 0;
     };
 } // namespace UKControllerPluginUtils::Api

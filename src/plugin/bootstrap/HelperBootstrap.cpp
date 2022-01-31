@@ -5,6 +5,7 @@
 #include "api/ApiHelper.h"
 #include "api/CurlApiRequestPerformerFactory.h"
 #include "api/LocateApiSettings.h"
+#include "api/ApiRequestFactory.h"
 #include "curl/CurlApi.h"
 #include "euroscope/CallbackFunction.h"
 #include "plugin/FunctionCallEventHandler.h"
@@ -39,8 +40,9 @@ namespace UKControllerPlugin::Bootstrap {
         Api::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
 
         persistence.apiFactory = std::make_unique<ApiFactory>(
-            std::make_unique<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()), true);
-
+            std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()), true);
+        
+        // TODO: Link old builder to new api creds.
         ApiRequestBuilder requestBuilder(
             persistence.settingsRepository->GetSetting("api-url", "https://ukcp.vatsim.uk"),
             persistence.settingsRepository->GetSetting("api-key"));

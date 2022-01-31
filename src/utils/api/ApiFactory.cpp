@@ -1,15 +1,17 @@
+#include "AbstractApiRequestPerformerFactory.h"
 #include "ApiFactory.h"
 #include "ApiRequestFactory.h"
-#include "AbstractApiRequestPerformerFactory.h"
 #include "ApiSettings.h"
 #include "setting/SettingRepository.h"
 
 namespace UKControllerPluginUtils::Api {
 
-    ApiFactory::ApiFactory(std::unique_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory, bool async)
+    ApiFactory::ApiFactory(std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory, bool async)
         : requestPerformerFactory(std::move(requestPerformerFactory)), async(async)
     {
     }
+
+    ApiFactory::~ApiFactory() = default;
 
     auto ApiFactory::Settings(const UKControllerPlugin::Setting::SettingRepository& settings) -> ApiSettings&
     {
@@ -21,8 +23,7 @@ namespace UKControllerPluginUtils::Api {
         return *apiSettings;
     }
 
-    auto ApiFactory::RequestFactory(
-        UKControllerPlugin::Curl::CurlInterface& curl, const UKControllerPlugin::Setting::SettingRepository& settings)
+    auto ApiFactory::RequestFactory(const UKControllerPlugin::Setting::SettingRepository& settings)
         -> const ApiRequestFactory&
     {
         if (requestFactory == nullptr) {

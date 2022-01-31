@@ -21,20 +21,19 @@ namespace UKControllerPluginUtils::Api {
     class ApiFactory
     {
         public:
-        ApiFactory(std::unique_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory, bool async);
-        [[nodiscard]] auto RequestFactory(
-            UKControllerPlugin::Curl::CurlInterface& curl,
-            const UKControllerPlugin::Setting::SettingRepository& settings) -> const ApiRequestFactory&;
+        ApiFactory(std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory, bool async);
+        ~ApiFactory();
+        [[nodiscard]] auto RequestFactory(const UKControllerPlugin::Setting::SettingRepository& settings)
+            -> const ApiRequestFactory&;
         [[nodiscard]] auto Settings(const UKControllerPlugin::Setting::SettingRepository& settings) -> ApiSettings&;
 
         private:
-        
+        // Starts performing requests - can be subbed out for a mock.
+        std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory;
+
         // Should api requests run async by default. Can be overriden.
         bool async;
-        
-        // Starts performing requests - can be subbed out for a mock.
-        std::unique_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory;
-        
+
         // The API settings
         std::unique_ptr<ApiSettings> apiSettings;
 

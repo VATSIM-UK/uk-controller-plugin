@@ -50,11 +50,16 @@ set(api
     api/ApiRequestPerformerInterface.h
     api/Response.cpp api/Response.h
     api/ApiRequestData.h api/ApiRequestData.cpp
-        api/CurlApiRequestPerformer.cpp api/CurlApiRequestPerformer.h
+    api/CurlApiRequestPerformer.cpp api/CurlApiRequestPerformer.h
     api/ApiUrlBuilder.cpp api/ApiUrlBuilder.h
     api/ApiHeaderApplicator.cpp api/ApiHeaderApplicator.h
     api/ApiCurlRequestFactory.cpp api/ApiCurlRequestFactory.h
-    api/ApiRequest.cpp api/ApiRequest.h api/ApiRequestFactoryFactory.cpp api/ApiRequestFactoryFactory.h api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h api/ApiFactory.cpp api/ApiFactory.h api/AbstractApiRequestPerformerFactory.h api/CurlApiRequestPerformerFactory.cpp api/CurlApiRequestPerformerFactory.h)
+    api/ApiRequest.cpp api/ApiRequest.h
+    api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h
+    api/ApiFactory.cpp api/ApiFactory.h
+    api/AbstractApiRequestPerformerFactory.h api/CurlApiRequestPerformerFactory.cpp
+    api/CurlApiRequestPerformerFactory.h
+    api/ChainableRequest.cpp api/ChainableRequest.h)
 source_group("api" FILES ${api})
 
 set(curl
@@ -99,8 +104,9 @@ set(helper
 source_group("helper" FILES ${helper})
 
 set(http
-        "http/HttpStatusCode.h"
-        http/HttpStatusCode.h http/HttpMethod.h http/HttpMethod.cpp)
+        http/HttpStatusCode.h
+        http/HttpMethod.h
+        http/HttpMethod.cpp)
 source_group("http" FILES ${http})
 
 set(log
