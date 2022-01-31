@@ -8,7 +8,7 @@ namespace UKControllerPluginUtils::Api {
     class ApiRequestFactory
     {
         public:
-        ApiRequestFactory(std::shared_ptr<ApiRequestPerformerInterface> requestPerformer, bool async);
+        ApiRequestFactory(ApiRequestPerformerInterface& requestPerformer, bool async);
         [[nodiscard]] auto Get(std::string uri) const -> ApiRequest;
         [[nodiscard]] auto Post(std::string uri, nlohmann::json body) const -> ApiRequest;
         [[nodiscard]] auto Put(std::string uri, nlohmann::json body) const -> ApiRequest;
@@ -17,7 +17,7 @@ namespace UKControllerPluginUtils::Api {
 
         private:
         // Helps with performing requests
-        std::shared_ptr<ApiRequestPerformerInterface> requestPerformer;
+        ApiRequestPerformerInterface& requestPerformer;
         
         // Do we run requests async
         bool async;

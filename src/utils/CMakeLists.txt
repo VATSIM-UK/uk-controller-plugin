@@ -50,11 +50,11 @@ set(api
     api/ApiRequestPerformerInterface.h
     api/Response.cpp api/Response.h
     api/ApiRequestData.h api/ApiRequestData.cpp
-    api/ApiRequestPerformer.cpp api/ApiRequestPerformer.h
+        api/CurlApiRequestPerformer.cpp api/CurlApiRequestPerformer.h
     api/ApiUrlBuilder.cpp api/ApiUrlBuilder.h
     api/ApiHeaderApplicator.cpp api/ApiHeaderApplicator.h
     api/ApiCurlRequestFactory.cpp api/ApiCurlRequestFactory.h
-    api/ApiRequest.cpp api/ApiRequest.h api/ApiRequestFactoryFactory.cpp api/ApiRequestFactoryFactory.h api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h)
+    api/ApiRequest.cpp api/ApiRequest.h api/ApiRequestFactoryFactory.cpp api/ApiRequestFactoryFactory.h api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h api/ApiFactory.cpp api/ApiFactory.h api/AbstractApiRequestPerformerFactory.h api/CurlApiRequestPerformerFactory.cpp api/CurlApiRequestPerformerFactory.h)
 source_group("api" FILES ${api})
 
 set(curl

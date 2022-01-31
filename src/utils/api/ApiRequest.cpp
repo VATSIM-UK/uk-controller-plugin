@@ -36,4 +36,16 @@ namespace UKControllerPluginUtils::Api {
         continuable = std::move(continuable).then(function);
         return std::move(*this);
     }
+
+    auto ApiRequest::Catch(const std::function<void(std::exception_ptr exception)>& function) -> ApiRequest
+    {
+        continuable = std::move(continuable).fail(function);
+        return std::move(*this);
+    }
+
+    auto ApiRequest::Await() -> ApiRequest
+    {
+        async = false;
+        return std::move(*this);
+    }
 } // namespace UKControllerPluginUtils::Api

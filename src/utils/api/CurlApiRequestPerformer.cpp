@@ -1,6 +1,6 @@
 #include "ApiCurlRequestFactory.h"
 #include "ApiException.h"
-#include "ApiRequestPerformer.h"
+#include "CurlApiRequestPerformer.h"
 #include "curl/CurlInterface.h"
 #include "curl/CurlRequest.h"
 
@@ -12,12 +12,12 @@ using UKControllerPluginUtils::Http::HttpStatusCode;
 
 namespace UKControllerPluginUtils::Api {
 
-    ApiRequestPerformer::ApiRequestPerformer(CurlInterface& curl, const ApiCurlRequestFactory& requestFactory)
+    CurlApiRequestPerformer::CurlApiRequestPerformer(CurlInterface& curl, const ApiCurlRequestFactory& requestFactory)
         : curl(curl), requestFactory(requestFactory)
     {
     }
 
-    auto ApiRequestPerformer::Perform(const ApiRequestData& data) -> Response
+    auto CurlApiRequestPerformer::Perform(const ApiRequestData& data) -> Response
     {
         auto curlResponse = curl.MakeCurlRequest(requestFactory.BuildCurlRequest(data));
         if (!ResponseSuccessful(curlResponse)) {
@@ -27,14 +27,14 @@ namespace UKControllerPluginUtils::Api {
         return {static_cast<HttpStatusCode>(curlResponse.GetStatusCode()), ParseResponseBody(curlResponse)};
     }
 
-    auto ApiRequestPerformer::ResponseSuccessful(const CurlResponse& response) -> bool
+    auto CurlApiRequestPerformer::ResponseSuccessful(const CurlResponse& response) -> bool
     {
         return !response.IsCurlError() &&
                (response.GetStatusCode() == HttpStatusCode::Ok || response.GetStatusCode() == HttpStatusCode::Created ||
                 response.GetStatusCode() == HttpStatusCode::NoContent);
     }
 
-    auto ApiRequestPerformer::ParseResponseBody(const CurlResponse& response) -> nlohmann::json
+    auto CurlApiRequestPerformer::ParseResponseBody(const CurlResponse& response) -> nlohmann::json
     {
         try {
             return nlohmann::json::parse(response.GetResponse());

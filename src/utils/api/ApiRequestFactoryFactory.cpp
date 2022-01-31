@@ -1,6 +1,6 @@
 #include "ApiCurlRequestFactory.h"
 #include "ApiHeaderApplicator.h"
-#include "ApiRequestPerformer.h"
+#include "CurlApiRequestPerformer.h"
 #include "ApiRequestFactory.h"
 #include "ApiRequestFactoryFactory.h"
 #include "ApiSettings.h"
@@ -23,6 +23,13 @@ namespace UKControllerPluginUtils::Api {
         urlBuilder = std::make_unique<ApiUrlBuilder>(*apiSettings);
         headerApplicator = std::make_unique<ApiHeaderApplicator>(*apiSettings);
         curlFactory = std::make_unique<ApiCurlRequestFactory>(*urlBuilder, *headerApplicator);
-        return std::make_unique<ApiRequestFactory>(std::make_shared<ApiRequestPerformer>(curl, *curlFactory), async);
+        return std::make_unique<ApiRequestFactory>(std::make_shared<CurlApiRequestPerformer>(curl, *curlFactory), async);
+        
+        // TODO:
+        // Create Api class that creates all these things.
+        // Methods to return settings and also the request factory.
+        
+        // We probahly need a way to make sure no ApiRequests are running before we allow destruction.
+        // Callback function that becomes a "finally" step to indicate that it's done?
     }
 } // namespace UKControllerPluginUtils::Api

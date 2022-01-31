@@ -12,6 +12,8 @@ namespace UKControllerPluginUtils::Api {
         ApiRequest(ApiRequest&& request) noexcept;
         ~ApiRequest();
         auto Then(const std::function<Response(Response)>& function) -> ApiRequest;
+        auto Catch(const std::function<void(std::exception_ptr exception)>& function) -> ApiRequest;
+        auto Await() -> ApiRequest;
 
         private:
         // Allows continuation

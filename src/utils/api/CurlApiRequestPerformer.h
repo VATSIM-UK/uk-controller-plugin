@@ -12,10 +12,10 @@ namespace UKControllerPluginUtils::Api {
     /**
      * Performs API requests.
      */
-    class ApiRequestPerformer : public ApiRequestPerformerInterface
+    class CurlApiRequestPerformer : public ApiRequestPerformerInterface
     {
         public:
-        ApiRequestPerformer(UKControllerPlugin::Curl::CurlInterface& curl, const ApiCurlRequestFactory& requestFactory);
+        CurlApiRequestPerformer(UKControllerPlugin::Curl::CurlInterface& curl, const ApiCurlRequestFactory& requestFactory);
         auto Perform(const ApiRequestData& data) -> Response override;
 
         private:
