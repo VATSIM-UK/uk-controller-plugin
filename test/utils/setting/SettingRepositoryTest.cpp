@@ -1,11 +1,11 @@
 #include "setting/SettingRepository.h"
-#include "setting/SettingValue.h"
+#include "setting/Setting.h"
 
 using ::testing::Return;
 using ::testing::StrictMock;
 using ::testing::Throw;
 using UKControllerPlugin::Setting::SettingRepository;
-using UKControllerPlugin::Setting::SettingValue;
+using UKControllerPlugin::Setting::Setting;
 using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginUtilsTest::Setting {

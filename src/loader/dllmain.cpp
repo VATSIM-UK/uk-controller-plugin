@@ -4,6 +4,7 @@
 #include "windows/WinApiInterface.h"
 #include "windows/WinApiBootstrap.h"
 #include "api/ApiBootstrap.h"
+#include "api/ApiFactory.h"
 #include "setting/SettingRepositoryFactory.h"
 #include "curl/CurlApi.h"
 #include "data/PluginDataLocations.h"
@@ -38,8 +39,9 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
         UKControllerPlugin::Curl::CurlApi curl;
         std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
             UKControllerPlugin::Setting::SettingRepositoryFactory::Create(*windows);
+        UKControllerPluginUtils::Api::ApiFactory factory(*settings, nullptr, false);
         std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api =
-            UKControllerPlugin::Api::Bootstrap(*settings, curl);
+            UKControllerPluginUtils::Api::Bootstrap(factory, curl);
 
         LogInfo("Loader build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
 

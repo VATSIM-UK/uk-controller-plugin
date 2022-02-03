@@ -59,7 +59,7 @@ set(api
     api/ApiFactory.cpp api/ApiFactory.h
     api/AbstractApiRequestPerformerFactory.h api/CurlApiRequestPerformerFactory.cpp
     api/CurlApiRequestPerformerFactory.h
-    api/ChainableRequest.cpp api/ChainableRequest.h)
+    api/ChainableRequest.cpp api/ChainableRequest.h api/ApiAuthorisationRequestFactory.cpp api/ApiAuthorisationRequestFactory.h api/ApiSettingsProviderInterface.h api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h setting/SettingProviderInterface.h)
 source_group("api" FILES ${api})
 
 set(curl
@@ -128,8 +128,8 @@ set(setting
     "setting/SettingRepository.h"
     "setting/SettingRepositoryFactory.cpp"
     "setting/SettingRepositoryFactory.h"
-    "setting/SettingValue.h"
-)
+    "setting/Setting.h"
+        setting/SettingRepositoryInterface.h setting/CompareSettings.cpp setting/CompareSettings.h setting/JsonFileSettingProvider.cpp setting/JsonFileSettingProvider.h)
 source_group("setting" FILES ${setting})
 
 set(squawk

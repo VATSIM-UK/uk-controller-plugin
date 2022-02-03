@@ -1,5 +1,6 @@
 #include "HelperBootstrap.h"
 #include "PersistenceContainer.h"
+#include "api/ApiBootstrap.h"
 #include "api/ApiConfigurationMenuItem.h"
 #include "api/ApiFactory.h"
 #include "api/ApiHelper.h"
@@ -40,14 +41,11 @@ namespace UKControllerPlugin::Bootstrap {
         Api::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
 
         persistence.apiFactory = std::make_unique<ApiFactory>(
-            std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()), true);
-        
-        // TODO: Link old builder to new api creds.
-        ApiRequestBuilder requestBuilder(
-            persistence.settingsRepository->GetSetting("api-url", "https://ukcp.vatsim.uk"),
-            persistence.settingsRepository->GetSetting("api-key"));
-        persistence.api = std::make_unique<ApiHelper>(*persistence.curl, requestBuilder);
+            *persistence.settingsRepository,
+            std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()),
+            true);
 
+        persistence.api = UKControllerPluginUtils::Api::Bootstrap(*persistence.apiFactory, *persistence.curl);
         persistence.taskRunner = std::make_shared<TaskRunner>(3);
         SetTaskRunner(persistence.taskRunner);
     }

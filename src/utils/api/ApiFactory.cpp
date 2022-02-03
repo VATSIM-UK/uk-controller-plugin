@@ -1,36 +1,58 @@
 #include "AbstractApiRequestPerformerFactory.h"
+#include "ApiAuthorisationRequestFactory.h"
 #include "ApiFactory.h"
+#include "ApiRequestBuilder.h"
 #include "ApiRequestFactory.h"
 #include "ApiSettings.h"
-#include "setting/SettingRepository.h"
+#include "ApiSettingsProviderInterface.h"
+
+using UKControllerPlugin::Api::ApiRequestBuilder;
 
 namespace UKControllerPluginUtils::Api {
 
-    ApiFactory::ApiFactory(std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory, bool async)
-        : requestPerformerFactory(std::move(requestPerformerFactory)), async(async)
+    ApiFactory::ApiFactory(
+        std::shared_ptr<ApiSettingsProviderInterface> settingsProvider,
+        std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory,
+        bool async)
+        : settingsProvider(settingsProvider), requestPerformerFactory(std::move(requestPerformerFactory)), async(async)
     {
     }
 
     ApiFactory::~ApiFactory() = default;
 
-    auto ApiFactory::Settings(const UKControllerPlugin::Setting::SettingRepository& settings) -> ApiSettings&
+    auto ApiFactory::Settings() -> ApiSettings&
     {
         if (apiSettings == nullptr) {
-            apiSettings = std::make_unique<ApiSettings>(
-                settings.GetSetting("api-url", "https://ukcp.vatsim.uk"), settings.GetSetting("api-key"));
+            apiSettings = settingsProvider->LoadSettings();
         }
 
         return *apiSettings;
     }
 
-    auto ApiFactory::RequestFactory(const UKControllerPlugin::Setting::SettingRepository& settings)
-        -> const ApiRequestFactory&
+    auto ApiFactory::RequestFactory() -> const ApiRequestFactory&
     {
         if (requestFactory == nullptr) {
-            requestFactory =
-                std::make_unique<ApiRequestFactory>(requestPerformerFactory->Make(Settings(settings)), async);
+            requestFactory = std::make_unique<ApiRequestFactory>(requestPerformerFactory->Make(Settings()), async);
         }
 
         return *requestFactory;
+    }
+
+    auto ApiFactory::LegacyRequestBuilder() -> const ApiRequestBuilder&
+    {
+        if (legacyRequestBuilder == nullptr) {
+            legacyRequestBuilder = std::make_unique<ApiRequestBuilder>(Settings());
+        }
+
+        return *legacyRequestBuilder;
+    }
+
+    auto ApiFactory::AuthorisationRequestFactory() -> const ApiAuthorisationRequestFactory&
+    {
+        if (authorisationRequestFactory == nullptr) {
+            authorisationRequestFactory = std::make_unique<ApiAuthorisationRequestFactory>(RequestFactory());
+        }
+
+        return *authorisationRequestFactory;
     }
 } // namespace UKControllerPluginUtils::Api

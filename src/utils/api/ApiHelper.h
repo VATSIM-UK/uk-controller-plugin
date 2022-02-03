@@ -74,8 +74,6 @@ namespace UKControllerPlugin::Api {
             -> nlohmann::json override;
         void CancelDepartureReleaseRequest(int releaseId) const override;
         void ReadNotification(int id) const override;
-        void SetApiKey(std::string key) override;
-        void SetApiDomain(std::string domain) override;
         [[nodiscard]] auto CreatePrenoteMessage(
             const std::string& callsign,
             const std::string& departureAirfield,

@@ -1,11 +1,12 @@
 #include "api/ApiRequestBuilder.h"
+#include "api/ApiSettings.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Srd::SrdSearchParameters;
+using UKControllerPluginUtils::Api::ApiSettings;
 
 namespace UKControllerPlugin::Api {
-    ApiRequestBuilder::ApiRequestBuilder(std::string apiDomain, std::string apiKey)
-        : apiDomain(std::move(apiDomain)), apiKey(std::move(apiKey))
+    ApiRequestBuilder::ApiRequestBuilder(const ApiSettings& settings) : settings(settings)
     {
     }
 
@@ -14,7 +15,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::AddCommonHeaders(CurlRequest request) const -> CurlRequest
     {
-        request.AddHeader("Authorization", "Bearer " + this->apiKey);
+        request.AddHeader("Authorization", "Bearer " + this->settings.Key());
         request.AddHeader("Accept", "application/json");
         request.AddHeader("Content-Type", "application/json");
         return request;
@@ -25,7 +26,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildAuthCheckRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(apiDomain + "/authorise", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/authorise"), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -33,7 +34,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildDependencyListRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(apiDomain + "/dependency", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/dependency"), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -62,7 +63,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildMinStackLevelRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(apiDomain + "/msl", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/msl"), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -70,7 +71,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildRegionalPressureRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(apiDomain + "/regional-pressure", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/regional-pressure"), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -78,7 +79,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildSrdQueryRequest(const SrdSearchParameters& parameters) const -> CurlRequest
     {
-        std::string uri = apiDomain + "/srd/route/search?";
+        std::string uri = BuildUrl("/srd/route/search?");
         uri += "origin=" + parameters.origin;
         uri += "&destination=" + parameters.destination;
 
@@ -94,7 +95,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildGetStandAssignmentsRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(apiDomain + "/stand/assignment", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(BuildUrl("/stand/assignment"), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -103,7 +104,7 @@ namespace UKControllerPlugin::Api {
     auto ApiRequestBuilder::BuildAssignStandToAircraftRequest(const std::string& callsign, int standId) const
         -> CurlRequest
     {
-        CurlRequest request(apiDomain + "/stand/assignment", CurlRequest::METHOD_PUT);
+        CurlRequest request(BuildUrl("/stand/assignment"), CurlRequest::METHOD_PUT);
         nlohmann::json body;
         body["callsign"] = callsign;
         body["stand_id"] = standId;
@@ -119,7 +120,7 @@ namespace UKControllerPlugin::Api {
         -> CurlRequest
     {
         return this->AddCommonHeaders(
-            CurlRequest(apiDomain + "/stand/assignment/" + callsign, CurlRequest::METHOD_DELETE));
+            CurlRequest(BuildUrl("/stand/assignment/" + callsign), CurlRequest::METHOD_DELETE));
     }
 
     /*
@@ -127,8 +128,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildSquawkAssignmentCheckRequest(const std::string& callsign) const -> CurlRequest
     {
-        return this->AddCommonHeaders(
-            CurlRequest(apiDomain + "/squawk-assignment/" + callsign, CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(BuildUrl("/squawk-assignment/" + callsign), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -137,7 +137,7 @@ namespace UKControllerPlugin::Api {
     auto ApiRequestBuilder::BuildSquawkAssignmentDeletionRequest(const std::string& callsign) const -> CurlRequest
     {
         return this->AddCommonHeaders(
-            CurlRequest(apiDomain + "/squawk-assignment/" + callsign, CurlRequest::METHOD_DELETE));
+            CurlRequest(BuildUrl("/squawk-assignment/" + callsign), CurlRequest::METHOD_DELETE));
     }
 
     /*
@@ -146,7 +146,7 @@ namespace UKControllerPlugin::Api {
     auto ApiRequestBuilder::BuildLocalSquawkAssignmentRequest(
         const std::string& callsign, const std::string& unit, const std::string& flightRules) const -> CurlRequest
     {
-        CurlRequest request(apiDomain + "/squawk-assignment/" + callsign, CurlRequest::METHOD_PUT);
+        CurlRequest request(BuildUrl("/squawk-assignment/" + callsign), CurlRequest::METHOD_PUT);
 
         nlohmann::json body;
         body["type"] = this->localSquawkAssignmentType;
@@ -164,7 +164,7 @@ namespace UKControllerPlugin::Api {
     auto ApiRequestBuilder::BuildGeneralSquawkAssignmentRequest(
         const std::string& callsign, const std::string& origin, const std::string& destination) const -> CurlRequest
     {
-        CurlRequest request(apiDomain + "/squawk-assignment/" + callsign, CurlRequest::METHOD_PUT);
+        CurlRequest request(BuildUrl("/squawk-assignment/" + callsign), CurlRequest::METHOD_PUT);
 
         nlohmann::json body;
         body["type"] = this->generalSquawkAssignmentType;
@@ -181,7 +181,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildHoldDependencyRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(BuildUrl("/hold"), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -189,7 +189,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildAllAssignedHoldsRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(apiDomain + "/hold/assigned", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(BuildUrl("/hold/assigned"), CurlRequest::METHOD_GET));
     }
 
     /*
@@ -197,7 +197,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildSetAssignedHoldRequest(std::string callsign, std::string navaid) const -> CurlRequest
     {
-        CurlRequest request(this->apiDomain + "/hold/assigned", CurlRequest::METHOD_PUT);
+        CurlRequest request(this->BuildUrl("/hold/assigned"), CurlRequest::METHOD_PUT);
         nlohmann::json data{{"callsign", callsign}, {"navaid", navaid}};
         request.SetBody(data.dump());
 
@@ -209,8 +209,7 @@ namespace UKControllerPlugin::Api {
     */
     auto ApiRequestBuilder::BuildDeleteAssignedHoldRequest(const std::string& callsign) const -> CurlRequest
     {
-        return this->AddCommonHeaders(
-            CurlRequest(apiDomain + "/hold/assigned/" + callsign, CurlRequest::METHOD_DELETE));
+        return this->AddCommonHeaders(CurlRequest(BuildUrl("/hold/assigned/" + callsign), CurlRequest::METHOD_DELETE));
     }
 
     auto ApiRequestBuilder::BuildEnrouteReleaseRequestWithReleasePoint(
@@ -220,7 +219,7 @@ namespace UKControllerPlugin::Api {
         int releaseType,
         std::string releasePoint) const -> CurlRequest
     {
-        CurlRequest request(this->apiDomain + "/release/enroute", CurlRequest::METHOD_POST);
+        CurlRequest request(this->BuildUrl("/release/enroute"), CurlRequest::METHOD_POST);
         nlohmann::json data{
             {"callsign", aircraftCallsign},
             {"type", releaseType},
@@ -235,36 +234,35 @@ namespace UKControllerPlugin::Api {
 
     auto ApiRequestBuilder::BuildGetAllNotificationsRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/notifications", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/notifications"), CurlRequest::METHOD_GET));
     }
 
     auto ApiRequestBuilder::BuildGetUnreadNotificationsRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/notifications/unread", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/notifications/unread"), CurlRequest::METHOD_GET));
     }
 
     auto ApiRequestBuilder::BuildReadNotificationRequest(int id) const -> CurlRequest
     {
         return this->AddCommonHeaders(
-            CurlRequest(this->apiDomain + "/notifications/read/" + std::to_string(id), CurlRequest::METHOD_PUT));
+            CurlRequest(this->BuildUrl("/notifications/read/" + std::to_string(id)), CurlRequest::METHOD_PUT));
     }
 
     auto ApiRequestBuilder::BuildLatestGithubVersionRequest(const std::string& releaseChannel) const -> CurlRequest
     {
         return this->AddCommonHeaders(
-            CurlRequest(this->apiDomain + "/version/latest?channel=" + releaseChannel, CurlRequest::METHOD_GET));
+            CurlRequest(this->BuildUrl("/version/latest?channel=" + releaseChannel), CurlRequest::METHOD_GET));
     }
 
     auto ApiRequestBuilder::BuildPluginEventSyncRequest() const -> CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/plugin-events/sync", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/plugin-events/sync"), CurlRequest::METHOD_GET));
     }
 
     auto ApiRequestBuilder::BuildGetLatestPluginEventsRequest(int lastEventId) const -> CurlRequest
     {
         return this->AddCommonHeaders(CurlRequest(
-            this->apiDomain + "/plugin-events/recent?previous=" + std::to_string(lastEventId),
-            CurlRequest::METHOD_GET));
+            this->BuildUrl("/plugin-events/recent?previous=" + std::to_string(lastEventId)), CurlRequest::METHOD_GET));
     }
 
     auto ApiRequestBuilder::BuildAcknowledgeDepartureReleaseRequest(int releaseId, int controllerPositionId) const
@@ -274,7 +272,7 @@ namespace UKControllerPlugin::Api {
         body["controller_position_id"] = controllerPositionId;
 
         CurlRequest request(
-            this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/acknowledge",
+            this->BuildUrl("/departure/release/request/" + std::to_string(releaseId) + "/acknowledge"),
             CurlRequest::METHOD_PATCH);
         request.SetBody(body.dump());
         return this->AddCommonHeaders(request);
@@ -288,7 +286,7 @@ namespace UKControllerPlugin::Api {
         body["remarks"] = remarks;
 
         CurlRequest request(
-            this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/reject",
+            this->BuildUrl("/departure/release/request/" + std::to_string(releaseId) + "/reject"),
             CurlRequest::METHOD_PATCH);
         request.SetBody(body.dump());
         return this->AddCommonHeaders(request);
@@ -315,7 +313,7 @@ namespace UKControllerPlugin::Api {
         }
 
         CurlRequest request(
-            this->apiDomain + "/departure/release/request/" + std::to_string(releaseId) + "/approve",
+            this->BuildUrl("/departure/release/request/" + std::to_string(releaseId) + "/approve"),
             CurlRequest::METHOD_PATCH);
         request.SetBody(body.dump());
         return this->AddCommonHeaders(request);
@@ -325,7 +323,7 @@ namespace UKControllerPlugin::Api {
         const std::string& callsign, int requestingControllerId, int targetController, int expiresInSeconds) const
         -> CurlRequest
     {
-        CurlRequest request(this->apiDomain + "/departure/release/request", CurlRequest::METHOD_POST);
+        CurlRequest request(this->BuildUrl("/departure/release/request"), CurlRequest::METHOD_POST);
 
         nlohmann::json body;
         body["callsign"] = callsign;
@@ -340,7 +338,7 @@ namespace UKControllerPlugin::Api {
     auto ApiRequestBuilder::BuildCancelReleaseRequest(int releaseId) const -> CurlRequest
     {
         return this->AddCommonHeaders(CurlRequest(
-            this->apiDomain + "/departure/release/request/" + std::to_string(releaseId), CurlRequest::METHOD_DELETE));
+            this->BuildUrl("/departure/release/request/" + std::to_string(releaseId)), CurlRequest::METHOD_DELETE));
     }
 
     auto ApiRequestBuilder::BuildEnrouteReleaseRequest(
@@ -349,7 +347,7 @@ namespace UKControllerPlugin::Api {
         std::string targetController,
         int releaseType) const -> CurlRequest
     {
-        CurlRequest request(this->apiDomain + "/release/enroute", CurlRequest::METHOD_POST);
+        CurlRequest request(this->BuildUrl("/release/enroute"), CurlRequest::METHOD_POST);
         nlohmann::json data{
             {"callsign", aircraftCallsign},
             {"type", releaseType},
@@ -361,38 +359,6 @@ namespace UKControllerPlugin::Api {
         return this->AddCommonHeaders(request);
     }
 
-    /*
-        Returns the API Domain that the builder is using
-    */
-    auto ApiRequestBuilder::GetApiDomain() const -> std::string
-    {
-        return this->apiDomain;
-    }
-
-    /*
-        Returns the API key that is used to authorize requests
-    */
-    auto ApiRequestBuilder::GetApiKey() const -> std::string
-    {
-        return this->apiKey;
-    }
-
-    /*
-        Set the API key
-    */
-    void ApiRequestBuilder::SetApiDomain(std::string domain)
-    {
-        this->apiDomain = std::move(domain);
-    }
-
-    /*
-        Set the API domain
-    */
-    void ApiRequestBuilder::SetApiKey(std::string key)
-    {
-        this->apiKey = std::move(key);
-    }
-
     auto ApiRequestBuilder::BuildCreatePrenoteMessageRequest(
         const std::string& callsign,
         const std::string& departureAirfield,
@@ -402,7 +368,7 @@ namespace UKControllerPlugin::Api {
         int targetController,
         int requestExpiry) const -> UKControllerPlugin::Curl::CurlRequest
     {
-        CurlRequest request(this->apiDomain + "/prenotes/messages", CurlRequest::METHOD_POST);
+        CurlRequest request(this->BuildUrl("/prenotes/messages"), CurlRequest::METHOD_POST);
         nlohmann::json data{
             {"callsign", callsign},
             {"departure_airfield", departureAirfield},
@@ -424,7 +390,7 @@ namespace UKControllerPlugin::Api {
         -> UKControllerPlugin::Curl::CurlRequest
     {
         CurlRequest request(
-            this->apiDomain + "/prenotes/messages/" + std::to_string(messageId) + "/acknowledge",
+            this->BuildUrl("/prenotes/messages/" + std::to_string(messageId) + "/acknowledge"),
             CurlRequest::METHOD_PATCH);
         nlohmann::json data{
             {"controller_position_id", controllerId},
@@ -437,13 +403,13 @@ namespace UKControllerPlugin::Api {
         -> UKControllerPlugin::Curl::CurlRequest
     {
         return this->AddCommonHeaders(
-            {this->apiDomain + "/prenotes/messages/" + std::to_string(messageId), CurlRequest::METHOD_DELETE});
+            {this->BuildUrl("/prenotes/messages/" + std::to_string(messageId)), CurlRequest::METHOD_DELETE});
     }
 
     auto ApiRequestBuilder::BuildMissedApproachMessage(const std::string& callsign) const
         -> UKControllerPlugin::Curl::CurlRequest
     {
-        CurlRequest request(this->apiDomain + "/missed-approaches", CurlRequest::METHOD_POST);
+        CurlRequest request(this->BuildUrl("/missed-approaches"), CurlRequest::METHOD_POST);
         nlohmann::json data{
             {"callsign", callsign},
         };
@@ -455,7 +421,7 @@ namespace UKControllerPlugin::Api {
     auto ApiRequestBuilder::BuildMissedApproachAcknowledgeMessage(int id, const std::string& remarks) const
         -> UKControllerPlugin::Curl::CurlRequest
     {
-        CurlRequest request(this->apiDomain + "/missed-approaches/" + std::to_string(id), CurlRequest::METHOD_PATCH);
+        CurlRequest request(this->BuildUrl("/missed-approaches/" + std::to_string(id)), CurlRequest::METHOD_PATCH);
         nlohmann::json data{
             {"remarks", remarks},
         };
@@ -466,6 +432,11 @@ namespace UKControllerPlugin::Api {
 
     auto ApiRequestBuilder::BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest
     {
-        return this->AddCommonHeaders(CurlRequest(this->apiDomain + "/metar", CurlRequest::METHOD_GET));
+        return this->AddCommonHeaders(CurlRequest(this->BuildUrl("/metar"), CurlRequest::METHOD_GET));
+    }
+
+    auto ApiRequestBuilder::BuildUrl(const std::string uri) const -> std::string
+    {
+        return this->settings.Url() + uri;
     }
 } // namespace UKControllerPlugin::Api

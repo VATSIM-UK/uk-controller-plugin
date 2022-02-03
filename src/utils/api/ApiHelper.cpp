@@ -326,23 +326,7 @@ namespace UKControllerPlugin::Api {
     {
         static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildReadNotificationRequest(id)));
     }
-
-    /*
-        Set api key on the request builder
-    */
-    void ApiHelper::SetApiKey(std::string key)
-    {
-        this->requestBuilder.SetApiKey(key);
-    }
-
-    /*
-        Set api domain on the request builder
-    */
-    void ApiHelper::SetApiDomain(std::string domain)
-    {
-        this->requestBuilder.SetApiDomain(domain);
-    }
-
+    
     auto ApiHelper::CreatePrenoteMessage(
         const std::string& callsign,
         const std::string& departureAirfield,

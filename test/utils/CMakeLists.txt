@@ -134,6 +134,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/continuable/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/function2/include"
 )
 
 ################################################################################
