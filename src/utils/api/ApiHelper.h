@@ -29,8 +29,6 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto FetchRemoteFile(std::string uri) const -> std::string override;
         [[nodiscard]] auto GetAssignedSquawk(std::string callsign) const
             -> UKControllerPlugin::Squawk::ApiSquawkAllocation override;
-        [[nodiscard]] auto GetApiDomain() const -> std::string override;
-        [[nodiscard]] auto GetApiKey() const -> std::string override;
         [[nodiscard]] auto GetDependencyList() const -> nlohmann::json override;
         [[nodiscard]] auto GetHoldDependency() const -> nlohmann::json override;
         [[nodiscard]] auto GetAssignedHolds() const -> nlohmann::json override;

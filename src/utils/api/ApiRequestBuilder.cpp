@@ -439,4 +439,9 @@ namespace UKControllerPlugin::Api {
     {
         return this->settings.Url() + uri;
     }
+
+    auto ApiRequestBuilder::GetApiDomain() const -> const std::string&
+    {
+        return this->settings.Url();
+    }
 } // namespace UKControllerPlugin::Api

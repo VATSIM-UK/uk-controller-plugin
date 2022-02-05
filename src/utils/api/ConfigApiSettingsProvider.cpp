@@ -6,23 +6,28 @@ using UKControllerPlugin::Setting::SettingRepositoryInterface;
 
 namespace UKControllerPluginUtils::Api {
 
-    ConfigApiSettingsProvider::ConfigApiSettingsProvider(SettingRepositoryInterface& configProvider)
-        : configProvider(configProvider)
+    ConfigApiSettingsProvider::ConfigApiSettingsProvider(SettingRepositoryInterface& settingRepository)
+        : settingRepository(settingRepository)
     {
     }
 
-    void ConfigApiSettingsProvider::SaveSettings(const ApiSettings& settings){
-        configProvider.Se
+    auto ConfigApiSettingsProvider::Get() -> ApiSettings&
+    {
+        if (!this->settings) {
+            this->settings = std::make_unique<ApiSettings>(
+                settingRepository.GetSetting(API_URL_SETTING, DEFAULT_API_URL),
+                settingRepository.GetSetting(API_KEY_SETTING));
+        }
+
+        return *this->settings;
     }
 
-    std::unique_ptr<ApiSettings> ConfigApiSettingsProvider::LoadSettings()
+    void ConfigApiSettingsProvider::Reload()
     {
-        return std::make_unique<ApiSettings>(
-            configProvider.GetSetting("api-url", "https://ukcp.vatsim.uk"), configProvider.GetSetting("api-key"));
-    }
+        this->settingRepository.ReloadSetting(API_KEY_SETTING);
+        this->settingRepository.ReloadSetting(API_URL_SETTING);
 
-    std::unique_ptr<ApiSettings> ConfigApiSettingsProvider::NewSettings()
-    {
-        return nullptr;
+        this->settings->Url(settingRepository.GetSetting(API_URL_SETTING, DEFAULT_API_URL));
+        this->settings->Key(settingRepository.GetSetting(API_KEY_SETTING));
     }
 } // namespace UKControllerPluginUtils::Api

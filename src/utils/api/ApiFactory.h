@@ -30,12 +30,11 @@ namespace UKControllerPluginUtils::Api {
         ~ApiFactory();
         [[nodiscard]] auto LegacyRequestBuilder() -> const UKControllerPlugin::Api::ApiRequestBuilder&;
         [[nodiscard]] auto RequestFactory() -> const ApiRequestFactory&;
-        [[nodiscard]] auto Settings() -> ApiSettings&;
+        [[nodiscard]] auto SettingsProvider() -> const std::shared_ptr<ApiSettingsProviderInterface>;
         [[nodiscard]] auto AuthorisationRequestFactory() -> const ApiAuthorisationRequestFactory&;
 
         private:
-        
-        //Loads api settings - can be subbed out for a mock.
+        // Loads api settings - can be subbed out for a mock.
         std::shared_ptr<ApiSettingsProviderInterface> settingsProvider;
 
         // Starts performing requests - can be subbed out for a mock.
@@ -44,15 +43,12 @@ namespace UKControllerPluginUtils::Api {
         // Should api requests run async by default. Can be overriden.
         bool async;
 
-        // The API settings
-        std::unique_ptr<ApiSettings> apiSettings;
-
         // Builds API requests
         std::unique_ptr<ApiRequestFactory> requestFactory;
 
         // Builds API requests, the legacy way
         std::unique_ptr<UKControllerPlugin::Api::ApiRequestBuilder> legacyRequestBuilder;
-        
+
         // Provides a way to check API authorisation
         std::unique_ptr<ApiAuthorisationRequestFactory> authorisationRequestFactory;
     };

@@ -20,19 +20,15 @@ namespace UKControllerPluginUtils::Api {
 
     ApiFactory::~ApiFactory() = default;
 
-    auto ApiFactory::Settings() -> ApiSettings&
+    auto ApiFactory::SettingsProvider() -> const std::shared_ptr<ApiSettingsProviderInterface>
     {
-        if (apiSettings == nullptr) {
-            apiSettings = settingsProvider->LoadSettings();
-        }
-
-        return *apiSettings;
+        return settingsProvider;
     }
 
     auto ApiFactory::RequestFactory() -> const ApiRequestFactory&
     {
         if (requestFactory == nullptr) {
-            requestFactory = std::make_unique<ApiRequestFactory>(requestPerformerFactory->Make(Settings()), async);
+            requestFactory = std::make_unique<ApiRequestFactory>(requestPerformerFactory->Make(SettingsProvider()->Get()), async);
         }
 
         return *requestFactory;
@@ -41,7 +37,7 @@ namespace UKControllerPluginUtils::Api {
     auto ApiFactory::LegacyRequestBuilder() -> const ApiRequestBuilder&
     {
         if (legacyRequestBuilder == nullptr) {
-            legacyRequestBuilder = std::make_unique<ApiRequestBuilder>(Settings());
+            legacyRequestBuilder = std::make_unique<ApiRequestBuilder>(SettingsProvider()->Get());
         }
 
         return *legacyRequestBuilder;

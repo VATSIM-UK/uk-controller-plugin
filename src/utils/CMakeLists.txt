@@ -128,8 +128,8 @@ set(setting
     "setting/SettingRepository.h"
     "setting/SettingRepositoryFactory.cpp"
     "setting/SettingRepositoryFactory.h"
-    "setting/Setting.h"
-        setting/SettingRepositoryInterface.h setting/CompareSettings.cpp setting/CompareSettings.h setting/JsonFileSettingProvider.cpp setting/JsonFileSettingProvider.h)
+    setting/SettingRepositoryInterface.h
+    setting/JsonFileSettingProvider.cpp setting/JsonFileSettingProvider.h)
 source_group("setting" FILES ${setting})
 
 set(squawk

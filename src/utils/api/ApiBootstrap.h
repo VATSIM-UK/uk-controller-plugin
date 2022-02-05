@@ -11,11 +11,19 @@ namespace UKControllerPlugin {
     namespace Curl {
         class CurlInterface;
     } // namespace Curl
+    namespace Windows {
+        class WinApiInterface;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPluginUtils::Api {
     class ApiFactory;
 
-    std::unique_ptr<UKControllerPlugin::Api::ApiInterface>
-    Bootstrap(ApiFactory& factory, UKControllerPlugin::Curl::CurlInterface& curl);
+    [[nodiscard]] auto Bootstrap(
+        UKControllerPlugin::Setting::SettingRepository& settingRepository,
+        UKControllerPlugin::Windows::WinApiInterface& windows,
+        UKControllerPlugin::Curl::CurlInterface& curl) -> std::unique_ptr<ApiFactory>;
+
+    [[nodiscard]] auto BootstrapLegacy(ApiFactory& factory, UKControllerPlugin::Curl::CurlInterface& curl)
+        -> std::unique_ptr<UKControllerPlugin::Api::ApiInterface>;
 } // namespace UKControllerPluginUtils::Api

@@ -97,6 +97,7 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto BuildMissedApproachAcknowledgeMessage(int id, const std::string& remarks) const
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto GetApiDomain() const -> const std::string&;
 
         private:
         [[nodiscard]] auto AddCommonHeaders(UKControllerPlugin::Curl::CurlRequest request) const

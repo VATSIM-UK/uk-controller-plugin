@@ -56,4 +56,9 @@ namespace UKControllerPlugin::Setting {
 
         return data.get<std::map<std::string, std::string>>();
     }
+
+    void JsonFileSettingProvider::Reload()
+    {
+        this->loadedSettings = this->LoadFromFile();
+    }
 } // namespace UKControllerPlugin::Setting

@@ -28,8 +28,6 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] virtual auto FetchRemoteFile(std::string uri) const -> std::string = 0;
         [[nodiscard]] virtual auto GetAssignedSquawk(std::string callsign) const
             -> UKControllerPlugin::Squawk::ApiSquawkAllocation = 0;
-        [[nodiscard]] virtual auto GetApiDomain() const -> std::string = 0;
-        [[nodiscard]] virtual auto GetApiKey() const -> std::string = 0;
         [[nodiscard]] virtual auto GetHoldDependency() const -> nlohmann::json = 0;
         [[nodiscard]] virtual auto GetAssignedHolds() const -> nlohmann::json = 0;
         virtual void AssignAircraftToHold(std::string callsign, std::string navaid) const = 0;

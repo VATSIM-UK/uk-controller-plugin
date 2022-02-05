@@ -15,7 +15,7 @@ namespace UKControllerPlugin::Setting {
         }
     }
 
-    auto SettingRepository::GetSetting(std::string setting, std::string defaultValue) const -> std::string
+    auto SettingRepository::GetSetting(const std::string& setting, const std::string& defaultValue) const -> std::string
     {
         if (!this->HasSetting(setting)) {
             return defaultValue;
@@ -25,17 +25,26 @@ namespace UKControllerPlugin::Setting {
         return value.empty() ? defaultValue : value;
     }
 
-    auto SettingRepository::HasSetting(std::string setting) const -> bool
+    auto SettingRepository::HasSetting(const std::string& setting) const -> bool
     {
         return this->settings.count(setting) > 0;
     }
 
-    void SettingRepository::UpdateSetting(std::string setting, std::string value)
+    void SettingRepository::UpdateSetting(const std::string& setting, const std::string& value)
     {
         if (!this->HasSetting(setting)) {
             return;
         }
 
         this->settings.at(setting)->Save(setting, value);
+    }
+
+    void SettingRepository::ReloadSetting(const std::string& setting)
+    {
+        if (!this->HasSetting(setting)) {
+            return;
+        }
+
+        this->settings.at(setting)->Reload();
     }
 } // namespace UKControllerPlugin::Setting

@@ -1,5 +1,4 @@
 #pragma once
-#include "CompareSettings.h"
 #include "SettingProviderInterface.h"
 
 namespace UKControllerPlugin::Windows {
@@ -18,6 +17,7 @@ namespace UKControllerPlugin::Setting {
         auto Get(const std::string& key) -> std::string override;
         void Save(const std::string& key, const std::string& value) override;
         auto Provides() -> const std::set<std::string>& override;
+        void Reload() override;
 
         private:
         [[nodiscard]] auto LoadFromFile() const -> std::map<std::string, std::string>;
