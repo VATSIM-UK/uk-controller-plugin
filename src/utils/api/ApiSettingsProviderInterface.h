@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ApiBootstrap.h"
 
 namespace UKControllerPluginUtils::Api {

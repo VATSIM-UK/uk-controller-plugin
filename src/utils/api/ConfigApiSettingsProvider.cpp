@@ -1,13 +1,16 @@
 #include "ApiSettings.h"
 #include "ConfigApiSettingsProvider.h"
 #include "setting/SettingRepositoryInterface.h"
+#include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::Setting::SettingRepositoryInterface;
+using UKControllerPlugin::Windows::WinApiInterface;
 
 namespace UKControllerPluginUtils::Api {
 
-    ConfigApiSettingsProvider::ConfigApiSettingsProvider(SettingRepositoryInterface& settingRepository)
-        : settingRepository(settingRepository)
+    ConfigApiSettingsProvider::ConfigApiSettingsProvider(
+        SettingRepositoryInterface& settingRepository, WinApiInterface& windows)
+        : settingRepository(settingRepository), windows(windows)
     {
     }
 
@@ -24,6 +27,21 @@ namespace UKControllerPluginUtils::Api {
 
     void ConfigApiSettingsProvider::Reload()
     {
+        // Select the file to get settings from
+        COMDLG_FILTERSPEC fileTypes[] = {
+            {L"JSON", L"*.json"},
+        };
+
+        std::wstring filePath = windows.FileOpenDialog(L"Select API Settings File", 1, fileTypes);
+        if (filePath == L"") {
+            LogInfo("User did not select a valid key file to replacte");
+            return;
+        }
+
+        // Write file
+        windows.WriteToFile(L"settings/api-settings.json", windows.ReadFromFile(filePath, false), true, false);
+
+        // Trigger a reload
         this->settingRepository.ReloadSetting(API_KEY_SETTING);
         this->settingRepository.ReloadSetting(API_URL_SETTING);
 

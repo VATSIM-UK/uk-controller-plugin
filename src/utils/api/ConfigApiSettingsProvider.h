@@ -1,8 +1,13 @@
 #pragma once
 #include "ApiSettingsProviderInterface.h"
 
-namespace UKControllerPlugin::Setting {
-    class SettingRepositoryInterface;
+namespace UKControllerPlugin {
+    namespace Setting {
+        class SettingRepositoryInterface;
+    } //
+    namespace Windows {
+        class WinApiInterface;
+    }
 }
 
 namespace UKControllerPluginUtils::Api {
@@ -10,13 +15,19 @@ namespace UKControllerPluginUtils::Api {
     class ConfigApiSettingsProvider : public ApiSettingsProviderInterface
     {
         public:
-        ConfigApiSettingsProvider(UKControllerPlugin::Setting::SettingRepositoryInterface& settingRepository);
+        ConfigApiSettingsProvider(
+            UKControllerPlugin::Setting::SettingRepositoryInterface& settingRepository,
+            UKControllerPlugin::Windows::WinApiInterface& windows
+        );
         [[nodiscard]] auto Get() -> ApiSettings& override;
         void Reload() override;
 
         private:
         // Provides us config
         UKControllerPlugin::Setting::SettingRepositoryInterface& settingRepository;
+        
+        // For reloading
+        UKControllerPlugin::Windows::WinApiInterface& windows;
         
         // The owned setting object
         std::unique_ptr<ApiSettings> settings;

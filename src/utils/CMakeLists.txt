@@ -25,8 +25,6 @@ ENDIF()
 # Source groups
 ################################################################################
 set(api
-    "api/ApiAuthChecker.cpp"
-    "api/ApiAuthChecker.h"
     "api/ApiBootstrap.cpp"
     "api/ApiBootstrap.h"
     "api/ApiException.h"
@@ -43,8 +41,6 @@ set(api
     "api/ApiResponseFactory.h"
     "api/ApiResponseValidator.cpp"
     "api/ApiResponseValidator.h"
-    "api/LocateApiSettings.cpp"
-    "api/LocateApiSettings.h"
     api/ApiRequestFactory.cpp api/ApiRequestFactory.h
     api/ApiSettings.cpp api/ApiSettings.h api/ApiRequestFactoryInterface.h
     api/ApiRequestPerformerInterface.h
@@ -59,7 +55,10 @@ set(api
     api/ApiFactory.cpp api/ApiFactory.h
     api/AbstractApiRequestPerformerFactory.h api/CurlApiRequestPerformerFactory.cpp
     api/CurlApiRequestPerformerFactory.h
-    api/ChainableRequest.cpp api/ChainableRequest.h api/ApiAuthorisationRequestFactory.cpp api/ApiAuthorisationRequestFactory.h api/ApiSettingsProviderInterface.h api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h setting/SettingProviderInterface.h)
+    api/ChainableRequest.cpp api/ChainableRequest.h
+    api/ApiAuthorisationRequestFactory.cpp api/ApiAuthorisationRequestFactory.h
+    api/ApiSettingsProviderInterface.h
+    api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h api/ApiRequestFacade.cpp api/ApiRequestFacade.h)
 source_group("api" FILES ${api})
 
 set(curl
@@ -129,6 +128,7 @@ set(setting
     "setting/SettingRepositoryFactory.cpp"
     "setting/SettingRepositoryFactory.h"
     setting/SettingRepositoryInterface.h
+    setting/SettingProviderInterface.h
     setting/JsonFileSettingProvider.cpp setting/JsonFileSettingProvider.h)
 source_group("setting" FILES ${setting})
 
