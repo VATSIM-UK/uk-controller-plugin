@@ -43,9 +43,9 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldDisplayTest()
-                : addAircraftList(std::make_shared<NiceMock<Aircraft::MockCallsignSelectionList>>()),
-                  dialogManager(mockDialogProvider), userSetting(mockUserSettingProvider),
-                  navaid({2, "TIMBA", EuroScopePlugIn::CPosition()}), holdManager(mockApi, mockTaskRunner),
+                : addAircraftList(std::make_shared<NiceMock<List::MockPopupList>>()), dialogManager(mockDialogProvider),
+                  userSetting(mockUserSettingProvider), navaid({2, "TIMBA", EuroScopePlugIn::CPosition()}),
+                  holdManager(mockApi, mockTaskRunner),
                   display(mockPlugin, holdManager, navaid, publishedHolds, dialogManager, addAircraftList)
             {
                 this->dialogManager.AddDialog(this->holdDialogData);
@@ -64,7 +64,7 @@ namespace UKControllerPluginTest {
             EuroScopePlugIn::CPosition mayPosition;
             PublishedHoldCollection publishedHolds;
             DialogData holdDialogData = {IDD_HOLD_PARAMS, "Test"};
-            std::shared_ptr<NiceMock<Aircraft::MockCallsignSelectionList>> addAircraftList;
+            std::shared_ptr<NiceMock<List::MockPopupList>> addAircraftList;
             NiceMock<MockTaskRunnerInterface> mockTaskRunner;
             NiceMock<MockApiInterface> mockApi;
             NiceMock<MockDialogProvider> mockDialogProvider;
@@ -1011,14 +1011,14 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldDisplayTest, ButtonRightClickedDoesNothingIfNotAddButton)
         {
-            EXPECT_CALL(*addAircraftList, TriggerList).Times(0);
+            EXPECT_CALL(*addAircraftList, Trigger).Times(0);
 
             display.ButtonRightClicked("notadd");
         }
 
         TEST_F(HoldDisplayTest, AddButtonRightClickTriggersTheList)
         {
-            EXPECT_CALL(*addAircraftList, TriggerList(PointEq(POINT{265, 118}))).Times(1);
+            EXPECT_CALL(*addAircraftList, Trigger(PointEq(POINT{265, 118}))).Times(1);
 
             display.ButtonRightClicked("add");
         }

@@ -1,5 +1,5 @@
 #pragma once
-#include "CallsignSelectionListInterface.h"
+#include "list/ListItemProviderInterface.h"
 
 namespace UKControllerPlugin::Euroscope {
     class EuroscopePluginLoopbackInterface;
@@ -11,25 +11,18 @@ namespace UKControllerPlugin::Aircraft {
     /**
      * Implements a callsign selection list.
      */
-    class CallsignSelectionList : public CallsignSelectionListInterface
+    class CallsignSelectionList : public List::ListItemProviderInterface
     {
         public:
-        CallsignSelectionList(
-            std::shared_ptr<CallsignSelectionProviderInterface> callsignProvider,
-            Euroscope::EuroscopePluginLoopbackInterface& plugin,
-            int callbackFunctionId);
+        CallsignSelectionList(std::shared_ptr<CallsignSelectionProviderInterface> callsignProvider);
         ~CallsignSelectionList() = default;
-        void TriggerList(const POINT& location) override;
-        void CallsignSelected(const std::string& callsign);
+        auto ListColumns() -> int override;
+        auto ListName() -> std::string override;
+        auto ListItems() -> std::list<std::shared_ptr<List::ListItem>> override;
+        void ItemSelected(const std::string& item) override;
 
         private:
         // Provides the callsigns
         std::shared_ptr<CallsignSelectionProviderInterface> callsignProvider;
-
-        // The plugin for triggering lists
-        Euroscope::EuroscopePluginLoopbackInterface& plugin;
-
-        // The callback function
-        int callbackFunctionId;
     };
 } // namespace UKControllerPlugin::Aircraft

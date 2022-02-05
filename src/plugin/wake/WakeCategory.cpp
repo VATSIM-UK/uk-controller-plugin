@@ -1,3 +1,4 @@
+#include "DepartureWakeInterval.h"
 #include "WakeCategory.h"
 
 namespace UKControllerPlugin::Wake {
@@ -36,5 +37,19 @@ namespace UKControllerPlugin::Wake {
     auto WakeCategory::SubsequentDepartureIntervals() const -> const std::list<std::shared_ptr<DepartureWakeInterval>>&
     {
         return subsequentDepartureIntervals;
+    }
+
+    auto WakeCategory::DepartureInterval(const WakeCategory& nextAircraftCategory, bool intermediate) const
+        -> std::shared_ptr<DepartureWakeInterval>
+    {
+        auto matchingInterval = std::find_if(
+            subsequentDepartureIntervals.cbegin(),
+            subsequentDepartureIntervals.cend(),
+            [&nextAircraftCategory, &intermediate](const std::shared_ptr<DepartureWakeInterval>& interval) -> bool {
+                return interval->intervalIsIntermediate == intermediate &&
+                       interval->subsequentWakeCategoryId == nextAircraftCategory.Id();
+            });
+
+        return matchingInterval == subsequentDepartureIntervals.cend() ? nullptr : *matchingInterval;
     }
 } // namespace UKControllerPlugin::Wake

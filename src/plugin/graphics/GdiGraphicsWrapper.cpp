@@ -1,27 +1,12 @@
+#include "FontManager.h"
 #include "GdiGraphicsWrapper.h"
+#include "StringFormatManager.h"
+
+using UKControllerPlugin::Graphics::FontManager;
+using UKControllerPlugin::Graphics::StringFormatManager;
 
 namespace UKControllerPlugin {
     namespace Windows {
-
-        GdiGraphicsWrapper::GdiGraphicsWrapper(void)
-        {
-            this->stringFormat =
-                std::make_unique<Gdiplus::StringFormat>(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip);
-            this->stringFormat->SetAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
-            this->stringFormat->SetLineAlignment(Gdiplus::StringAlignment::StringAlignmentCenter);
-            this->font =
-                CreateFont(13, '\0', '\0', '\0', 400, '\0', '\0', '\0', '\x1', '\0', '\0', '\0', '\0', L"EuroScope");
-        }
-
-        GdiGraphicsWrapper::GdiGraphicsWrapper(std::unique_ptr<Gdiplus::Graphics> graphics)
-            : graphics(std::move(graphics))
-        {
-        }
-
-        GdiGraphicsWrapper::~GdiGraphicsWrapper(void)
-        {
-            DeleteObject(this->font);
-        }
 
         /*
             Draws the outline of a rectangle to the screen.
@@ -101,7 +86,12 @@ namespace UKControllerPlugin {
         void GdiGraphicsWrapper::DrawString(std::wstring text, const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
         {
             api->DrawString(
-                text.c_str(), text.size(), this->euroscopeFont.get(), area, this->stringFormat.get(), &brush);
+                text.c_str(),
+                text.size(),
+                &FontManager::Instance().GetDefault(),
+                area,
+                &StringFormatManager::Instance().GetCentreAlign(),
+                &brush);
         }
 
         /*
@@ -109,14 +99,12 @@ namespace UKControllerPlugin {
         */
         void GdiGraphicsWrapper::DrawString(std::wstring text, const Gdiplus::Rect& area, const Gdiplus::Brush& brush)
         {
-            Gdiplus::RectF areaFloat = {
-                static_cast<Gdiplus::REAL>(area.X),
-                static_cast<Gdiplus::REAL>(area.Y),
-                static_cast<Gdiplus::REAL>(area.Width),
-                static_cast<Gdiplus::REAL>(area.Height)};
-
-            api->DrawString(
-                text.c_str(), text.size(), this->euroscopeFont.get(), areaFloat, this->stringFormat.get(), &brush);
+            this->DrawString(
+                text,
+                area,
+                brush,
+                StringFormatManager::Instance().GetCentreAlign(),
+                FontManager::Instance().GetDefault());
         }
 
         /*
@@ -131,7 +119,12 @@ namespace UKControllerPlugin {
                 static_cast<Gdiplus::REAL>(area.bottom - area.top)};
 
             api->DrawString(
-                text.c_str(), text.size(), this->euroscopeFont.get(), areaFloat, this->stringFormat.get(), &brush);
+                text.c_str(),
+                text.size(),
+                &FontManager::Instance().GetDefault(),
+                areaFloat,
+                &StringFormatManager::Instance().GetCentreAlign(),
+                &brush);
         }
 
         /*
@@ -172,8 +165,7 @@ namespace UKControllerPlugin {
         */
         void GdiGraphicsWrapper::SetDeviceHandle(HDC& handle)
         {
-            this->api.reset(new Gdiplus::Graphics(handle));
-            this->euroscopeFont.reset(new Gdiplus::Font(handle, font));
+            this->api.reset(Gdiplus::Graphics::FromHDC(handle));
         }
 
         void GdiGraphicsWrapper::Clipped(Gdiplus::Region& clipRegion, std::function<void()> drawFunction)
@@ -240,6 +232,22 @@ namespace UKControllerPlugin {
                 Gdiplus::PointF(area.X + area.Width, area.Y + (area.Height / 2)),
                 Gdiplus::PointF(area.X + (area.Width / 2), area.Y)};
             api->FillPolygon(&brush, points, 4);
+        }
+
+        void GdiGraphicsWrapper::DrawString(
+            const std::wstring& text,
+            const Gdiplus::Rect& area,
+            const Gdiplus::Brush& brush,
+            const Gdiplus::StringFormat& format,
+            const Gdiplus::Font& font)
+        {
+            Gdiplus::RectF areaFloat = {
+                static_cast<Gdiplus::REAL>(area.X),
+                static_cast<Gdiplus::REAL>(area.Y),
+                static_cast<Gdiplus::REAL>(area.Width),
+                static_cast<Gdiplus::REAL>(area.Height)};
+
+            api->DrawString(text.c_str(), text.size(), &font, areaFloat, &format, &brush);
         }
     } // namespace Windows
 } // namespace UKControllerPlugin
