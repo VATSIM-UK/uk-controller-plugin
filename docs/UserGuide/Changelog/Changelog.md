@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [4.1.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0...4.1.0) (2022-02-05)
+
+
+### Features
+
+* **wake:** Departure wake interval calculator ([#417](https://github.com/VATSIM-UK/uk-controller-plugin/issues/417)) ([92c6737](https://github.com/VATSIM-UK/uk-controller-plugin/commit/92c6737a17fbafed3dd2de07479889dd58c9fc37))
+
 # [4.0.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.14.0...4.0.0) (2022-01-23)
 
 
