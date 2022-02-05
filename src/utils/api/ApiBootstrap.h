@@ -21,8 +21,7 @@ namespace UKControllerPluginUtils::Api {
 
     [[nodiscard]] auto Bootstrap(
         UKControllerPlugin::Setting::SettingRepository& settingRepository,
-        UKControllerPlugin::Windows::WinApiInterface& windows,
-        UKControllerPlugin::Curl::CurlInterface& curl) -> std::shared_ptr<ApiFactory>;
+        UKControllerPlugin::Windows::WinApiInterface& windows) -> std::shared_ptr<ApiFactory>;
 
     [[nodiscard]] auto BootstrapLegacy(ApiFactory& factory, UKControllerPlugin::Curl::CurlInterface& curl)
         -> std::unique_ptr<UKControllerPlugin::Api::ApiInterface>;

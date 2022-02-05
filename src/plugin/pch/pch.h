@@ -20,6 +20,7 @@
 #include "spdlog/include/spdlog/sinks/null_sink.h"
 #include "json/json.hpp"
 
+#include "api/ApiRequestFacade.h"
 #include "euroscope/EuroScopePlugIn.h"
 #include "log/LoggerFunctions.h"
 #include "task/RunAsyncTask.h"

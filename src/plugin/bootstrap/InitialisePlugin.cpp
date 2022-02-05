@@ -1,7 +1,6 @@
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
-#include "api/ApiAuthChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
@@ -56,7 +55,6 @@
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
 
-using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
 using UKControllerPlugin::Bootstrap::ExternalsBootstrap;
@@ -163,8 +161,9 @@ namespace UKControllerPlugin {
         Datablock::BootstrapPlugin(*this->container);
 
         // If we're not allowed to use the API because we've been banned or something... It's no go.
-        ApiAuthChecker::IsAuthorised(
-            *this->container->api, *this->container->windows, *this->container->settingsRepository);
+        // TODO: Re-add this
+/*        ApiAuthChecker::IsAuthorised(
+            *this->container->api, *this->container->windows, *this->container->settingsRepository);*/
 
         // Dependency loading can happen regardless of plugin version or API status.
         Dependency::UpdateDependencies(*this->container->api, *this->container->windows);

@@ -17,6 +17,6 @@ namespace UKControllerPluginUtils::Api {
         /**
          * Triggers a reload of the settings from source.
          */
-        virtual void Reload() = 0;
+        [[nodiscard]] virtual auto Reload() -> bool = 0;
     };
 } // namespace UKControllerPluginUtils::Api

@@ -4,8 +4,6 @@
 #include "api/ApiConfigurationMenuItem.h"
 #include "api/ApiFactory.h"
 #include "api/ApiHelper.h"
-#include "api/CurlApiRequestPerformerFactory.h"
-#include "api/LocateApiSettings.h"
 #include "api/ApiRequestFactory.h"
 #include "curl/CurlApi.h"
 #include "euroscope/CallbackFunction.h"
@@ -26,7 +24,6 @@ using UKControllerPlugin::Setting::SettingRepository;
 using UKControllerPlugin::Setting::SettingRepositoryFactory;
 using UKControllerPlugin::TaskManager::TaskRunner;
 using UKControllerPluginUtils::Api::ApiFactory;
-using UKControllerPluginUtils::Api::CurlApiRequestPerformerFactory;
 
 namespace UKControllerPlugin::Bootstrap {
 
@@ -35,17 +32,12 @@ namespace UKControllerPlugin::Bootstrap {
     */
     void HelperBootstrap::Bootstrap(PersistenceContainer& persistence)
     {
-        persistence.settingsRepository = SettingRepositoryFactory::Create(*persistence.windows);
+        persistence.settingsRepository = SettingRepositoryFactory::Create();
 
-        // Prompt for a settings file, if one isn't there.
-        Api::LocateApiSettings(*persistence.windows, *persistence.settingsRepository);
+        persistence.apiFactory =
+            UKControllerPluginUtils::Api::Bootstrap(*persistence.settingsRepository, *persistence.windows);
 
-        persistence.apiFactory = std::make_unique<ApiFactory>(
-            *persistence.settingsRepository,
-            std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()),
-            true);
-
-        persistence.api = UKControllerPluginUtils::Api::Bootstrap(*persistence.apiFactory, *persistence.curl);
+        persistence.api = UKControllerPluginUtils::Api::BootstrapLegacy(*persistence.apiFactory, *persistence.curl);
         persistence.taskRunner = std::make_shared<TaskRunner>(3);
         SetTaskRunner(persistence.taskRunner);
     }
@@ -57,8 +49,8 @@ namespace UKControllerPlugin::Bootstrap {
         const PersistenceContainer& persistence, ConfigurableDisplayCollection& configurableDisplays)
     {
         unsigned int callbackId = persistence.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-        std::shared_ptr<ApiConfigurationMenuItem> menuItem =
-            std::make_shared<ApiConfigurationMenuItem>(*persistence.windows, callbackId);
+        std::shared_ptr<ApiConfigurationMenuItem> menuItem = std::make_shared<ApiConfigurationMenuItem>(
+            *persistence.apiFactory->SettingsProvider(), *persistence.windows, callbackId);
 
         CallbackFunction menuItemSelectedCallback(
             callbackId, // NOLINT

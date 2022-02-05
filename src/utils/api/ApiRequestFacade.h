@@ -5,8 +5,5 @@ namespace UKControllerPluginUtils::Api {
     class ApiRequestFactory;
 } // namespace UKControllerPluginUtils::Api
 
-namespace UKControllerPlugin::Api {
-
-    [[nodiscard]] auto ApiRequest() -> const UKControllerPluginUtils::Api::ApiRequestFactory&;
-    void SetApiRequestFactory(std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> factory);
-} // namespace UKControllerPlugin::Api
+[[nodiscard]] auto ApiRequest() -> const UKControllerPluginUtils::Api::ApiRequestFactory&;
+void SetApiRequestFactory(std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> factory);

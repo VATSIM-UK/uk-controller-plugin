@@ -22,6 +22,22 @@ namespace UKControllerPluginUtils::Api {
         continuable = std::move(continuable).then(function);
     }
 
+    void ChainableRequest::Then(const std::function<void(Response)>& function)
+    {
+        continuable = std::move(continuable).then([function](Response response) {
+            function(response);
+            return response;
+        });
+    }
+
+    void ChainableRequest::Then(const std::function<void(void)>& function)
+    {
+        continuable = std::move(continuable).then([function](Response response) {
+            function();
+            return response;
+        });
+    }
+
     void ChainableRequest::Catch(const std::function<void(std::exception_ptr exception)>& function)
     {
         continuable = std::move(continuable).fail(function);

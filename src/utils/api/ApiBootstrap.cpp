@@ -10,7 +10,6 @@
 
 using UKControllerPlugin::Api::ApiHelper;
 using UKControllerPlugin::Api::ApiInterface;
-using UKControllerPlugin::Api::SetApiRequestFactory;
 using UKControllerPlugin::Curl::CurlApi;
 using UKControllerPlugin::Curl::CurlInterface;
 using UKControllerPlugin::Setting::JsonFileSettingProvider;

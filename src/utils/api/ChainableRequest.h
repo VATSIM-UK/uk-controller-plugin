@@ -13,6 +13,8 @@ namespace UKControllerPluginUtils::Api {
         public:
         ChainableRequest(const ApiRequestData& data, ApiRequestPerformerInterface& performer);
         void Then(const std::function<Response(Response)>& function);
+        void Then(const std::function<void(Response)>& function);
+        void Then(const std::function<void(void)>& function);
         void Catch(const std::function<void(std::exception_ptr exception)>& function);
         void Await();
 

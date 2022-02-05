@@ -12,6 +12,8 @@ namespace UKControllerPluginUtils::Api {
         ApiRequest(const ApiRequestData& data, ApiRequestPerformerInterface& performer, bool async = true);
         ~ApiRequest();
         auto Then(const std::function<Response(Response)>& function) -> ApiRequest;
+        auto Then(const std::function<void(Response)>& function) -> ApiRequest;
+        auto Then(const std::function<void(void)>& function) -> ApiRequest;
         auto Catch(const std::function<void(std::exception_ptr exception)>& function) -> ApiRequest;
         void Await();
 

@@ -1,18 +1,38 @@
 #include "ApiConfigurationMenuItem.h"
-#include "api/LocateApiSettings.h"
+#include "api/ApiRequestFactory.h"
+#include "api/Response.h"
+#include "api/ApiSettingsProviderInterface.h"
 
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPluginUtils::Api::ApiSettingsProviderInterface;
+using UKControllerPluginUtils::Api::Response;
 
 namespace UKControllerPlugin::Api {
-    ApiConfigurationMenuItem::ApiConfigurationMenuItem(WinApiInterface& winApi, int menuCallbackId)
-        : menuCallbackId(menuCallbackId), winApi(winApi)
+    ApiConfigurationMenuItem::ApiConfigurationMenuItem(
+        UKControllerPluginUtils::Api::ApiSettingsProviderInterface& provider,
+        Windows::WinApiInterface& windows,
+        int menuCallbackId)
+        : provider(provider), windows(windows), menuCallbackId(menuCallbackId)
     {
     }
 
     void ApiConfigurationMenuItem::Configure(int functionId, std::string subject, RECT area)
     {
-        UserRequestedKeyUpdate(this->winApi);
+        if (!provider.Reload()) {
+            return;
+        };
+
+        ApiRequest()
+            .Get("authorise")
+            .Then([]() { LogInfo("Api configuration updated successfully"); })
+            .Catch([this](std::exception_ptr exception) {
+                windows.OpenMessageBox(
+                    L"Unable to successfully authenticate with the API. If this problem persists, please contact the "
+                    "Web Services Department",
+                    L"UKCP API Config Invalid",
+                    MB_OK | MB_ICONERROR);
+            });
     }
 
     /*

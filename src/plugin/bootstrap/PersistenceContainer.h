@@ -173,7 +173,7 @@ namespace UKControllerPlugin::Bootstrap {
 
         // The helpers and collections
         std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
-        std::unique_ptr<UKControllerPluginUtils::Api::ApiFactory> apiFactory;
+        std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> apiFactory;
         std::shared_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
         std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
         std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;

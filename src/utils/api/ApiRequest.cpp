@@ -25,6 +25,18 @@ namespace UKControllerPluginUtils::Api {
         return std::move(*this);
     }
 
+    auto ApiRequest::Then(const std::function<void(Response)>& function) -> ApiRequest
+    {
+        chain->Then(function);
+        return std::move(*this);
+    }
+
+    auto ApiRequest::Then(const std::function<void(void)>& function) -> ApiRequest
+    {
+        chain->Then(function);
+        return std::move(*this);
+    }
+
     auto ApiRequest::Catch(const std::function<void(std::exception_ptr exception)>& function) -> ApiRequest
     {
         chain->Catch(function);

@@ -19,8 +19,9 @@ namespace UKControllerPluginUtils::Api {
             UKControllerPlugin::Setting::SettingRepositoryInterface& settingRepository,
             UKControllerPlugin::Windows::WinApiInterface& windows
         );
+        ~ConfigApiSettingsProvider();
         [[nodiscard]] auto Get() -> ApiSettings& override;
-        void Reload() override;
+        [[nodiscard]] auto Reload() -> bool override;
 
         private:
         // Provides us config

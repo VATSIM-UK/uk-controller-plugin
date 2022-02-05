@@ -14,6 +14,8 @@ namespace UKControllerPluginUtils::Api {
     {
     }
 
+    ConfigApiSettingsProvider::~ConfigApiSettingsProvider() = default;
+
     auto ConfigApiSettingsProvider::Get() -> ApiSettings&
     {
         if (!this->settings) {
@@ -25,7 +27,7 @@ namespace UKControllerPluginUtils::Api {
         return *this->settings;
     }
 
-    void ConfigApiSettingsProvider::Reload()
+    auto ConfigApiSettingsProvider::Reload() -> bool
     {
         // Select the file to get settings from
         COMDLG_FILTERSPEC fileTypes[] = {
@@ -35,7 +37,7 @@ namespace UKControllerPluginUtils::Api {
         std::wstring filePath = windows.FileOpenDialog(L"Select API Settings File", 1, fileTypes);
         if (filePath == L"") {
             LogInfo("User did not select a valid key file to replacte");
-            return;
+            return false;
         }
 
         // Write file
@@ -47,5 +49,6 @@ namespace UKControllerPluginUtils::Api {
 
         this->settings->Url(settingRepository.GetSetting(API_URL_SETTING, DEFAULT_API_URL));
         this->settings->Key(settingRepository.GetSetting(API_KEY_SETTING));
+        return true;
     }
 } // namespace UKControllerPluginUtils::Api
