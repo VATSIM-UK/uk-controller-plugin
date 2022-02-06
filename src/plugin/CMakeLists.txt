@@ -37,7 +37,7 @@ source_group("src\\airfield" FILES ${src__airfield})
 set(src__api
     "api/ApiConfigurationMenuItem.cpp"
     "api/ApiConfigurationMenuItem.h"
-)
+        api/FirstTimeApiConfigLoader.cpp api/FirstTimeApiConfigLoader.h api/BootstrapApi.cpp api/BootstrapApi.h)
 source_group("src\\api" FILES ${src__api})
 
 set(src__bootstrap

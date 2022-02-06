@@ -1,6 +1,7 @@
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
+#include "api/BootstrapApi.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
@@ -153,8 +154,9 @@ namespace UKControllerPlugin {
         // User messager
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
 
-        // API + Websocket
+        // Settings, api, websocket
         HelperBootstrap::Bootstrap(*this->container);
+        Api::BootstrapApi(*this->container);
         Push::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         // Datetime
@@ -162,8 +164,8 @@ namespace UKControllerPlugin {
 
         // If we're not allowed to use the API because we've been banned or something... It's no go.
         // TODO: Re-add this
-/*        ApiAuthChecker::IsAuthorised(
-            *this->container->api, *this->container->windows, *this->container->settingsRepository);*/
+        /*        ApiAuthChecker::IsAuthorised(
+         *this->container->api, *this->container->windows, *this->container->settingsRepository);*/
 
         // Dependency loading can happen regardless of plugin version or API status.
         Dependency::UpdateDependencies(*this->container->api, *this->container->windows);
@@ -213,7 +215,8 @@ namespace UKControllerPlugin {
             *this->container->dialogManager,
             *this->container->pluginUserSettingHandler,
             *this->container->userSettingHandlers,
-            *this->container->settingsRepository);
+            *this->container->settingsRepository,
+            *this->container->windows);
 
         // Bootstrap the modules
         Metar::BootstrapPlugin(*this->container);

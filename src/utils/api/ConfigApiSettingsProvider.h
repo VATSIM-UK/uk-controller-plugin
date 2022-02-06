@@ -21,6 +21,7 @@ namespace UKControllerPluginUtils::Api {
         );
         ~ConfigApiSettingsProvider();
         [[nodiscard]] auto Get() -> ApiSettings& override;
+        auto Has() -> bool override;
         [[nodiscard]] auto Reload() -> bool override;
 
         private:

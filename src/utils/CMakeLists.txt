@@ -58,7 +58,7 @@ set(api
     api/ChainableRequest.cpp api/ChainableRequest.h
     api/ApiAuthorisationRequestFactory.cpp api/ApiAuthorisationRequestFactory.h
     api/ApiSettingsProviderInterface.h
-    api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h api/ApiRequestFacade.cpp api/ApiRequestFacade.h)
+    api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h api/ApiRequestFacade.cpp api/ApiRequestFacade.h api/ApiRequestException.cpp api/ApiRequestException.h)
 source_group("api" FILES ${api})
 
 set(curl

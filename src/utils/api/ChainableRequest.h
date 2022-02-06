@@ -3,6 +3,7 @@
 
 namespace UKControllerPluginUtils::Api {
     class ApiRequestData;
+    class ApiRequestException;
     class ApiRequestPerformerInterface;
 
     /**
@@ -15,7 +16,7 @@ namespace UKControllerPluginUtils::Api {
         void Then(const std::function<Response(Response)>& function);
         void Then(const std::function<void(Response)>& function);
         void Then(const std::function<void(void)>& function);
-        void Catch(const std::function<void(std::exception_ptr exception)>& function);
+        void Catch(const std::function<void(const ApiRequestException&)>& function);
         void Await();
 
         private:

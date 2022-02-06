@@ -15,12 +15,14 @@ namespace UKControllerPluginUtils::Api {
     class CurlApiRequestPerformer : public ApiRequestPerformerInterface
     {
         public:
-        CurlApiRequestPerformer(UKControllerPlugin::Curl::CurlInterface& curl, const ApiCurlRequestFactory& requestFactory);
+        CurlApiRequestPerformer(
+            UKControllerPlugin::Curl::CurlInterface& curl, const ApiCurlRequestFactory& requestFactory);
         auto Perform(const ApiRequestData& data) -> Response override;
 
         private:
         [[nodiscard]] static auto ResponseSuccessful(const UKControllerPlugin::Curl::CurlResponse& response) -> bool;
-        [[nodiscard]] static auto ParseResponseBody(const UKControllerPlugin::Curl::CurlResponse& response)
+        [[nodiscard]] static auto
+        ParseResponseBody(const ApiRequestData& data, const UKControllerPlugin::Curl::CurlResponse& response)
             -> nlohmann::json;
 
         // For making the cURL requests

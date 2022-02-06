@@ -4,6 +4,7 @@
 
 namespace UKControllerPluginUtils::Api {
     class ApiRequestPerformerInterface;
+    class ApiRequestException;
     class ChainableRequest;
 
     class ApiRequest
@@ -14,7 +15,7 @@ namespace UKControllerPluginUtils::Api {
         auto Then(const std::function<Response(Response)>& function) -> ApiRequest;
         auto Then(const std::function<void(Response)>& function) -> ApiRequest;
         auto Then(const std::function<void(void)>& function) -> ApiRequest;
-        auto Catch(const std::function<void(std::exception_ptr exception)>& function) -> ApiRequest;
+        auto Catch(const std::function<void(const ApiRequestException&)>& function) -> ApiRequest;
         void Await();
 
         private:

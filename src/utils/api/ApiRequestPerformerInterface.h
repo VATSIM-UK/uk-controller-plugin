@@ -13,6 +13,11 @@ namespace UKControllerPluginUtils::Api {
     {
         public:
         virtual ~ApiRequestPerformerInterface() = default;
+        /**
+         * Perform the request.
+         *
+         * @throws ApiRequestException on failure
+         */
         [[nodiscard]] virtual auto Perform(const ApiRequestData& data) -> Response = 0;
     };
 } // namespace UKControllerPluginUtils::Api

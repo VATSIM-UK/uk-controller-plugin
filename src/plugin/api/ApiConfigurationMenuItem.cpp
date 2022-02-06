@@ -1,10 +1,12 @@
 #include "ApiConfigurationMenuItem.h"
+#include "api/ApiRequestException.h"
 #include "api/ApiRequestFactory.h"
 #include "api/Response.h"
 #include "api/ApiSettingsProviderInterface.h"
 
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPluginUtils::Api::ApiRequestException;
 using UKControllerPluginUtils::Api::ApiSettingsProviderInterface;
 using UKControllerPluginUtils::Api::Response;
 
@@ -26,12 +28,19 @@ namespace UKControllerPlugin::Api {
         ApiRequest()
             .Get("authorise")
             .Then([]() { LogInfo("Api configuration updated successfully"); })
-            .Catch([this](std::exception_ptr exception) {
-                windows.OpenMessageBox(
-                    L"Unable to successfully authenticate with the API. If this problem persists, please contact the "
-                    "Web Services Department",
-                    L"UKCP API Config Invalid",
-                    MB_OK | MB_ICONERROR);
+            .Catch([this](const ApiRequestException& exception) {
+                if (UKControllerPluginUtils::Http::IsAuthenticationError(exception.StatusCode())) {
+                    windows.OpenMessageBox(
+                        L"API authentication failed. Please re-download your credentails from the VATSIM UK website "
+                        "and try again. If this problem persists, please contact the Web Services Department.",
+                        L"UKCP API Config Invalid",
+                        MB_OK | MB_ICONERROR);
+                } else if (UKControllerPluginUtils::Http::IsServerError(exception.StatusCode()))
+                    windows.OpenMessageBox(
+                        L"Unable to perform API config check as the API responded with an error. Please try again "
+                        L"later. Some functionality such as stand and squawk allocations may not work as expected.",
+                        L"UKCP API Config Invalid",
+                        MB_OK | MB_ICONERROR);
             });
     }
 

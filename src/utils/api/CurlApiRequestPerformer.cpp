@@ -1,10 +1,10 @@
 #include "ApiCurlRequestFactory.h"
-#include "ApiException.h"
+#include "ApiRequestData.h"
+#include "ApiRequestException.h"
 #include "CurlApiRequestPerformer.h"
 #include "curl/CurlInterface.h"
 #include "curl/CurlRequest.h"
 
-using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Curl::CurlInterface;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
@@ -21,10 +21,10 @@ namespace UKControllerPluginUtils::Api {
     {
         auto curlResponse = curl.MakeCurlRequest(requestFactory.BuildCurlRequest(data));
         if (!ResponseSuccessful(curlResponse)) {
-            throw ApiException("Api returned status code: " + std::to_string(curlResponse.GetStatusCode()));
+            throw ApiRequestException(data.Uri(), static_cast<HttpStatusCode>(curlResponse.GetStatusCode()), false);
         }
 
-        return {static_cast<HttpStatusCode>(curlResponse.GetStatusCode()), ParseResponseBody(curlResponse)};
+        return {static_cast<HttpStatusCode>(curlResponse.GetStatusCode()), ParseResponseBody(data, curlResponse)};
     }
 
     auto CurlApiRequestPerformer::ResponseSuccessful(const CurlResponse& response) -> bool
@@ -34,12 +34,13 @@ namespace UKControllerPluginUtils::Api {
                 response.GetStatusCode() == HttpStatusCode::NoContent);
     }
 
-    auto CurlApiRequestPerformer::ParseResponseBody(const CurlResponse& response) -> nlohmann::json
+    auto CurlApiRequestPerformer::ParseResponseBody(const ApiRequestData& data, const CurlResponse& response)
+        -> nlohmann::json
     {
         try {
             return nlohmann::json::parse(response.GetResponse());
-        } catch (nlohmann::json::exception&) {
-            throw ApiException("Invalid API response body");
+        } catch (nlohmann::json::exception& jsonException) {
+            throw ApiRequestException(data.Uri(), static_cast<HttpStatusCode>(response.GetStatusCode()), true);
         }
     }
 } // namespace UKControllerPluginUtils::Api

@@ -18,4 +18,15 @@ namespace UKControllerPluginUtils::Http {
     {
         return first == static_cast<uint64_t>(second);
     }
+
+    inline auto IsAuthenticationError(HttpStatusCode status) -> bool
+    {
+        return status == HttpStatusCode::Unauthorised || status == HttpStatusCode::Forbidden;
+    }
+
+    inline auto IsServerError(HttpStatusCode status) -> bool
+    {
+        return status == HttpStatusCode::ServerError || status == HttpStatusCode::BadGateway ||
+               status == HttpStatusCode::Unknown;
+    }
 } // namespace UKControllerPluginUtils::Http
