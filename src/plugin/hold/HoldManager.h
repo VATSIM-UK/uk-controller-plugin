@@ -54,5 +54,8 @@ namespace UKControllerPlugin::Hold {
 
         // The aircraft in the holds
         std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
+
+        // A mutex for async access
+        std::mutex dataMutex;
     };
 } // namespace UKControllerPlugin::Hold
