@@ -2,6 +2,7 @@
 #include "HoldManager.h"
 #include "ProximityHold.h"
 #include "navaids/NavaidCollection.h"
+#include "api/ApiRequestFactory.h"
 #include "time/ParseTimeStrings.h"
 
 namespace UKControllerPlugin::Hold {
@@ -25,7 +26,16 @@ namespace UKControllerPlugin::Hold {
 
     void AircraftEnteredHoldingAreaEventHandler::PluginEventsSynced()
     {
-        PushEventProcessorInterface::PluginEventsSynced();
+        ApiRequest().Get("hold/proximity").Then([this](const UKControllerPluginUtils::Api::Response response) {
+            if (!response.Data().is_array()) {
+                LogWarning("Aircraft holding proximity sync data invalid");
+                return;
+            }
+
+            for (const auto& item : response.Data()) {
+                ProcessData(item);
+            }
+        });
     }
 
     void AircraftEnteredHoldingAreaEventHandler::ProcessData(const nlohmann::json& data) const
