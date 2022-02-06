@@ -35,9 +35,10 @@ UKCP_UPDATER_API bool PerformUpdates()
     // Bootstrap the API, download the updater if we don't have it already and run it
     UKControllerPlugin::Curl::CurlApi curl;
     std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
-        UKControllerPlugin::Setting::SettingRepositoryFactory::Create(*windows);
-    UKControllerPluginUtils::Api::ApiFactory factory(*settings, nullptr, false);
-    std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api = UKControllerPluginUtils::Api::Bootstrap(factory, curl);
+        UKControllerPlugin::Setting::SettingRepositoryFactory::Create();
+
+    auto factory = UKControllerPluginUtils::Api::Bootstrap(*settings, *windows);
+    auto api = UKControllerPluginUtils::Api::BootstrapLegacy(*factory, curl);
 
     LogInfo("Updater build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
     UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;
