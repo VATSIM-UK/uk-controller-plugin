@@ -32,9 +32,10 @@ namespace UKControllerPlugin::Api {
                 if (UKControllerPluginUtils::Http::IsAuthenticationError(exception.StatusCode())) {
                     windows.OpenMessageBox(
                         L"API authentication failed. Please re-download your credentails from the VATSIM UK website "
-                        "and try again. If this problem persists, please contact the Web Services Department.",
+                        "and try again. If this problem persists, please contact the Web Services Department. Some "
+                        "functionality such as stand and squawk allocations may not work as expected.",
                         L"UKCP API Config Invalid",
-                        MB_OK | MB_ICONERROR);
+                        MB_OK | MB_ICONWARNING);
                 } else if (UKControllerPluginUtils::Http::IsServerError(exception.StatusCode()))
                     windows.OpenMessageBox(
                         L"Unable to perform API config check as the API responded with an error. Please try again "

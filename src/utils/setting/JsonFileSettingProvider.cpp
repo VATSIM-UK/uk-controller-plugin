@@ -33,6 +33,10 @@ namespace UKControllerPlugin::Setting {
 
     auto JsonFileSettingProvider::LoadFromFile() const -> std::map<std::string, std::string>
     {
+        if (!windows.FileExists(L"settings/" + filename)) {
+            return {};
+        }
+        
         nlohmann::json data;
         try {
             data = nlohmann::json::parse(windows.ReadFromFile(L"settings/" + filename));

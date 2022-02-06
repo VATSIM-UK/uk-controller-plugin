@@ -1,17 +1,14 @@
-#include "ApiException.h"
 #include "ApiRequestData.h"
 #include "ApiRequestException.h"
 #include "ApiRequestPerformerInterface.h"
 #include "ChainableRequest.h"
-
-using UKControllerPlugin::Api::ApiException;
 
 namespace UKControllerPluginUtils::Api {
     ChainableRequest::ChainableRequest(const ApiRequestData& data, ApiRequestPerformerInterface& performer)
         : continuable(cti::make_continuable<Response>([data, &performer](auto&& promise) {
               try {
                   promise.set_value(performer.Perform(data));
-              } catch (std::exception exception) {
+              } catch (ApiRequestException& exception) {
                   promise.set_exception(std::make_exception_ptr(exception));
               }
           }))
@@ -46,14 +43,16 @@ namespace UKControllerPluginUtils::Api {
                 std::rethrow_exception(exception);
             } catch (const ApiRequestException& requestException) {
                 function(requestException);
-            } catch (const std::exception& otherException) {
-                LogError("Exception thrown during API request: " + std::string(otherException.what()));
+            } catch (const std::exception&) {
+                // Do nothing here.
             }
+
+            return cti::cancel();
         });
     }
 
     void ChainableRequest::Await()
     {
-        std::move(continuable).freeze().apply(cti::transforms::wait());
+        std::move(continuable).apply(cti::transforms::wait());
     }
 } // namespace UKControllerPluginUtils::Api

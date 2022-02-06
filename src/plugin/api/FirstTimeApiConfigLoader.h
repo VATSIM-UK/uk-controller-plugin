@@ -5,5 +5,5 @@ namespace UKControllerPluginUtils::Api {
 } // namespace UKControllerPluginUtils::Api
 
 namespace UKControllerPlugin::Api {
-    void LocateConfig(UKControllerPluginUtils::Api::ApiSettingsProviderInterface& settingsProvider);
+    auto LocateConfig(UKControllerPluginUtils::Api::ApiSettingsProviderInterface& settingsProvider) -> bool;
 } // namespace UKControllerPlugin::Api

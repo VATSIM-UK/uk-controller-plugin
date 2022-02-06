@@ -1,7 +1,10 @@
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
+#include "api/ApiFactory.h"
 #include "api/BootstrapApi.h"
+#include "api/FirstTimeApiConfigLoader.h"
+#include "api/FirstTimeApiAuthorisationChecker.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
@@ -162,10 +165,11 @@ namespace UKControllerPlugin {
         // Datetime
         Datablock::BootstrapPlugin(*this->container);
 
-        // If we're not allowed to use the API because we've been banned or something... It's no go.
-        // TODO: Re-add this
-        /*        ApiAuthChecker::IsAuthorised(
-         *this->container->api, *this->container->windows, *this->container->settingsRepository);*/
+        // Perform a first-time load of API config and check we're authorised.
+        if (Api::LocateConfig(*this->container->apiFactory->SettingsProvider())) {
+            Api::FirstTimeApiAuthorisationCheck(
+                *this->container->apiFactory->SettingsProvider(), *this->container->windows);
+        };
 
         // Dependency loading can happen regardless of plugin version or API status.
         Dependency::UpdateDependencies(*this->container->api, *this->container->windows);

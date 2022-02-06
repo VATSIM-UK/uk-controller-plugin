@@ -20,7 +20,6 @@ namespace UKControllerPluginUtils::Api {
         void Await();
 
         private:
-        
         // Continuable instance
         cti::continuable<Response> continuable;
     };

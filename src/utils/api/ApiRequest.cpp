@@ -19,45 +19,49 @@ namespace UKControllerPluginUtils::Api {
                 exception.StatusCode() != Http::HttpStatusCode::Created &&
                 exception.StatusCode() != Http::HttpStatusCode::NoContent) {
                 LogError(
-                    "Unhandled API exception when making request to " + exception.Uri() + ". Status code was " +
+                    "Unhandled API exception when making request to uri " + exception.Uri() + ". Status code was " +
                     std::to_string(static_cast<uint64_t>(exception.StatusCode())));
             } else if (exception.InvalidJson()) {
                 LogError(
-                    "Unhandled API exception when making request to " + exception.Uri() +
+                    "Unhandled API exception when making request to uri " + exception.Uri() +
                     ". Response was invalid "
                     "JSON");
             } else {
-                LogError("Unknown unhandled API Exception");
+                LogError("Unknown unhandled API Exception when making request to uri " + exception.Uri());
             }
         });
 
         if (!async) {
-            chain->Await();
+            try {
+                chain->Await();
+            } catch (...) {
+                // No rethrow
+            }
         }
     }
 
-    auto ApiRequest::Then(const std::function<Response(Response)>& function) -> ApiRequest
+    auto ApiRequest::Then(const std::function<Response(Response)>& function) -> ApiRequest&
     {
         chain->Then(function);
-        return std::move(*this);
+        return *this;
     }
 
-    auto ApiRequest::Then(const std::function<void(Response)>& function) -> ApiRequest
+    auto ApiRequest::Then(const std::function<void(Response)>& function) -> ApiRequest&
     {
         chain->Then(function);
-        return std::move(*this);
+        return *this;
     }
 
-    auto ApiRequest::Then(const std::function<void(void)>& function) -> ApiRequest
+    auto ApiRequest::Then(const std::function<void(void)>& function) -> ApiRequest&
     {
         chain->Then(function);
-        return std::move(*this);
+        return *this;
     }
 
-    auto ApiRequest::Catch(const std::function<void(const ApiRequestException&)>& function) -> ApiRequest
+    auto ApiRequest::Catch(const std::function<void(const ApiRequestException&)>& function) -> ApiRequest&
     {
         chain->Catch(function);
-        return std::move(*this);
+        return *this;
     }
 
     void ApiRequest::Await()
