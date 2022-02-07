@@ -108,9 +108,7 @@ namespace UKControllerPluginTest::Metar {
     TEST_F(PressureMonitorTest, ItSendsUpdateMessageOnNewQnh)
     {
         EXPECT_CALL(
-            this->mockPlugin,
-            ChatAreaMessage(
-                _, _, "Pressure change at EGKK. QNH was 1011, now 1012. QFE was 1012, now 1013.", _, _, _, _, _))
+            this->mockPlugin, ChatAreaMessage(_, _, "EGKK QNH(QFE) now 1014(1012), was 1013(1011).", _, _, _, _, _))
             .Times(1);
 
         this->monitor.SetNotficationsEnabled(true);
