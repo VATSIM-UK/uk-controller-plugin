@@ -113,8 +113,7 @@ jobs:
       - name: Run Tests
         working-directory: build
         run: |
-          dir | dir release | dir release\\bin
-          .\\release\\bin\\UKControllerPluginCoreTest.exe
+          dir
           ctest -C Release --output-on-failure --no-tests=error
 
       # Do Srclinting
