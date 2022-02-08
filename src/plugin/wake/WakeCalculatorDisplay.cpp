@@ -251,6 +251,12 @@ namespace UKControllerPlugin::Wake {
         const auto leadFlightplan = plugin.GetFlightplanForCallsign(options->LeadAircraft());
         const auto followingFlightplan = plugin.GetFlightplanForCallsign(options->FollowingAircraft());
         if (options->SchemeMapper() == nullptr || leadFlightplan == nullptr || followingFlightplan == nullptr) {
+            graphics.DrawString(
+                L"--",
+                calculationResultArea,
+                *resultBrush,
+                Graphics::StringFormatManager::Instance().GetCentreAlign(),
+                Graphics::FontManager::Instance().Get(16));
             return;
         }
 
@@ -258,6 +264,12 @@ namespace UKControllerPlugin::Wake {
         const auto leadCategory = mapper->MapForFlightplan(*leadFlightplan);
         const auto followingCategory = mapper->MapForFlightplan(*followingFlightplan);
         if (leadCategory == nullptr || followingCategory == nullptr) {
+            graphics.DrawString(
+                L"--",
+                calculationResultArea,
+                *resultBrush,
+                Graphics::StringFormatManager::Instance().GetCentreAlign(),
+                Graphics::FontManager::Instance().Get(16));
             return;
         }
 
@@ -273,7 +285,7 @@ namespace UKControllerPlugin::Wake {
         const auto departureInterval = leadCategory->DepartureInterval(*followingCategory, options->Intermediate());
         if (departureInterval == nullptr) {
             graphics.DrawString(
-                L"--",
+                L"N/A",
                 calculationResultArea,
                 *resultBrush,
                 Graphics::StringFormatManager::Instance().GetCentreAlign(),
