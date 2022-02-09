@@ -1,7 +1,5 @@
 #pragma once
 
-#include "WakeCategoryFactory.h"
-
 namespace UKControllerPlugin::Wake {
     struct DepartureWakeInterval;
 
@@ -24,6 +22,8 @@ namespace UKControllerPlugin::Wake {
         [[nodiscard]] auto RelativeWeighting() const -> int;
         [[nodiscard]] auto SubsequentDepartureIntervals() const
             -> const std::list<std::shared_ptr<DepartureWakeInterval>>&;
+        [[nodiscard]] auto DepartureInterval(const WakeCategory& nextAircraftCategory, bool intermediate) const
+            -> std::shared_ptr<DepartureWakeInterval>;
 
         private:
         // The id in the API

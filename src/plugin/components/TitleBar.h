@@ -18,9 +18,12 @@ namespace UKControllerPlugin::Components {
     {
         public:
         static std::shared_ptr<TitleBar> Create(std::wstring title, Gdiplus::Rect area);
+        std::shared_ptr<TitleBar> WithDefaultBackgroundBrush();
         std::shared_ptr<TitleBar> WithBackgroundBrush(std::shared_ptr<Gdiplus::Brush> brush);
         std::shared_ptr<TitleBar> WithTextBrush(std::shared_ptr<Gdiplus::Brush> brush);
+        std::shared_ptr<TitleBar> WithDefaultTextBrush();
         std::shared_ptr<TitleBar> WithBorder(std::shared_ptr<Gdiplus::Pen> pen);
+        std::shared_ptr<TitleBar> WithDefaultBorder();
         std::shared_ptr<TitleBar> WithDrag(int screenObjectId);
         std::shared_ptr<TitleBar> WithPosition(Gdiplus::Rect area);
         std::shared_ptr<TitleBar> WithTitle(std::wstring title);

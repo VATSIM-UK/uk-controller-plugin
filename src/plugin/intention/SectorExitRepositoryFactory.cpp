@@ -53,6 +53,8 @@ namespace UKControllerPlugin {
                 "LESRA", "K3", SectorExitPoint::outEast | SectorExitPoint::outNorthEast);
             points["SOPTO"] = std::make_unique<SectorExitPoint>(
                 "SOPTO", "K3", SectorExitPoint::outEast | SectorExitPoint::outNorthEast);
+            points["GOLUM"] = std::make_unique<SectorExitPoint>(
+                "GOLUM", "K3", SectorExitPoint::outEast | SectorExitPoint::outNorthEast);
 
             // Stavanger
             points["PEPIN"] = std::make_unique<SectorExitPoint>(

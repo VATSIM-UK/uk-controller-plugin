@@ -1,42 +1,36 @@
 #include "CallsignSelectionList.h"
 #include "CallsignSelectionProviderInterface.h"
-#include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "plugin/PopupMenuItem.h"
+#include "list/ListItem.h"
 
 namespace UKControllerPlugin::Aircraft {
 
-    CallsignSelectionList::CallsignSelectionList(
-        std::shared_ptr<CallsignSelectionProviderInterface> callsignProvider,
-        Euroscope::EuroscopePluginLoopbackInterface& plugin,
-        int callbackFunctionId)
-        : callsignProvider(std::move(callsignProvider)), plugin(plugin), callbackFunctionId(callbackFunctionId)
+    CallsignSelectionList::CallsignSelectionList(std::shared_ptr<CallsignSelectionProviderInterface> callsignProvider)
+        : callsignProvider(std::move(callsignProvider))
     {
     }
 
-    void CallsignSelectionList::TriggerList(const POINT& location)
+    int CallsignSelectionList::ListColumns()
     {
-        const auto callsigns = this->callsignProvider->GetCallsigns();
-        if (callsigns.empty()) {
-            return;
-        }
-
-        plugin.TriggerPopupList(RECT{location.x, location.y, location.x + 50, location.y + 100}, "Select Aircraft", 1);
-
-        Plugin::PopupMenuItem menuItem;
-        menuItem.secondValue = "";
-        menuItem.callbackFunctionId = callbackFunctionId;
-        menuItem.fixedPosition = false;
-        menuItem.disabled = false;
-        menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-
-        for (const auto& callsign : callsigns) {
-            menuItem.firstValue = callsign;
-            plugin.AddItemToPopupList(menuItem);
-        }
+        return 1;
     }
 
-    void CallsignSelectionList::CallsignSelected(const std::string& callsign)
+    std::string CallsignSelectionList::ListName()
     {
-        callsignProvider->CallsignSelected(callsign);
+        return "Select Aircraft";
+    }
+
+    std::list<std::shared_ptr<List::ListItem>> CallsignSelectionList::ListItems()
+    {
+        std::list<std::shared_ptr<List::ListItem>> items;
+        for (const auto& callsign : this->callsignProvider->GetCallsigns()) {
+            items.push_back(
+                std::make_shared<List::ListItem>(callsign, "", false, false, List::ListItemCheckedStatus::NoCheckbox));
+        }
+        return items;
+    }
+
+    void CallsignSelectionList::ItemSelected(const std::string& item)
+    {
+        this->callsignProvider->CallsignSelected(item);
     }
 } // namespace UKControllerPlugin::Aircraft

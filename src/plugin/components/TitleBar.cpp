@@ -1,7 +1,7 @@
-#include "components/TitleBar.h"
+#include "ClickableArea.h"
+#include "TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
-#include "components/ClickableArea.h"
 
 namespace UKControllerPlugin::Components {
     std::shared_ptr<TitleBar> TitleBar::Create(std::wstring title, Gdiplus::Rect area)
@@ -71,4 +71,20 @@ namespace UKControllerPlugin::Components {
     TitleBar::TitleBar(std::wstring title, Gdiplus::Rect area) : title(std::move(title)), area(area)
     {
     }
+
+    std::shared_ptr<TitleBar> TitleBar::WithDefaultBackgroundBrush()
+    {
+        return this->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(130, 50, 154)));
+    }
+
+    std::shared_ptr<TitleBar> TitleBar::WithDefaultTextBrush()
+    {
+        return this->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(227, 227, 227)));
+    }
+
+    std::shared_ptr<TitleBar> TitleBar::WithDefaultBorder()
+    {
+        return this->WithBorder(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255)));
+    }
+
 } // namespace UKControllerPlugin::Components

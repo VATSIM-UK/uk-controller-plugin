@@ -9,13 +9,18 @@ namespace UKControllerPluginTest::Wake {
     {
         public:
         WakeCategoryTest()
-            : wakeIntervals({std::make_shared<DepartureWakeInterval>(3, 60, "nm", true)}),
-              category(123, "LM", "Lower Medium", 20, wakeIntervals)
+            : wakeIntervals(
+                  {std::make_shared<DepartureWakeInterval>(3, 60, "nm", true),
+                   std::make_shared<DepartureWakeInterval>(3, 30, "nm", false)}),
+              category(123, "LM", "Lower Medium", 20, wakeIntervals),
+              subsequentCategory1(1, "LM", "Lower Medium", 20, {}), subsequentCategory2(3, "LM", "Lower Medium", 20, {})
         {
         }
 
         std::list<std::shared_ptr<DepartureWakeInterval>> wakeIntervals;
         WakeCategory category;
+        WakeCategory subsequentCategory1;
+        WakeCategory subsequentCategory2;
     };
 
     TEST_F(WakeCategoryTest, ItHasAnId)
@@ -41,5 +46,20 @@ namespace UKControllerPluginTest::Wake {
     TEST_F(WakeCategoryTest, ItHasWakeIntervals)
     {
         EXPECT_EQ(wakeIntervals, category.SubsequentDepartureIntervals());
+    }
+
+    TEST_F(WakeCategoryTest, ItReturnsSubsequentWakeIntervalIntermediate)
+    {
+        EXPECT_EQ(wakeIntervals.front(), category.DepartureInterval(subsequentCategory2, true));
+    }
+
+    TEST_F(WakeCategoryTest, ItReturnsSubsequentWakeIntervalNotIntermediate)
+    {
+        EXPECT_EQ(wakeIntervals.back(), category.DepartureInterval(subsequentCategory2, false));
+    }
+
+    TEST_F(WakeCategoryTest, ItReturnsNullptrNoDepartureIntervalFound)
+    {
+        EXPECT_EQ(nullptr, category.DepartureInterval(subsequentCategory1, false));
     }
 } // namespace UKControllerPluginTest::Wake

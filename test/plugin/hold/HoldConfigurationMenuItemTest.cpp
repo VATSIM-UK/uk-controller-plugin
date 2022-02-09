@@ -8,6 +8,7 @@
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/PublishedHoldCollection.h"
+#include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 
@@ -22,6 +23,7 @@ using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPlugin::Hold::HoldDisplayManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -37,7 +39,7 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldConfigurationMenuItemTest()
-                : listFactory(functionHandlers, mockPlugin), dialogManager(mockProvider),
+                : popupFactory(functionHandlers, mockPlugin), listFactory(popupFactory), dialogManager(mockProvider),
                   holdManager(mockApi, mockTaskRunner),
                   displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
                   displayManager(new HoldDisplayManager(displayFactory)), menuItem(dialogManager, displayManager, 1)
@@ -52,6 +54,7 @@ namespace UKControllerPluginTest {
             NiceMock<MockApiInterface> mockApi;
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
             FunctionCallEventHandler functionHandlers;
+            PopupListFactory popupFactory;
             CallsignSelectionListFactory listFactory;
             NiceMock<MockDialogProvider> mockProvider;
             UKControllerPlugin::Dialog::DialogManager dialogManager;

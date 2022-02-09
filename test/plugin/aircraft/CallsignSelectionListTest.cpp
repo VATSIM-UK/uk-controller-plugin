@@ -1,7 +1,10 @@
 #include "aircraft/CallsignSelectionList.h"
+#include "list/ListItem.h"
 #include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Aircraft::CallsignSelectionList;
+using UKControllerPlugin::List::ListItem;
+using UKControllerPlugin::List::ListItemCheckedStatus;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPluginTest::Aircraft {
@@ -10,56 +13,59 @@ namespace UKControllerPluginTest::Aircraft {
         public:
         CallsignSelectionListTest()
             : callsignProvider(std::make_shared<testing::NiceMock<Aircraft::MockCallsignSelectionProvider>>()),
-              list(callsignProvider, plugin, 123)
+              list(callsignProvider)
         {
         }
         std::shared_ptr<testing::NiceMock<Aircraft::MockCallsignSelectionProvider>> callsignProvider;
-        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         CallsignSelectionList list;
     };
 
-    TEST_F(CallsignSelectionListTest, ItDoesntTriggerListIfNoCallsigns)
+    TEST_F(CallsignSelectionListTest, ItHasASingleColumn)
     {
-        EXPECT_CALL(*callsignProvider, GetCallsigns).Times(1).WillOnce(testing::Return(std::set<std::string>()));
-
-        EXPECT_CALL(plugin, TriggerPopupList).Times(0);
-
-        list.TriggerList({1, 2});
+        EXPECT_EQ(1, list.ListColumns());
     }
 
-    TEST_F(CallsignSelectionListTest, ItDisplaysCallsignList)
+    TEST_F(CallsignSelectionListTest, ItHasAName)
+    {
+        EXPECT_EQ("Select Aircraft", list.ListName());
+    }
+
+    TEST_F(CallsignSelectionListTest, ItReturnsListItems)
     {
         EXPECT_CALL(*callsignProvider, GetCallsigns)
             .Times(1)
             .WillOnce(testing::Return(std::set<std::string>{"ABCD", "EFGH", "IJKL"}));
 
-        EXPECT_CALL(plugin, TriggerPopupList(RectEq(RECT{1, 2, 51, 102}), "Select Aircraft", 1)).Times(1);
+        const auto items = list.ListItems();
+        EXPECT_EQ(3, items.size());
 
-        PopupMenuItem expectedItem;
-        expectedItem.firstValue = "ABCD";
-        expectedItem.secondValue = "";
-        expectedItem.disabled = false;
-        expectedItem.fixedPosition = false;
-        expectedItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
-        expectedItem.callbackFunctionId = 123;
+        auto itemIterator = items.cbegin();
+        const auto item1 = *itemIterator++;
+        EXPECT_EQ("ABCD", item1->firstColumn);
+        EXPECT_EQ("", item1->secondColumn);
+        EXPECT_FALSE(item1->fixedPosition);
+        EXPECT_FALSE(item1->disabled);
+        EXPECT_EQ(ListItemCheckedStatus::NoCheckbox, item1->checked);
 
-        EXPECT_CALL(plugin, AddItemToPopupList(expectedItem)).Times(1);
+        const auto item2 = *itemIterator++;
+        EXPECT_EQ("EFGH", item2->firstColumn);
+        EXPECT_EQ("", item2->secondColumn);
+        EXPECT_FALSE(item2->fixedPosition);
+        EXPECT_FALSE(item2->disabled);
+        EXPECT_EQ(ListItemCheckedStatus::NoCheckbox, item2->checked);
 
-        expectedItem.firstValue = "EFGH";
-
-        EXPECT_CALL(plugin, AddItemToPopupList(expectedItem)).Times(1);
-
-        expectedItem.firstValue = "IJKL";
-
-        EXPECT_CALL(plugin, AddItemToPopupList(expectedItem)).Times(1);
-
-        list.TriggerList({1, 2});
+        const auto item3 = *itemIterator++;
+        EXPECT_EQ("IJKL", item3->firstColumn);
+        EXPECT_EQ("", item3->secondColumn);
+        EXPECT_FALSE(item3->fixedPosition);
+        EXPECT_FALSE(item3->disabled);
+        EXPECT_EQ(ListItemCheckedStatus::NoCheckbox, item3->checked);
     }
 
     TEST_F(CallsignSelectionListTest, ItTriggersCallsignSelected)
     {
         EXPECT_CALL(*callsignProvider, CallsignSelected("BAW123")).Times(1);
 
-        list.CallsignSelected("BAW123");
+        list.ItemSelected("BAW123");
     }
 } // namespace UKControllerPluginTest::Aircraft

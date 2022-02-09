@@ -10,6 +10,7 @@
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldSelectionMenu.h"
 #include "hold/PublishedHoldCollection.h"
+#include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 
@@ -27,6 +28,7 @@ using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -45,8 +47,8 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldSelectionMenuTest()
-                : listFactory(functionHandlers, mockPlugin), dialogManager(mockDialogProvider),
-                  userSetting(mockUserSettingProvider),
+                : popupFactory(functionHandlers, mockPlugin), listFactory(popupFactory),
+                  dialogManager(mockDialogProvider), userSetting(mockUserSettingProvider),
                   displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
                   holdManager(mockApi, mockTaskRunner), holdSelectionMenu(holdManager, mockPlugin, 1)
             {
@@ -72,6 +74,7 @@ namespace UKControllerPluginTest {
             NiceMock<MockTaskRunnerInterface> mockTaskRunner;
             NiceMock<MockDialogProvider> mockDialogProvider;
             FunctionCallEventHandler functionHandlers;
+            PopupListFactory popupFactory;
             CallsignSelectionListFactory listFactory;
             DialogManager dialogManager;
             NavaidCollection navaids;

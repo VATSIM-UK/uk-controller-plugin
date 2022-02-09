@@ -25,6 +25,7 @@
 #include "initialheading/InitialHeadingModule.h"
 #include "integration/IntegrationModule.h"
 #include "intention/IntentionCodeModule.h"
+#include "list/PopupListFactoryBootstrap.h"
 #include "log/LoggerBootstrap.h"
 #include "login/LoginModule.h"
 #include "message/UserMessagerBootstrap.h"
@@ -186,6 +187,7 @@ namespace UKControllerPlugin {
         }
 
         Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate(), winsockInitialised);
+        List::BootstrapPlugin(*this->container);
         Aircraft::BootstrapPlugin(*this->container);
 
         // Boostrap all the modules at a plugin level
