@@ -71,6 +71,6 @@ namespace UKControllerPluginTest::Metar {
 
     TEST_F(PressureChangeMessageTest, ItHasAMessageInHg)
     {
-        EXPECT_EQ("EGKK QNH(QFE) now 29.94(29.86), was 29.92(29.84).", messageInhg.MessageString());
+        EXPECT_EQ("EGLL QNH(QFE) now 29.94(29.86), was 29.92(29.84).", messageInhg.MessageString());
     }
 } // namespace UKControllerPluginTest::Metar
