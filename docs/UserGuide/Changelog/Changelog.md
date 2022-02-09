@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [4.1.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.1.0...4.1.1) (2022-02-09)
+
+
+### Bug Fixes
+
+* **intention:** add golum exit point for copenhagen ([#422](https://github.com/VATSIM-UK/uk-controller-plugin/issues/422)) ([b032890](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b03289000b36586b4e65a05865f9657187c2f6eb)), closes [#421](https://github.com/VATSIM-UK/uk-controller-plugin/issues/421)
+
 # [4.1.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0...4.1.0) (2022-02-05)
 
 
