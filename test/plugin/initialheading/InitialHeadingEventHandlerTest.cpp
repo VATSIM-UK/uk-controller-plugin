@@ -528,9 +528,12 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
 
-            EXPECT_CALL(this->mockFlightPlan, SetHeading(125)).Times(1);
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
 
-            EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin()).Times(0);
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(125)).Times(1);
+            
 
             EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading()).Times(0);
 
@@ -556,6 +559,10 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
 
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
             EXPECT_CALL(this->mockFlightPlan, SetHeading(125)).Times(1);
 
             handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
@@ -577,7 +584,49 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockFlightPlan, IsTrackedByUser()).WillByDefault(Return(true));
 
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
             EXPECT_CALL(this->mockFlightPlan, SetHeading(125)).Times(1);
+
+            handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+        }
+
+        TEST_F(InitialHeadingEventHandlerTest, RecycleDoesNothingIfAircraftOutOfRange)
+        {
+            ON_CALL(this->mockFlightPlan, GetSidName()).WillByDefault(Return("ADMAG2X"));
+
+            ON_CALL(this->mockFlightPlan, GetOrigin()).WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->mockFlightPlan, GetCallsign()).WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(0));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(0));
+
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(_)).Times(0);
+
+            handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+        }
+
+        TEST_F(InitialHeadingEventHandlerTest, RecycleDoesNothingIfAircraftNotInAirportProximity)
+        {
+            ON_CALL(this->mockFlightPlan, GetSidName()).WillByDefault(Return("ADMAG2X"));
+
+            ON_CALL(this->mockFlightPlan, GetOrigin()).WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->mockFlightPlan, GetCallsign()).WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(11));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
+            EXPECT_CALL(this->mockFlightPlan, SetHeading(_)).Times(0);
 
             handler.RecycleInitialHeading(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
@@ -593,6 +642,10 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(true));
 
             ON_CALL(this->mockFlightPlan, IsTrackedByUser()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetHeading(_)).Times(0);
 
@@ -612,6 +665,10 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetHeading(_)).Times(0);
 
