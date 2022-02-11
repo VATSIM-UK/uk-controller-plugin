@@ -5,8 +5,11 @@
 
 namespace UKControllerPluginUtils::Api {
 
-    ApiRequest::ApiRequest(const ApiRequestData& data, ApiRequestPerformerInterface& performer, bool async)
-        : chain(std::make_shared<ChainableRequest>(data, performer)), async(async)
+    ApiRequest::ApiRequest(
+        const ApiRequestData& data,
+        ApiRequestPerformerInterface& performer,
+        std::function<void(void)> onCompletionHandler)
+        : chain(std::make_shared<ChainableRequest>(data, performer, onCompletionHandler))
     {
     }
 
@@ -72,6 +75,6 @@ namespace UKControllerPluginUtils::Api {
 
     void ApiRequest::Await()
     {
-        async = false;
+        this->async = false;
     }
 } // namespace UKControllerPluginUtils::Api

@@ -3,7 +3,7 @@
 
 std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> apiFactory;
 
-[[nodiscard]] auto ApiRequest() -> const UKControllerPluginUtils::Api::ApiRequestFactory&
+[[nodiscard]] auto ApiRequest() -> UKControllerPluginUtils::Api::ApiRequestFactory&
 {
     return apiFactory->RequestFactory();
 }

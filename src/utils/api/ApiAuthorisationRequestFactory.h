@@ -7,10 +7,10 @@ namespace UKControllerPluginUtils::Api {
     class ApiAuthorisationRequestFactory
     {
         public:
-        ApiAuthorisationRequestFactory(const ApiRequestFactory& requestFactory);
+        ApiAuthorisationRequestFactory(ApiRequestFactory& requestFactory);
         [[nodiscard]] auto AuthorisationRequest() const -> ApiRequest;
 
         private:
-        const ApiRequestFactory& requestFactory;
+        ApiRequestFactory& requestFactory;
     };
 } // namespace UKControllerPluginUtils::Api

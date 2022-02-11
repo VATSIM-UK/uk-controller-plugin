@@ -3,7 +3,7 @@
 
 namespace UKControllerPluginUtils::Api {
 
-    ApiAuthorisationRequestFactory::ApiAuthorisationRequestFactory(const ApiRequestFactory& requestFactory)
+    ApiAuthorisationRequestFactory::ApiAuthorisationRequestFactory(ApiRequestFactory& requestFactory)
         : requestFactory(requestFactory)
     {
     }

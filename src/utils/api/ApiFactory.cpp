@@ -12,9 +12,8 @@ namespace UKControllerPluginUtils::Api {
 
     ApiFactory::ApiFactory(
         std::shared_ptr<ApiSettingsProviderInterface> settingsProvider,
-        std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory,
-        bool async)
-        : settingsProvider(settingsProvider), requestPerformerFactory(std::move(requestPerformerFactory)), async(async)
+        std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory)
+        : settingsProvider(settingsProvider), requestPerformerFactory(std::move(requestPerformerFactory))
     {
     }
 
@@ -25,10 +24,11 @@ namespace UKControllerPluginUtils::Api {
         return settingsProvider;
     }
 
-    auto ApiFactory::RequestFactory() -> const ApiRequestFactory&
+    auto ApiFactory::RequestFactory() -> ApiRequestFactory&
     {
         if (requestFactory == nullptr) {
-            requestFactory = std::make_unique<ApiRequestFactory>(requestPerformerFactory->Make(SettingsProvider()->Get()), async);
+            requestFactory =
+                std::make_unique<ApiRequestFactory>(requestPerformerFactory->Make(SettingsProvider()->Get()));
         }
 
         return *requestFactory;

@@ -56,6 +56,6 @@ namespace UKControllerPlugin::Hold {
         std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft> aircraft;
 
         // A mutex for async access
-        std::mutex dataMutex;
+        mutable std::mutex dataMutex;
     };
 } // namespace UKControllerPlugin::Hold

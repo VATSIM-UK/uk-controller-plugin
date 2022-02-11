@@ -4,15 +4,24 @@
 #include "ChainableRequest.h"
 
 namespace UKControllerPluginUtils::Api {
-    ChainableRequest::ChainableRequest(const ApiRequestData& data, ApiRequestPerformerInterface& performer)
+    ChainableRequest::ChainableRequest(
+        const ApiRequestData& data, ApiRequestPerformerInterface& performer, std::function<void(void)> onCompletion)
         : continuable(cti::make_continuable<Response>([data, &performer](auto&& promise) {
               try {
                   promise.set_value(performer.Perform(data));
               } catch (ApiRequestException& exception) {
                   promise.set_exception(std::make_exception_ptr(exception));
               }
-          }))
+          })),
+          onCompletion(onCompletion)
     {
+    }
+
+    ChainableRequest::~ChainableRequest()
+    {
+        if (!this->executed) {
+            this->ApplyOnCompletion();
+        }
     }
 
     void ChainableRequest::Then(const std::function<Response(Response)>& function)
@@ -38,13 +47,15 @@ namespace UKControllerPluginUtils::Api {
 
     void ChainableRequest::Catch(const std::function<void(const ApiRequestException&)>& function)
     {
-        continuable = std::move(continuable).fail([function](std::exception_ptr exception) {
+        auto complete = this->onCompletion;
+        continuable = std::move(continuable).fail([function, complete](std::exception_ptr exception) {
             try {
                 std::rethrow_exception(exception);
             } catch (const ApiRequestException& requestException) {
                 function(requestException);
             } catch (const std::exception&) {
-                // Do nothing here.
+                // Everythings over, run onCompletion
+                complete();
             }
 
             return cti::cancel();
@@ -53,6 +64,16 @@ namespace UKControllerPluginUtils::Api {
 
     void ChainableRequest::Await()
     {
+        this->ApplyOnCompletion();
         std::move(continuable).apply(cti::transforms::wait());
+    }
+
+    void ChainableRequest::ApplyOnCompletion()
+    {
+        auto complete = this->onCompletion;
+        this->Then([this, complete]() {
+            this->executed = true;
+            complete();
+        });
     }
 } // namespace UKControllerPluginUtils::Api

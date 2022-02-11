@@ -12,7 +12,11 @@ namespace UKControllerPluginUtils::Api {
     class ChainableRequest
     {
         public:
-        ChainableRequest(const ApiRequestData& data, ApiRequestPerformerInterface& performer);
+        ChainableRequest(
+            const ApiRequestData& data,
+            ApiRequestPerformerInterface& performer,
+            std::function<void(void)> onCompletion);
+        ~ChainableRequest();
         void Then(const std::function<Response(Response)>& function);
         void Then(const std::function<void(Response)>& function);
         void Then(const std::function<void(void)>& function);
@@ -20,7 +24,15 @@ namespace UKControllerPluginUtils::Api {
         void Await();
 
         private:
+        void ApplyOnCompletion();
+        
         // Continuable instance
         cti::continuable<Response> continuable;
+
+        // A function to run when we're all done
+        std::function<void(void)> onCompletion;
+        
+        // Has the request executed
+        bool executed = false;
     };
 } // namespace UKControllerPluginUtils::Api

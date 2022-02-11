@@ -2,6 +2,7 @@
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
 #include "api/ApiFactory.h"
+#include "api/ApiRequestFactory.h"
 #include "api/BootstrapApi.h"
 #include "api/FirstTimeApiConfigLoader.h"
 #include "api/FirstTimeApiAuthorisationChecker.h"
@@ -94,6 +95,7 @@ namespace UKControllerPlugin {
     */
     void InitialisePlugin::EuroScopeCleanup()
     {
+        this->container->apiFactory->RequestFactory().AwaitRequestCompletion();
         this->container->taskRunner.reset();
         this->container.reset();
         this->duplicatePlugin.reset();

@@ -10,7 +10,10 @@ namespace UKControllerPluginUtils::Api {
     class ApiRequest
     {
         public:
-        ApiRequest(const ApiRequestData& data, ApiRequestPerformerInterface& performer, bool async = true);
+        ApiRequest(
+            const ApiRequestData& data,
+            ApiRequestPerformerInterface& performer,
+            std::function<void(void)> onCompletionHandler);
         ~ApiRequest();
         ApiRequest(ApiRequest&&) = delete;
         ApiRequest(const ApiRequest&) = delete;
@@ -27,6 +30,6 @@ namespace UKControllerPluginUtils::Api {
         std::shared_ptr<ChainableRequest> chain;
 
         // Run on main thread or async
-        bool async;
+        bool async = true;
     };
 } // namespace UKControllerPluginUtils::Api

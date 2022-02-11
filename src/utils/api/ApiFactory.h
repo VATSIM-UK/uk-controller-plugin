@@ -25,11 +25,10 @@ namespace UKControllerPluginUtils::Api {
         public:
         ApiFactory(
             std::shared_ptr<ApiSettingsProviderInterface> settingsProvider,
-            std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory,
-            bool async);
+            std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory);
         ~ApiFactory();
         [[nodiscard]] auto LegacyRequestBuilder() -> const UKControllerPlugin::Api::ApiRequestBuilder&;
-        [[nodiscard]] auto RequestFactory() -> const ApiRequestFactory&;
+        [[nodiscard]] auto RequestFactory() -> ApiRequestFactory&;
         [[nodiscard]] auto SettingsProvider() -> const std::shared_ptr<ApiSettingsProviderInterface>;
         [[nodiscard]] auto AuthorisationRequestFactory() -> const ApiAuthorisationRequestFactory&;
 
@@ -39,9 +38,6 @@ namespace UKControllerPluginUtils::Api {
 
         // Starts performing requests - can be subbed out for a mock.
         std::shared_ptr<AbstractApiRequestPerformerFactory> requestPerformerFactory;
-
-        // Should api requests run async by default. Can be overriden.
-        bool async;
 
         // Builds API requests
         std::unique_ptr<ApiRequestFactory> requestFactory;

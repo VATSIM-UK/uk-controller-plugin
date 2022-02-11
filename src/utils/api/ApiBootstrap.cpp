@@ -28,8 +28,7 @@ namespace UKControllerPluginUtils::Api {
 
         auto factory = std::make_shared<ApiFactory>(
             std::make_shared<ConfigApiSettingsProvider>(settingRepository, windows),
-            std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()),
-            true);
+            std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()));
 
         SetApiRequestFactory(factory);
         return factory;
