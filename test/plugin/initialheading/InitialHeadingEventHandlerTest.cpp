@@ -533,7 +533,6 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetHeading(125)).Times(1);
-            
 
             EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading()).Times(0);
 
