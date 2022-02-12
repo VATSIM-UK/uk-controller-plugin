@@ -71,6 +71,10 @@ namespace UKControllerPlugin::InitialHeading {
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
 
+        static auto IsNotOutOfRange(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
+
         // Used to generate initial headings.
         const Sid::SidMapperInterface& sidMapper;
 
@@ -95,6 +99,7 @@ namespace UKControllerPlugin::InitialHeading {
         // The maximum distance from the airfield that an aircraft can be untracked
         // to be considered for an heading update.
         const double assignmentMaxDistanceFromOrigin = 3.0;
+        inline static const double forceAssignmentMaxDistanceFromOrigin = 10.0;
 
         // Then maximum speed that for assigning initial headings.
         const int assignmentMaxSpeed = 40;
