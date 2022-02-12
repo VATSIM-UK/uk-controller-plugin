@@ -18,4 +18,4 @@ UKControllerPlugin::Curl::CurlRequest GetApiGetUriCurlRequest(
 /*
     Returns an API Request Builder
 */
-UKControllerPlugin::Api::ApiRequestBuilder GetApiRequestBuilder(void);
+UKControllerPlugin::Api::ApiRequestBuilder GetApiRequestBuilder();

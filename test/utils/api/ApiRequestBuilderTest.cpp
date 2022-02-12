@@ -1,4 +1,5 @@
 #include "api/ApiRequestBuilder.h"
+#include "api/ApiSettings.h"
 #include "srd/SrdSearchParameters.h"
 
 using ::testing::Test;
@@ -6,39 +7,20 @@ using ::testing::Test;
 using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Srd::SrdSearchParameters;
+using UKControllerPluginUtils::Api::ApiSettings;
 
 namespace UKControllerPluginUtilsTest::Api {
 
     class ApiRequestBuilderTest : public Test
     {
         public:
-        ApiRequestBuilderTest() : builder("http://testurl.com", "apikey")
+        ApiRequestBuilderTest() : settings("http://testurl.com", "apikey"), builder(settings)
         {
         }
+
+        ApiSettings settings;
         ApiRequestBuilder builder;
     };
-
-    TEST_F(ApiRequestBuilderTest, ItHasAnApiDomain)
-    {
-        EXPECT_TRUE("http://testurl.com" == this->builder.GetApiDomain());
-    }
-
-    TEST_F(ApiRequestBuilderTest, ItHasAnApiKey)
-    {
-        EXPECT_TRUE("apikey" == this->builder.GetApiKey());
-    }
-
-    TEST_F(ApiRequestBuilderTest, ApiDomainCanBeUpdated)
-    {
-        this->builder.SetApiDomain("http://nottesturl.com");
-        EXPECT_TRUE("http://nottesturl.com" == this->builder.GetApiDomain());
-    }
-
-    TEST_F(ApiRequestBuilderTest, ApiKeyCanBeUpdated)
-    {
-        this->builder.SetApiKey("notapikey");
-        EXPECT_TRUE("notapikey" == this->builder.GetApiKey());
-    }
 
     TEST_F(ApiRequestBuilderTest, ItBuildsAuthCheckRequests)
     {

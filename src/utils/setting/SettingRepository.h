@@ -12,6 +12,7 @@ namespace UKControllerPlugin::Setting {
         [[nodiscard]] auto HasSetting(const std::string& setting) const -> bool override;
         void UpdateSetting(const std::string& setting, const std::string& value) override;
         void ReloadSetting(const std::string& setting) override;
+        [[nodiscard]] auto CountSettings() const -> size_t;
 
         private:
         // Setting key to provider map

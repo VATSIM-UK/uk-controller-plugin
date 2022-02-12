@@ -4,7 +4,6 @@ set(PROJECT_NAME UKControllerPluginUtilsTest)
 # Source groups
 ################################################################################
 set(test__api
-    "api/ApiAuthCheckerTest.cpp"
     "api/ApiHelperTest.cpp"
     "api/ApiRequestBuilderTest.cpp"
     "api/ApiResponseFactoryTest.cpp"
@@ -46,6 +45,10 @@ set(test__log
 )
 source_group("test\\log" FILES ${test__log})
 
+set(test__mock
+        mock/MockSettingProvider.h)
+source_group("test\\mock" FILES ${test__mock})
+
 set(test__pch
     "pch/pch.cpp"
     "pch/pch.h"
@@ -77,6 +80,7 @@ set(ALL_FILES
     ${test__duplicate}
     ${test__helper}
     ${test__log}
+    ${test__mock}
     ${test__pch}
     ${test__setting}
     ${test__squawk}

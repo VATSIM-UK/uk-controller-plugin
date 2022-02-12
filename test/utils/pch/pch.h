@@ -12,6 +12,7 @@
 #include "gmock/gmock.h"
 #pragma warning(pop)
 
+#include "mock/MockSettingProvider.h"
 #include "../../testingutils/mock/MockApiInterface.h"
 #include "../../testingutils/mock/MockCurlApi.h"
 #include "../../testingutils/mock/MockDialogProvider.h"

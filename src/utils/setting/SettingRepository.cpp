@@ -47,4 +47,9 @@ namespace UKControllerPlugin::Setting {
 
         this->settings.at(setting)->Reload();
     }
+
+    auto SettingRepository::CountSettings() const -> size_t
+    {
+        return this->settings.size();
+    }
 } // namespace UKControllerPlugin::Setting

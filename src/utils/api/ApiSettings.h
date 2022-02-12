@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include "ApiSettingsFactory.h"
-
 namespace UKControllerPluginUtils::Api {
     /**
      * Contains the settings for the API

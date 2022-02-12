@@ -43,6 +43,8 @@ set(ALL_FILES
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
 
+target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
+
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE TestingUtils)
 
