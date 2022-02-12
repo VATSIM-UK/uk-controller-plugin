@@ -155,7 +155,7 @@ namespace UKControllerPlugin::InitialAltitude {
     auto InitialAltitudeEventHandler::MeetsAssignmentConditions(
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget) const -> bool
     {
-        return radarTarget.GetFlightLevel() != 0 && flightPlan.GetDistanceFromOrigin() != 0.0 &&
+        return IsNotOutOfRange(flightPlan, radarTarget) &&
                radarTarget.GetFlightLevel() <= this->assignmentMaxAltitude &&
                flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
                radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed && !flightPlan.HasControllerClearedAltitude() &&
@@ -163,16 +163,24 @@ namespace UKControllerPlugin::InitialAltitude {
                this->airfieldOwnership.DeliveryControlProvidedByUser(flightPlan.GetOrigin());
     }
 
+    auto InitialAltitudeEventHandler::IsNotOutOfRange(
+        EuroScopeCFlightPlanInterface& flightplan, EuroScopeCRadarTargetInterface& radarTarget) -> bool
+    {
+        return radarTarget.GetFlightLevel() != 0 && flightplan.GetDistanceFromOrigin() != 0.0;
+    }
+
     /*
      * Force assignments are allowed if the aircraft is:
      *
      * 1. Not tracked
      * 2. Tracked by the current user
+     * 3. Not got the all zero values, because EuroScope
      */
     auto InitialAltitudeEventHandler::MeetsForceAssignmentConditions(
         EuroScopeCFlightPlanInterface& flightplan, EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
-        return !flightplan.IsTracked() || flightplan.IsTrackedByUser();
+        return (!flightplan.IsTracked() || flightplan.IsTrackedByUser()) && IsNotOutOfRange(flightplan, radarTarget) &&
+               flightplan.GetDistanceFromOrigin() < forceAssignmentMaxDistanceFromOrigin;
     }
 
     /*

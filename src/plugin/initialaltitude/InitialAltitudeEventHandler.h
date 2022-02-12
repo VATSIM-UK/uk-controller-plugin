@@ -71,6 +71,10 @@ namespace UKControllerPlugin::InitialAltitude {
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
 
+        static auto IsNotOutOfRange(
+            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
+
         // Used to generate initial altitudes.
         const Sid::SidMapperInterface& sidMapper;
 
@@ -95,6 +99,7 @@ namespace UKControllerPlugin::InitialAltitude {
         // The maximum distance from the airfield that an aircraft can be untracked
         // to be considered for an altitude update.
         const double assignmentMaxDistanceFromOrigin = 3.0;
+        inline static const double forceAssignmentMaxDistanceFromOrigin = 10.0;
 
         // Then maximum speed that for assigning initial altitudes.
         const int assignmentMaxSpeed = 40;

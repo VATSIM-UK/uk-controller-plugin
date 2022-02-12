@@ -516,7 +516,9 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000)).Times(1);
 
-            EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin()).Times(0);
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(0);
 
@@ -540,6 +542,10 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
 
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000)).Times(1);
 
             handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
@@ -557,7 +563,49 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockFlightPlan, IsTrackedByUser()).WillByDefault(Return(true));
 
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000)).Times(1);
+
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfAircraftOutOfRange)
+        {
+            ON_CALL(this->mockFlightPlan, GetSidName()).WillByDefault(Return("ADMAG2X"));
+
+            ON_CALL(this->mockFlightPlan, GetOrigin()).WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->mockFlightPlan, GetCallsign()).WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(0));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(0));
+
+            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
+
+            handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
+        }
+
+        TEST_F(InitialAltitudeEventHandlerTest, RecycleDoesNothingIfAircraftOutsideOfAirfieldRange)
+        {
+            ON_CALL(this->mockFlightPlan, GetSidName()).WillByDefault(Return("ADMAG2X"));
+
+            ON_CALL(this->mockFlightPlan, GetOrigin()).WillByDefault(Return("EGKK"));
+
+            ON_CALL(this->mockFlightPlan, GetCallsign()).WillByDefault(Return("BAW123"));
+
+            ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(11));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
+            EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
 
             handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
         }
@@ -573,6 +621,10 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(true));
 
             ON_CALL(this->mockFlightPlan, IsTrackedByUser()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
 
@@ -592,6 +644,10 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, GetCallsign()).WillByDefault(Return("BAW123"));
 
             ON_CALL(this->mockFlightPlan, IsTracked()).WillByDefault(Return(false));
+
+            ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
+
+            ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
 
