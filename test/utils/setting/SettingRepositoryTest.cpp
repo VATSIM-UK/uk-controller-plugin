@@ -54,5 +54,87 @@ namespace UKControllerPluginUtilsTest::Setting {
         EXPECT_TRUE(repository.HasSetting("setting3"));
     }
 
-    // TODO: Add remaining tests
+    TEST_F(SettingRepositoryTest, ItReturnsDefaultValueIfNoProviderForSetting)
+    {
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        EXPECT_EQ("abc", repository.GetSetting("test1", "abc"));
+    }
+
+    TEST_F(SettingRepositoryTest, ItReturnsEmptyValueIfNoProviderForSettingAndNoDefaultProvided)
+    {
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        EXPECT_EQ("", repository.GetSetting("test1"));
+    }
+
+    TEST_F(SettingRepositoryTest, ItReturnsDefaultValueIfProviderReturnsEmpty)
+    {
+        EXPECT_CALL(*mockProvider1, Get("setting1")).Times(1).WillOnce(testing::Return(""));
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        EXPECT_EQ("abc", repository.GetSetting("setting1", "abc"));
+    }
+
+    TEST_F(SettingRepositoryTest, ItReturnsValueFromProvider)
+    {
+        EXPECT_CALL(*mockProvider1, Get("setting1")).Times(1).WillOnce(testing::Return("123"));
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        EXPECT_EQ("123", repository.GetSetting("setting1"));
+    }
+
+    TEST_F(SettingRepositoryTest, ItDoesntUpdateSettingIfNoProvider)
+    {
+        EXPECT_CALL(*mockProvider1, Save(testing::_, testing::_)).Times(0);
+
+        EXPECT_CALL(*mockProvider2, Save(testing::_, testing::_)).Times(0);
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        repository.UpdateSetting("setting4", "abc");
+    }
+
+    TEST_F(SettingRepositoryTest, ItUpdatesSetting)
+    {
+        EXPECT_CALL(*mockProvider1, Save(testing::_, testing::_)).Times(0);
+
+        EXPECT_CALL(*mockProvider2, Save("setting3", "abc")).Times(1);
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        repository.UpdateSetting("setting3", "abc");
+    }
+
+    TEST_F(SettingRepositoryTest, ItDoesntReloadSettingIfNoProvider)
+    {
+        EXPECT_CALL(*mockProvider1, Reload()).Times(0);
+
+        EXPECT_CALL(*mockProvider2, Reload()).Times(0);
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        repository.ReloadSetting("setting4");
+    }
+
+    TEST_F(SettingRepositoryTest, ItReloadsSetting)
+    {
+        EXPECT_CALL(*mockProvider1, Reload()).Times(0);
+
+        EXPECT_CALL(*mockProvider2, Reload()).Times(1);
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        repository.ReloadSetting("setting3");
+    }
 } // namespace UKControllerPluginUtilsTest::Setting
