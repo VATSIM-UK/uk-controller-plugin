@@ -1,5 +1,29 @@
 # UK Controller Plugin Changelog
 
+# [5.0.0-alpha.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.0...5.0.0-alpha.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* **updater:** Handle empty binaries during updates ([#388](https://github.com/VATSIM-UK/uk-controller-plugin/issues/388)) ([dc988b0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/dc988b07292838cd16f127f07da5d020c514aaee))
+
+
+### Features
+
+* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
+* **departure:** Combine pending prenotes and releases into one list ([#386](https://github.com/VATSIM-UK/uk-controller-plugin/issues/386)) ([531b687](https://github.com/VATSIM-UK/uk-controller-plugin/commit/531b6876f94a2e6284279efd4ce10c88f2bd92e3))
+* **hold:** Display hold entry time based on proximity ([#418](https://github.com/VATSIM-UK/uk-controller-plugin/issues/418)) ([3c2e5d1](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3c2e5d1e0c45f90e9f90f4e0f2ac4fcaf4cca79f))
+* **missedapproach:** Allow airfields to always alert regardless of service provision ([#384](https://github.com/VATSIM-UK/uk-controller-plugin/issues/384)) ([5fe9fd7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5fe9fd797bfef1bea9fc47e1385ef999e8c6592b))
+* **misssedapproach:** Allow airfields to always alert regardless of service provision ([4398182](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4398182e685fc9f1c7ef9236aaeb6dc494aa28aa))
+
+
+### BREAKING CHANGES
+
+* **departure:** The old lists are replaced by a single list. New ASR settings
+are also used for this list.
+* **misssedapproach:** The airfield selector for Missed Approach configuration now acts as an override
+to the service provision options, rather than a filter for which airfields to use.
+
 # [4.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.1.1...4.2.0) (2022-02-10)
 
 
