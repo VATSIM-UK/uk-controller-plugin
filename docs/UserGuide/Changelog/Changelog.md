@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [4.2.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.0...4.2.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* **initialaltitude:** Dont allow initial altitude recycle on aircraft out of range ([#430](https://github.com/VATSIM-UK/uk-controller-plugin/issues/430)) ([cd3fd0e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cd3fd0e553626d256863377d1cbe30c6b521261a))
+* **initialheading:** Dont allow initial heading recycle on aircraft out of range ([#431](https://github.com/VATSIM-UK/uk-controller-plugin/issues/431)) ([e4fd211](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e4fd211bfde01b0829deaf58a962f1c043654faf)), closes [#429](https://github.com/VATSIM-UK/uk-controller-plugin/issues/429)
+
 # [4.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.1.1...4.2.0) (2022-02-10)
 
 
