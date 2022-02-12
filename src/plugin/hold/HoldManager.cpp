@@ -1,5 +1,6 @@
 #include "HoldingAircraft.h"
 #include "HoldManager.h"
+#include "ProximityHold.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -24,18 +25,18 @@ namespace UKControllerPlugin::Hold {
     /*
         Add an aircraft to a "hold" because it's within proximity to the fix
     */
-    void HoldManager::AddAircraftToProximityHold(const std::string& callsign, const std::string& hold)
+    void HoldManager::AddAircraftToProximityHold(const std::shared_ptr<ProximityHold>& hold)
     {
         std::shared_ptr<HoldingAircraft> holdingAircraft;
-        if (this->aircraft.count(callsign) != 0) {
-            holdingAircraft = *this->aircraft.find(callsign);
+        if (this->aircraft.count(hold->callsign) != 0) {
+            holdingAircraft = *this->aircraft.find(hold->callsign);
             holdingAircraft->AddProximityHold(hold);
         } else {
-            holdingAircraft = std::make_shared<HoldingAircraft>(callsign, std::set<std::string>({hold}));
+            holdingAircraft = std::make_shared<HoldingAircraft>(hold->callsign, hold);
             this->aircraft.insert(holdingAircraft);
         }
 
-        this->holds[hold].insert(holdingAircraft);
+        this->holds[hold->navaid].insert(holdingAircraft);
     }
 
     /*

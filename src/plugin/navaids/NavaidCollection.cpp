@@ -1,5 +1,4 @@
-#include "pch/pch.h"
-#include "navaids/NavaidCollection.h"
+#include "NavaidCollection.h"
 
 namespace UKControllerPlugin {
     namespace Navaids {
@@ -22,5 +21,11 @@ namespace UKControllerPlugin {
             return navaid == this->navaids.cend() ? this->invalidNavaid : *navaid;
         }
 
-    }  // namespace Navaids
-}  // namespace UKControllerPlugin
+        auto NavaidCollection::Get(int id) const -> const UKControllerPlugin::Navaids::Navaid&
+        {
+            auto navaid = std::find_if(
+                this->navaids.cbegin(), this->navaids.cend(), [&id](const Navaid& navaid) { return navaid.id == id; });
+            return navaid == this->navaids.cend() ? this->invalidNavaid : *navaid;
+        }
+    } // namespace Navaids
+} // namespace UKControllerPlugin

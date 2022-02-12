@@ -387,4 +387,16 @@ namespace UKControllerPluginTest::Hold {
         EXPECT_EQ(1, this->radarScreenCommands.CountHandlers());
         EXPECT_TRUE(this->radarScreenCommands.ProcessCommand(".ukcp hold"));
     }
+
+    TEST_F(HoldModuleTest, ItAddsHandlerForAircraftEnteringHoldArea)
+    {
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
+        EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForEvent("hold.area-entered"));
+    }
+
+    TEST_F(HoldModuleTest, ItAddsHandlerForAircraftExitingHoldArea)
+    {
+        BootstrapPlugin(this->mockDependencyProvider, this->container);
+        EXPECT_EQ(1, this->container.pushEventProcessors->CountProcessorsForEvent("hold.area-exited"));
+    }
 } // namespace UKControllerPluginTest::Hold
