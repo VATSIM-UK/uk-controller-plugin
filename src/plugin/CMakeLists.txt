@@ -10,7 +10,6 @@ set(resource
 source_group("resource" FILES ${resource})
 
 set(src__aircraft
-        aircraft/CallsignSelectionListInterface.h
         aircraft/CallsignSelectionProviderInterface.h
         aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h
         aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h
@@ -244,7 +243,7 @@ set(src__graphics
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
     "graphics/GdiplusBrushes.h"
-)
+        graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h)
 source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff
@@ -448,6 +447,16 @@ set(src__intention
     "intention/ShannonAirfieldGroup.h"
 )
 source_group("src\\intention" FILES ${src__intention})
+
+set(src__list
+        list/ListItemProviderInterface.h
+        list/PopupListInterface.h
+        list/PopupList.cpp list/PopupList.h
+        list/PopupListFactory.cpp list/PopupListFactory.h
+        list/ListItem.h
+        list/ListItemCheckedStatus.h
+        list/PopupListFactoryBootstrap.cpp list/PopupListFactoryBootstrap.h)
+source_group("src\\list" FILES ${src__list})
 
 set(src__login
     "login/Login.cpp"
@@ -706,7 +715,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
@@ -889,7 +898,9 @@ set(src__wake
     wake/WakeSchemeCollectionFactory.cpp
     wake/WakeSchemeCollectionFactory.h
     wake/WakeCategoryMapperInterface.h
-    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h)
+    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h
+    wake/WakeCalculatorDisplay.cpp wake/WakeCalculatorDisplay.h
+    wake/WakeCalculatorOptions.cpp wake/WakeCalculatorOptions.h wake/LeadWakeCallsignProvider.cpp wake/LeadWakeCallsignProvider.h wake/FollowingWakeCallsignProvider.cpp wake/FollowingWakeCallsignProvider.h wake/WakeSchemeProvider.cpp wake/WakeSchemeProvider.h wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
@@ -918,6 +929,7 @@ set(ALL_FILES
     ${src__initialheading}
     ${src__integration}
     ${src__intention}
+    ${src__list}
     ${src__login}
     ${src__message}
     ${src__metar}

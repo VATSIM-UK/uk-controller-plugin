@@ -72,6 +72,9 @@ namespace UKControllerPlugin {
     namespace InitialAltitude {
         class InitialAltitudeEventHandler;
     } // namespace InitialAltitude
+    namespace List {
+        class PopupListFactory;
+    } // namespace List
     namespace Metar {
         class MetarEventHandlerCollection;
     } // namespace Metar
@@ -251,5 +254,6 @@ namespace UKControllerPlugin::Bootstrap {
 
         // Some factories
         std::unique_ptr<Aircraft::CallsignSelectionListFactory> callsignSelectionListFactory;
+        std::unique_ptr<List::PopupListFactory> popupListFactory;
     };
 } // namespace UKControllerPlugin::Bootstrap

@@ -37,6 +37,7 @@
 #include "intention/IntentionCodeCache.h"
 #include "intention/IntentionCodeGenerator.h"
 #include "intention/SectorExitRepository.h"
+#include "list/PopupListFactory.h"
 #include "login/Login.h"
 #include "message/UserMessager.h"
 #include "metar/MetarEventHandlerCollection.h"

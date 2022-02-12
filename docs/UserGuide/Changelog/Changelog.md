@@ -1,5 +1,27 @@
 # UK Controller Plugin Changelog
 
+# [4.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.1.1...4.2.0) (2022-02-10)
+
+
+### Features
+
+* **pressure:** Make pressure monitor message more brief ([#424](https://github.com/VATSIM-UK/uk-controller-plugin/issues/424)) ([058be53](https://github.com/VATSIM-UK/uk-controller-plugin/commit/058be53e6a40d25d4dd9c5fd490ca24a9661252d)), closes [#423](https://github.com/VATSIM-UK/uk-controller-plugin/issues/423)
+* **wake:** Add not applicable to wake calculator display ([#426](https://github.com/VATSIM-UK/uk-controller-plugin/issues/426)) ([6ec1b87](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6ec1b87464db4f5c513048347cf8034c35c37725)), closes [#425](https://github.com/VATSIM-UK/uk-controller-plugin/issues/425)
+
+## [4.1.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.1.0...4.1.1) (2022-02-09)
+
+
+### Bug Fixes
+
+* **intention:** add golum exit point for copenhagen ([#422](https://github.com/VATSIM-UK/uk-controller-plugin/issues/422)) ([b032890](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b03289000b36586b4e65a05865f9657187c2f6eb)), closes [#421](https://github.com/VATSIM-UK/uk-controller-plugin/issues/421)
+
+# [4.1.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0...4.1.0) (2022-02-05)
+
+
+### Features
+
+* **wake:** Departure wake interval calculator ([#417](https://github.com/VATSIM-UK/uk-controller-plugin/issues/417)) ([92c6737](https://github.com/VATSIM-UK/uk-controller-plugin/commit/92c6737a17fbafed3dd2de07479889dd58c9fc37))
+
 # [4.0.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.14.0...4.0.0) (2022-01-23)
 
 

@@ -231,6 +231,10 @@ set(test__intention
 )
 source_group("test\\intention" FILES ${test__intention})
 
+set(test__list
+        list/PopupListTest.cpp list/PopupListFactoryTest.cpp list/PopupListFactoryBootstrapTest.cpp)
+source_group("test\\list" FILES ${test__list})
+
 set(test__login
     "login/LoginModuleTest.cpp"
     "login/LoginTest.cpp"
@@ -331,9 +335,9 @@ set(test__mock
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"
     mock/MockCallsignSelectionProvider.h
-    mock/MockCallsignSelectionList.h
     mock/MockAircraftTypeMapper.h
-    mock/MockWakeCategoryMapper.h)
+    mock/MockWakeCategoryMapper.h
+    mock/MockListItemProvider.h mock/MockPopupList.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -431,7 +435,7 @@ set(test__radarscreen
     "radarscreen/RadarRenderableCollectionTest.cpp"
     "radarscreen/ScreenControlsBootstrapTest.cpp"
     "radarscreen/ScreenControlsTest.cpp"
-)
+        radarscreen/ToggleDisplayFromMenuTest.cpp mock/MockMenuToggleableDisplay.h radarscreen/MenuToggleableDisplayFactoryTest.cpp)
 source_group("test\\radarscreen" FILES ${test__radarscreen})
 
 set(test__regional
@@ -545,7 +549,7 @@ set(test__wake
     wake/WakeSchemeFactoryTest.cpp
     wake/WakeSchemeCollectionTest.cpp
     wake/WakeSchemeCollectionFactoryTest.cpp
-    wake/FlightplanWakeCategoryMapperTest.cpp)
+    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
@@ -572,6 +576,7 @@ set(ALL_FILES
     ${test__initialheading}
     ${test__integration}
     ${test__intention}
+    ${test__list}
     ${test__login}
     ${test__message}
     ${test__metar}

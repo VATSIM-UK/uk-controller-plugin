@@ -66,15 +66,11 @@ namespace UKControllerPluginTest::Metar {
 
     TEST_F(PressureChangeMessageTest, ItHasAMessageHectopascals)
     {
-        EXPECT_EQ(
-            "Pressure change at EGKK. QNH was 1013, now 1014. QFE was 1011, now 1012.",
-            messageHectopascals.MessageString());
+        EXPECT_EQ("EGKK QNH(QFE) now 1014(1012), was 1013(1011).", messageHectopascals.MessageString());
     }
 
     TEST_F(PressureChangeMessageTest, ItHasAMessageInHg)
     {
-        EXPECT_EQ(
-            "Pressure change at EGLL. QNH was 29.92, now 29.94. QFE was 29.84, now 29.86.",
-            messageInhg.MessageString());
+        EXPECT_EQ("EGLL QNH(QFE) now 29.94(29.86), was 29.92(29.84).", messageInhg.MessageString());
     }
 } // namespace UKControllerPluginTest::Metar

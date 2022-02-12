@@ -8,7 +8,6 @@
 #include "HoldingData.h"
 #include "ProximityHold.h"
 #include "PublishedHoldCollection.h"
-#include "aircraft/CallsignSelectionListInterface.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
@@ -16,6 +15,7 @@
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "list/PopupListInterface.h"
 #include "navaids/Navaid.h"
 
 using UKControllerPlugin::Dialog::DialogManager;
@@ -35,7 +35,7 @@ namespace UKControllerPlugin {
             const Navaids::Navaid& navaid,
             const PublishedHoldCollection& publishedHoldCollection,
             const DialogManager& dialogManager,
-            std::shared_ptr<Aircraft::CallsignSelectionListInterface> addAircraftSelector)
+            std::shared_ptr<List::PopupListInterface> addAircraftSelector)
             : navaid(navaid), publishedHolds(publishedHoldCollection.GetForFix(navaid.identifier)),
               holdManager(holdManager), plugin(plugin), dialogManager(dialogManager),
               publishedHoldCollection(publishedHoldCollection), addAircraftSelector(addAircraftSelector),
@@ -114,7 +114,7 @@ namespace UKControllerPlugin {
         void HoldDisplay::ButtonRightClicked(const std::string& button)
         {
             if (button == "add") {
-                addAircraftSelector->TriggerList({this->addButtonClickRect.left, this->addButtonClickRect.top});
+                addAircraftSelector->Trigger({this->addButtonClickRect.left, this->addButtonClickRect.top});
             }
         }
 

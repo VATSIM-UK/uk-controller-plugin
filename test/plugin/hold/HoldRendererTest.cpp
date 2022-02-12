@@ -6,6 +6,7 @@
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
+#include "list/PopupListFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/PopupMenuItem.h"
 #include "navaids/NavaidCollection.h"
@@ -23,6 +24,7 @@ using UKControllerPlugin::Hold::HoldDisplayManager;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldRenderer;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -40,8 +42,8 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldRendererTest()
-                : callsignSelectionFactory(functionHandlers, mockPlugin), dialogManager(mockDialog),
-                  userSetting(mockUserSettingProvider), holdManager(mockApi, mockTaskRunner),
+                : popupFactory(functionHandlers, mockPlugin), callsignSelectionFactory(popupFactory),
+                  dialogManager(mockDialog), userSetting(mockUserSettingProvider), holdManager(mockApi, mockTaskRunner),
                   displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory),
                   displayManager(new HoldDisplayManager(displayFactory)), renderer(displayManager, 1, 2)
             {
@@ -64,6 +66,7 @@ namespace UKControllerPluginTest {
             NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
             FunctionCallEventHandler functionHandlers;
+            PopupListFactory popupFactory;
             CallsignSelectionListFactory callsignSelectionFactory;
             NiceMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
             NiceMock<MockApiInterface> mockApi;
