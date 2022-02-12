@@ -43,22 +43,7 @@ to the service provision options, rather than a filter for which airfields to us
 
 * chore(release): 4.0.0-beta.1 [skip ci]
 
-# [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
-
-### Features
-* The old lists are replaced by a single list. New ASR settings
-are also used for this list.
-
-* chore(release): 4.0.0-beta.2 [skip ci]
-
-# [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
-
-### Features
-
-* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
-
 # [4.0.0-beta.7](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.6...4.0.0-beta.7) (2022-01-23)
-
 
 ### Features
 
