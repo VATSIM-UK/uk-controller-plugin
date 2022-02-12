@@ -1,22 +1,30 @@
+#include "aircraft/CallsignSelectionListFactory.h"
+#include "dialog/DialogManager.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
+#include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldingData.h"
-#include "hold/HoldDisplay.h"
+#include "hold/PublishedHoldCollection.h"
+#include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
 #include "navaids/Navaid.h"
-#include "hold/PublishedHoldCollection.h"
-#include "dialog/DialogManager.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
+using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Hold::HoldDisplay;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -28,8 +36,10 @@ namespace UKControllerPluginTest::Hold {
     {
         public:
         HoldDisplayFactoryTest()
-            : dialogManager(dialogProvider), navaid({1, "TIMBA", EuroScopePlugIn::CPosition()}),
-              holdManager(mockApi, taskRunner), factory(mockPlugin, holdManager, navaids, holds, dialogManager)
+            : dialogManager(dialogProvider), popupFactory(functionHandlers, mockPlugin),
+              callsignSelectionFactory(popupFactory), navaid({1, "TIMBA", EuroScopePlugIn::CPosition()}),
+              holdManager(mockApi, taskRunner),
+              factory(mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory)
 
         {
             this->navaids.AddNavaid(navaid);
@@ -41,6 +51,9 @@ namespace UKControllerPluginTest::Hold {
         NiceMock<MockDialogProvider> dialogProvider;
         DialogManager dialogManager;
         NiceMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
+        FunctionCallEventHandler functionHandlers;
+        PopupListFactory popupFactory;
+        CallsignSelectionListFactory callsignSelectionFactory;
         HoldingData holdData = {1, "TIMBA", "TIMBA TEST", 7000, 15000, 360, "left", {}};
         PublishedHoldCollection holds;
         Navaid navaid;

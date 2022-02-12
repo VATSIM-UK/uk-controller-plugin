@@ -2,7 +2,6 @@
 #include "push/PushEventBootstrap.h"
 #include "push/PushEventProcessorCollection.h"
 #include "timedevent/TimedEventCollection.h"
-#include "memory"
 
 using testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -44,8 +43,13 @@ namespace UKControllerPluginTest::Push {
     TEST_F(PushEventBootstrapTest, ItSetsUpProtocolHandlerForTimedEventsOnDuplicatePlugin)
     {
         BootstrapPlugin(this->container, true);
-        EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
         EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(1));
+    }
+
+    TEST_F(PushEventBootstrapTest, ItSetsUpProxySyncOnDuplicatePlugin)
+    {
+        BootstrapPlugin(this->container, true);
+        EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(5));
     }
 
     TEST_F(PushEventBootstrapTest, ItSetsUpProxyHandlerForPushEventsOnNonDuplicatePlugin)

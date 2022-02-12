@@ -1,14 +1,15 @@
-#include "pch/pch.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldingDataSerializer.h"
 #include "hold/HoldingData.h"
 #include "bootstrap/PersistenceContainer.h"
 
-using UKControllerPlugin::Hold::JsonValid;
-using UKControllerPlugin::Hold::holdSerializerInvalid;
-using UKControllerPlugin::Hold::HoldingData;
-using UKControllerPlugin::Hold::from_json_with_restrictions;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using ::testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Hold::from_json_with_restrictions;
+using UKControllerPlugin::Hold::HoldingData;
+using UKControllerPlugin::Hold::holdSerializerInvalid;
+using UKControllerPlugin::Hold::JsonValid;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -16,34 +17,28 @@ namespace UKControllerPluginTest {
         class HoldingDataSerializerTest : public Test
         {
             public:
-                HoldingDataSerializerTest()
-                {
-                    nlohmann::json restriction = {
-                        {"type", "level-block"},
-                        {"levels", nlohmann::json::array({7000, 9000})}
-                    };
+            HoldingDataSerializerTest()
+            {
+                nlohmann::json restriction = {{"type", "level-block"}, {"levels", nlohmann::json::array({7000, 9000})}};
 
-                    nlohmann::json deemedSeparatedHold = {
-                        {"hold_id", 2},
-                        {"vsl_insert_distance", 2}
-                    };
+                nlohmann::json deemedSeparatedHold = {{"hold_id", 2}, {"vsl_insert_distance", 2}};
 
-                    testData = {
-                        {"id", 1},
-                        {"fix", "TIMBA"},
-                        {"description", "TIMBA LOW"},
-                        {"minimum_altitude", 7000},
-                        {"maximum_altitude", 15000},
-                        {"inbound_heading", 309},
-                        {"turn_direction", "right"},
-                        {"restrictions", nlohmann::json::array({restriction})},
-                        {"deemed_separated_holds", nlohmann::json::array({deemedSeparatedHold})},
-                    };
-                }
+                testData = {
+                    {"id", 1},
+                    {"fix", "TIMBA"},
+                    {"description", "TIMBA LOW"},
+                    {"minimum_altitude", 7000},
+                    {"maximum_altitude", 15000},
+                    {"inbound_heading", 309},
+                    {"turn_direction", "right"},
+                    {"restrictions", nlohmann::json::array({restriction})},
+                    {"deemed_separated_holds", nlohmann::json::array({deemedSeparatedHold})},
+                };
+            }
 
-                PersistenceContainer container;
+            PersistenceContainer container;
 
-                nlohmann::json testData;
+            nlohmann::json testData;
         };
 
         TEST_F(HoldingDataSerializerTest, ValidJsonReturnsTrueAllValid)
@@ -174,7 +169,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldingDataSerializerTest, ReturnsHoldingDataWithRestrictionsFromJson)
         {
             HoldingData actual;
-            from_json_with_restrictions (this->testData, actual, this->container);
+            from_json_with_restrictions(this->testData, actual, this->container);
             EXPECT_EQ(1, actual.identifier);
             EXPECT_EQ("TIMBA", actual.fix);
             EXPECT_EQ("TIMBA LOW", actual.description);
@@ -187,5 +182,5 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE((*actual.restrictions.cbegin())->LevelRestricted(9000));
             EXPECT_EQ(2, (*actual.deemedSeparatedHolds.cbegin())->identifier);
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

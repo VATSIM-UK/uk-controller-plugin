@@ -9,6 +9,20 @@ set(resource
 )
 source_group("resource" FILES ${resource})
 
+set(src__aircraft
+        aircraft/CallsignSelectionProviderInterface.h
+        aircraft/CallsignSelectionList.cpp aircraft/CallsignSelectionList.h
+        aircraft/CallsignSelectionListFactory.cpp aircraft/CallsignSelectionListFactory.h
+        aircraft/CallsignSelectionListFactoryBootstrap.cpp aircraft/CallsignSelectionListFactoryBootstrap.h
+        aircraft/AircraftType.cpp aircraft/AircraftType.h
+        aircraft/AircraftTypeCollection.cpp aircraft/AircraftTypeCollection.h
+        aircraft/AircraftTypeCollectionFactory.cpp aircraft/AircraftTypeCollectionFactory.h
+        aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h
+        aircraft/AircraftModule.cpp aircraft/AircraftModule.h
+        aircraft/FlightplanAircraftTypeMapper.cpp aircraft/FlightplanAircraftTypeMapper.h
+        aircraft/AircraftTypeMapperInterface.h)
+source_group("src\\aircraft" FILES ${src__aircraft})
+
 set(src__airfield
     "airfield/AirfieldCollection.cpp"
     "airfield/AirfieldCollection.h"
@@ -229,7 +243,7 @@ set(src__graphics
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
     "graphics/GdiplusBrushes.h"
-)
+        graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h)
 source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff
@@ -246,7 +260,7 @@ set(src__handoff
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
     controller/HandoffEventHandler.cpp
-    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h)
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/ClearCacheOnActiveCallsignChanges.cpp handoff/ClearCacheOnActiveCallsignChanges.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__headings headings/Heading.h headings/Heading.cpp)
@@ -325,7 +339,7 @@ set(src__hold
     "hold/PublishedHoldCollection.h"
     "hold/PublishedHoldCollectionFactory.cpp"
     "hold/PublishedHoldCollectionFactory.h"
-)
+        hold/AssignHoldCommand.cpp hold/AssignHoldCommand.h hold/AddToHoldCallsignProvider.cpp hold/AddToHoldCallsignProvider.h)
 source_group("src\\hold" FILES ${src__hold})
 
 set(src__initialaltitude
@@ -433,6 +447,16 @@ set(src__intention
     "intention/ShannonAirfieldGroup.h"
 )
 source_group("src\\intention" FILES ${src__intention})
+
+set(src__list
+        list/ListItemProviderInterface.h
+        list/PopupListInterface.h
+        list/PopupList.cpp list/PopupList.h
+        list/PopupListFactory.cpp list/PopupListFactory.h
+        list/ListItem.h
+        list/ListItemCheckedStatus.h
+        list/PopupListFactoryBootstrap.cpp list/PopupListFactoryBootstrap.h)
+source_group("src\\list" FILES ${src__list})
 
 set(src__login
     "login/Login.cpp"
@@ -669,7 +693,9 @@ set(src__push
     "push/PushEventProxyWindow.h"
     "push/PushEventSubscription.cpp"
     "push/PushEventSubscription.h"
-        push/PushEvent.cpp push/PushEventConnectionInterface.cpp)
+    push/PushEvent.cpp
+    push/PushEventConnectionInterface.cpp
+    push/ProxyPushDataSync.cpp push/ProxyPushDataSync.h)
 source_group("src\\push" FILES ${src__push})
 
 set(src__radarscreen
@@ -689,7 +715,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
@@ -743,6 +769,13 @@ set(src__releases
     releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
 source_group("src\\releases" FILES ${src__releases})
 
+set(src__runway
+        runway/Runway.cpp runway/Runway.h
+        runway/RunwayCollection.cpp runway/RunwayCollection.h
+        runway/RunwayCollectionFactory.cpp runway/RunwayCollectionFactory.h
+        runway/RunwayModule.cpp runway/RunwayModule.h)
+source_group("src\\runway" FILES ${src__runway})
+
 set(src__sectorfile
     "sectorfile/Runway.cpp"
     "sectorfile/Runway.h"
@@ -770,7 +803,8 @@ set(src__sid
     "sid/SidModule.h"
     "sid/StandardInstrumentDeparture.cpp"
     "sid/StandardInstrumentDeparture.h"
-)
+    sid/FlightplanSidMapper.cpp sid/FlightplanSidMapper.h
+    sid/SidMapperInterface.h)
 source_group("src\\sid" FILES ${src__sid})
 
 set(src__squawk
@@ -850,19 +884,28 @@ source_group("src\\timer" FILES ${src__timer})
 
 set(src__wake
     "wake/CacheItem.h"
-    "wake/CreateWakeMappings.cpp"
-    "wake/CreateWakeMappings.h"
     "wake/WakeCategoryEventHandler.cpp"
     "wake/WakeCategoryEventHandler.h"
-    "wake/WakeCategoryMapper.cpp"
-    "wake/WakeCategoryMapper.h"
     "wake/WakeModule.cpp"
     "wake/WakeModule.h"
-)
+    wake/WakeScheme.cpp wake/WakeScheme.h
+    wake/WakeCategory.cpp wake/WakeCategory.h
+    wake/WakeCategoryFactory.cpp wake/WakeCategoryFactory.h
+    wake/DepartureWakeInterval.h
+    wake/DepartureWakeIntervalFactory.cpp wake/DepartureWakeIntervalFactory.h
+    wake/WakeSchemeFactory.cpp wake/WakeSchemeFactory.h wake/WakeSchemeCollection.cpp
+    wake/WakeSchemeCollection.h
+    wake/WakeSchemeCollectionFactory.cpp
+    wake/WakeSchemeCollectionFactory.h
+    wake/WakeCategoryMapperInterface.h
+    wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h
+    wake/WakeCalculatorDisplay.cpp wake/WakeCalculatorDisplay.h
+    wake/WakeCalculatorOptions.cpp wake/WakeCalculatorOptions.h wake/LeadWakeCallsignProvider.cpp wake/LeadWakeCallsignProvider.h wake/FollowingWakeCallsignProvider.cpp wake/FollowingWakeCallsignProvider.h wake/WakeSchemeProvider.cpp wake/WakeSchemeProvider.h wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
     ${resource}
+    ${src__aircraft}
     ${src__airfield}
     ${src__api}
     ${src__bootstrap}
@@ -886,6 +929,7 @@ set(ALL_FILES
     ${src__initialheading}
     ${src__integration}
     ${src__intention}
+    ${src__list}
     ${src__login}
     ${src__message}
     ${src__metar}
@@ -902,6 +946,7 @@ set(ALL_FILES
     ${src__radarscreen}
     ${src__regional}
     ${src__releases}
+    ${src__runway}
     ${src__sectorfile}
     ${src__selcal}
     ${src__sid}
@@ -912,8 +957,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
-    ${src__wake}
-        missedapproach/MissedApproachAudioAlert.cpp missedapproach/MissedApproachAudioAlert.h)
+    ${src__wake})
 
 ################################################################################
 # Target

@@ -4,6 +4,11 @@
 namespace UKControllerPlugin {
     class UKPlugin;
 
+    namespace Aircraft {
+        class AircraftTypeCollection;
+        class AircraftTypeMapperInterface;
+        class CallsignSelectionListFactory;
+    } // namespace Aircraft
     namespace Airfield {
         class AirfieldCollection;
     } // namespace Airfield
@@ -67,6 +72,9 @@ namespace UKControllerPlugin {
     namespace InitialAltitude {
         class InitialAltitudeEventHandler;
     } // namespace InitialAltitude
+    namespace List {
+        class PopupListFactory;
+    } // namespace List
     namespace Metar {
         class MetarEventHandlerCollection;
     } // namespace Metar
@@ -104,6 +112,9 @@ namespace UKControllerPlugin {
     namespace Releases {
         class DepartureReleaseEventHandler;
     } // namespace Releases
+    namespace Runway {
+        class RunwayCollection;
+    } // namespace Runway
     namespace SectorFile {
         class RunwayCollection;
     } // namespace SectorFile
@@ -112,6 +123,7 @@ namespace UKControllerPlugin {
     } // namespace Setting
     namespace Sid {
         class SidCollection;
+        class SidMapperInterface;
     } // namespace Sid
     namespace Squawk {
         class SquawkAssignment;
@@ -127,6 +139,9 @@ namespace UKControllerPlugin {
     namespace TimedEvent {
         class TimedEventCollection;
     } // namespace TimedEvent
+    namespace Wake {
+        class WakeSchemeCollection;
+    } // namespace Wake
     namespace Windows {
         struct GdiplusBrushes;
         class GdiGraphicsWrapper;
@@ -210,6 +225,9 @@ namespace UKControllerPlugin::Bootstrap {
 
         // Large collections that we don't want to go onto the stack
         std::unique_ptr<Sid::SidCollection> sids;
+        std::unique_ptr<Sid::SidMapperInterface> sidMapper;
+        std::unique_ptr<const UKControllerPlugin::Aircraft::AircraftTypeCollection> aircraftTypes;
+        std::unique_ptr<UKControllerPlugin::Aircraft::AircraftTypeMapperInterface> aircraftTypeMapper;
         std::unique_ptr<const UKControllerPlugin::Airfield::AirfieldCollection> airfields;
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
@@ -219,10 +237,16 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeGenerator> intentionCodeGenerator;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
+        std::unique_ptr<UKControllerPlugin::Wake::WakeSchemeCollection> wakeSchemes;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
         std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
+        std::unique_ptr<UKControllerPlugin::Runway::RunwayCollection> runwayCollection;
 
         // Push events
         std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;
+
+        // Some factories
+        std::unique_ptr<Aircraft::CallsignSelectionListFactory> callsignSelectionListFactory;
+        std::unique_ptr<List::PopupListFactory> popupListFactory;
     };
 } // namespace UKControllerPlugin::Bootstrap

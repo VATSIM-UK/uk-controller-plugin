@@ -16,7 +16,9 @@ namespace UKControllerPlugin::Handoff {
         const FlightplanSidHandoffMapper& sidMapper,
         const FlightplanAirfieldHandoffMapper& airfieldMapper,
         const Controller::ActiveCallsignCollection& activeCallsigns)
-        : sidMapper(sidMapper), airfieldMapper(airfieldMapper), activeCallsigns(activeCallsigns)
+        : sidMapper(sidMapper), airfieldMapper(airfieldMapper), activeCallsigns(activeCallsigns),
+          unicomController(std::make_shared<Controller::ControllerPosition>(
+              -1, "UNICOM", 122.800, std::vector<std::string>{}, false, false))
     {
     }
 
@@ -28,86 +30,59 @@ namespace UKControllerPlugin::Handoff {
     auto DepartureHandoffResolver::Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> std::shared_ptr<ResolvedHandoff>
     {
-        const auto resolved = this->ResolveHandoff(flightplan);
-        return resolved != nullptr ? resolved
-                                   : ResolveToUnicom(flightplan, std::make_shared<ControllerPositionHierarchy>());
-    }
+        std::shared_ptr<Controller::ControllerPosition> controller = nullptr;
 
-    auto DepartureHandoffResolver::ResolveToUnicom(
-        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-        std::shared_ptr<Controller::ControllerPositionHierarchy> handoffOrder) -> std::shared_ptr<ResolvedHandoff>
-    {
-        return std::make_shared<ResolvedHandoff>(flightplan.GetCallsign(), UNICOM_FREQUENCY, handoffOrder);
-    }
-
-    /**
-     * Work through the flightplan and use the resolvers in orde to resolve the handoff.
-     */
-    auto DepartureHandoffResolver::ResolveHandoff(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
-        -> std::shared_ptr<ResolvedHandoff>
-    {
-        std::shared_ptr<ResolvedHandoff> resolved = nullptr;
-
-        // First, try the SID, as these orders are most specific.
+        /*
+         * Resolve the handoff for the SID. If we find one and a controller on that handoff
+         * is active, that's the handoff controller.
+         */
         const auto sidHandoff = this->sidMapper.MapForFlightplan(flightplan);
         if (sidHandoff != nullptr) {
-            resolved = this->ResolveForHandoff(flightplan, *sidHandoff);
+            const auto resolvedSidController = this->ResolveController(*sidHandoff);
+            if (resolvedSidController) {
+                controller = resolvedSidController;
+            }
         }
 
-        // If we've resolved to something that's not unicom, stop here.
-        if (resolved && !ResolvedToUnicom(*resolved)) {
-            return resolved;
-        }
-
-        // As a last attempt, try to resolve to the default airfield handoff order.
+        /*
+         * Resolve the handoff for the airfield as a fallback.
+         *
+         * If there isn't already a controller the SID, try to find one for the airport.
+         */
         const auto airfieldHandoff = this->airfieldMapper.MapForFlightplan(flightplan);
-        if (airfieldHandoff != nullptr) {
-            resolved = this->ResolveForHandoff(flightplan, *airfieldHandoff);
+        if (controller == nullptr && airfieldHandoff != nullptr) {
+            const auto resolvedAirfieldController = this->ResolveController(*airfieldHandoff);
+            if (resolvedAirfieldController) {
+                controller = resolvedAirfieldController;
+            }
         }
 
-        return resolved;
-    }
-
-    /**
-     * Given a particular handoff, resolve it to a controller and thus make it a resolved
-     * handoff. The handoff frequency may be unicom if the controller is providing top-down,
-     * but should still use the resolved handoffs order for it incase another controller
-     * comes along.
-     */
-    auto DepartureHandoffResolver::ResolveForHandoff(
-        const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const HandoffOrder& handoff) const
-        -> std::shared_ptr<ResolvedHandoff>
-    {
-        const auto controller = this->ResolveController(handoff);
-        if (!controller) {
-            return ResolveToUnicom(flightplan, handoff.order);
-        }
-
-        return this->activeCallsigns.GetLeadCallsignForPosition(controller->GetCallsign()).GetIsUser()
-                   ? ResolveToUnicom(flightplan, handoff.order)
-                   : std::make_shared<ResolvedHandoff>(
-                         flightplan.GetCallsign(), controller->GetFrequency(), handoff.order);
+        return std::make_shared<ResolvedHandoff>(
+            flightplan.GetCallsign(),
+            controller != nullptr ? controller : this->unicomController,
+            sidHandoff != nullptr ? sidHandoff->order : std::make_shared<ControllerPositionHierarchy>(),
+            airfieldHandoff != nullptr ? airfieldHandoff->order : std::make_shared<ControllerPositionHierarchy>());
     }
 
     /**
      * For a given handoff, resolve it to a particular controller position.
      */
     auto DepartureHandoffResolver::ResolveController(const HandoffOrder& handoff) const
-        -> std::shared_ptr<const Controller::ControllerPosition>
+        -> std::shared_ptr<Controller::ControllerPosition>
     {
-        for (const auto& controller : *handoff.order) {
+        for (auto& controller : *handoff.order) {
             if (!this->activeCallsigns.PositionActive(controller->GetCallsign())) {
                 continue;
+            }
+
+            // If the controller is us, then it's unicom.
+            if (this->activeCallsigns.GetLeadCallsignForPosition(controller->GetCallsign()).GetIsUser()) {
+                return unicomController;
             }
 
             return controller;
         }
 
         return nullptr;
-    }
-
-    auto DepartureHandoffResolver::ResolvedToUnicom(const ResolvedHandoff& resolved) -> bool
-    {
-        return resolved.frequency == UNICOM_FREQUENCY;
     }
 } // namespace UKControllerPlugin::Handoff

@@ -7,14 +7,24 @@ namespace UKControllerPlugin {
     namespace Dependency {
         class DependencyLoaderInterface;
     } // namespace Dependency
+    namespace Euroscope {
+        class AsrEventHandlerCollection;
+    } // namespace Euroscope
+    namespace RadarScreen {
+        class MenuToggleableDisplayFactory;
+        class RadarRenderableCollection;
+    } // namespace RadarScreen
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Wake {
 
     void BootstrapPlugin(
-        const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
+        UKControllerPlugin::Bootstrap::PersistenceContainer& container,
         UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies);
 
-    [[nodiscard]] auto GetWakeDependencyKey() -> std::string;
-    [[nodiscard]] auto GetRecatDependencyKey() -> std::string;
+    void BootstrapRadarScreen(
+        const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
+        RadarScreen::RadarRenderableCollection& renderables,
+        Euroscope::AsrEventHandlerCollection& asrHandlers,
+        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory);
 } // namespace UKControllerPlugin::Wake

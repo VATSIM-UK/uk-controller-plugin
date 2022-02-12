@@ -21,8 +21,8 @@ namespace UKControllerPlugin::Metar {
 
     auto PressureChangeMessage::MessageString() const -> std::string
     {
-        return "Pressure change at " + airfield + ". QNH was " + this->QnhBefore() + ", now " + this->QnhAfter() +
-               ". QFE was " + this->QfeBefore() + ", now " + this->QfeAfter() + ".";
+        return airfield + " QNH(QFE) now " + this->QnhAfter() + "(" + this->QfeAfter() + "), was " + this->QnhBefore() +
+               "(" + this->QfeBefore() + ").";
     }
 
     auto PressureChangeMessage::MessageShowHandler() const -> bool

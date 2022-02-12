@@ -1,14 +1,25 @@
+#include "aircraft/CallsignSelectionListFactory.h"
+#include "dialog/DialogManager.h"
+#include "euroscope/UserSetting.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
+#include "hold/HoldingAircraft.h"
 #include "hold/HoldManager.h"
+#include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldDisplayFactory.h"
 #include "hold/HoldSelectionMenu.h"
-#include "euroscope/UserSetting.h"
+#include "hold/PublishedHoldCollection.h"
+#include "list/PopupListFactory.h"
+#include "navaids/NavaidCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using ::testing::_;
 using ::testing::InSequence;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Test;
+using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Hold::HoldDisplayFactory;
@@ -17,7 +28,9 @@ using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Hold::HoldSelectionMenu;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
+using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
@@ -34,8 +47,9 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldSelectionMenuTest()
-                : dialogManager(mockDialogProvider), userSetting(mockUserSettingProvider),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager),
+                : popupFactory(functionHandlers, mockPlugin), listFactory(popupFactory),
+                  dialogManager(mockDialogProvider), userSetting(mockUserSettingProvider),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
                   holdManager(mockApi, mockTaskRunner), holdSelectionMenu(holdManager, mockPlugin, 1)
             {
                 this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
@@ -59,6 +73,9 @@ namespace UKControllerPluginTest {
             NiceMock<MockApiInterface> mockApi;
             NiceMock<MockTaskRunnerInterface> mockTaskRunner;
             NiceMock<MockDialogProvider> mockDialogProvider;
+            FunctionCallEventHandler functionHandlers;
+            PopupListFactory popupFactory;
+            CallsignSelectionListFactory listFactory;
             DialogManager dialogManager;
             NavaidCollection navaids;
             PublishedHoldCollection holds;

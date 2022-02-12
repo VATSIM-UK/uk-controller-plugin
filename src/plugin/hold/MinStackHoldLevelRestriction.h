@@ -1,7 +1,14 @@
 #pragma once
 #include "AbstractHoldLevelRestriction.h"
-#include "minstack/MinStackManager.h"
-#include "sectorfile/RunwayCollection.h"
+
+namespace UKControllerPlugin {
+    namespace MinStack {
+        class MinStackManager;
+    } // namespace MinStack
+    namespace SectorFile {
+        class RunwayCollection;
+    } // namespace SectorFile
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Hold {
 

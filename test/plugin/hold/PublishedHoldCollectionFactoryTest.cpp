@@ -1,14 +1,15 @@
-#include "pch/pch.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/DeemedSeparatedHold.h"
 #include "hold/PublishedHoldCollectionFactory.h"
 #include "hold/PublishedHoldCollection.h"
 #include "hold/HoldingData.h"
 #include "bootstrap/PersistenceContainer.h"
 
 using testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Hold::CreatePublishedHoldCollection;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::PublishedHoldCollection;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -16,7 +17,7 @@ namespace UKControllerPluginTest {
         class PublishedHoldCollectionFactoryTest : public Test
         {
             public:
-                PersistenceContainer container;
+            PersistenceContainer container;
         };
 
         TEST_F(PublishedHoldCollectionFactoryTest, ItReturnsEmptyIfDataEmpty)
@@ -55,14 +56,14 @@ namespace UKControllerPluginTest {
             hold2["restrictions"] = nlohmann::json::array();
             hold2["deemed_separated_holds"] = nlohmann::json::array();
 
-            data = { hold1, hold2 };
+            data = {hold1, hold2};
             EXPECT_EQ(2, CreatePublishedHoldCollection(data, container)->Count());
         }
 
         TEST_F(PublishedHoldCollectionFactoryTest, ItDoesntAddNonObjects)
         {
             nlohmann::json data;
-            data = { "Test" };
+            data = {"Test"};
 
             EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->Count());
         }
@@ -78,9 +79,9 @@ namespace UKControllerPluginTest {
             hold["inbound_heading"] = 309;
             hold["turn_direction"] = "left";
 
-            data = { hold };
+            data = {hold};
 
             EXPECT_EQ(0, CreatePublishedHoldCollection(data, container)->Count());
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

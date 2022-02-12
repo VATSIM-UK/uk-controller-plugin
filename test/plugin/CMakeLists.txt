@@ -3,6 +3,18 @@ set(PROJECT_NAME UKControllerPluginCoreTest)
 ################################################################################
 # Source groups
 ################################################################################
+set(test__aircraft
+        aircraft/CallsignSelectionListTest.cpp
+        aircraft/CallsignSelectionListFactoryTest.cpp
+        aircraft/CallsignSelectionListFactoryBootstrapTest.cpp
+        aircraft/AircraftTypeTest.cpp
+        aircraft/AircraftTypeCollectionTest.cpp
+        aircraft/AircraftTypeFactoryTest.cpp
+        aircraft/AircraftTypeCollectionFactoryTest.cpp
+        aircraft/AircraftModuleTest.cpp
+        aircraft/FlightplanAircraftTypeMapperTest.cpp)
+source_group("test\\aircraft" FILES ${test__aircraft})
+
 set(test__airfield
     "airfield/AirfieldCollectionFactoryTest.cpp"
     "airfield/AirfieldCollectionTest.cpp"
@@ -124,7 +136,7 @@ set(test__handoff
     handoff/FlightplanSidHandoffMapperTest.cpp
     handoff/FlightplanAirfieldHandoffMapperTest.cpp
     handoff/HandoffCacheTest.cpp
-    handoff/DepartureHandoffResolverTest.cpp)
+    handoff/DepartureHandoffResolverTest.cpp handoff/ClearCacheOnActiveCallsignChangesTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
@@ -166,7 +178,7 @@ set(test__hold
     "hold/MinStackHoldLevelRestrictionTest.cpp"
     "hold/PublishedHoldCollectionFactoryTest.cpp"
     "hold/PublishedHoldCollectionTest.cpp"
-)
+        hold/AssignHoldCommandTest.cpp hold/AddToHoldCallsignProviderTest.cpp)
 source_group("test\\hold" FILES ${test__hold})
 
 set(test__initialaltitude
@@ -219,6 +231,10 @@ set(test__intention
 )
 source_group("test\\intention" FILES ${test__intention})
 
+set(test__list
+        list/PopupListTest.cpp list/PopupListFactoryTest.cpp list/PopupListFactoryBootstrapTest.cpp)
+source_group("test\\list" FILES ${test__list})
+
 set(test__login
     "login/LoginModuleTest.cpp"
     "login/LoginTest.cpp"
@@ -246,7 +262,7 @@ set(test__metar
     metar/MetarModuleTest.cpp
     metar/PressureQueryMessageTest.cpp
     metar/PressureNotFoundMessageTest.cpp
-    metar/PressureQueryCommandHandlerTest.cpp)
+    metar/PressureQueryCommandHandlerTest.cpp mock/MockMetarEventHandler.h)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack
@@ -318,7 +334,10 @@ set(test__mock
     "mock/MockSocket.h"
     "mock/MockUserSettingAwareInterface.h"
     "mock/MockUserSettingProviderInterface.h"
-)
+    mock/MockCallsignSelectionProvider.h
+    mock/MockAircraftTypeMapper.h
+    mock/MockWakeCategoryMapper.h
+    mock/MockListItemProvider.h mock/MockPopupList.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -407,7 +426,7 @@ set(test__push
     "push/PushEventProtocolHandlerTest.cpp"
     "push/PushEventProxyConnetionTest.cpp"
     "push/PushEventProxyHandlerTest.cpp"
-)
+    push/ProxyPushDataSyncTest.cpp)
 source_group("test\\push" FILES ${test__push})
 
 set(test__radarscreen
@@ -416,7 +435,7 @@ set(test__radarscreen
     "radarscreen/RadarRenderableCollectionTest.cpp"
     "radarscreen/ScreenControlsBootstrapTest.cpp"
     "radarscreen/ScreenControlsTest.cpp"
-)
+        radarscreen/ToggleDisplayFromMenuTest.cpp mock/MockMenuToggleableDisplay.h radarscreen/MenuToggleableDisplayFactoryTest.cpp)
 source_group("test\\radarscreen" FILES ${test__radarscreen})
 
 set(test__regional
@@ -441,9 +460,16 @@ set(test__releases
     releases/ReleaseRejectionRemarksUserMessageTest.cpp)
 source_group("test\\releases" FILES ${test__releases})
 
+set(test__runway
+    runway/RunwayTest.cpp
+    runway/RunwayCollectionTest.cpp
+    runway/RunwayCollectionFactoryTest.cpp
+    runway/RunwayModuleTest.cpp)
+source_group("test\\runway" FILES ${test__runway})
+
 set(test__sectorfile
-    "sectorfile/RunwayCollectionTest.cpp"
-    "sectorfile/RunwayTest.cpp"
+    "sectorfile/SectorfileRunwayCollectionTest.cpp"
+    "sectorfile/SectorfileRunwayTest.cpp"
     "sectorfile/SectorFileBootstrapTest.cpp"
     "sectorfile/SectorFileCoordinatesTest.cpp"
 )
@@ -459,7 +485,8 @@ set(test__sid
     "sid/SidCollectionTest.cpp"
     "sid/SidModuleTest.cpp"
     "sid/StandardInstrumentDepartureTest.cpp"
-)
+    sid/FlightplanSidMapperTest.cpp
+    mock/MockSidMapperInterface.h)
 source_group("test\\sid" FILES ${test__sid})
 
 set(test__squawk
@@ -513,14 +540,20 @@ set(test__timer
 source_group("test\\timer" FILES ${test__timer})
 
 set(test__wake
-    "wake/CreateWakeMappingsTest.cpp"
     "wake/WakeCategoryEventHandlerTest.cpp"
-    "wake/WakeCategoryMapperTest.cpp"
     "wake/WakeModuleTest.cpp"
-)
+    wake/WakeCategoryTest.cpp
+    wake/WakeSchemeTest.cpp
+    wake/DepartureWakeIntervalFactoryTest.cpp
+    wake/WakeCategoryFactoryTest.cpp
+    wake/WakeSchemeFactoryTest.cpp
+    wake/WakeSchemeCollectionTest.cpp
+    wake/WakeSchemeCollectionFactoryTest.cpp
+    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
+    ${test__aircraft}
     ${test__airfield}
     ${test__api}
     ${test__bootstrap}
@@ -543,6 +576,7 @@ set(ALL_FILES
     ${test__initialheading}
     ${test__integration}
     ${test__intention}
+    ${test__list}
     ${test__login}
     ${test__message}
     ${test__metar}
@@ -560,6 +594,7 @@ set(ALL_FILES
     ${test__radarscreen}
     ${test__regional}
     ${test__releases}
+    ${test__runway}
     ${test__sectorfile}
     ${test__selcal}
     ${test__sid}

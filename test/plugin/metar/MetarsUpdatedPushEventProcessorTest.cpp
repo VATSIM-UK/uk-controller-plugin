@@ -6,6 +6,7 @@
 #include "metar/MetarComponents.h"
 #include "metar/MetarComponentsFactory.h"
 #include "metar/MetarComponentsFactoryFactory.h"
+#include "metar/MetarEventHandlerCollection.h"
 #include "metar/ParsedMetar.h"
 #include "metar/ParsedMetarCollection.h"
 #include "metar/ParsedMetarFactory.h"
@@ -18,6 +19,7 @@ using UKControllerPlugin::Airfield::AirfieldModel;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Metar::BuildComponentsFactory;
 using UKControllerPlugin::Metar::MetarComponentsFactory;
+using UKControllerPlugin::Metar::MetarEventHandlerCollection;
 using UKControllerPlugin::Metar::MetarsUpdatedPushEventProcessor;
 using UKControllerPlugin::Metar::ParsedMetarCollection;
 using UKControllerPlugin::Metar::ParsedMetarFactory;
@@ -30,10 +32,12 @@ namespace UKControllerPluginTest::Metar {
         public:
         MetarsUpdatedPushEventProcessorTest()
             : componentsFactory(BuildComponentsFactory()), factory(*componentsFactory, airfields),
-              processor(collection, factory, mockApi)
+              processor(collection, factory, mockApi, metarEvents)
         {
             this->airfields.AddAirfield(std::make_shared<AirfieldModel>(1, "EGKK", nullptr));
             this->airfields.AddAirfield(std::make_shared<AirfieldModel>(2, "EGLL", nullptr));
+            this->mockHandler = std::make_shared<testing::NiceMock<MockMetarEventHandler>>();
+            this->metarEvents.RegisterHandler(this->mockHandler);
         }
 
         /*
@@ -45,6 +49,8 @@ namespace UKControllerPluginTest::Metar {
             return {"metars,updated.created", "test", data, data.dump()};
         };
 
+        std::shared_ptr<testing::NiceMock<MockMetarEventHandler>> mockHandler;
+        MetarEventHandlerCollection metarEvents;
         testing::NiceMock<Api::MockApiInterface> mockApi;
         std::shared_ptr<MetarComponentsFactory> componentsFactory;
         AirfieldCollection airfields;
@@ -59,7 +65,7 @@ namespace UKControllerPluginTest::Metar {
         EXPECT_EQ(expected, processor.GetPushEventSubscriptions());
     }
 
-    TEST_F(MetarsUpdatedPushEventProcessorTest, ItHandlesNonArrayData)
+    TEST_F(MetarsUpdatedPushEventProcessorTest, ItHandlesNonObjectData)
     {
         nlohmann::json data = {
             {"airfield_id", 1},
@@ -71,8 +77,23 @@ namespace UKControllerPluginTest::Metar {
         EXPECT_EQ(0, collection.Count());
     }
 
+    TEST_F(MetarsUpdatedPushEventProcessorTest, ItHandlesObjectWithMissingMetarsKey)
+    {
+        nlohmann::json data = {
+            {"airfield_id", 1},
+            {"raw", "foo"},
+            {"parsed",
+             {{"qnh", 1013}, {"qfe", 1007}, {"qnh_inhg", 29.92}, {"qfe_inhg", 28.21}, {"pressure_format", "hpa"}}}};
+
+        processor.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"not_metars", data}})));
+
+        EXPECT_EQ(0, collection.Count());
+    }
+
     TEST_F(MetarsUpdatedPushEventProcessorTest, ItCreatesParsedMetars)
     {
+        EXPECT_CALL(*mockHandler, MetarUpdated(testing::_)).Times(2);
+
         nlohmann::json data = nlohmann::json::array();
         data.push_back(
             {{"airfield_id", 1},
@@ -85,7 +106,7 @@ namespace UKControllerPluginTest::Metar {
              {"parsed",
               {{"qnh", 1013}, {"qfe", 1007}, {"qnh_inhg", 29.92}, {"qfe_inhg", 28.21}, {"pressure_format", "hpa"}}}});
 
-        processor.ProcessPushEvent(MakePushEvent(data));
+        processor.ProcessPushEvent(MakePushEvent(nlohmann::json::object({{"metars", data}})));
 
         EXPECT_EQ(2, collection.Count());
         EXPECT_NE(nullptr, collection.GetForAirfield("EGKK"));
@@ -96,6 +117,8 @@ namespace UKControllerPluginTest::Metar {
 
     TEST_F(MetarsUpdatedPushEventProcessorTest, ItLoadsMetarsOnPluginEventSync)
     {
+        EXPECT_CALL(*mockHandler, MetarUpdated(testing::_)).Times(2);
+
         nlohmann::json data = nlohmann::json::array();
         data.push_back(
             {{"airfield_id", 1},

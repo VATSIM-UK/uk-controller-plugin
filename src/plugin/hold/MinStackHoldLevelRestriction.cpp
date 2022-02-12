@@ -1,5 +1,7 @@
 #include "MinStackHoldLevelRestriction.h"
 #include "minstack/MinStackLevel.h"
+#include "minstack/MinStackManager.h"
+#include "sectorfile/RunwayCollection.h"
 
 using UKControllerPlugin::MinStack::MinStackLevel;
 using UKControllerPlugin::MinStack::MinStackManager;

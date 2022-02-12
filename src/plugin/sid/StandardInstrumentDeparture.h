@@ -8,14 +8,16 @@ namespace UKControllerPlugin::Sid {
     {
         public:
         StandardInstrumentDeparture(
-            std::string airfield,
+            int id,
+            int runwayId,
             std::string identifier,
             int initialAltitude,
             int initialHeading,
             int handoffId,
             std::set<int> prenotes = {});
 
-        [[nodiscard]] auto Airfield() const -> std::string;
+        [[nodiscard]] auto Id() const -> int;
+        [[nodiscard]] auto RunwayId() const -> int;
         [[nodiscard]] auto Identifier() const -> std::string;
         [[nodiscard]] auto InitialAltitude() const -> int;
         [[nodiscard]] auto InitialHeading() const -> int;
@@ -24,7 +26,8 @@ namespace UKControllerPlugin::Sid {
         [[nodiscard]] auto Prenotes() const -> const std::set<int>&;
 
         private:
-        const std::string airfield;
+        const int id;
+        const int runwayId;
         const std::string identifier;
         const int initialAltitude;
         const int initialHeading;

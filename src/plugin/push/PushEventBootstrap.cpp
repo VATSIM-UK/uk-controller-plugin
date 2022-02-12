@@ -1,4 +1,5 @@
 #include "PollingPushEventConnection.h"
+#include "ProxyPushDataSync.h"
 #include "PushEventBootstrap.h"
 #include "PushEventProtocolHandler.h"
 #include "PushEventProxyConnection.h"
@@ -22,6 +23,8 @@ namespace UKControllerPlugin::Push {
         // Create a websocket connection depending on whether we're the main plugin
         if (duplicatePlugin) {
             pushEvents = std::make_shared<PushEventProxyConnection>();
+            container.timedHandler->RegisterEvent(
+                std::make_shared<ProxyPushDataSync>(*container.pushEventProcessors), 5);
         } else {
             const auto pollingEvents = std::make_shared<PollingPushEventConnection>(
                 *container.api, *container.taskRunner, *container.pushEventProcessors);

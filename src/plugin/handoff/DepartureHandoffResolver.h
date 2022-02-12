@@ -34,17 +34,8 @@ namespace UKControllerPlugin::Handoff {
             -> std::shared_ptr<ResolvedHandoff>;
 
         private:
-        [[nodiscard]] auto
-        ResolveForHandoff(const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const HandoffOrder& handoff) const
-            -> std::shared_ptr<ResolvedHandoff>;
         [[nodiscard]] auto ResolveController(const HandoffOrder& handoff) const
-            -> std::shared_ptr<const Controller::ControllerPosition>;
-        [[nodiscard]] auto ResolveHandoff(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
-            -> std::shared_ptr<ResolvedHandoff>;
-        [[nodiscard]] static auto ResolveToUnicom(
-            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            std::shared_ptr<Controller::ControllerPositionHierarchy> handoffOrder) -> std::shared_ptr<ResolvedHandoff>;
-        [[nodiscard]] static auto ResolvedToUnicom(const ResolvedHandoff& resolved) -> bool;
+            -> std::shared_ptr<Controller::ControllerPosition>;
 
         // Maps flightplans to sids to handoffs
         const FlightplanSidHandoffMapper& sidMapper;
@@ -57,5 +48,8 @@ namespace UKControllerPlugin::Handoff {
 
         // The unicom frequency
         inline static const double UNICOM_FREQUENCY = 122.800;
+
+        // The unicom controller for default values
+        const std::shared_ptr<Controller::ControllerPosition> unicomController;
     };
 } // namespace UKControllerPlugin::Handoff

@@ -1,3 +1,4 @@
+#include "MetarEventHandlerCollection.h"
 #include "MetarsUpdatedPushEventProcessor.h"
 #include "ParsedMetarCollection.h"
 #include "ParsedMetar.h"
@@ -9,14 +10,22 @@
 namespace UKControllerPlugin::Metar {
 
     MetarsUpdatedPushEventProcessor::MetarsUpdatedPushEventProcessor(
-        ParsedMetarCollection& metars, const ParsedMetarFactory& factory, const Api::ApiInterface& api)
-        : metars(metars), factory(factory), api(api)
+        ParsedMetarCollection& metars,
+        const ParsedMetarFactory& factory,
+        const Api::ApiInterface& api,
+        const MetarEventHandlerCollection& eventHandlers)
+        : metars(metars), factory(factory), api(api), eventHandlers(eventHandlers)
     {
     }
 
     void MetarsUpdatedPushEventProcessor::ProcessPushEvent(const Push::PushEvent& message)
     {
-        this->ProcessMetarsUpdatedJson(message.data);
+        if (!message.data.is_object() || !message.data.contains("metars")) {
+            LogError("Invalid METAR push event message");
+            return;
+        }
+
+        this->ProcessMetarsUpdatedJson(message.data.at("metars"));
     }
 
     auto MetarsUpdatedPushEventProcessor::GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription>
@@ -49,6 +58,7 @@ namespace UKControllerPlugin::Metar {
             }
 
             metars.UpdateMetar(parsed);
+            eventHandlers.UpdatedMetarEvent(*parsed);
             LogInfo("Received updated METAR: " + parsed->Raw());
         }
     }

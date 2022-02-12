@@ -22,7 +22,8 @@ namespace UKControllerPluginTest::Sid {
     {
         nlohmann::json sidData = nlohmann::json::array(
             {nlohmann::json::object({
-                 {"airfield", "EGGD"},
+                 {"id", 1},
+                 {"runway_id", 2},
                  {"identifier", "TEST1Y"},
                  {"initial_altitude", 6000},
                  {"initial_heading", 350},
@@ -30,8 +31,9 @@ namespace UKControllerPluginTest::Sid {
                  {"prenotes", nlohmann::json::array({1, 2})},
              }),
              nlohmann::json::object(
-                 {{"airfield", "EGGD"},
-                  {"identifier", "TEST1Y"},
+                 {{"id", 2},
+                  {"runway_id", 2},
+                  {"identifier", "TEST1Z"},
                   {"initial_altitude", 6000},
                   {"initial_heading", nlohmann::json::value_t::null},
                   {"handoff", 5},
@@ -43,5 +45,11 @@ namespace UKControllerPluginTest::Sid {
 
         BootstrapPlugin(container, dependencyLoader);
         EXPECT_EQ(2, container.sids->CountSids());
+    }
+
+    TEST_F(SidModuleTest, ItSetsMapperOnContainer)
+    {
+        BootstrapPlugin(container, dependencyLoader);
+        EXPECT_NE(nullptr, container.sidMapper);
     }
 } // namespace UKControllerPluginTest::Sid
