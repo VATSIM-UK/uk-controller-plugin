@@ -19,4 +19,5 @@
 #include "../../testingutils/mock/MockApiSettingsProvider.h"
 #include "../../testingutils/mock/MockCurlApi.h"
 #include "../../testingutils/mock/MockDialogProvider.h"
+#include "../../testingutils/mock/MockSettingRepository.h"
 #include "../../testingutils/mock/MockWinApi.h"

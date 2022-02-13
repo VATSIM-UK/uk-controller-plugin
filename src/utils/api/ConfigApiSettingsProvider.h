@@ -38,5 +38,6 @@ namespace UKControllerPluginUtils::Api {
         const std::string API_KEY_SETTING = "api-key";
         const std::string API_URL_SETTING = "api-url";
         const std::string DEFAULT_API_URL = "https://ukcp.vatsim.uk";
+        const std::string DEFAULT_API_KEY = "";
     };
 } // namespace UKControllerPluginUtils::Api

@@ -22,7 +22,7 @@ set(mock
     "mock/MockDialogProvider.h"
     "mock/MockTaskRunnerInterface.h"
     "mock/MockWinApi.h"
-        mock/MockApiSettingsProvider.h mock/MockApiRequestPerformer.h mock/MockApiRequestPerformerFactory.h)
+        mock/MockApiSettingsProvider.h mock/MockApiRequestPerformer.h mock/MockApiRequestPerformerFactory.h mock/MockSettingRepository.h)
 source_group("mock" FILES ${mock})
 
 set(pch

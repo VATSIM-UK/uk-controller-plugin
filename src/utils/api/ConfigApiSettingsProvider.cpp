@@ -21,7 +21,7 @@ namespace UKControllerPluginUtils::Api {
         if (!this->settings) {
             this->settings = std::make_unique<ApiSettings>(
                 settingRepository.GetSetting(API_URL_SETTING, DEFAULT_API_URL),
-                settingRepository.GetSetting(API_KEY_SETTING));
+                settingRepository.GetSetting(API_KEY_SETTING, DEFAULT_API_KEY));
         }
 
         return *this->settings;
@@ -48,7 +48,7 @@ namespace UKControllerPluginUtils::Api {
         this->settingRepository.ReloadSetting(API_URL_SETTING);
 
         this->settings->Url(settingRepository.GetSetting(API_URL_SETTING, DEFAULT_API_URL));
-        this->settings->Key(settingRepository.GetSetting(API_KEY_SETTING));
+        this->settings->Key(settingRepository.GetSetting(API_KEY_SETTING, DEFAULT_API_KEY));
         return true;
     }
 
