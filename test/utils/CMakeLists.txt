@@ -19,7 +19,10 @@ set(test__api
     api/ApiRequestFactoryTest.cpp
     api/ApiSettingsTest.cpp
     api/ApiUrlBuilderTest.cpp
-    api/ConfigApiSettingsProviderTest.cpp api/CurlApiRequestPerformerTest.cpp api/CurlApiRequestPerformerFactoryTest.cpp api/ResponseTest.cpp)
+    api/ConfigApiSettingsProviderTest.cpp
+    api/CurlApiRequestPerformerTest.cpp
+    api/CurlApiRequestPerformerFactoryTest.cpp
+    api/ResponseTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl
@@ -49,6 +52,11 @@ set(test__helper
     "helper/HelperFunctionsTest.cpp"
 )
 source_group("test\\helper" FILES ${test__helper})
+
+set(test__http
+        "helper/HelperFunctionsTest.cpp"
+        http/HttpMethodTest.cpp)
+source_group("test\\http" FILES ${test__http})
 
 set(test__log
     "log/LoggerBootstrapTest.cpp"
@@ -89,6 +97,7 @@ set(ALL_FILES
     ${test__dialog}
     ${test__duplicate}
     ${test__helper}
+    ${test__http}
     ${test__log}
     ${test__mock}
     ${test__pch}
