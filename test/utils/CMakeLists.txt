@@ -9,7 +9,17 @@ set(test__api
     "api/ApiResponseFactoryTest.cpp"
     "api/ApiResponseTest.cpp"
     "api/ApiResponseValidatorTest.cpp"
-        api/ApiBootstrapTest.cpp api/ApiCurlRequestFactoryTest.cpp api/ApiFactoryTest.cpp api/ApiHeaderApplicatorTest.cpp api/ApiRequestTest.cpp api/ApiRequestDataTest.cpp api/ApiRequestExceptionTest.cpp api/ApiRequestFactoryTest.cpp api/ApiSettingsTest.cpp api/ApiSettingsFactoryTest.cpp api/ApiUrlBuilderTest.cpp)
+    api/ApiBootstrapTest.cpp
+    api/ApiCurlRequestFactoryTest.cpp
+    api/ApiFactoryTest.cpp
+    api/ApiHeaderApplicatorTest.cpp
+    api/ApiRequestTest.cpp
+    api/ApiRequestDataTest.cpp
+    api/ApiRequestExceptionTest.cpp
+    api/ApiRequestFactoryTest.cpp
+    api/ApiSettingsTest.cpp
+    api/ApiUrlBuilderTest.cpp
+    api/ConfigApiSettingsProviderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl

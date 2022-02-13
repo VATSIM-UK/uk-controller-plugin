@@ -35,7 +35,7 @@ namespace UKControllerPluginUtils::Api {
         };
 
         std::wstring filePath = windows.FileOpenDialog(L"Select API Settings File", 1, fileTypes);
-        if (filePath == L"") {
+        if (filePath.empty()) {
             LogInfo("User did not select a valid key file to replacte");
             return false;
         }
@@ -46,6 +46,10 @@ namespace UKControllerPluginUtils::Api {
         // Trigger a reload
         this->settingRepository.ReloadSetting(API_KEY_SETTING);
         this->settingRepository.ReloadSetting(API_URL_SETTING);
+
+        if (!this->settings) {
+            this->settings = std::make_unique<ApiSettings>(DEFAULT_API_URL, DEFAULT_API_KEY);
+        }
 
         this->settings->Url(settingRepository.GetSetting(API_URL_SETTING, DEFAULT_API_URL));
         this->settings->Key(settingRepository.GetSetting(API_KEY_SETTING, DEFAULT_API_KEY));

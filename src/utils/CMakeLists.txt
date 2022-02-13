@@ -51,7 +51,6 @@ set(api
     api/ApiHeaderApplicator.cpp api/ApiHeaderApplicator.h
     api/ApiCurlRequestFactory.cpp api/ApiCurlRequestFactory.h
     api/ApiRequest.cpp api/ApiRequest.h
-    api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h
     api/ApiFactory.cpp api/ApiFactory.h
     api/AbstractApiRequestPerformerFactory.h api/CurlApiRequestPerformerFactory.cpp
     api/CurlApiRequestPerformerFactory.h
@@ -192,8 +191,7 @@ set(ALL_FILES
     ${string}
     ${task}
     ${update}
-    ${windows}
-        api/ApiSettingsFactory.cpp api/ApiSettingsFactory.h)
+    ${windows})
 
 ################################################################################
 # Target
