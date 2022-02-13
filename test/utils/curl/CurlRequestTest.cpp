@@ -1,10 +1,10 @@
-#include "pch/pch.h"
 #include "curl/CurlRequest.h"
+#include "http/HttpMethod.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
+using UKControllerPluginUtils::Http::HttpMethod;
 
-namespace UKControllerPluginUtilsTest
-{
+namespace UKControllerPluginUtilsTest {
     namespace Curl {
 
         TEST(CurlRequestTest, TestConstructorSetsUri)
@@ -16,6 +16,12 @@ namespace UKControllerPluginUtilsTest
         TEST(CurlRequestTest, TestConstructorSetsMethod)
         {
             CurlRequest request("http://test.com/abc", CurlRequest::METHOD_GET);
+            EXPECT_EQ(0, strcmp(request.GetMethod(), CurlRequest::METHOD_GET.c_str()));
+        }
+
+        TEST(CurlRequestTest, TestConstructorSetsMethodFromHttpMethodEnum)
+        {
+            CurlRequest request("http://test.com/abc", HttpMethod::Get());
             EXPECT_EQ(0, strcmp(request.GetMethod(), CurlRequest::METHOD_GET.c_str()));
         }
 
@@ -146,5 +152,5 @@ namespace UKControllerPluginUtilsTest
             request2.AddHeader("Test1", "Test4");
             EXPECT_FALSE(request1 == request2);
         }
-    }  // namespace Curl
+    } // namespace Curl
 } // namespace UKControllerPluginUtilsTest
