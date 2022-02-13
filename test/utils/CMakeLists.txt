@@ -55,7 +55,7 @@ source_group("test\\helper" FILES ${test__helper})
 
 set(test__http
         "helper/HelperFunctionsTest.cpp"
-        http/HttpMethodTest.cpp)
+        http/HttpMethodTest.cpp http/HttpStatusCodeTest.cpp)
 source_group("test\\http" FILES ${test__http})
 
 set(test__log
