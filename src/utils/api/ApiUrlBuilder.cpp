@@ -11,6 +11,7 @@ namespace UKControllerPluginUtils::Api {
 
     auto ApiUrlBuilder::BuildUrl(const ApiRequestData& requestData) const -> const std::string
     {
-        return String::rtrim(settings.Url()) + "/" + String::trim(requestData.Uri());
+        return String::rtrim(settings.Url(), URL_PATH_SEPARATOR) + URL_PATH_SEPARATOR +
+               String::trim(requestData.Uri(), URL_PATH_SEPARATOR);
     }
 } // namespace UKControllerPluginUtils::Api
