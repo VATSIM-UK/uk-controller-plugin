@@ -17,7 +17,6 @@ namespace UKControllerPluginUtils::Api {
             ApiRequestPerformerInterface& performer,
             std::function<void(void)> onCompletion);
         ~ChainableRequest();
-        void Then(const std::function<Response(Response)>& function);
         void Then(const std::function<void(Response)>& function);
         void Then(const std::function<void(void)>& function);
         void Catch(const std::function<void(const ApiRequestException&)>& function);

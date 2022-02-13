@@ -15,12 +15,6 @@ namespace UKControllerPluginUtils::Api {
 
     ApiRequest::~ApiRequest()
     {
-        // Have a final handler allows us, in a non-error situation
-        // TODO: Create an ApiRequestTracker that is passed as a reference to this class. Provides async-safe tracking
-        // TODO: of API requests.
-        // TODO: Add a final Then handler that "completes" the request
-        // TODO: Wrap the implementation of catch, so that it does a decrement post failure to complete request.
-
         // Not dealing with an exception means we end up in an "everything blows up" situation.
         // So have a default handler for API exceptions.
         chain->Catch([](const ApiRequestException& exception) {
@@ -47,12 +41,6 @@ namespace UKControllerPluginUtils::Api {
                 // No rethrow
             }
         }
-    }
-
-    auto ApiRequest::Then(const std::function<Response(Response)>& function) -> ApiRequest&
-    {
-        chain->Then(function);
-        return *this;
     }
 
     auto ApiRequest::Then(const std::function<void(Response)>& function) -> ApiRequest&

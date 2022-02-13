@@ -24,11 +24,6 @@ namespace UKControllerPluginUtils::Api {
         }
     }
 
-    void ChainableRequest::Then(const std::function<Response(Response)>& function)
-    {
-        continuable = std::move(continuable).then(function);
-    }
-
     void ChainableRequest::Then(const std::function<void(Response)>& function)
     {
         continuable = std::move(continuable).then([function](Response response) {
@@ -48,14 +43,15 @@ namespace UKControllerPluginUtils::Api {
     void ChainableRequest::Catch(const std::function<void(const ApiRequestException&)>& function)
     {
         auto complete = this->onCompletion;
-        continuable = std::move(continuable).fail([function, complete](std::exception_ptr exception) {
+        continuable = std::move(continuable).fail([function, complete, this](std::exception_ptr exception) {
             try {
                 std::rethrow_exception(exception);
             } catch (const ApiRequestException& requestException) {
                 function(requestException);
-            } catch (const std::exception&) {
-                // Everythings over, run onCompletion
+                this->executed = true;
                 complete();
+            } catch (const std::exception&) {
+                // Everythings over now
             }
 
             return cti::cancel();

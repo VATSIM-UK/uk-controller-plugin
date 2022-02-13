@@ -19,9 +19,8 @@ namespace UKControllerPluginUtils::Api {
         ApiRequest(const ApiRequest&) = delete;
         auto operator=(const ApiRequest&) = delete;
         auto operator=(ApiRequest&&) -> ApiRequest& = delete;
-        auto Then(const std::function<Response(Response)>& function) -> ApiRequest&;
         auto Then(const std::function<void(Response)>& function) -> ApiRequest&;
-        auto Then(const std::function<void(void)>& function) -> ApiRequest&;
+        auto Then(const std::function<void()>& function) -> ApiRequest&;
         auto Catch(const std::function<void(const ApiRequestException&)>& function) -> ApiRequest&;
         void Await();
 
