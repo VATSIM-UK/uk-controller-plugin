@@ -5,7 +5,7 @@ using UKControllerPluginUtils::Http::HttpMethod;
 namespace UKControllerPluginUtils::Api {
 
     ApiRequestData::ApiRequestData(std::string uri, Http::HttpMethod method, nlohmann::json body)
-        : uri(uri), method(method), body(std::move(body))
+        : uri(std::move(uri)), method(std::move(method)), body(std::move(body))
     {
         this->CheckForRequiredBody();
     }
@@ -17,7 +17,7 @@ namespace UKControllerPluginUtils::Api {
 
     auto ApiRequestData::MethodRequiresBody() -> bool
     {
-        return method == HttpMethod::Post() || method == HttpMethod::Put();
+        return method == HttpMethod::Post() || method == HttpMethod::Put() || method == HttpMethod::Patch();
     }
 
     void ApiRequestData::CheckForRequiredBody()
