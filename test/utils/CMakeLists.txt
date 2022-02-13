@@ -9,7 +9,7 @@ set(test__api
     "api/ApiResponseFactoryTest.cpp"
     "api/ApiResponseTest.cpp"
     "api/ApiResponseValidatorTest.cpp"
-        api/ApiBootstrapTest.cpp)
+        api/ApiBootstrapTest.cpp api/ApiCurlRequestFactoryTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl
