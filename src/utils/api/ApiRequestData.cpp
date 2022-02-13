@@ -41,4 +41,9 @@ namespace UKControllerPluginUtils::Api {
     {
         return body;
     }
+
+    auto ApiRequestData::operator==(const ApiRequestData& compare) const -> bool
+    {
+        return uri == compare.uri && method == compare.method && body == compare.body;
+    }
 } // namespace UKControllerPluginUtils::Api

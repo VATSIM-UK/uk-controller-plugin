@@ -14,7 +14,6 @@ namespace UKControllerPluginUtils::Api {
     class ApiRequestFactory;
     class ApiSettings;
     class ApiSettingsProviderInterface;
-    class ApiAuthorisationRequestFactory;
 
     /**
      * Bootstraps and builds the API. Keeps objects alive throughout

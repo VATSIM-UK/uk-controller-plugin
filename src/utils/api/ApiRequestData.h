@@ -12,6 +12,7 @@ namespace UKControllerPluginUtils::Api {
         [[nodiscard]] auto Uri() const -> const std::string&;
         [[nodiscard]] auto Method() const -> Http::HttpMethod;
         [[nodiscard]] auto Body() const -> const nlohmann::json&;
+        [[nodiscard]] auto operator==(const ApiRequestData& compare) const -> bool;
 
         private:
         void CheckForRequiredBody();
