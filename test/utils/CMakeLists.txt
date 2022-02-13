@@ -84,6 +84,10 @@ set(test__squawk
 )
 source_group("test\\squawk" FILES ${test__squawk})
 
+set(test__string
+        string/StringTrimFunctionTest.cpp)
+source_group("test\\string" FILES ${test__string})
+
 set(test__update
     "update/UpdateBinariesTest.cpp"
     "update/CheckDevelopmentVersionTest.cpp"
@@ -103,6 +107,7 @@ set(ALL_FILES
     ${test__pch}
     ${test__setting}
     ${test__squawk}
+    ${test__string}
     ${test__update}
 )
 
