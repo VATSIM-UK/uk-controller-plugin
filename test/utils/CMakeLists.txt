@@ -9,7 +9,7 @@ set(test__api
     "api/ApiResponseFactoryTest.cpp"
     "api/ApiResponseTest.cpp"
     "api/ApiResponseValidatorTest.cpp"
-)
+        api/ApiBootstrapTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl
@@ -249,6 +249,9 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "crypt32;"
     "Winmm;"
     "dbghelp"
+    "Ws2_32;"
+    "Wldap32;"
+    "normaliz;"
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 

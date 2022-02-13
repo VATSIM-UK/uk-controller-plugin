@@ -7,3 +7,4 @@ namespace UKControllerPluginUtils::Api {
 
 [[nodiscard]] auto ApiRequest() -> UKControllerPluginUtils::Api::ApiRequestFactory&;
 void SetApiRequestFactory(std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> factory);
+[[nodiscard]] auto ApiRequestFactorySet() -> bool;

@@ -1,5 +1,4 @@
 #include "AbstractApiRequestPerformerFactory.h"
-#include "ApiAuthorisationRequestFactory.h"
 #include "ApiFactory.h"
 #include "ApiRequestBuilder.h"
 #include "ApiRequestFactory.h"
@@ -41,14 +40,5 @@ namespace UKControllerPluginUtils::Api {
         }
 
         return *legacyRequestBuilder;
-    }
-
-    auto ApiFactory::AuthorisationRequestFactory() -> const ApiAuthorisationRequestFactory&
-    {
-        if (authorisationRequestFactory == nullptr) {
-            authorisationRequestFactory = std::make_unique<ApiAuthorisationRequestFactory>(RequestFactory());
-        }
-
-        return *authorisationRequestFactory;
     }
 } // namespace UKControllerPluginUtils::Api

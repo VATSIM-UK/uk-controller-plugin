@@ -16,3 +16,8 @@ void SetApiRequestFactory(std::shared_ptr<UKControllerPluginUtils::Api::ApiFacto
 
     apiFactory = factory;
 }
+
+auto ApiRequestFactorySet() -> bool
+{
+    return apiFactory != nullptr;
+}

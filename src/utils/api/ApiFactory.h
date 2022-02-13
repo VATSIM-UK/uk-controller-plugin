@@ -30,7 +30,6 @@ namespace UKControllerPluginUtils::Api {
         [[nodiscard]] auto LegacyRequestBuilder() -> const UKControllerPlugin::Api::ApiRequestBuilder&;
         [[nodiscard]] auto RequestFactory() -> ApiRequestFactory&;
         [[nodiscard]] auto SettingsProvider() -> const std::shared_ptr<ApiSettingsProviderInterface>;
-        [[nodiscard]] auto AuthorisationRequestFactory() -> const ApiAuthorisationRequestFactory&;
 
         private:
         // Loads api settings - can be subbed out for a mock.
@@ -44,8 +43,5 @@ namespace UKControllerPluginUtils::Api {
 
         // Builds API requests, the legacy way
         std::unique_ptr<UKControllerPlugin::Api::ApiRequestBuilder> legacyRequestBuilder;
-
-        // Provides a way to check API authorisation
-        std::unique_ptr<ApiAuthorisationRequestFactory> authorisationRequestFactory;
     };
 } // namespace UKControllerPluginUtils::Api
