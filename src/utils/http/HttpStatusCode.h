@@ -10,6 +10,9 @@ namespace UKControllerPluginUtils::Http {
         BadRequest = 400L,
         Unauthorised = 401L,
         Forbidden = 403L,
+        NotFound = 404L,
+        MethodNotAllowed = 405L,
+        Unprocessable = 422L,
         ServerError = 500L,
         BadGateway = 502L,
     };

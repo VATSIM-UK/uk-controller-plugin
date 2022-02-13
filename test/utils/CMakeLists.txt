@@ -19,7 +19,7 @@ set(test__api
     api/ApiRequestFactoryTest.cpp
     api/ApiSettingsTest.cpp
     api/ApiUrlBuilderTest.cpp
-    api/ConfigApiSettingsProviderTest.cpp)
+    api/ConfigApiSettingsProviderTest.cpp api/CurlApiRequestPerformerTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl
