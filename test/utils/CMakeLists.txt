@@ -76,7 +76,7 @@ source_group("test\\pch" FILES ${test__pch})
 set(test__setting
     "setting/SettingRepositoryFactoryTest.cpp"
     "setting/SettingRepositoryTest.cpp"
-)
+        setting/JsonFileSettingProviderTest.cpp)
 source_group("test\\setting" FILES ${test__setting})
 
 set(test__squawk
