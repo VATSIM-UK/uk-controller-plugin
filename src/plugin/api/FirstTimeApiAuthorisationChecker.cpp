@@ -41,7 +41,7 @@ namespace UKControllerPlugin::Api {
                     windows.OpenMessageBox(
                         L"You have elected not to complete API setup at this time. Some functionality of the plugin "
                         "may not work as expected.",
-                        L"UKCP API Config Invalid",
+                        L"UKCP API Config Not Updated",
                         MB_OK | MB_ICONWARNING);
                     return;
                 }
