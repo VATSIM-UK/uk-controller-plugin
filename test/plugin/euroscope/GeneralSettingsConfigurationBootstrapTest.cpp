@@ -28,7 +28,7 @@ namespace UKControllerPluginTest {
         {
             public:
             GeneralSettingsConfigurationBootstrapTest()
-                : userSettings(mockUserSettingProvider), settings(mockWindows), dialogManager(mockDialogProvider)
+                : userSettings(mockUserSettingProvider), settings(), dialogManager(mockDialogProvider)
             {
             }
 
@@ -71,7 +71,7 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapPluginAddsDialogToDialogManager)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
-                this->dialogManager, this->userSettings, this->userSettingCollection, settings);
+                this->dialogManager, this->userSettings, this->userSettingCollection, settings, mockWindows);
 
             EXPECT_EQ(1, this->dialogManager.CountDialogs());
             EXPECT_TRUE(this->dialogManager.HasDialog(IDD_GENERAL_SETTINGS));

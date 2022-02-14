@@ -10,10 +10,6 @@ std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> apiFactory;
 
 void SetApiRequestFactory(std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> factory)
 {
-    if (apiFactory) {
-        return;
-    }
-
     apiFactory = factory;
 }
 

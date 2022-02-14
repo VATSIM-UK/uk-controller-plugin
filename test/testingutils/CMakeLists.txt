@@ -22,7 +22,10 @@ set(mock
     "mock/MockDialogProvider.h"
     "mock/MockTaskRunnerInterface.h"
     "mock/MockWinApi.h"
-        mock/MockApiSettingsProvider.h mock/MockApiRequestPerformer.h mock/MockApiRequestPerformerFactory.h mock/MockSettingRepository.h)
+    mock/MockApiSettingsProvider.h
+    mock/MockApiRequestPerformer.h
+    mock/MockApiRequestPerformerFactory.h
+    mock/MockSettingRepository.h)
 source_group("mock" FILES ${mock})
 
 set(pch
@@ -31,10 +34,15 @@ set(pch
 )
 source_group("pch" FILES ${pch})
 
+set(test
+        test/ApiTestCase.cpp test/ApiTestCase.h)
+source_group("test" FILES ${test})
+
 set(ALL_FILES
     ${helper}
     ${mock}
     ${pch}
+    ${test}
 )
 
 ################################################################################

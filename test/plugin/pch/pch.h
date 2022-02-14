@@ -12,9 +12,13 @@
 
 // Testingutils mocks
 #include "../../testingutils/mock/MockApiInterface.h"
+#include "../../testingutils/mock/MockApiSettingsProvider.h"
 #include "../../testingutils/mock/MockCurlApi.h"
 #include "../../testingutils/mock/MockDialogProvider.h"
 #include "../../testingutils/mock/MockWinApi.h"
+
+// Test case
+#include "../../testingutils/test/ApiTestCase.h"
 
 // Plugin mocks
 #include "../mock/MockAbstractTimedEvent.h"

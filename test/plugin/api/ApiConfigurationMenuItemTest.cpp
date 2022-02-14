@@ -1,4 +1,5 @@
 #include "api/ApiConfigurationMenuItem.h"
+#include "api/ApiRequestData.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -7,14 +8,17 @@ using ::testing::Test;
 using UKControllerPlugin::Api::ApiConfigurationMenuItem;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPluginUtils::Api::ApiRequestData;
+using UKControllerPluginUtils::Api::ApiRequestException;
+using UKControllerPluginUtils::Api::Response;
 
 namespace UKControllerPluginTest {
     namespace Api {
 
-        class ApiConfigurationMenuItemTest : public Test
+        class ApiConfigurationMenuItemTest : public ApiTestCase
         {
             public:
-            ApiConfigurationMenuItemTest() : menuItem(mockWindows, 55)
+            ApiConfigurationMenuItemTest() : ApiTestCase(), menuItem(this->SettingsProvider(), mockWindows, 55)
             {
             }
             NiceMock<MockWinApi> mockWindows;
@@ -34,18 +38,70 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(expected == this->menuItem.GetConfigurationMenuItem());
         }
 
-        TEST_F(ApiConfigurationMenuItemTest, ConfigureStartsTheKeyReplacementProcedure)
+        TEST_F(ApiConfigurationMenuItemTest, ConfigureDoesntReplaceTheSettingsIfUserDoesntReload)
         {
-            EXPECT_CALL(
-                this->mockWindows,
-                OpenMessageBox(
-                    testing::StrEq(L"Please select the key file to use, this will overwrite your previous key."),
-                    testing::StrEq(L"UKCP Message"),
-                    MB_OKCANCEL | MB_ICONINFORMATION))
-                .Times(1)
-                .WillOnce(Return(IDCANCEL));
+            EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(false));
+
+            this->ExpectNoRequests();
 
             this->menuItem.Configure(55, "Test", {});
+
+            this->AwaitApiCallCompletion();
+        }
+
+        TEST_F(ApiConfigurationMenuItemTest, ConfigureReplacesTheApiSettings)
+        {
+            EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(true));
+
+            this->ExpectApiRequestWithResponse(
+                ApiRequestData("authorise", UKControllerPluginUtils::Http::HttpMethod::Get()),
+                Response(UKControllerPluginUtils::Http::HttpStatusCode::Ok, {}));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::StrEq(L"Configuration Updated"), MB_OK | MB_ICONINFORMATION))
+                .Times(1)
+                .WillOnce(Return(IDOK));
+
+            this->menuItem.Configure(55, "Test", {});
+
+            this->AwaitApiCallCompletion();
+        }
+
+        TEST_F(ApiConfigurationMenuItemTest, ConfigureHandlesAuthenticationErrorDuringAuthCheck)
+        {
+            EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(true));
+
+            this->ExpectApiRequestWithError(
+                ApiRequestData("authorise", UKControllerPluginUtils::Http::HttpMethod::Get()),
+                ApiRequestException("authorise", UKControllerPluginUtils::Http::HttpStatusCode::Forbidden, false));
+
+            EXPECT_CALL(
+                this->mockWindows,
+                OpenMessageBox(testing::_, testing::StrEq(L"UKCP API Config Invalid"), MB_OK | MB_ICONWARNING))
+                .Times(1)
+                .WillOnce(Return(IDOK));
+
+            this->menuItem.Configure(55, "Test", {});
+
+            this->AwaitApiCallCompletion();
+        }
+
+        TEST_F(ApiConfigurationMenuItemTest, ConfigureHandlesServerErrorDuringAuthCheck)
+        {
+            EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(true));
+
+            this->ExpectApiRequestWithError(
+                ApiRequestData("authorise", UKControllerPluginUtils::Http::HttpMethod::Get()),
+                ApiRequestException("authorise", UKControllerPluginUtils::Http::HttpStatusCode::ServerError, false));
+
+            EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::StrEq(L"Server Error"), testing::_))
+                .Times(1)
+                .WillOnce(Return(IDOK));
+
+            this->menuItem.Configure(55, "Test", {});
+
+            this->AwaitApiCallCompletion();
         }
     } // namespace Api
 } // namespace UKControllerPluginTest

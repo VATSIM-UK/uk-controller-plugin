@@ -27,7 +27,13 @@ namespace UKControllerPlugin::Api {
 
         ApiRequest()
             .Get("authorise")
-            .Then([]() { LogInfo("Api configuration updated successfully"); })
+            .Then([this]() {
+                LogInfo("Api configuration updated successfully");
+                windows.OpenMessageBox(
+                    L"API configuration has been replaced sucessfully",
+                    L"Configuration Updated",
+                    MB_OK | MB_ICONINFORMATION);
+            })
             .Catch([this](const ApiRequestException& exception) {
                 if (UKControllerPluginUtils::Http::IsAuthenticationError(exception.StatusCode())) {
                     windows.OpenMessageBox(
@@ -40,7 +46,7 @@ namespace UKControllerPlugin::Api {
                     windows.OpenMessageBox(
                         L"Unable to perform API config check as the API responded with an error. Please try again "
                         L"later. Some functionality such as stand and squawk allocations may not work as expected.",
-                        L"UKCP API Config Invalid",
+                        L"Server Error",
                         MB_OK | MB_ICONERROR);
             });
     }
