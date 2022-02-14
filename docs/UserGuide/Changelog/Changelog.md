@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [4.2.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.1...4.2.2) (2022-02-14)
+
+
+### Bug Fixes
+
+* **fonts:** Provide fallback font if EuroScope is not installed ([#434](https://github.com/VATSIM-UK/uk-controller-plugin/issues/434)) ([ce434f3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ce434f363ab4e2e4747420ab1145ddf2533ac0d0)), closes [#433](https://github.com/VATSIM-UK/uk-controller-plugin/issues/433)
+
 ## [4.2.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.0...4.2.1) (2022-02-12)
 
 
