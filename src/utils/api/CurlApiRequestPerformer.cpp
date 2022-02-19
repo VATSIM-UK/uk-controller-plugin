@@ -9,6 +9,7 @@ using UKControllerPlugin::Curl::CurlInterface;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
 using UKControllerPluginUtils::Http::HttpStatusCode;
+using UKControllerPluginUtils::Http::IsSuccessful;
 
 namespace UKControllerPluginUtils::Api {
 
@@ -29,9 +30,7 @@ namespace UKControllerPluginUtils::Api {
 
     auto CurlApiRequestPerformer::ResponseSuccessful(const CurlResponse& response) -> bool
     {
-        return !response.IsCurlError() &&
-               (response.GetStatusCode() == HttpStatusCode::Ok || response.GetStatusCode() == HttpStatusCode::Created ||
-                response.GetStatusCode() == HttpStatusCode::NoContent);
+        return !response.IsCurlError() && IsSuccessful(static_cast<HttpStatusCode>(response.GetStatusCode()));
     }
 
     auto CurlApiRequestPerformer::ParseResponseBody(const ApiRequestData& data, const CurlResponse& response)

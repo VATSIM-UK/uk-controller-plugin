@@ -22,6 +22,11 @@ namespace UKControllerPluginUtils::Http {
         return first == static_cast<uint64_t>(second);
     }
 
+    inline auto IsSuccessful(HttpStatusCode status) -> bool
+    {
+        return status == HttpStatusCode::Ok || status == HttpStatusCode::Created || status == HttpStatusCode::NoContent;
+    }
+
     inline auto IsAuthenticationError(HttpStatusCode status) -> bool
     {
         return status == HttpStatusCode::Unauthorised || status == HttpStatusCode::Forbidden;

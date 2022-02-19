@@ -19,6 +19,10 @@
 
 // Test case
 #include "../../testingutils/test/ApiTestCase.h"
+#include "../../testingutils/test/ApiMethodExpectation.h"
+#include "../../testingutils/test/ApiRequestExpectation.h"
+#include "../../testingutils/test/ApiResponseExpectation.h"
+#include "../../testingutils/test/ApiUriExpectation.h"
 
 // Plugin mocks
 #include "../mock/MockAbstractTimedEvent.h"

@@ -25,7 +25,7 @@ namespace UKControllerPlugin::Api {
                         L"Server error whilst checking API authentication, some functionality may not work as "
                         "expected. If your configuration is otherwise correct, functionality will resume when the "
                         "service is online again.",
-                        L"UKCP API Config Invalid",
+                        L"UKCP API Server Error",
                         MB_OK | MB_ICONWARNING);
                     return;
                 }

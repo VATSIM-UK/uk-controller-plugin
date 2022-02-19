@@ -1,15 +1,10 @@
 #pragma once
-#include "api/ApiRequestData.h"
-#include "api/ApiRequestException.h"
-#include "api/Response.h"
+#include "ApiMethodExpectation.h"
 
 namespace UKControllerPluginUtils::Api {
     class ApiFactory;
-    class ApiRequestData;
-    class ApiRequestException;
     class ApiRequestFactory;
     class ApiSettings;
-    class Response;
 } // namespace UKControllerPluginUtils::Api
 
 namespace UKControllerPluginUtilsTest::Api {
@@ -24,14 +19,10 @@ namespace UKControllerPluginTest {
         public:
         ApiTestCase();
         ~ApiTestCase() = default;
-        void ExpectApiRequestWithResponse(
-            const UKControllerPluginUtils::Api::ApiRequestData& request,
-            const UKControllerPluginUtils::Api::Response& response);
-        void ExpectApiRequestWithError(
-            const UKControllerPluginUtils::Api::ApiRequestData& request,
-            const UKControllerPluginUtils::Api::ApiRequestException& exception);
-        void ExpectNoRequests();
-        void DontExpectRequest(const UKControllerPluginUtils::Api::ApiRequestData& request);
+        void TearDown() override;
+        [[nodiscard]] auto ExpectApiRequest() -> std::shared_ptr<ApiMethodExpectation>;
+        [[nodiscard]] auto DontExpectApiRequest() -> std::shared_ptr<ApiMethodExpectation>;
+        void ExpectNoApiRequests();
         void AwaitApiCallCompletion();
         [[nodiscard]] auto SettingsProvider()
             -> testing::NiceMock<UKControllerPluginUtilsTest::Api::MockApiSettingsProvider>&;

@@ -17,3 +17,8 @@ auto ApiRequestFactorySet() -> bool
 {
     return apiFactory != nullptr;
 }
+
+void UnsetSetApiFactory()
+{
+    apiFactory.reset();
+}

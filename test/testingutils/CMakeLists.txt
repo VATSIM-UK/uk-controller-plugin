@@ -35,7 +35,12 @@ set(pch
 source_group("pch" FILES ${pch})
 
 set(test
-        test/ApiTestCase.cpp test/ApiTestCase.h)
+        test/ApiTestCase.cpp test/ApiTestCase.h
+        test/ApiExpectation.cpp test/ApiExpectation.h
+        test/ApiMethodExpectation.h
+        test/ApiUriExpectation.h
+        test/ApiRequestExpectation.h
+        test/ApiResponseExpectation.h)
 source_group("test" FILES ${test})
 
 set(ALL_FILES

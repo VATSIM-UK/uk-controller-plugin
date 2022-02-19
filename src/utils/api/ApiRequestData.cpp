@@ -10,12 +10,12 @@ namespace UKControllerPluginUtils::Api {
         this->CheckForRequiredBody();
     }
 
-    auto ApiRequestData::BodyMissing() -> bool
+    auto ApiRequestData::BodyMissing() const -> bool
     {
         return body.empty();
     }
 
-    auto ApiRequestData::MethodRequiresBody() -> bool
+    auto ApiRequestData::MethodRequiresBody() const -> bool
     {
         return method == HttpMethod::Post() || method == HttpMethod::Put() || method == HttpMethod::Patch();
     }
@@ -43,6 +43,16 @@ namespace UKControllerPluginUtils::Api {
     }
 
     auto ApiRequestData::operator==(const ApiRequestData& compare) const -> bool
+    {
+        return IsEqual(compare);
+    }
+
+    auto ApiRequestData::operator!=(const ApiRequestData& compare) const -> bool
+    {
+        return !IsEqual(compare);
+    }
+
+    auto ApiRequestData::IsEqual(const ApiRequestData& compare) const -> bool
     {
         return uri == compare.uri && method == compare.method && body == compare.body;
     }
