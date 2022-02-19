@@ -1,3 +1,4 @@
+#include "ArrivalWakeInterval.h"
 #include "DepartureWakeInterval.h"
 #include "WakeCategory.h"
 
@@ -8,9 +9,11 @@ namespace UKControllerPlugin::Wake {
         std::string code,
         std::string description,
         int relativeWeighting,
-        std::list<std::shared_ptr<DepartureWakeInterval>> subsequentDepartureIntervals)
+        std::list<std::shared_ptr<DepartureWakeInterval>> subsequentDepartureIntervals,
+        std::list<std::shared_ptr<ArrivalWakeInterval>> subsequentArrivalIntervals)
         : id(id), code(std::move(code)), description(std::move(description)), relativeWeighting(relativeWeighting),
-          subsequentDepartureIntervals(std::move(subsequentDepartureIntervals))
+          subsequentDepartureIntervals(std::move(subsequentDepartureIntervals)),
+          subsequentArrivalIntervals(std::move(subsequentArrivalIntervals))
     {
     }
 
@@ -51,5 +54,23 @@ namespace UKControllerPlugin::Wake {
             });
 
         return matchingInterval == subsequentDepartureIntervals.cend() ? nullptr : *matchingInterval;
+    }
+
+    auto WakeCategory::ArrivalInterval(const WakeCategory& nextAircraftCategory) const
+        -> std::shared_ptr<ArrivalWakeInterval>
+    {
+        auto matchingInterval = std::find_if(
+            subsequentArrivalIntervals.cbegin(),
+            subsequentArrivalIntervals.cend(),
+            [&nextAircraftCategory](const std::shared_ptr<ArrivalWakeInterval>& interval) -> bool {
+                return interval->subsequentWakeCategoryId == nextAircraftCategory.Id();
+            });
+
+        return matchingInterval == subsequentArrivalIntervals.cend() ? nullptr : *matchingInterval;
+    }
+
+    auto WakeCategory::SubsequentArrivalIntervals() const -> const std::list<std::shared_ptr<ArrivalWakeInterval>>&
+    {
+        return subsequentArrivalIntervals;
     }
 } // namespace UKControllerPlugin::Wake
