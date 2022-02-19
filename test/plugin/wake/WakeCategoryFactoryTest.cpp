@@ -53,10 +53,10 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_EQ("s", category->SubsequentDepartureIntervals().back()->intervalUnit);
         EXPECT_TRUE(category->SubsequentDepartureIntervals().back()->intervalIsIntermediate);
         EXPECT_EQ(2, category->SubsequentArrivalIntervals().size());
-        EXPECT_EQ(1, category->SubsequentArrivalIntervals().front()->subsequentWakeCategoryId);
-        EXPECT_FLOAT_EQ(4.5, category->SubsequentArrivalIntervals().front()->intervalValue);
-        EXPECT_EQ(2, category->SubsequentArrivalIntervals().back()->subsequentWakeCategoryId);
-        EXPECT_FLOAT_EQ(5.0, category->SubsequentArrivalIntervals().back()->intervalValue);
+        EXPECT_EQ(1, category->SubsequentArrivalIntervals().front()->SubsequentCategory());
+        EXPECT_FLOAT_EQ(4.5, category->SubsequentArrivalIntervals().front()->Value());
+        EXPECT_EQ(2, category->SubsequentArrivalIntervals().back()->SubsequentCategory());
+        EXPECT_FLOAT_EQ(5.0, category->SubsequentArrivalIntervals().back()->Value());
     }
 
     TEST_F(WakeCategoryFactoryTest, ItIgnoresBadDepartureIntervals)

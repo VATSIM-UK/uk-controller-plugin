@@ -63,7 +63,7 @@ namespace UKControllerPlugin::Wake {
             subsequentArrivalIntervals.cbegin(),
             subsequentArrivalIntervals.cend(),
             [&nextAircraftCategory](const std::shared_ptr<ArrivalWakeInterval>& interval) -> bool {
-                return interval->subsequentWakeCategoryId == nextAircraftCategory.Id();
+                return interval->SubsequentCategory() == nextAircraftCategory.Id();
             });
 
         return matchingInterval == subsequentArrivalIntervals.cend() ? nullptr : *matchingInterval;

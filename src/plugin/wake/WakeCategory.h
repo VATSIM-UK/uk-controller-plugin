@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin::Wake {
-    struct ArrivalWakeInterval;
+    class ArrivalWakeInterval;
     struct DepartureWakeInterval;
 
     /**

@@ -65,7 +65,7 @@ namespace UKControllerPluginTest::Wake {
     TEST_F(ArrivalWakeIntervalFactoryTest, ItReturnsInterval)
     {
         const auto interval = ArrivalIntervalFromJson(GetInterval());
-        EXPECT_EQ(123, interval->subsequentWakeCategoryId);
-        EXPECT_FLOAT_EQ(4.5, interval->intervalValue);
+        EXPECT_EQ(123, interval->SubsequentCategory());
+        EXPECT_FLOAT_EQ(4.5, interval->Value());
     }
 } // namespace UKControllerPluginTest::Wake
