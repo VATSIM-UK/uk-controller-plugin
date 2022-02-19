@@ -48,7 +48,7 @@ namespace UKControllerPluginTest {
 
     void ApiTestCase::AwaitApiCallCompletion()
     {
-        factory->RequestFactory().AwaitRequestCompletion();
+        factory->RequestFactory().AwaitRequestCompletion(std::chrono::seconds(5));
     }
 
     auto ApiTestCase::SettingsProvider()

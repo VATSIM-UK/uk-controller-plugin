@@ -13,9 +13,10 @@ namespace UKControllerPluginUtils::Api {
         [[nodiscard]] auto Put(std::string uri, nlohmann::json body) -> ApiRequest;
         [[nodiscard]] auto Delete(std::string uri) -> ApiRequest;
         [[nodiscard]] auto Patch(std::string uri, nlohmann::json body) -> ApiRequest;
-        void AwaitRequestCompletion();
+        void AwaitRequestCompletion(const std::chrono::seconds& = std::chrono::seconds(10));
 
         private:
+        [[nodiscard]] auto ApiRequestsCompleted() -> bool;
         [[nodiscard]] auto OnCompletionFunction() -> std::function<void(void)>;
         void BeginRequest();
 

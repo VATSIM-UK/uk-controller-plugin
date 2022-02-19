@@ -6,7 +6,7 @@
 namespace UKControllerPluginUtils::Api {
 
     ApiRequestFactory::ApiRequestFactory(ApiRequestPerformerInterface& requestPerformer)
-        : requestPerformer(requestPerformer)
+        : requestPerformer(requestPerformer), requestsInProgress(0)
     {
     }
 
@@ -60,11 +60,25 @@ namespace UKControllerPluginUtils::Api {
     /**
      * This method is for shutdown / tests, wait for all requests to complete.
      */
-    void ApiRequestFactory::AwaitRequestCompletion()
+    void ApiRequestFactory::AwaitRequestCompletion(const std::chrono::seconds& seconds)
     {
-        while (this->requestsInProgress > 0) {
-            auto lock = std::lock_guard(this->requestsInProgressLock);
+        auto startTime = std::chrono::system_clock::now();
+        while (true) {
+            if (std::chrono::system_clock::now() > startTime + seconds) {
+                throw std::exception("Timeout whilst waiting for API request completion");
+            }
+
+            if (this->ApiRequestsCompleted()) {
+                break;
+            }
+
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
+    }
+
+    auto ApiRequestFactory::ApiRequestsCompleted() -> bool
+    {
+        auto lock = std::lock_guard(this->requestsInProgressLock);
+        return this->requestsInProgress == 0;
     }
 } // namespace UKControllerPluginUtils::Api
