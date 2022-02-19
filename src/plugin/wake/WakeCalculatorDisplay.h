@@ -54,6 +54,8 @@ namespace UKControllerPlugin::Wake {
         void
         RenderScheme(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
         void
+        RenderMode(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
+        void
         RenderLead(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
         void RenderFollowing(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
@@ -68,7 +70,7 @@ namespace UKControllerPlugin::Wake {
 
         inline static const int WINDOW_WIDTH = 350;
         inline static const int TITLE_BAR_HEIGHT = 20;
-        inline static const int CONTENT_HEIGHT = 125;
+        inline static const int CONTENT_HEIGHT = 150;
         inline static const int TEXT_INSET = 5;
 
         // Some options
@@ -105,6 +107,8 @@ namespace UKControllerPlugin::Wake {
         Gdiplus::Rect schemeTextArea;
         Gdiplus::Rect intermediateStaticArea;
         Gdiplus::Rect intermediateTextArea;
+        Gdiplus::Rect departureArrivalStaticArea;
+        Gdiplus::Rect departureArrivaTextArea;
         Gdiplus::Rect leadStaticArea;
         Gdiplus::Rect leadTextArea;
         Gdiplus::Rect followingStaticArea;
@@ -119,6 +123,7 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<Components::ClickableArea> followingClickspot;
         std::shared_ptr<Components::ClickableArea> schemeClickspot;
         std::shared_ptr<Components::ClickableArea> intermediateClickspot;
+        std::shared_ptr<Components::ClickableArea> departureArrivalClickspot;
 
         // ASR Things
         const std::string ASR_KEY_VISIBILITY = "wakeCalculatorVisibility";
