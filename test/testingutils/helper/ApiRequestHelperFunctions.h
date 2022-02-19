@@ -10,10 +10,7 @@ extern const std::string mockApiKey;
 */
 UKControllerPlugin::Curl::CurlRequest GetApiCurlRequest(std::string route, std::string method);
 UKControllerPlugin::Curl::CurlRequest GetApiCurlRequest(std::string route, std::string method, nlohmann::json body);
-UKControllerPlugin::Curl::CurlRequest GetApiGetUriCurlRequest(
-    std::string route,
-    std::string method
-);
+UKControllerPlugin::Curl::CurlRequest GetApiGetUriCurlRequest(std::string route, std::string method);
 
 /*
     Returns an API Request Builder

@@ -43,7 +43,7 @@ namespace UKControllerPluginTest::Api {
             .Times(0);
 
         this->ExpectApiRequest()->Get().To("authorise").WithoutBody().WillReturnOk();
-        
+
         this->ExpectApiRequest()->Get().To("authorise").WithoutBody().WillReturnForbidden();
 
         FirstTimeApiAuthorisationCheck(this->SettingsProvider(), windows);

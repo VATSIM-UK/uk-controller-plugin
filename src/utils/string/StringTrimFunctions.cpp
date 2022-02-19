@@ -13,7 +13,7 @@ namespace UKControllerPluginUtils::String {
         size_t end = string.find_last_not_of(charactersToTrim);
         return (end == std::string::npos) ? "" : string.substr(0, end + 1);
     }
-    
+
     auto trim(const std::string& string, const std::string& charactersToTrim) -> std::string
     {
         return ltrim(rtrim(string, charactersToTrim), charactersToTrim);

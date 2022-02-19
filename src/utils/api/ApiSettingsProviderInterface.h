@@ -13,7 +13,7 @@ namespace UKControllerPluginUtils::Api {
          * Load from storage, using defaults if required.
          */
         virtual auto Get() -> ApiSettings& = 0;
-        
+
         /**
          * Do we have the API settings?
          */

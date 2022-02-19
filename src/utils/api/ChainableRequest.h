@@ -24,13 +24,13 @@ namespace UKControllerPluginUtils::Api {
 
         private:
         void ApplyOnCompletion();
-        
+
         // Continuable instance
         cti::continuable<Response> continuable;
 
         // A function to run when we're all done
         std::function<void(void)> onCompletion;
-        
+
         // Has the request executed
         bool executed = false;
     };

@@ -18,13 +18,12 @@ namespace UKControllerPluginUtils::Api {
         public:
         CurlApiRequestPerformerFactory(std::unique_ptr<UKControllerPlugin::Curl::CurlInterface> curl);
         ~CurlApiRequestPerformerFactory();
-        [[nodiscard]] auto Make(const ApiSettings& apiSettings)
-            -> ApiRequestPerformerInterface& override;
+        [[nodiscard]] auto Make(const ApiSettings& apiSettings) -> ApiRequestPerformerInterface& override;
 
         private:
         // For cURL requests
         std::unique_ptr<UKControllerPlugin::Curl::CurlInterface> curl;
-        
+
         // Applies headers
         std::unique_ptr<ApiHeaderApplicator> headerApplicator;
 

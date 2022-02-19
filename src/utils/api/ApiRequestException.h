@@ -16,10 +16,10 @@ namespace UKControllerPluginUtils::Api {
         private:
         // The URI this request was trying to hit
         const std::string uri;
-        
+
         // The HTTP status code
         Http::HttpStatusCode statusCode;
-        
+
         // Is the response invalid JSON
         bool invalidJson;
     };

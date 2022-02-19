@@ -46,7 +46,7 @@ namespace UKControllerPlugin::Hold {
     void HoldManager::AssignAircraftToHold(const std::string& callsign, const std::string& hold, bool updateApi)
     {
         auto lock = std::lock_guard(this->dataMutex);
-        
+
         // Add it to the aircraft list or fetch it if needed
         std::shared_ptr<HoldingAircraft> holdingAircraft;
         if (this->aircraft.count(callsign) != 0) {

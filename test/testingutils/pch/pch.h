@@ -8,11 +8,11 @@
 // add headers that you want to pre-compile here
 // Ignore warnings about uninitialised variables in the Gmock headers
 #include "json/json.hpp"
-#pragma warning( push )
-#pragma warning( disable : 26495 26451 28251)
+#pragma warning(push)
+#pragma warning(disable : 26495 26451 28251)
 #include "gmock/gmock.h"
 #include "helper/Matchers.h"
-#pragma warning( pop )
+#pragma warning(pop)
 
 #include <Windows.h>
 #include <string>
@@ -24,8 +24,8 @@
 #include "mock/MockApiRequestPerformer.h"
 #include "mock/MockApiRequestPerformerFactory.h"
 #include "mock/MockApiSettingsProvider.h"
-using std::min;
 using std::max;
+using std::min;
 #include <gdiplus.h>
 #include <gdiplusgraphics.h>
 #include <gdiplustypes.h>

@@ -21,7 +21,7 @@ namespace UKControllerPlugin::Setting {
 
         private:
         [[nodiscard]] auto LoadFromFile() const -> std::map<std::string, std::string>;
-        
+
         // The filename to load
         const std::wstring filename;
 
@@ -30,7 +30,7 @@ namespace UKControllerPlugin::Setting {
 
         // Windows API for loading files
         Windows::WinApiInterface& windows;
-        
+
         // Loaded settings
         std::map<std::string, std::string> loadedSettings;
     };

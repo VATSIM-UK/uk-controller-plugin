@@ -6,12 +6,12 @@ namespace UKControllerPluginUtils::Api {
         : statusCode(statusCode), data(std::move(data))
     {
     }
-    
+
     auto Response::StatusCode() const -> Http::HttpStatusCode
     {
         return statusCode;
     }
-    
+
     auto Response::Data() const -> const nlohmann::json&
     {
         return data;

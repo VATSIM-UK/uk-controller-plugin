@@ -13,11 +13,12 @@ using UKControllerPluginUtils::Http::IsSuccessful;
 
 namespace UKControllerPluginTest {
 
-    ApiExpectation::ApiExpectation(bool isPositive, UKControllerPluginUtilsTest::Api::MockApiRequestPerformer& performer)
+    ApiExpectation::ApiExpectation(
+        bool isPositive, UKControllerPluginUtilsTest::Api::MockApiRequestPerformer& performer)
         : isPositive(isPositive), performer(performer), responseCode(HttpStatusCode::Unknown)
     {
     }
-    
+
     ApiExpectation::~ApiExpectation()
     {
         if (this->isPositive) {
@@ -31,8 +32,7 @@ namespace UKControllerPluginTest {
                     .RetiresOnSaturation();
             }
         } else {
-            EXPECT_CALL(performer, Perform(ExpectedRequest()))
-                .Times(0);
+            EXPECT_CALL(performer, Perform(ExpectedRequest())).Times(0);
         }
     }
 

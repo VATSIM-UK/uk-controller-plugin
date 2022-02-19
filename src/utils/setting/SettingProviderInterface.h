@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Setting {
     {
         public:
         virtual ~SettingProviderInterface() = default;
-        
+
         /**
          * Returns settings values. Returns empty string if not found.
          */

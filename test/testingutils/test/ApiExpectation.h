@@ -46,13 +46,13 @@ namespace UKControllerPluginTest {
         [[nodiscard]] auto ExpectedRequest() const -> UKControllerPluginUtils::Api::ApiRequestData;
         [[nodiscard]] auto ExpectedResponse() const
             -> std::variant<UKControllerPluginUtils::Api::Response, UKControllerPluginUtils::Api::ApiRequestException>;
-        
+
         // Is this a positive or negative assertion
         bool isPositive;
-        
+
         // Performs the expectation
         UKControllerPluginUtilsTest::Api::MockApiRequestPerformer& performer;
-        
+
         // The expected URI for the request
         std::string uri;
 
