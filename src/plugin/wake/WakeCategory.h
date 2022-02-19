@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin::Wake {
     class ArrivalWakeInterval;
-    struct DepartureWakeInterval;
+    class DepartureWakeInterval;
 
     /**
      * Represents a wake category within a given wake scheme

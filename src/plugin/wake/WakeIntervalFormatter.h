@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin::Wake {
-    struct DepartureWakeInterval;
+    class WakeIntervalInterface;
 
-    [[nodiscard]] auto FormatInterval(const DepartureWakeInterval& interval) -> std::wstring;
+    [[nodiscard]] auto FormatInterval(const WakeIntervalInterface& interval) -> std::wstring;
 } // namespace UKControllerPlugin::Wake

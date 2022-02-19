@@ -891,7 +891,7 @@ set(src__wake
     wake/WakeScheme.cpp wake/WakeScheme.h
     wake/WakeCategory.cpp wake/WakeCategory.h
     wake/WakeCategoryFactory.cpp wake/WakeCategoryFactory.h
-    wake/DepartureWakeInterval.h
+    wake/DepartureWakeInterval.cpp wake/DepartureWakeInterval.h
     wake/DepartureWakeIntervalFactory.cpp wake/DepartureWakeIntervalFactory.h
     wake/WakeSchemeFactory.cpp wake/WakeSchemeFactory.h wake/WakeSchemeCollection.cpp
     wake/WakeSchemeCollection.h
@@ -905,7 +905,7 @@ set(src__wake
     wake/FollowingWakeCallsignProvider.cpp wake/FollowingWakeCallsignProvider.h
     wake/WakeSchemeProvider.cpp wake/WakeSchemeProvider.h
     wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h
-    wake/ArrivalWakeInterval.h wake/ArrivalWakeInterval.cpp
+    wake/ArrivalWakeInterval.cpp wake/ArrivalWakeInterval.h
     wake/ArrivalWakeIntervalFactory.cpp wake/ArrivalWakeIntervalFactory.h
     wake/WakeIntervalInterface.h)
 source_group("src\\wake" FILES ${src__wake})

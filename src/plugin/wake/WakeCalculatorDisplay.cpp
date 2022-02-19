@@ -1,5 +1,7 @@
-#include "WakeCategory.h"
+#include "ArrivalWakeInterval.h"
+#include "DepartureWakeInterval.h"
 #include "WakeCalculatorDisplay.h"
+#include "WakeCategory.h"
 #include "WakeCategoryMapperInterface.h"
 #include "WakeCalculatorOptions.h"
 #include "WakeIntervalFormatter.h"
@@ -316,8 +318,8 @@ namespace UKControllerPlugin::Wake {
         graphics.DrawString(categoryComparison, comparisonTextArea, *textBrush);
 
         // Check for intervals and display if present
-        const auto departureInterval = leadCategory->DepartureInterval(*followingCategory, options->Intermediate());
-        if (departureInterval == nullptr) {
+        const auto interval = RelevantInterval(*leadCategory, *followingCategory, options->Intermediate());
+        if (interval == nullptr) {
             graphics.DrawString(
                 L"N/A",
                 calculationResultArea,
@@ -328,11 +330,21 @@ namespace UKControllerPlugin::Wake {
         }
 
         graphics.DrawString(
-            FormatInterval(*departureInterval),
+            FormatInterval(*interval),
             calculationResultArea,
             *resultBrush,
             Graphics::StringFormatManager::Instance().GetCentreAlign(),
             Graphics::FontManager::Instance().Get(16));
+    }
+
+    auto WakeCalculatorDisplay::RelevantInterval(
+        const WakeCategory& lead, const WakeCategory& following, bool intermediate) const
+        -> std::shared_ptr<WakeIntervalInterface>
+    {
+        return options->Departures()
+                   ? static_cast<std::shared_ptr<WakeIntervalInterface>>(
+                         lead.DepartureInterval(following, intermediate))
+                   : static_cast<std::shared_ptr<WakeIntervalInterface>>(lead.ArrivalInterval(following));
     }
 
     auto WakeCalculatorDisplay::Position() const -> const POINT&

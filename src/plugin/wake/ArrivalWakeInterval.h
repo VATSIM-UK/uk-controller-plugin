@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "WakeIntervalInterface.h"
 
 namespace UKControllerPlugin::Wake {
