@@ -79,8 +79,7 @@ namespace UKControllerPlugin::IntentionCode {
         // If we have it cached, then use the cached value
         const auto& flightplan = tagData.GetFlightplan();
         EuroscopeExtractedRouteInterface extractedRoute = flightplan.GetExtractedRoute();
-        if (this->codeCache.HasIntentionCodeForAircraft(flightplan.GetCallsign()) &&
-            this->codeCache.IntentionCodeValid(flightplan.GetCallsign(), extractedRoute)) {
+        if (this->codeCache.HasIntentionCodeForAircraft(flightplan.GetCallsign())) {
             tagData.SetItemString(this->codeCache.GetIntentionCodeForAircraft(flightplan.GetCallsign()));
             return;
         }
