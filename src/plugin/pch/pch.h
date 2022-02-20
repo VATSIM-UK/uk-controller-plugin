@@ -14,12 +14,9 @@
 #pragma warning(disable : 26495 26451)
 
 #include "../../resource/resource.h"
-#include "spdlog/include/spdlog/logger.h"
-#include "spdlog/include/spdlog/sinks/file_sinks.h"
-#include "spdlog/include/spdlog/sinks/null_sink.h"
 #include "json/json.hpp"
+#include "fmt/include/fmt/chrono.h"
 
-#include "euroscope/EuroScopePlugIn.h"
 #include "log/LoggerFunctions.h"
 #include "task/RunAsyncTask.h"
 #pragma warning(pop)
@@ -27,12 +24,14 @@
 // Standard headers
 using std::max;
 using std::min;
+#include <ws2tcpip.h>
+#include <winsock2.h>
+#include <Windows.h>
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <KnownFolders.h>
 #include <Shlobj.h>
 #include <Shobjidl.h>
-#include <Windows.h>
 #include <algorithm>
 #include <cctype>
 #include <codecvt>
@@ -63,5 +62,5 @@ using std::min;
 #include <utility>
 #include <variant>
 #include <vector>
-#include <ws2def.h>
-#include <ws2tcpip.h>
+
+#include "euroscope/EuroScopePlugIn.h"
