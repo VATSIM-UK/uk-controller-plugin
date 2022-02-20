@@ -1081,7 +1081,8 @@ if(MSVC)
         $<$<CONFIG:Debug>:
             /DEBUG:FASTLINK;
             /INCREMENTAL
-        >
+            -flto=thin
+            >
         $<$<CONFIG:Release>:
             /DEBUG;
             /OPT:REF;
