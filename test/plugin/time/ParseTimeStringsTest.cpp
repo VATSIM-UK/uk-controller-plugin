@@ -49,4 +49,9 @@ namespace UKControllerPluginTest::Time {
     {
         EXPECT_EQ("2021-11-12 13:14:15", ToDateTimeString(ParseTimeString("2021-11-12 13:14:15")));
     }
+
+    TEST_F(ParseTimeStringsTest, ItConvertsDaylightSavingsTimePointsToString)
+    {
+        EXPECT_EQ("2021-06-12 13:14:15", ToDateTimeString(ParseTimeString("2021-06-12 13:14:15")));
+    }
 } // namespace UKControllerPluginTest::Time
