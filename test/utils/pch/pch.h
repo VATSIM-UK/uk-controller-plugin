@@ -16,3 +16,5 @@
 #include "../../testingutils/mock/MockCurlApi.h"
 #include "../../testingutils/mock/MockDialogProvider.h"
 #include "../../testingutils/mock/MockWinApi.h"
+
+#include <chrono>

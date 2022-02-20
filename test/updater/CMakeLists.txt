@@ -111,7 +111,7 @@ if(MSVC)
         $<$<CONFIG:Release>:
             /Zi
         >
-        /std:c++17;
+        /std:c++20;
         /W4;
         /WX;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}

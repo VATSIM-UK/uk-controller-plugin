@@ -1060,7 +1060,7 @@ if(MSVC)
             /Oi;
             /Gy
         >
-        /std:c++17;
+        /std:c++20;
         /sdl;
         /W4;
         /WX;

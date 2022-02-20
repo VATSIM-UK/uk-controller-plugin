@@ -73,6 +73,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/spdlog/include"
 )
 
 ################################################################################
@@ -101,7 +102,7 @@ if(MSVC)
             /Gy
         >
         /permissive-;
-        /std:c++17;
+        /std:c++20;
         /sdl;
         /W4;
         /WX;

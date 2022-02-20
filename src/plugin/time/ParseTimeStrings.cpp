@@ -9,12 +9,12 @@ namespace UKControllerPlugin::Time {
     {
         std::chrono::system_clock::time_point timePoint;
         std::istringstream inputStream(time);
-        inputStream >> date::parse(FORMAT, timePoint);
+        inputStream >> std::chrono::parse(FORMAT, timePoint);
         return static_cast<bool>(inputStream) ? timePoint : invalidTime;
     }
 
     auto ToDateTimeString(const std::chrono::system_clock::time_point& timePoint) -> std::string
     {
-        return date::format(FORMAT, date::floor<std::chrono::seconds>(timePoint));
+        return fmt::format(FORMAT, std::chrono::floor<std::chrono::seconds>(timePoint));
     }
 } // namespace UKControllerPlugin::Time

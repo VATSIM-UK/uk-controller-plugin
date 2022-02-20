@@ -106,7 +106,7 @@ if(MSVC)
             /Od;
             /RTC1
         >
-        /std:c++17;
+        /std:c++20;
         /W4;
         /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};

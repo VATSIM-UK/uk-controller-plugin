@@ -8,17 +8,20 @@
 // add headers that you want to pre-compile here
 #pragma warning(push)
 #pragma warning(disable : 26495 26451)
+#define SPDLOG_WCHAR_FILENAMES
 #include <curl/curl.h>
-#include <date/include/date/date.h>
 #include <json/json.hpp>
 #include <spdlog/include/spdlog/logger.h>
-#include <spdlog/include/spdlog/sinks/file_sinks.h>
+#include <spdlog/include/spdlog/sinks/basic_file_sink.h>
 #include <spdlog/include/spdlog/sinks/null_sink.h>
 #include <spdlog/include/spdlog/spdlog.h>
+#include <fmt/include/fmt/chrono.h>
 #pragma warning(pop)
 
 #include <CommCtrl.h>
 #include <CommDlg.h>
+#include <codecvt>
+#include <deque>
 #include <Mmsystem.h>
 #include <filesystem>
 #include <fstream>

@@ -403,8 +403,8 @@ namespace UKControllerPluginUtilsTest::Api {
 
         std::chrono::system_clock::time_point timePoint;
         std::istringstream inputStream("2021-05-09 12:31:00");
-        inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
-
+        inputStream >> std::chrono::parse(std::string{"%Y-%m-%d %H:%M:%S"}, timePoint);
+        
         EXPECT_TRUE(
             expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, 120, "Some remarks"));
     }
@@ -427,7 +427,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         std::chrono::system_clock::time_point timePoint;
         std::istringstream inputStream("2021-05-09 12:31:00");
-        inputStream >> date::parse("%Y-%m-%d %H:%M:%S", timePoint);
+        inputStream >> std::chrono::parse(std::string{"%Y-%m-%d %H:%M:%S"}, timePoint);
 
         EXPECT_TRUE(
             expectedRequest == this->builder.BuildApproveDepartureReleaseRequest(1, 2, timePoint, -1, "Some remarks"));

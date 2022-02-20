@@ -18,8 +18,9 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
+#define SPDLOG_WCHAR_FILENAMES
 #include "spdlog/include/spdlog/logger.h"
-#include "spdlog/include/spdlog/sinks/file_sinks.h"
+#include "spdlog/include/spdlog/sinks/basic_file_sink.h"
 #include "spdlog/include/spdlog/sinks/null_sink.h"
 using std::min;
 using std::max;
