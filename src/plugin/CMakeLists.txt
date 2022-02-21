@@ -238,6 +238,10 @@ set(src__flightrule
         flightrule/FlightRuleCollectionFactory.cpp flightrule/FlightRuleCollectionFactory.h)
 source_group("src\\flightrule" FILES ${src__flightrule})
 
+set(src__geometry
+        geometry/Line.cpp geometry/Line.h)
+source_group("src\\geometry" FILES ${src__geometry})
+
 set(src__graphics
     "graphics/GdiGraphicsInterface.h"
     "graphics/GdiGraphicsWrapper.cpp"
@@ -927,6 +931,7 @@ set(ALL_FILES
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}
+    ${src__geometry}
     ${src__graphics}
     ${src__handoff}
     ${src__headings}

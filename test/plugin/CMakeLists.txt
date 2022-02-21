@@ -127,6 +127,10 @@ set(test__flightrule
         flightrule/FlightRuleCollectionTest.cpp flightrule/FlightRuleCollectionFactoryTest.cpp flightrule/FlightRuleModuleTest.cpp)
 source_group("test\\flightrule" FILES ${test__flightrule})
 
+set(test__geometry
+        geometry/LineTest.cpp)
+source_group("test\\geometry" FILES ${test__geometry})
+
 set(test__handoff
     "handoff/HandoffCollectionFactoryTest.cpp"
     "handoff/HandoffCollectionTest.cpp"
@@ -568,6 +572,7 @@ set(ALL_FILES
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__flightrule}
+    ${test__geometry}
     ${test__handoff}
     ${test__headings}
     ${test__historytrail}
