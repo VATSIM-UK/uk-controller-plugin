@@ -39,6 +39,10 @@ set(src__api
 )
 source_group("src\\api" FILES ${src__api})
 
+set(src__approach
+        approach/ApproachSpacingRingRenderer.cpp approach/ApproachSpacingRingRenderer.h approach/ApproachModule.cpp approach/ApproachModule.h)
+source_group("src\\approach" FILES ${src__approach})
+
 set(src__bootstrap
     "bootstrap/BootstrapWarningMessage.cpp"
     "bootstrap/BootstrapWarningMessage.h"
@@ -56,7 +60,7 @@ set(src__bootstrap
     "bootstrap/PersistenceContainer.h"
     "bootstrap/PostInit.cpp"
     "bootstrap/PostInit.h"
-    bootstrap/PersistenceContainer.cpp)
+    bootstrap/PersistenceContainer.cpp bootstrap/BootstrapProviderInterface.h)
 source_group("src\\bootstrap" FILES ${src__bootstrap})
 
 set(src__command
@@ -239,7 +243,7 @@ set(src__flightrule
 source_group("src\\flightrule" FILES ${src__flightrule})
 
 set(src__geometry
-        geometry/Line.cpp geometry/Line.h)
+        geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h)
 source_group("src\\geometry" FILES ${src__geometry})
 
 set(src__graphics
@@ -919,6 +923,7 @@ set(ALL_FILES
     ${src__aircraft}
     ${src__airfield}
     ${src__api}
+    ${src__approach}
     ${src__bootstrap}
     ${src__command}
     ${src__components}

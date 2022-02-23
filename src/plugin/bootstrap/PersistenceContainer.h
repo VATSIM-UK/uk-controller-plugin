@@ -15,6 +15,9 @@ namespace UKControllerPlugin {
     namespace Api {
         class ApiInterface;
     } // namespace Api
+    namespace Approach {
+        class ApproachModule;
+    } // namespace Approach
     namespace Command {
         class CommandHandlerCollection;
     } // namespace Command
@@ -36,6 +39,9 @@ namespace UKControllerPlugin {
     namespace Datablock {
         class DisplayTime;
     } // namespace Datablock
+    namespace Dependency {
+        class DependencyLoaderInterface;
+    } // namespace Dependency
     namespace Dialog {
         class DialogManager;
     } // namespace Dialog
@@ -180,6 +186,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
         std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
         std::shared_ptr<UKControllerPlugin::Prenote::PrenoteMessageCollection> prenotes;
+        std::shared_ptr<UKControllerPlugin::Dependency::DependencyLoaderInterface> dependencyLoader;
 
         // Collections of event handlers
         std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;
@@ -214,6 +221,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
         std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
         std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseEventHandler> departureReleaseHandler;
+        std::shared_ptr<UKControllerPlugin::Approach::ApproachModule> approachModule;
 
         // Collections that are spawned multiple times.
         std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;
