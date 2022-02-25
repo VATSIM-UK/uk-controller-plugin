@@ -8,7 +8,7 @@
 namespace UKControllerPlugin::Approach {
 
     ApproachSpacingRingRenderer::ApproachSpacingRingRenderer(Euroscope::EuroscopePluginLoopbackInterface& plugin)
-        : plugin(plugin), circleBrush(Gdiplus::SolidBrush(Gdiplus::Color(255, 255, 255)))
+        : plugin(plugin), circleBrush(Gdiplus::SolidBrush(Gdiplus::Color(50, 255, 255, 255)))
     {
     }
 

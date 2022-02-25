@@ -2,11 +2,12 @@
 #include "bootstrap/BootstrapProviderInterface.h"
 
 namespace UKControllerPlugin::Approach {
-    class ApproachModule : Bootstrap::BootstrapProviderInterface
+    class ApproachBootstrapProvider : public Bootstrap::BootstrapProviderInterface
     {
         public:
+        ApproachBootstrapProvider() = default;
         void BootstrapPlugin(Bootstrap::PersistenceContainer& container) override;
-        
+
         void BootstrapRadarScreen(
             const Bootstrap::PersistenceContainer& container,
             RadarScreen::RadarRenderableCollection& radarRenderables,

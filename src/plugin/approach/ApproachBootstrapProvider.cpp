@@ -1,4 +1,4 @@
-#include "ApproachModule.h"
+#include "ApproachBootstrapProvider.h"
 #include "ApproachSpacingRingRenderer.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/UKPlugin.h"
@@ -6,11 +6,11 @@
 
 namespace UKControllerPlugin::Approach {
 
-    void ApproachModule::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
+    void ApproachBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
     {
     }
 
-    void ApproachModule::BootstrapRadarScreen(
+    void ApproachBootstrapProvider::BootstrapRadarScreen(
         const Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& radarRenderables,
         RadarScreen::ConfigurableDisplayCollection& configurables,

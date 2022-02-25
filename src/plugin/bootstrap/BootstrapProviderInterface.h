@@ -3,7 +3,7 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class AsrEventHandlerCollection;
-    }
+    } // namespace Euroscope
     namespace RadarScreen {
         class RadarRenderableCollection;
         class ConfigurableDisplayCollection;
@@ -14,7 +14,10 @@ namespace UKControllerPlugin::Bootstrap {
     struct PersistenceContainer;
 
     /**
-     * An interface for classes that want to be part of the plugin bootstrapping process.
+     * An interface for classes that bootstrap things to the plugin and the radar screens.
+     *
+     * These should not be storing any classes, they're just for the bootstrap process. For the
+     * classes that may be shared between modules, look at the ModuleFactories.
      */
     class BootstrapProviderInterface
     {

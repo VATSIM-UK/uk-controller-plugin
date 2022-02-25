@@ -4,7 +4,8 @@
 #include "RadarScreenFactory.h"
 #include "ScreenControlsBootstrap.h"
 #include "UKRadarScreen.h"
-#include "approach/ApproachModule.h"
+#include "approach/ApproachBootstrapProvider.h"
+#include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "countdown/CountdownModule.h"
@@ -112,7 +113,8 @@ namespace UKControllerPlugin::RadarScreen {
         Departure::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         Wake::BootstrapRadarScreen(this->persistence, renderers, userSettingHandlers, displayFactory);
-        this->persistence.approachModule->BootstrapRadarScreen(
+
+        this->persistence.bootstrapProviders->BootstrapRadarScreen(
             this->persistence, renderers, configurableDisplays, userSettingHandlers);
 
         // Register command for position resets

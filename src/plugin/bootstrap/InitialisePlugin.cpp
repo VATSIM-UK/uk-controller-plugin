@@ -1,13 +1,15 @@
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
-#include "approach/ApproachModule.h"
+#include "approach/ApproachBootstrapProvider.h"
 #include "api/ApiAuthChecker.h"
+#include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/InitialisePlugin.h"
+#include "bootstrap/ModuleBootstrap.h"
 #include "bootstrap/PostInit.h"
 #include "controller/ControllerBootstrap.h"
 #include "countdown/CountdownModule.h"
@@ -258,7 +260,9 @@ namespace UKControllerPlugin {
         // Pressure monitor
         Metar::PressureMonitorBootstrap(*this->container);
 
-        this->container->approachModule = std::make_unique<Approach::ApproachModule>();
+        // Run the module bootstraps
+        Bootstrap::ModuleBootstrap(*this->container);
+        this->container->bootstrapProviders->BootstrapPlugin(*this->container);
 
         // Do post-init and final setup, which involves running tasks that need to happen on load.
         PostInit::Process(*this->container);

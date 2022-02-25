@@ -15,9 +15,10 @@ namespace UKControllerPlugin {
     namespace Api {
         class ApiInterface;
     } // namespace Api
-    namespace Approach {
-        class ApproachModule;
-    } // namespace Approach
+    namespace Bootstrap {
+        class BootstrapProviderCollection;
+        class ModuleFactories;
+    } // namespace Bootstrap
     namespace Command {
         class CommandHandlerCollection;
     } // namespace Command
@@ -207,6 +208,8 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;
 
         // The modules
+        std::unique_ptr<ModuleFactories> moduleFactories;
+        std::unique_ptr<BootstrapProviderCollection> bootstrapProviders;
         std::shared_ptr<UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler> initialAltitudeEvents;
         std::unique_ptr<UKControllerPlugin::HistoryTrail::HistoryTrailRepository> historyTrails;
         std::shared_ptr<UKControllerPlugin::Countdown::CountdownTimer> countdownTimer;
@@ -221,7 +224,6 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
         std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
         std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseEventHandler> departureReleaseHandler;
-        std::shared_ptr<UKControllerPlugin::Approach::ApproachModule> approachModule;
 
         // Collections that are spawned multiple times.
         std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;

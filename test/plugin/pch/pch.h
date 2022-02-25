@@ -22,6 +22,7 @@
 #include "../mock/MockAircraftTypeMapper.h"
 #include "../mock/MockAirfieldGroup.h"
 #include "../mock/MockAsrEventHandlerInterface.h"
+#include "../mock/MockBootstrapProvider.h"
 #include "../mock/MockCallsignSelectionProvider.h"
 #include "../mock/MockConfigurableDisplay.h"
 #include "../mock/MockConnection.h"
@@ -59,3 +60,6 @@
 #include "../mock/MockUserSettingAwareInterface.h"
 #include "../mock/MockUserSettingProviderInterface.h"
 #include "../mock/MockWakeCategoryMapper.h"
+
+// Test cases
+#include "../test/BootstrapProviderTestCase.h"

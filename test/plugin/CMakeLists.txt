@@ -27,13 +27,17 @@ set(test__api
 )
 source_group("test\\api" FILES ${test__api})
 
+set(test__approach
+        approach/ApproachBootstrapProviderTest.cpp)
+source_group("test\\approach" FILES ${test__approach})
+
 set(test__bootstrap
     "bootstrap/BootstrapWarningMessageTest.cpp"
     "bootstrap/CollectionBootstrapTest.cpp"
     "bootstrap/EventHandlerCollectionBootstrapTest.cpp"
     "bootstrap/ExternalsBootstrapTest.cpp"
     "bootstrap/HelperBootstrapTest.cpp"
-)
+        bootstrap/ModuleBootstrapTest.cpp bootstrap/ModuleFactoriesTest.cpp bootstrap/BootstrapProviderCollectionTest.cpp bootstrap/BootstrapProviderCollectionFactoryTest.cpp)
 source_group("test\\bootstrap" FILES ${test__bootstrap})
 
 set(test__command
@@ -128,7 +132,7 @@ set(test__flightrule
 source_group("test\\flightrule" FILES ${test__flightrule})
 
 set(test__geometry
-        geometry/LineTest.cpp)
+        geometry/LineTest.cpp geometry/DistanceRadiusToScreenRadiusTest.cpp)
 source_group("test\\geometry" FILES ${test__geometry})
 
 set(test__handoff
@@ -341,7 +345,7 @@ set(test__mock
     mock/MockCallsignSelectionProvider.h
     mock/MockAircraftTypeMapper.h
     mock/MockWakeCategoryMapper.h
-    mock/MockListItemProvider.h mock/MockPopupList.h)
+    mock/MockListItemProvider.h mock/MockPopupList.h mock/MockBootstrapProvider.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -527,6 +531,10 @@ set(test__tag
 )
 source_group("test\\tag" FILES ${test__tag})
 
+set(test__test
+        test/BootstrapProviderTestCase.h)
+source_group("test\\test" FILES ${test__test})
+
 set(test__time
     "time/ParseTimeStringsTest.cpp"
     "time/SystemClockTest.cpp"
@@ -560,6 +568,7 @@ set(ALL_FILES
     ${test__aircraft}
     ${test__airfield}
     ${test__api}
+    ${test__approach}
     ${test__bootstrap}
     ${test__command}
     ${test__components}
@@ -607,6 +616,7 @@ set(ALL_FILES
     ${test__srd}
     ${test__stands}
     ${test__tag}
+    ${test__test}
     ${test__time}
     ${test__timedevent}
     ${test__timer}

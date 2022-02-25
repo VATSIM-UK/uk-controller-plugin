@@ -40,7 +40,7 @@ set(src__api
 source_group("src\\api" FILES ${src__api})
 
 set(src__approach
-        approach/ApproachSpacingRingRenderer.cpp approach/ApproachSpacingRingRenderer.h approach/ApproachModule.cpp approach/ApproachModule.h)
+        approach/ApproachSpacingRingRenderer.cpp approach/ApproachSpacingRingRenderer.h approach/ApproachBootstrapProvider.cpp approach/ApproachBootstrapProvider.h approach/ApproachModuleFactory.cpp approach/ApproachModuleFactory.h)
 source_group("src\\approach" FILES ${src__approach})
 
 set(src__bootstrap
@@ -60,7 +60,7 @@ set(src__bootstrap
     "bootstrap/PersistenceContainer.h"
     "bootstrap/PostInit.cpp"
     "bootstrap/PostInit.h"
-    bootstrap/PersistenceContainer.cpp bootstrap/BootstrapProviderInterface.h)
+    bootstrap/PersistenceContainer.cpp bootstrap/BootstrapProviderInterface.h bootstrap/BootstrapProviderCollection.h bootstrap/BootstrapProviderCollection.cpp bootstrap/BootstrapProviderCollection.h bootstrap/ModuleFactories.h bootstrap/ModuleFactories.cpp bootstrap/ModuleFactories.h bootstrap/BootstrapProviderCollectionFactory.cpp bootstrap/BootstrapProviderCollectionFactory.h bootstrap/ModuleBootstrap.cpp bootstrap/ModuleBootstrap.h)
 source_group("src\\bootstrap" FILES ${src__bootstrap})
 
 set(src__command
