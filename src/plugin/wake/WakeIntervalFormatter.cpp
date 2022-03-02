@@ -1,18 +1,22 @@
 #include "DepartureWakeInterval.h"
 #include "WakeIntervalFormatter.h"
+#include "helper/HelperFunctions.h"
 
 namespace UKControllerPlugin::Wake {
 
-    auto FormatInterval(const DepartureWakeInterval& interval) -> std::wstring
+    auto FormatInterval(const WakeIntervalInterface& interval) -> std::wstring
     {
-        if (interval.intervalUnit == "s") {
-            if (interval.intervalValue % 60 == 0) {
-                return std::to_wstring(interval.intervalValue / 60) + L" mins";
+        if (interval.Unit() == "s") {
+            auto time = static_cast<int>(std::ceil(interval.Value()));
+            if (time % 60 == 0) {
+                return std::to_wstring(time / 60) + L" mins";
             } else {
-                return std::to_wstring(interval.intervalValue) + L" secs";
+                return std::to_wstring(time) + L" secs";
             }
-        } else if (interval.intervalUnit == "nm") {
-            return std::to_wstring(interval.intervalValue) + L" " + L"nm";
+        } else if (interval.Unit() == "nm") {
+            char distanceString[25];                             // NOLINT
+            sprintf_s(distanceString, "%.1f", interval.Value()); // NOLINT
+            return HelperFunctions::ConvertToWideString(distanceString) + L" " + L"nm";
         }
 
         return L"--";

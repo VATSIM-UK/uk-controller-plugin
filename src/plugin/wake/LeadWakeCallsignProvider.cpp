@@ -20,10 +20,11 @@ namespace UKControllerPlugin::Wake {
             Ownership::ServiceType::Delivery | Ownership::ServiceType::Ground | Ownership::ServiceType::Tower);
 
         plugin.ApplyFunctionToAllFlightplans(
-            [&callsigns, &airfields](
+            [&callsigns, &airfields, this](
                 const std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface>& flightplan,
                 const std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface>& radarTarget) {
-                if (std::find(airfields.begin(), airfields.end(), flightplan->GetOrigin()) == airfields.cend()) {
+                if (std::find(airfields.begin(), airfields.end(), RelevantAirfieldForFlightplan(*flightplan)) ==
+                    airfields.cend()) {
                     return;
                 }
 
@@ -36,5 +37,11 @@ namespace UKControllerPlugin::Wake {
     {
         options->LeadAircraft(callsign);
         options->FollowingAircraft("");
+    }
+
+    auto LeadWakeCallsignProvider::RelevantAirfieldForFlightplan(
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> std::string
+    {
+        return this->options->Departures() ? flightplan.GetOrigin() : flightplan.GetDestination();
     }
 } // namespace UKControllerPlugin::Wake

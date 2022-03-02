@@ -50,4 +50,19 @@ namespace UKControllerPlugin::Wake {
     {
         schemeMapper = mapper;
     }
+
+    auto WakeCalculatorOptions::Departures() const -> bool
+    {
+        return !Arrivals();
+    }
+
+    void WakeCalculatorOptions::ToggleArrivals()
+    {
+        arrivals = !arrivals;
+    }
+
+    auto WakeCalculatorOptions::Arrivals() const -> bool
+    {
+        return this->arrivals;
+    }
 } // namespace UKControllerPlugin::Wake

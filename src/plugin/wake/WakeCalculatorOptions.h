@@ -19,6 +19,9 @@ namespace UKControllerPlugin::Wake {
         void SchemeMapper(const std::shared_ptr<WakeCategoryMapperInterface> mapper);
         [[nodiscard]] auto Intermediate() const -> bool;
         void Intermediate(bool intermediate);
+        [[nodiscard]] auto Arrivals() const -> bool;
+        [[nodiscard]] auto Departures() const -> bool;
+        void ToggleArrivals();
 
         private:
         // Who the lead aircraft is
@@ -29,6 +32,9 @@ namespace UKControllerPlugin::Wake {
 
         // Are we doing intermediate departures
         bool intermediate = false;
+
+        // Are we doing arrivals
+        bool arrivals = false;
 
         // What scheme we're using
         std::string scheme;

@@ -108,9 +108,9 @@ namespace UKControllerPluginTest::Wake {
     TEST_F(DepartureWakeIntervalFactoryTest, ItReturnsInterval)
     {
         const auto interval = IntervalFromJson(GetInterval());
-        EXPECT_EQ(123, interval->subsequentWakeCategoryId);
-        EXPECT_EQ(120, interval->intervalValue);
-        EXPECT_EQ("s", interval->intervalUnit);
-        EXPECT_EQ(false, interval->intervalIsIntermediate);
+        EXPECT_EQ(123, interval->SubsequentCategory());
+        EXPECT_FLOAT_EQ(120, interval->Value());
+        EXPECT_EQ("s", interval->Unit());
+        EXPECT_EQ(false, interval->Intermediate());
     }
 } // namespace UKControllerPluginTest::Wake

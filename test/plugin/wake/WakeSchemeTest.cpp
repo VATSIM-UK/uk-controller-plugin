@@ -1,7 +1,9 @@
+#include "wake/ArrivalWakeInterval.h"
 #include "wake/DepartureWakeInterval.h"
 #include "wake/WakeCategory.h"
 #include "wake/WakeScheme.h"
 
+using UKControllerPlugin::Wake::ArrivalWakeInterval;
 using UKControllerPlugin::Wake::DepartureWakeInterval;
 using UKControllerPlugin::Wake::WakeCategory;
 using UKControllerPlugin::Wake::WakeScheme;
@@ -12,7 +14,12 @@ namespace UKControllerPluginTest::Wake {
         public:
         WakeSchemeTest()
             : categories({std::make_shared<WakeCategory>(
-                  456, "LM", "Lower Medium", 21, std::list<std::shared_ptr<DepartureWakeInterval>>{})}),
+                  456,
+                  "LM",
+                  "Lower Medium",
+                  21,
+                  std::list<std::shared_ptr<DepartureWakeInterval>>{},
+                  std::list<std::shared_ptr<ArrivalWakeInterval>>{})}),
               scheme(123, "RECAT", "RECAT-EU", categories)
         {
         }

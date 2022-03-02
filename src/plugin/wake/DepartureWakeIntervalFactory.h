@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin::Wake {
-    struct DepartureWakeInterval;
+    class DepartureWakeInterval;
 
     [[nodiscard]] auto IntervalFromJson(const nlohmann::json& json) -> std::shared_ptr<DepartureWakeInterval>;
     [[nodiscard]] auto IntervalValid(const nlohmann::json& json) -> bool;

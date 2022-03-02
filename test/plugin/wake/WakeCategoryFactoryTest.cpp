@@ -1,3 +1,4 @@
+#include "wake/ArrivalWakeInterval.h"
 #include "wake/DepartureWakeInterval.h"
 #include "wake/WakeCategory.h"
 #include "wake/WakeCategoryFactory.h"
@@ -21,7 +22,9 @@ namespace UKControllerPluginTest::Wake {
                 {"subsequent_departure_intervals",
                  nlohmann::json::array(
                      {{{"id", 1}, {"interval", 120}, {"interval_unit", "s"}, {"intermediate", false}},
-                      {{"id", 2}, {"interval", 180}, {"interval_unit", "s"}, {"intermediate", true}}})}};
+                      {{"id", 2}, {"interval", 180}, {"interval_unit", "s"}, {"intermediate", true}}})},
+                {"subsequent_arrival_intervals",
+                 nlohmann::json::array({{{"id", 1}, {"interval", 4.5}}, {{"id", 2}, {"interval", 5.0}}})}};
 
             category.update(override);
 
@@ -41,14 +44,19 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_EQ("Lower Medium", category->Description());
         EXPECT_EQ(15, category->RelativeWeighting());
         EXPECT_EQ(2, category->SubsequentDepartureIntervals().size());
-        EXPECT_EQ(1, category->SubsequentDepartureIntervals().front()->subsequentWakeCategoryId);
-        EXPECT_EQ(120, category->SubsequentDepartureIntervals().front()->intervalValue);
-        EXPECT_EQ("s", category->SubsequentDepartureIntervals().front()->intervalUnit);
-        EXPECT_FALSE(category->SubsequentDepartureIntervals().front()->intervalIsIntermediate);
-        EXPECT_EQ(2, category->SubsequentDepartureIntervals().back()->subsequentWakeCategoryId);
-        EXPECT_EQ(180, category->SubsequentDepartureIntervals().back()->intervalValue);
-        EXPECT_EQ("s", category->SubsequentDepartureIntervals().back()->intervalUnit);
-        EXPECT_TRUE(category->SubsequentDepartureIntervals().back()->intervalIsIntermediate);
+        EXPECT_EQ(1, category->SubsequentDepartureIntervals().front()->SubsequentCategory());
+        EXPECT_EQ(120, category->SubsequentDepartureIntervals().front()->Value());
+        EXPECT_EQ("s", category->SubsequentDepartureIntervals().front()->Unit());
+        EXPECT_FALSE(category->SubsequentDepartureIntervals().front()->Intermediate());
+        EXPECT_EQ(2, category->SubsequentDepartureIntervals().back()->SubsequentCategory());
+        EXPECT_EQ(180, category->SubsequentDepartureIntervals().back()->Value());
+        EXPECT_EQ("s", category->SubsequentDepartureIntervals().back()->Unit());
+        EXPECT_TRUE(category->SubsequentDepartureIntervals().back()->Intermediate());
+        EXPECT_EQ(2, category->SubsequentArrivalIntervals().size());
+        EXPECT_EQ(1, category->SubsequentArrivalIntervals().front()->SubsequentCategory());
+        EXPECT_FLOAT_EQ(4.5, category->SubsequentArrivalIntervals().front()->Value());
+        EXPECT_EQ(2, category->SubsequentArrivalIntervals().back()->SubsequentCategory());
+        EXPECT_FLOAT_EQ(5.0, category->SubsequentArrivalIntervals().back()->Value());
     }
 
     TEST_F(WakeCategoryFactoryTest, ItIgnoresBadDepartureIntervals)
@@ -64,6 +72,20 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_EQ("Lower Medium", category->Description());
         EXPECT_EQ(15, category->RelativeWeighting());
         EXPECT_EQ(0, category->SubsequentDepartureIntervals().size());
+    }
+
+    TEST_F(WakeCategoryFactoryTest, ItIgnoresBadArrivalIntervals)
+    {
+        const nlohmann::json intervals = {
+            {"subsequent_arrival_intervals", nlohmann::json::array({{{"id", "abc"}, {"interval", 1.5}}})}};
+
+        const auto category = WakeCategoryFromJson(GetCategory(intervals));
+        EXPECT_EQ(123, category->Id());
+        EXPECT_EQ("LM", category->Code());
+        EXPECT_EQ("Lower Medium", category->Description());
+        EXPECT_EQ(15, category->RelativeWeighting());
+        EXPECT_EQ(2, category->SubsequentDepartureIntervals().size());
+        EXPECT_EQ(0, category->SubsequentArrivalIntervals().size());
     }
 
     TEST_F(WakeCategoryFactoryTest, ItReturnsNullptrBadCategory)
@@ -125,6 +147,16 @@ namespace UKControllerPluginTest::Wake {
     TEST_F(WakeCategoryFactoryTest, CategoryIsInvalidDepartureIntervalsNotArray)
     {
         EXPECT_FALSE(CategoryValid(GetCategory(nlohmann::json::object({{"subsequent_departure_intervals", "abc"}}))));
+    }
+
+    TEST_F(WakeCategoryFactoryTest, CategoryIsInvalidArrivalIntervalsMissing)
+    {
+        EXPECT_FALSE(CategoryValid(GetCategory(nlohmann::json::object(), "subsequent_arrival_intervals")));
+    }
+
+    TEST_F(WakeCategoryFactoryTest, CategoryIsInvalidArrivalIntervalsNotArray)
+    {
+        EXPECT_FALSE(CategoryValid(GetCategory(nlohmann::json::object({{"subsequent_arrival_intervals", "abc"}}))));
     }
 
     TEST_F(WakeCategoryFactoryTest, CategoryIsInvalidIfNotObject)

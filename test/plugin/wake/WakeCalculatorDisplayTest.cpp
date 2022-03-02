@@ -148,12 +148,30 @@ namespace UKControllerPluginTest::Wake {
         display.LeftClick(radarScreen, 1, "scheme", {1, 2}, {});
     }
 
-    TEST_F(WakeCalculatorDisplayTest, IntermediateClickTriggersList)
+    TEST_F(WakeCalculatorDisplayTest, IntermediateClickToggles)
     {
         EXPECT_FALSE(options->Intermediate());
         display.LeftClick(radarScreen, 1, "intermediate", {1, 2}, {});
         EXPECT_TRUE(options->Intermediate());
         display.LeftClick(radarScreen, 1, "intermediate", {1, 2}, {});
         EXPECT_FALSE(options->Intermediate());
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, ModeTogglesMode)
+    {
+        EXPECT_FALSE(options->Arrivals());
+        display.LeftClick(radarScreen, 1, "mode", {1, 2}, {});
+        EXPECT_TRUE(options->Arrivals());
+        display.LeftClick(radarScreen, 1, "mode", {1, 2}, {});
+        EXPECT_FALSE(options->Arrivals());
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, ModeToggleResetsCallsigns)
+    {
+        options->LeadAircraft("abc");
+        options->FollowingAircraft("def");
+        display.LeftClick(radarScreen, 1, "mode", {1, 2}, {});
+        EXPECT_TRUE(options->LeadAircraft().empty());
+        EXPECT_TRUE(options->FollowingAircraft().empty());
     }
 } // namespace UKControllerPluginTest::Wake

@@ -4,6 +4,7 @@
 #include "wake/WakeCategory.h"
 
 using UKControllerPlugin::Aircraft::AircraftType;
+using UKControllerPlugin::Wake::ArrivalWakeInterval;
 using UKControllerPlugin::Wake::DepartureWakeInterval;
 using UKControllerPlugin::Wake::FlightplanWakeCategoryMapper;
 using UKControllerPlugin::Wake::WakeCategory;
@@ -15,7 +16,12 @@ namespace UKControllerPluginTest::Wake {
         public:
         FlightplanWakeCategoryMapperTest()
             : category(std::make_shared<WakeCategory>(
-                  1, "LM", "Lower Medium", 15, std::list<std::shared_ptr<DepartureWakeInterval>>{})),
+                  1,
+                  "LM",
+                  "Lower Medium",
+                  15,
+                  std::list<std::shared_ptr<DepartureWakeInterval>>{},
+                  std::list<std::shared_ptr<ArrivalWakeInterval>>{})),
               wakeScheme(1, "TEST", "TEST", std::list<std::shared_ptr<WakeCategory>>({category})),
               mapper(wakeScheme, aircraftMapper)
         {

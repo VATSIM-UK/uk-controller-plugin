@@ -1,5 +1,7 @@
-#include "WakeCategory.h"
+#include "ArrivalWakeInterval.h"
+#include "DepartureWakeInterval.h"
 #include "WakeCalculatorDisplay.h"
+#include "WakeCategory.h"
 #include "WakeCategoryMapperInterface.h"
 #include "WakeCalculatorOptions.h"
 #include "WakeIntervalFormatter.h"
@@ -39,7 +41,9 @@ namespace UKControllerPlugin::Wake {
               Components::ClickableArea::Create(followingTextArea, screenObjectId, "followcallsign", false)),
           schemeClickspot(Components::ClickableArea::Create(schemeTextArea, screenObjectId, "scheme", false)),
           intermediateClickspot(
-              Components::ClickableArea::Create(intermediateTextArea, screenObjectId, "intermediate", false))
+              Components::ClickableArea::Create(intermediateTextArea, screenObjectId, "intermediate", false)),
+          departureArrivalClickspot(
+              Components::ClickableArea::Create(departureArrivaTextArea, screenObjectId, "mode", false))
     {
         this->Move({DEFAULT_WINDOW_POSITION.x, DEFAULT_WINDOW_POSITION.y, 0, 0}, "");
     }
@@ -75,6 +79,13 @@ namespace UKControllerPlugin::Wake {
             options->Intermediate(!options->Intermediate());
             return;
         }
+
+        if (objectDescription == "mode") {
+            options->ToggleArrivals();
+            options->LeadAircraft("");
+            options->FollowingAircraft("");
+            return;
+        }
     }
 
     void WakeCalculatorDisplay::Move(RECT position, std::string objectDescription)
@@ -95,10 +106,16 @@ namespace UKControllerPlugin::Wake {
             intermediateStaticArea.GetRight() + TEXT_INSET, schemeStaticArea.GetTop(), 30, 20};
         this->intermediateClickspot->WithPosition(this->intermediateTextArea);
 
+        // Departure Arrival Mode
+        this->departureArrivalStaticArea = {TEXT_INSET, schemeStaticArea.GetBottom() + TEXT_INSET, 45, 20};
+        this->departureArrivaTextArea = {
+            departureArrivalStaticArea.GetRight() + TEXT_INSET, schemeStaticArea.GetBottom() + TEXT_INSET, 110, 20};
+        this->departureArrivalClickspot->WithPosition(this->departureArrivaTextArea);
+
         // Lead
-        this->leadStaticArea = {TEXT_INSET, schemeStaticArea.GetBottom() + TEXT_INSET, 45, 20};
+        this->leadStaticArea = {TEXT_INSET, departureArrivalStaticArea.GetBottom() + TEXT_INSET, 45, 20};
         this->leadTextArea = {
-            leadStaticArea.GetRight() + TEXT_INSET, schemeStaticArea.GetBottom() + TEXT_INSET, 110, 20};
+            leadStaticArea.GetRight() + TEXT_INSET, departureArrivalStaticArea.GetBottom() + TEXT_INSET, 110, 20};
         this->leadClickspot->WithPosition(this->leadTextArea);
 
         // Following
@@ -124,6 +141,7 @@ namespace UKControllerPlugin::Wake {
             graphics.FillRect(this->contentArea, *backgroundBrush);
             this->RenderScheme(graphics, radarScreen);
             this->RenderIntermediate(graphics, radarScreen);
+            this->RenderMode(graphics, radarScreen);
             this->RenderLead(graphics, radarScreen);
             this->RenderFollowing(graphics, radarScreen);
             this->RenderDividingLine(graphics);
@@ -181,6 +199,24 @@ namespace UKControllerPlugin::Wake {
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->schemeClickspot->Apply(graphics, radarScreen);
+    }
+
+    void WakeCalculatorDisplay::RenderMode(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        graphics.DrawString(
+            L"Mode:",
+            departureArrivalStaticArea,
+            *textBrush,
+            Graphics::StringFormatManager::Instance().GetLeftAlign(),
+            Graphics::FontManager::Instance().GetDefault());
+        graphics.DrawString(
+            options->Arrivals() ? L"Arrival" : L"Departure",
+            departureArrivaTextArea,
+            *textBrush,
+            Graphics::StringFormatManager::Instance().GetLeftAlign(),
+            Graphics::FontManager::Instance().GetDefault());
+        this->departureArrivalClickspot->Apply(graphics, radarScreen);
     }
 
     void WakeCalculatorDisplay::RenderLead(
@@ -282,8 +318,8 @@ namespace UKControllerPlugin::Wake {
         graphics.DrawString(categoryComparison, comparisonTextArea, *textBrush);
 
         // Check for intervals and display if present
-        const auto departureInterval = leadCategory->DepartureInterval(*followingCategory, options->Intermediate());
-        if (departureInterval == nullptr) {
+        const auto interval = RelevantInterval(*leadCategory, *followingCategory, options->Intermediate());
+        if (interval == nullptr) {
             graphics.DrawString(
                 L"N/A",
                 calculationResultArea,
@@ -294,11 +330,21 @@ namespace UKControllerPlugin::Wake {
         }
 
         graphics.DrawString(
-            FormatInterval(*departureInterval),
+            FormatInterval(*interval),
             calculationResultArea,
             *resultBrush,
             Graphics::StringFormatManager::Instance().GetCentreAlign(),
             Graphics::FontManager::Instance().Get(16));
+    }
+
+    auto WakeCalculatorDisplay::RelevantInterval(
+        const WakeCategory& lead, const WakeCategory& following, bool intermediate) const
+        -> std::shared_ptr<WakeIntervalInterface>
+    {
+        return options->Departures()
+                   ? static_cast<std::shared_ptr<WakeIntervalInterface>>(
+                         lead.DepartureInterval(following, intermediate))
+                   : static_cast<std::shared_ptr<WakeIntervalInterface>>(lead.ArrivalInterval(following));
     }
 
     auto WakeCalculatorDisplay::Position() const -> const POINT&

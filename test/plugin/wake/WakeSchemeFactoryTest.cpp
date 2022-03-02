@@ -23,12 +23,14 @@ namespace UKControllerPluginTest::Wake {
                        {"code", "LM"},
                        {"description", "Lower Medium"},
                        {"relative_weighting", 5},
-                       {"subsequent_departure_intervals", nlohmann::json::array()}},
+                       {"subsequent_departure_intervals", nlohmann::json::array()},
+                       {"subsequent_arrival_intervals", nlohmann::json::array()}},
                       {{"id", 2},
                        {"code", "H"},
                        {"description", "Heavy"},
                        {"relative_weighting", 20},
-                       {"subsequent_departure_intervals", nlohmann::json::array()}}})}};
+                       {"subsequent_departure_intervals", nlohmann::json::array()},
+                       {"subsequent_arrival_intervals", nlohmann::json::array()}}})}};
 
             scheme.update(override);
 
@@ -60,12 +62,14 @@ namespace UKControllerPluginTest::Wake {
                    {"code", "LM"},
                    {"description", "Lower Medium"},
                    {"relative_weighting", 5},
-                   {"subsequent_departure_intervals", nlohmann::json::array()}},
+                   {"subsequent_departure_intervals", nlohmann::json::array()},
+                   {"subsequent_arrival_intervals", nlohmann::json::array()}},
                   {{"id", 2},
                    {"code", "LM"},
                    {"description", "Lower Medium"},
                    {"relative_weighting", 5},
-                   {"subsequent_departure_intervals", nlohmann::json::array()}}})}};
+                   {"subsequent_departure_intervals", nlohmann::json::array()},
+                   {"subsequent_arrival_intervals", nlohmann::json::array()}}})}};
 
         const auto scheme = WakeSchemeFromJson(GetScheme(categories));
         EXPECT_EQ(123, scheme->Id());
