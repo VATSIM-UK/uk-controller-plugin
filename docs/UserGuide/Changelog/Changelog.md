@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [4.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.2...4.3.0) (2022-03-02)
+
+
+### Features
+
+* **intentioncode:** Dont cancel intention codes after leaving the FIR ([#437](https://github.com/VATSIM-UK/uk-controller-plugin/issues/437)) ([fed8a43](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fed8a438ccdccb0523b87ac2b3a10a41e17c394e))
+* **wake:** Arrival interval calculations ([#438](https://github.com/VATSIM-UK/uk-controller-plugin/issues/438)) ([45e97a3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/45e97a39611de23777f9b8a86b0927d47c542a97))
+
 ## [4.2.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.1...4.2.2) (2022-02-14)
 
 
