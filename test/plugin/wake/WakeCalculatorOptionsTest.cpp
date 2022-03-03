@@ -64,4 +64,21 @@ namespace UKControllerPluginTest::Wake {
         options.SchemeMapper(mapper);
         EXPECT_EQ(mapper, options.SchemeMapper());
     }
+
+    TEST_F(WakeCalculatorOptionsTest, ArrivalsStartsFalse)
+    {
+        EXPECT_FALSE(options.Arrivals());
+    }
+
+    TEST_F(WakeCalculatorOptionsTest, DeparturesStartsTrue)
+    {
+        EXPECT_TRUE(options.Departures());
+    }
+
+    TEST_F(WakeCalculatorOptionsTest, ArrivalsCanBeToggled)
+    {
+        options.ToggleArrivals();
+        EXPECT_TRUE(options.Arrivals());
+        EXPECT_FALSE(options.Departures());
+    }
 } // namespace UKControllerPluginTest::Wake

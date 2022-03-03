@@ -29,9 +29,11 @@ namespace UKControllerPluginTest::Wake {
 
             ON_CALL(*flightplan1, GetCallsign).WillByDefault(testing::Return("BAW123"));
             ON_CALL(*flightplan1, GetOrigin).WillByDefault(testing::Return("EGLL"));
+            ON_CALL(*flightplan1, GetDestination).WillByDefault(testing::Return("EGLL"));
 
             ON_CALL(*flightplan2, GetCallsign).WillByDefault(testing::Return("BAW456"));
             ON_CALL(*flightplan2, GetOrigin).WillByDefault(testing::Return("EGLL"));
+            ON_CALL(*flightplan2, GetDestination).WillByDefault(testing::Return("EGLL"));
         }
 
         ControllerPosition position;
@@ -57,6 +59,21 @@ namespace UKControllerPluginTest::Wake {
         plugin.AddAllFlightplansItem({flightplan2, radarTarget2});
 
         EXPECT_EQ(std::set<std::string>({"BAW123", "BAW456"}), callsignProvider.GetCallsigns());
+    }
+
+    TEST_F(LeadWakeCallsignProviderTest, ItReturnsRelevantArrivalCallsigns)
+    {
+        ON_CALL(*flightplan2, GetDestination).WillByDefault(testing::Return("EGKK"));
+        options->ToggleArrivals();
+        serviceProviders.SetProvidersForAirfield(
+            "EGLL",
+            std::vector<std::shared_ptr<ServiceProvision>>{
+                std::make_shared<ServiceProvision>(ServiceType::Tower, callsign)});
+
+        plugin.AddAllFlightplansItem({flightplan1, radarTarget1});
+        plugin.AddAllFlightplansItem({flightplan2, radarTarget2});
+
+        EXPECT_EQ(std::set<std::string>({"BAW123"}), callsignProvider.GetCallsigns());
     }
 
     TEST_F(LeadWakeCallsignProviderTest, ItReturnsRelevantCallsignsGroundControl)

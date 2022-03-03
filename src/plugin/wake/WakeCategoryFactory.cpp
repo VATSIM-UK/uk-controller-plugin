@@ -1,3 +1,4 @@
+#include "ArrivalWakeIntervalFactory.h"
 #include "DepartureWakeIntervalFactory.h"
 #include "WakeCategory.h"
 #include "WakeCategoryFactory.h"
@@ -21,12 +22,23 @@ namespace UKControllerPlugin::Wake {
             wakeIntervals.push_back(std::move(wakeInterval));
         }
 
+        std::list<std::shared_ptr<ArrivalWakeInterval>> arrivalIntervals;
+        for (const auto& interval : json.at("subsequent_arrival_intervals")) {
+            auto wakeInterval = ArrivalIntervalFromJson(interval);
+            if (!wakeInterval) {
+                continue;
+            }
+
+            arrivalIntervals.push_back(wakeInterval);
+        }
+
         return std::make_shared<WakeCategory>(
             json.at("id").get<int>(),
             json.at("code").get<std::string>(),
             json.at("description").get<std::string>(),
             json.at("relative_weighting").get<int>(),
-            std::move(wakeIntervals));
+            std::move(wakeIntervals),
+            std::move(arrivalIntervals));
     }
 
     auto CategoryValid(const nlohmann::json& json) -> bool
@@ -34,6 +46,8 @@ namespace UKControllerPlugin::Wake {
         return json.is_object() && json.contains("id") && json.at("id").is_number_integer() && json.contains("code") &&
                json.at("code").is_string() && json.contains("description") && json.at("description").is_string() &&
                json.contains("relative_weighting") && json.at("relative_weighting").is_number_integer() &&
-               json.contains("subsequent_departure_intervals") && json.at("subsequent_departure_intervals").is_array();
+               json.contains("subsequent_departure_intervals") &&
+               json.at("subsequent_departure_intervals").is_array() && json.contains("subsequent_arrival_intervals") &&
+               json.at("subsequent_arrival_intervals").is_array();
     }
 } // namespace UKControllerPlugin::Wake

@@ -1,5 +1,20 @@
 # UK Controller Plugin Changelog
 
+# [4.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.2...4.3.0) (2022-03-02)
+
+
+### Features
+
+* **intentioncode:** Dont cancel intention codes after leaving the FIR ([#437](https://github.com/VATSIM-UK/uk-controller-plugin/issues/437)) ([fed8a43](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fed8a438ccdccb0523b87ac2b3a10a41e17c394e))
+* **wake:** Arrival interval calculations ([#438](https://github.com/VATSIM-UK/uk-controller-plugin/issues/438)) ([45e97a3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/45e97a39611de23777f9b8a86b0927d47c542a97))
+
+## [4.2.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.1...4.2.2) (2022-02-14)
+
+
+### Bug Fixes
+
+* **fonts:** Provide fallback font if EuroScope is not installed ([#434](https://github.com/VATSIM-UK/uk-controller-plugin/issues/434)) ([ce434f3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ce434f363ab4e2e4747420ab1145ddf2533ac0d0)), closes [#433](https://github.com/VATSIM-UK/uk-controller-plugin/issues/433)
+
 ## [4.2.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.0...4.2.1) (2022-02-12)
 * **initialaltitude:** Dont allow initial altitude recycle on aircraft out of range ([#430](https://github.com/VATSIM-UK/uk-controller-plugin/issues/430)) ([cd3fd0e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cd3fd0e553626d256863377d1cbe30c6b521261a))
 * **initialheading:** Dont allow initial heading recycle on aircraft out of range ([#431](https://github.com/VATSIM-UK/uk-controller-plugin/issues/431)) ([e4fd211](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e4fd211bfde01b0829deaf58a962f1c043654faf)), closes [#429](https://github.com/VATSIM-UK/uk-controller-plugin/issues/429)

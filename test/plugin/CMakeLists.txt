@@ -549,7 +549,7 @@ set(test__wake
     wake/WakeSchemeFactoryTest.cpp
     wake/WakeSchemeCollectionTest.cpp
     wake/WakeSchemeCollectionFactoryTest.cpp
-    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp)
+    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp wake/ArrivalWakeIntervalFactoryTest.cpp wake/ArrivalWakeIntervalTest.cpp wake/DepartureWakeIntervalTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
@@ -717,6 +717,7 @@ if(MSVC)
         $<$<CONFIG:Debug>:
             /DEBUG:FASTLINK;
             /INCREMENTAL
+            -flto=thin
         >
         $<$<CONFIG:Release>:
             /DEBUG;
