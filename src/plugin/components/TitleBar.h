@@ -17,6 +17,7 @@ namespace UKControllerPlugin::Components {
     class TitleBar : public std::enable_shared_from_this<TitleBar>
     {
         public:
+        virtual ~TitleBar();
         static std::shared_ptr<TitleBar> Create(std::wstring title, Gdiplus::Rect area);
         std::shared_ptr<TitleBar> WithDefaultBackgroundBrush();
         std::shared_ptr<TitleBar> WithBackgroundBrush(std::shared_ptr<Gdiplus::Brush> brush);
@@ -27,7 +28,7 @@ namespace UKControllerPlugin::Components {
         std::shared_ptr<TitleBar> WithDrag(int screenObjectId);
         std::shared_ptr<TitleBar> WithPosition(Gdiplus::Rect area);
         std::shared_ptr<TitleBar> WithTitle(std::wstring title);
-        void
+        virtual void
         Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const;
 
         protected:

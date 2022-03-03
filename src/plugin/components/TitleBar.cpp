@@ -4,6 +4,8 @@
 #include "graphics/GdiGraphicsInterface.h"
 
 namespace UKControllerPlugin::Components {
+    TitleBar::~TitleBar() = default;
+    
     std::shared_ptr<TitleBar> TitleBar::Create(std::wstring title, Gdiplus::Rect area)
     {
         return std::shared_ptr<TitleBar>(new TitleBar(title, area));
@@ -86,5 +88,4 @@ namespace UKControllerPlugin::Components {
     {
         return this->WithBorder(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255)));
     }
-
 } // namespace UKControllerPlugin::Components

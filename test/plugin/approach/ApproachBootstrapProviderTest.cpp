@@ -9,9 +9,10 @@ namespace UKControllerPluginTest::Approach {
         ApproachBootstrapProvider provider;
     };
 
-    TEST_F(ApproachBootstrapProviderTest, ItRegistersTheRingRenderer)
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersTheRenderers)
     {
         this->RunBootstrapRadarScreen(provider);
-        EXPECT_EQ(1, renderers.CountRenderers());
+        EXPECT_EQ(2, renderers.CountRenderers());
+        EXPECT_EQ(2, renderers.CountRenderersInPhase(renderers.beforeTags));
     }
 } // namespace UKControllerPluginTest::Approach
