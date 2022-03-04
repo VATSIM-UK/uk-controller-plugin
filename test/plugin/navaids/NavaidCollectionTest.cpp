@@ -48,5 +48,17 @@ namespace UKControllerPluginTest {
             this->collection.AddNavaid(navaid1);
             EXPECT_EQ(this->collection.invalidNavaid, this->collection.GetByIdentifier("WILLO"));
         }
+
+        TEST_F(NavaidCollectionTest, ItFindsNavaidsById)
+        {
+            this->collection.AddNavaid(navaid1);
+            EXPECT_EQ(navaid1, this->collection.Get(1));
+        }
+
+        TEST_F(NavaidCollectionTest, ItReturnsInvalidIfNavaidNotFoundById)
+        {
+            this->collection.AddNavaid(navaid1);
+            EXPECT_EQ(this->collection.invalidNavaid, this->collection.Get(33));
+        }
     } // namespace Navaids
 } // namespace UKControllerPluginTest

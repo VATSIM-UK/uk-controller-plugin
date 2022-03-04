@@ -18,5 +18,6 @@ namespace UKControllerPlugin::Navaids {
         EuroScopePlugIn::CPosition coordinates;
 
         auto operator==(const Navaid& compare) const -> bool;
+        auto operator!=(const Navaid& compare) const -> bool;
     };
 } // namespace UKControllerPlugin::Navaids

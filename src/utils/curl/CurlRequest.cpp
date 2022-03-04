@@ -1,9 +1,15 @@
 #include "CurlRequest.h"
 
+using UKControllerPluginUtils::Http::HttpMethod;
+
 namespace UKControllerPlugin::Curl {
 
     CurlRequest::CurlRequest(std::string uri, std::string method)
         : method(CheckMethod(std::move(method))), uri(std::move(uri))
+    {
+    }
+
+    CurlRequest::CurlRequest(std::string uri, HttpMethod method) : method(method), uri(std::move(uri))
     {
     }
 

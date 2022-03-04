@@ -2,6 +2,7 @@
 #include "windows/WinApiInterface.h"
 #include "windows/WinApiBootstrap.h"
 #include "api/ApiBootstrap.h"
+#include "api/ApiFactory.h"
 #include "setting/SettingRepositoryFactory.h"
 #include "curl/CurlApi.h"
 #include "log/LoggerBootstrap.h"
@@ -34,8 +35,10 @@ UKCP_UPDATER_API bool PerformUpdates()
     // Bootstrap the API, download the updater if we don't have it already and run it
     UKControllerPlugin::Curl::CurlApi curl;
     std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
-        UKControllerPlugin::Setting::SettingRepositoryFactory::Create(*windows);
-    std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api = UKControllerPlugin::Api::Bootstrap(*settings, curl);
+        UKControllerPlugin::Setting::SettingRepositoryFactory::Create();
+
+    auto factory = UKControllerPluginUtils::Api::Bootstrap(*settings, *windows);
+    auto api = UKControllerPluginUtils::Api::BootstrapLegacy(*factory, curl);
 
     LogInfo("Updater build version " + std::string(UKControllerPlugin::Plugin::PluginVersion::version));
     UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;

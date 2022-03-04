@@ -1,5 +1,6 @@
 #include "HoldingAircraft.h"
 #include "HoldManager.h"
+#include "ProximityHold.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -24,18 +25,19 @@ namespace UKControllerPlugin::Hold {
     /*
         Add an aircraft to a "hold" because it's within proximity to the fix
     */
-    void HoldManager::AddAircraftToProximityHold(const std::string& callsign, const std::string& hold)
+    void HoldManager::AddAircraftToProximityHold(const std::shared_ptr<ProximityHold>& hold)
     {
+        auto lock = std::lock_guard(this->dataMutex);
         std::shared_ptr<HoldingAircraft> holdingAircraft;
-        if (this->aircraft.count(callsign) != 0) {
-            holdingAircraft = *this->aircraft.find(callsign);
+        if (this->aircraft.count(hold->callsign) != 0) {
+            holdingAircraft = *this->aircraft.find(hold->callsign);
             holdingAircraft->AddProximityHold(hold);
         } else {
-            holdingAircraft = std::make_shared<HoldingAircraft>(callsign, std::set<std::string>({hold}));
+            holdingAircraft = std::make_shared<HoldingAircraft>(hold->callsign, hold);
             this->aircraft.insert(holdingAircraft);
         }
 
-        this->holds[hold].insert(holdingAircraft);
+        this->holds[hold->navaid].insert(holdingAircraft);
     }
 
     /*
@@ -43,6 +45,7 @@ namespace UKControllerPlugin::Hold {
     */
     void HoldManager::AssignAircraftToHold(const std::string& callsign, const std::string& hold, bool updateApi)
     {
+        auto lock = std::lock_guard(this->dataMutex);
 
         // Add it to the aircraft list or fetch it if needed
         std::shared_ptr<HoldingAircraft> holdingAircraft;
@@ -83,11 +86,13 @@ namespace UKControllerPlugin::Hold {
     auto HoldManager::GetAircraftForHold(const std::string& hold) const
         -> const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>&
     {
+        auto lock = std::lock_guard(this->dataMutex);
         return this->holds.count(hold) != 0 ? this->holds.find(hold)->second : this->invalidHolds;
     }
 
     auto HoldManager::GetHoldingAircraft(const std::string& callsign) -> const std::shared_ptr<HoldingAircraft>&
     {
+        auto lock = std::lock_guard(this->dataMutex);
         auto aircraft = this->aircraft.find(callsign);
         return aircraft != this->aircraft.cend() ? *aircraft : this->invalidAircraft;
     }
@@ -97,6 +102,7 @@ namespace UKControllerPlugin::Hold {
     */
     void HoldManager::UnassignAircraftFromHold(const std::string& callsign, bool updateApi)
     {
+        auto lock = std::lock_guard(this->dataMutex);
         if (this->aircraft.find(callsign) == this->aircraft.cend()) {
             return;
         }
@@ -135,6 +141,7 @@ namespace UKControllerPlugin::Hold {
     */
     void HoldManager::RemoveAircraftFromProximityHold(const std::string& callsign, const std::string& hold)
     {
+        auto lock = std::lock_guard(this->dataMutex);
         if (this->aircraft.find(callsign) == this->aircraft.cend()) {
             return;
         }
