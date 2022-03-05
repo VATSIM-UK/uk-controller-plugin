@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [4.4.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0-beta.1...4.4.0-beta.2) (2022-03-05)
+
+
+### Bug Fixes
+
+* **hold:** Hold display breaking when aircraft not in proximity ([d51fc06](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d51fc063532b0cf2b1f9d39402b1ea904cafdb0f))
+* **updater:** Updater not respecting selected release channel ([3b5865d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3b5865ded2428e14b9b25c55e222a1e14fb02698))
+
 # [4.4.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.3.0...4.4.0-beta.1) (2022-03-05)
 
 
