@@ -28,7 +28,7 @@ set(test__api
 source_group("test\\api" FILES ${test__api})
 
 set(test__approach
-        approach/ApproachBootstrapProviderTest.cpp approach/ApproachSequencerTest.cpp approach/ApproachSequencedAircraftTest.cpp approach/ApproachSequencerDisplayTest.cpp)
+        approach/ApproachBootstrapProviderTest.cpp approach/ApproachSequenceTest.cpp approach/ApproachSequencedAircraftTest.cpp approach/ApproachSequencerDisplayTest.cpp)
 source_group("test\\approach" FILES ${test__approach})
 
 set(test__bootstrap

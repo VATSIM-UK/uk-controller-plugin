@@ -1,28 +1,28 @@
 #include "approach/ApproachSequencedAircraft.h"
-#include "approach/ApproachSequencer.h"
+#include "approach/ApproachSequence.h"
 
-using UKControllerPlugin::Approach::ApproachSequencer;
+using UKControllerPlugin::Approach::ApproachSequence;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 
 namespace UKControllerPluginTest::Approach {
-    class ApproachSequencerTest : public testing::Test
+    class ApproachSequenceTest : public testing::Test
     {
         public:
-        ApproachSequencer sequencer;
+        ApproachSequence sequencer;
     };
 
-    TEST_F(ApproachSequencerTest, SequenceStartsEmpty)
+    TEST_F(ApproachSequenceTest, SequenceStartsEmpty)
     {
         EXPECT_EQ(nullptr, sequencer.First());
     }
 
-    TEST_F(ApproachSequencerTest, GetReturnsNullptrAircraftNotFound)
+    TEST_F(ApproachSequenceTest, GetReturnsNullptrAircraftNotFound)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         EXPECT_EQ(nullptr, sequencer.Get("BAW456"));
     }
 
-    TEST_F(ApproachSequencerTest, ItAddsAircraftToTheBackOfTheSequence)
+    TEST_F(ApproachSequenceTest, ItAddsAircraftToTheBackOfTheSequence)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         auto firstAircraft = sequencer.First();
@@ -50,7 +50,7 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(nullptr, thirdAircraft->Next());
     }
 
-    TEST_F(ApproachSequencerTest, ItAddsAircraftBeforeAnotherInSequenceIfSequenceEmpty)
+    TEST_F(ApproachSequenceTest, ItAddsAircraftBeforeAnotherInSequenceIfSequenceEmpty)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum, "BAW456");
         auto firstAircraft = sequencer.First();
@@ -78,7 +78,7 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(nullptr, thirdAircraft->Next());
     }
 
-    TEST_F(ApproachSequencerTest, ItAddsAircraftBeforeAnotherInSequence)
+    TEST_F(ApproachSequenceTest, ItAddsAircraftBeforeAnotherInSequence)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         auto firstAircraft = sequencer.First();
@@ -108,14 +108,14 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(nullptr, firstAircraft->Next());
     }
 
-    TEST_F(ApproachSequencerTest, ItRemovesAnAircraftSingleSequence)
+    TEST_F(ApproachSequenceTest, ItRemovesAnAircraftSingleSequence)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         sequencer.RemoveAircraft("BAW123");
         EXPECT_EQ(nullptr, sequencer.Get("BAW123"));
     }
 
-    TEST_F(ApproachSequencerTest, ItRemovesAnAircraftMidSequence)
+    TEST_F(ApproachSequenceTest, ItRemovesAnAircraftMidSequence)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
@@ -127,7 +127,7 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(sequencer.Get("BAW123"), sequencer.Get("BAW789")->Previous());
     }
 
-    TEST_F(ApproachSequencerTest, ItRemovesAnAircraftEndOfSequence)
+    TEST_F(ApproachSequenceTest, ItRemovesAnAircraftEndOfSequence)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
@@ -138,7 +138,7 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(nullptr, sequencer.Get("BAW456")->Next());
     }
 
-    TEST_F(ApproachSequencerTest, ItRemovesAnAircraftStartOfSequence)
+    TEST_F(ApproachSequenceTest, ItRemovesAnAircraftStartOfSequence)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
@@ -150,7 +150,7 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(nullptr, sequencer.Get("BAW456")->Previous());
     }
 
-    TEST_F(ApproachSequencerTest, ItHandlesRemoveAircraftNotInSequence)
+    TEST_F(ApproachSequenceTest, ItHandlesRemoveAircraftNotInSequence)
     {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);

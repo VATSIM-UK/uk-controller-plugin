@@ -7,7 +7,7 @@ namespace UKControllerPlugin::Approach {
     /**
      * Handles sequencing for aircraft on approach.
      */
-    class ApproachSequencer
+    class ApproachSequence
     {
         public:
         void AddAircraftToSequence(const std::string& callsign, ApproachSequencingMode mode);

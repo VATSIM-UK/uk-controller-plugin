@@ -1,9 +1,9 @@
 #include "ApproachSequencedAircraft.h"
-#include "ApproachSequencer.h"
+#include "ApproachSequence.h"
 
 namespace UKControllerPlugin::Approach {
 
-    void ApproachSequencer::AddAircraftToSequence(const std::string& callsign, ApproachSequencingMode mode)
+    void ApproachSequence::AddAircraftToSequence(const std::string& callsign, ApproachSequencingMode mode)
     {
         std::shared_ptr<ApproachSequencedAircraft> lastAircraft = nullptr;
 
@@ -17,7 +17,7 @@ namespace UKControllerPlugin::Approach {
         sequencedAircraft.push_back(aircraft);
     }
 
-    void ApproachSequencer::AddAircraftToSequence(
+    void ApproachSequence::AddAircraftToSequence(
         const std::string& callsign, ApproachSequencingMode mode, const std::string& insertBefore)
     {
         auto existingAircraft = this->AircraftMatchingCallsign(insertBefore);
@@ -41,7 +41,7 @@ namespace UKControllerPlugin::Approach {
         }
     }
 
-    void ApproachSequencer::RemoveAircraft(const std::string& callsign)
+    void ApproachSequence::RemoveAircraft(const std::string& callsign)
     {
         auto sequenced = this->AircraftMatchingCallsign(callsign);
         if (sequenced != sequencedAircraft.cend()) {
@@ -59,18 +59,18 @@ namespace UKControllerPlugin::Approach {
         }
     }
 
-    auto ApproachSequencer::Get(const std::string& callsign) -> const std::shared_ptr<ApproachSequencedAircraft>
+    auto ApproachSequence::Get(const std::string& callsign) -> const std::shared_ptr<ApproachSequencedAircraft>
     {
         auto aircraft = this->AircraftMatchingCallsign(callsign);
         return aircraft == this->sequencedAircraft.cend() ? nullptr : *aircraft;
     }
 
-    auto ApproachSequencer::First() -> const std::shared_ptr<ApproachSequencedAircraft>
+    auto ApproachSequence::First() -> const std::shared_ptr<ApproachSequencedAircraft>
     {
         return this->sequencedAircraft.empty() ? nullptr : this->sequencedAircraft.front();
     }
 
-    auto ApproachSequencer::AircraftMatchingCallsign(const std::string& callsign) const
+    auto ApproachSequence::AircraftMatchingCallsign(const std::string& callsign) const
         -> std::list<std::shared_ptr<ApproachSequencedAircraft>>::const_iterator
     {
         return std::find_if(
