@@ -91,7 +91,7 @@ source_group("test\\string" FILES ${test__string})
 set(test__update
     "update/UpdateBinariesTest.cpp"
     "update/CheckDevelopmentVersionTest.cpp"
-)
+        update/BootstrapReleaseChannelSettingsTest.cpp)
 source_group("test\\update" FILES ${test__update})
 
 set(ALL_FILES
