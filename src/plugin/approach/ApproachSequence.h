@@ -13,8 +13,8 @@ namespace UKControllerPlugin::Approach {
         void AddAircraftToSequence(const std::string& callsign, ApproachSequencingMode mode);
         void AddAircraftToSequence(
             const std::string& callsign, ApproachSequencingMode mode, const std::string& insertBefore);
-        [[nodiscard]] auto First() -> const std::shared_ptr<ApproachSequencedAircraft>;
-        [[nodiscard]] auto Get(const std::string& callsign) -> const std::shared_ptr<ApproachSequencedAircraft>;
+        [[nodiscard]] auto First() const -> const std::shared_ptr<ApproachSequencedAircraft>;
+        [[nodiscard]] auto Get(const std::string& callsign) const -> const std::shared_ptr<ApproachSequencedAircraft>;
         void RemoveAircraft(const std::string& callsign);
 
         private:

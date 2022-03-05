@@ -1,5 +1,5 @@
-#include "ApproachSequencedAircraft.h"
 #include "ApproachSequence.h"
+#include "ApproachSequencedAircraft.h"
 
 namespace UKControllerPlugin::Approach {
 
@@ -59,13 +59,13 @@ namespace UKControllerPlugin::Approach {
         }
     }
 
-    auto ApproachSequence::Get(const std::string& callsign) -> const std::shared_ptr<ApproachSequencedAircraft>
+    auto ApproachSequence::Get(const std::string& callsign) const -> const std::shared_ptr<ApproachSequencedAircraft>
     {
         auto aircraft = this->AircraftMatchingCallsign(callsign);
         return aircraft == this->sequencedAircraft.cend() ? nullptr : *aircraft;
     }
 
-    auto ApproachSequence::First() -> const std::shared_ptr<ApproachSequencedAircraft>
+    auto ApproachSequence::First() const -> const std::shared_ptr<ApproachSequencedAircraft>
     {
         return this->sequencedAircraft.empty() ? nullptr : this->sequencedAircraft.front();
     }
