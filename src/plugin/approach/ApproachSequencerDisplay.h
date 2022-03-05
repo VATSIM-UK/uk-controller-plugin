@@ -29,6 +29,7 @@ namespace UKControllerPlugin::Approach {
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void ResetPosition() override;
+        [[nodiscard]] auto ContentCollapsed() const -> bool;
 
         private:
         POINT windowPosition{200, 200};

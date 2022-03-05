@@ -34,7 +34,7 @@ namespace UKControllerPlugin::Approach {
     {
         RadarRenderableInterface::ResetPosition();
     }
-    
+
     void ApproachSequencerDisplay::LeftClick(
         Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
         int objectId,
@@ -42,7 +42,13 @@ namespace UKControllerPlugin::Approach {
         POINT mousePos,
         RECT itemArea)
     {
-        RadarRenderableInterface::LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
+        if (objectDescription == "collapseButton") {
+            this->contentCollapsed = !this->contentCollapsed;
+        }
+    }
+
+    auto ApproachSequencerDisplay::ContentCollapsed() const -> bool
+    {
+        return contentCollapsed;
     }
 } // namespace UKControllerPlugin::Approach
-// namespace UKControllerPlugin::Approach
