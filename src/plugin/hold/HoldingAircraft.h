@@ -2,7 +2,7 @@
 #include "CompareProximityHolds.h"
 
 namespace UKControllerPlugin::Hold {
-    struct ProximityHold;
+    class ProximityHold;
 
     /*
         Data about a holding aircraft

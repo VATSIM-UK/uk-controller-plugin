@@ -29,15 +29,15 @@ namespace UKControllerPlugin::Hold {
     {
         auto lock = std::lock_guard(this->dataMutex);
         std::shared_ptr<HoldingAircraft> holdingAircraft;
-        if (this->aircraft.count(hold->callsign) != 0) {
-            holdingAircraft = *this->aircraft.find(hold->callsign);
+        if (this->aircraft.count(hold->Callsign()) != 0) {
+            holdingAircraft = *this->aircraft.find(hold->Callsign());
             holdingAircraft->AddProximityHold(hold);
         } else {
-            holdingAircraft = std::make_shared<HoldingAircraft>(hold->callsign, hold);
+            holdingAircraft = std::make_shared<HoldingAircraft>(hold->Callsign(), hold);
             this->aircraft.insert(holdingAircraft);
         }
 
-        this->holds[hold->navaid].insert(holdingAircraft);
+        this->holds[hold->Navaid()].insert(holdingAircraft);
     }
 
     /*

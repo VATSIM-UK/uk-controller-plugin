@@ -341,7 +341,7 @@ set(src__hold
     "hold/PublishedHoldCollection.h"
     "hold/PublishedHoldCollectionFactory.cpp"
     "hold/PublishedHoldCollectionFactory.h"
-        hold/AssignHoldCommand.cpp hold/AssignHoldCommand.h hold/AddToHoldCallsignProvider.cpp hold/AddToHoldCallsignProvider.h hold/ProximityHold.h hold/CompareProximityHolds.cpp hold/CompareProximityHolds.h hold/AircraftEnteredHoldingAreaEventHandler.cpp hold/AircraftEnteredHoldingAreaEventHandler.h hold/AircraftExitedHoldingAreaEventHandler.cpp hold/AircraftExitedHoldingAreaEventHandler.h)
+        hold/AssignHoldCommand.cpp hold/AssignHoldCommand.h hold/AddToHoldCallsignProvider.cpp hold/AddToHoldCallsignProvider.h hold/ProximityHold.h hold/CompareProximityHolds.cpp hold/CompareProximityHolds.h hold/AircraftEnteredHoldingAreaEventHandler.cpp hold/AircraftEnteredHoldingAreaEventHandler.h hold/AircraftExitedHoldingAreaEventHandler.cpp hold/AircraftExitedHoldingAreaEventHandler.h hold/ProximityHold.cpp)
 source_group("src\\hold" FILES ${src__hold})
 
 set(src__initialaltitude

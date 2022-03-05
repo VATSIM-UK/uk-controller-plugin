@@ -15,20 +15,20 @@ namespace UKControllerPluginTest::Hold {
 
     TEST_F(CompareProximityHoldsTest, LessThanStringReturnsTrueIfLessThan)
     {
-        std::shared_ptr<ProximityHold> aircraft = std::make_shared<ProximityHold>("BAW123", "BNM", TimeNow());
+        std::shared_ptr<ProximityHold> aircraft = std::make_shared<ProximityHold>("BAW123", "BNM");
         EXPECT_TRUE(compare(aircraft, "BNN"));
     }
 
     TEST_F(CompareProximityHoldsTest, LessThanStructReturnsTrueIfLessThan)
     {
-        std::shared_ptr<ProximityHold> aircraft = std::make_shared<ProximityHold>("BAW124", "BNN", TimeNow());
+        std::shared_ptr<ProximityHold> aircraft = std::make_shared<ProximityHold>("BAW124", "BNN");
         EXPECT_TRUE(compare("BNM", aircraft));
     }
 
     TEST_F(CompareProximityHoldsTest, CompareReturnsTrueIfFirstLessThanLast)
     {
-        std::shared_ptr<ProximityHold> aircraft1 = std::make_shared<ProximityHold>("BAW123", "BNM", TimeNow());
-        std::shared_ptr<ProximityHold> aircraft2 = std::make_shared<ProximityHold>("BAW124", "BNN", TimeNow());
+        std::shared_ptr<ProximityHold> aircraft1 = std::make_shared<ProximityHold>("BAW123", "BNM");
+        std::shared_ptr<ProximityHold> aircraft2 = std::make_shared<ProximityHold>("BAW124", "BNN");
         EXPECT_TRUE(compare(aircraft1, aircraft2));
     }
 } // namespace UKControllerPluginTest::Hold

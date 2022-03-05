@@ -4,17 +4,17 @@
 namespace UKControllerPlugin::Hold {
     bool CompareProximityHolds::operator()(const std::shared_ptr<ProximityHold>& proximity, std::string navaid) const
     {
-        return proximity->navaid < navaid;
+        return proximity->Navaid() < navaid;
     }
 
     bool CompareProximityHolds::operator()(std::string navaid, const std::shared_ptr<ProximityHold>& proximity) const
     {
-        return navaid < proximity->navaid;
+        return navaid < proximity->Navaid();
     }
 
     bool CompareProximityHolds::operator()(
         const std::shared_ptr<ProximityHold>& a, const std::shared_ptr<ProximityHold>& b) const
     {
-        return a->navaid < b->navaid;
+        return a->Navaid() < b->Navaid();
     }
 } // namespace UKControllerPlugin::Hold

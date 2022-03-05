@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Hold {
     class HoldingAircraft;
-    struct ProximityHold;
+    class ProximityHold;
 
     /*
         A class that manages which aircraft are in which holds

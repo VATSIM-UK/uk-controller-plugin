@@ -59,7 +59,15 @@ namespace UKControllerPlugin::Hold {
             for (auto navaids = this->navaids.cbegin(); navaids != this->navaids.cend(); ++navaids) {
                 if (rt->GetPosition().DistanceTo(navaids->coordinates) <= this->proximityDistance) {
                     this->holdManager.AddAircraftToProximityHold(
-                        std::make_shared<ProximityHold>(fp->GetCallsign(), navaids->identifier, Time::TimeNow()));
+                        std::make_shared<ProximityHold>(fp->GetCallsign(), navaids->identifier));
+                    
+                    if (rt->GetPosition().DistanceTo(navaids->coordinates) <= this->enterDistance) {
+                        auto proximity = this->holdManager.GetHoldingAircraft(fp->GetCallsign())
+                            ->GetProximityHold(navaids->identifier);
+                        if (!proximity->HasEntered()) {
+                            proximity->Enter();
+                        }
+                    }
                 } else {
                     this->holdManager.RemoveAircraftFromProximityHold(fp->GetCallsign(), navaids->identifier);
                 }

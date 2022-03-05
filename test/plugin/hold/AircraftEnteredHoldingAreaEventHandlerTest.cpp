@@ -80,9 +80,9 @@ namespace UKControllerPluginTest::Hold {
         EXPECT_NE(nullptr, holdingAircraft);
         const auto proximityHold = holdingAircraft->GetProximityHold("BNN");
         EXPECT_NE(nullptr, proximityHold);
-        EXPECT_EQ("BAW123", proximityHold->callsign);
-        EXPECT_EQ("BNN", proximityHold->navaid);
-        EXPECT_EQ(ParseIsoZuluString("2021-01-09T01:02:03.000000Z"), proximityHold->enteredAt);
+        EXPECT_EQ("BAW123", proximityHold->Callsign());
+        EXPECT_EQ("BNN", proximityHold->Navaid());
+        EXPECT_EQ(ParseIsoZuluString("2021-01-09T01:02:03.000000Z"), proximityHold->EnteredAt());
     }
 
     TEST_F(AircraftEnteredHoldingAreaEventHandlerTest, ItHandlesPushEventDataNotObject)

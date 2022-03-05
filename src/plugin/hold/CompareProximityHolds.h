@@ -1,7 +1,7 @@
 #pragma once
 
 namespace UKControllerPlugin::Hold {
-    struct ProximityHold;
+    class ProximityHold;
 
     using CompareProximityHolds = struct CompareProximityHolds
     {

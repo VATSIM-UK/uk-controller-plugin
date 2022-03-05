@@ -178,7 +178,7 @@ set(test__hold
     "hold/MinStackHoldLevelRestrictionTest.cpp"
     "hold/PublishedHoldCollectionFactoryTest.cpp"
     "hold/PublishedHoldCollectionTest.cpp"
-        hold/AssignHoldCommandTest.cpp hold/AddToHoldCallsignProviderTest.cpp hold/CompareProximityHoldsTest.cpp hold/AircraftEnteredHoldingAreaEventHandlerTest.cpp hold/AircraftExitedHoldingAreaEventHandlerTest.cpp)
+        hold/AssignHoldCommandTest.cpp hold/AddToHoldCallsignProviderTest.cpp hold/CompareProximityHoldsTest.cpp hold/AircraftEnteredHoldingAreaEventHandlerTest.cpp hold/AircraftExitedHoldingAreaEventHandlerTest.cpp hold/ProximityHoldTest.cpp)
 source_group("test\\hold" FILES ${test__hold})
 
 set(test__initialaltitude
