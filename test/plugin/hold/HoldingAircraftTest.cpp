@@ -1,7 +1,11 @@
 #include "hold/HoldingAircraft.h"
+#include "hold/ProximityHold.h"
+#include "time/SystemClock.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Hold::HoldingAircraft;
+using UKControllerPlugin::Hold::ProximityHold;
+using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -10,35 +14,42 @@ namespace UKControllerPluginTest {
         {
             public:
             HoldingAircraftTest()
-                : baseAircraft("BAW123", "BNN"), proximityAircraft("BAW123", std::set<std::string>({"BNN", "LAM"}))
+                : proximity(std::make_shared<ProximityHold>("BAW123", "BNN", TimeNow())), baseAircraft("BAW123", "BNN"),
+                  proximityAircraft("BAW123", proximity)
             {
             }
 
+            std::shared_ptr<ProximityHold> proximity;
             HoldingAircraft baseAircraft;
             HoldingAircraft proximityAircraft;
         };
 
-        TEST_F(HoldingAircraftTest, AssignedConstructionSetsCallsignAssignedHoldAndEntryTime)
+        TEST_F(HoldingAircraftTest, AssignedConstructionSetsCallsignAndAssignedHold)
         {
             EXPECT_EQ("BAW123", this->baseAircraft.GetCallsign());
             EXPECT_EQ("BNN", this->baseAircraft.GetAssignedHold());
-
-            std::chrono::seconds seconds = std::chrono::duration_cast<std::chrono::seconds>(
-                this->baseAircraft.GetAssignedHoldEntryTime() - std::chrono::system_clock::now());
-
-            EXPECT_LT(seconds, std::chrono::seconds(3));
         }
 
         TEST_F(HoldingAircraftTest, ProximityConstructionSetsCallsignAndProximityHolds)
         {
             EXPECT_EQ("BAW123", this->proximityAircraft.GetCallsign());
-            EXPECT_EQ(std::set<std::string>({"BNN", "LAM"}), this->proximityAircraft.GetProximityHolds());
+            EXPECT_EQ(1, this->proximityAircraft.GetProximityHolds().size());
+            EXPECT_EQ(proximity, this->proximityAircraft.GetProximityHold("BNN"));
         }
 
         TEST_F(HoldingAircraftTest, TestItAddsAProximityHold)
         {
-            this->baseAircraft.AddProximityHold("TIMBA");
-            EXPECT_EQ(std::set<std::string>({"TIMBA"}), this->baseAircraft.GetProximityHolds());
+            this->baseAircraft.AddProximityHold(proximity);
+            EXPECT_EQ(1, this->baseAircraft.GetProximityHolds().size());
+            EXPECT_EQ(proximity, this->baseAircraft.GetProximityHold("BNN"));
+        }
+
+        TEST_F(HoldingAircraftTest, TestItDoesntDuplicateProximityHolds)
+        {
+            this->baseAircraft.AddProximityHold(proximity);
+            this->baseAircraft.AddProximityHold(proximity);
+            this->baseAircraft.AddProximityHold(proximity);
+            EXPECT_EQ(1, this->baseAircraft.GetProximityHolds().size());
         }
 
         TEST_F(HoldingAircraftTest, IsInAnyHoldReturnsTrueIfAssigned)
@@ -86,12 +97,22 @@ namespace UKControllerPluginTest {
         TEST_F(HoldingAircraftTest, RemoveProximityHoldRemovesProximity)
         {
             this->proximityAircraft.RemoveProximityHold("BNN");
-            EXPECT_EQ(std::set<std::string>({"LAM"}), this->proximityAircraft.GetProximityHolds());
+            EXPECT_EQ(0, this->proximityAircraft.GetProximityHolds().size());
         }
 
         TEST_F(HoldingAircraftTest, RemoveProximityHoldHandlesNotInProximity)
         {
             EXPECT_NO_THROW(this->proximityAircraft.RemoveProximityHold("ABCDEF"));
+        }
+
+        TEST_F(HoldingAircraftTest, ItReturnsProximityHoldIfSet)
+        {
+            EXPECT_NE(nullptr, this->proximityAircraft.GetProximityHold("BNN"));
+        }
+
+        TEST_F(HoldingAircraftTest, ItReturnsNullptrIfNoProximityHold)
+        {
+            EXPECT_EQ(nullptr, this->proximityAircraft.GetProximityHold("ABC"));
         }
     } // namespace Hold
 } // namespace UKControllerPluginTest

@@ -1,275 +1,140 @@
 #include "setting/SettingRepository.h"
-#include "setting/SettingValue.h"
 
-using ::testing::Return;
-using ::testing::StrictMock;
-using ::testing::Throw;
 using UKControllerPlugin::Setting::SettingRepository;
-using UKControllerPlugin::Setting::SettingValue;
-using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPluginTest::Setting::MockSettingProvider;
 
 namespace UKControllerPluginUtilsTest::Setting {
 
-    TEST(SettingRepository, AddSettingValueAddsSetting)
+    class SettingRepositoryTest : public testing::Test
     {
-        StrictMock<MockWinApi> winApiMock;
-        SettingRepository repo(winApiMock);
+        public:
+        SettingRepositoryTest()
+            : provider1Settings({"setting1", "setting2"}), provider2Settings({"setting3"}),
+              mockProvider1(std::make_shared<testing::NiceMock<MockSettingProvider>>()),
+              mockProvider2(std::make_shared<testing::NiceMock<MockSettingProvider>>())
+        {
+            ON_CALL(*mockProvider1, Provides).WillByDefault(testing::ReturnRef(provider1Settings));
 
-        EXPECT_CALL(
-            winApiMock, WriteToFile(std::wstring(L"settings/baz"), nlohmann::json{{"foo", "bar"}}.dump(4), true, false))
-            .Times(1);
+            ON_CALL(*mockProvider2, Provides).WillByDefault(testing::ReturnRef(provider2Settings));
+        }
 
-        repo.AddSettingValue({"foo", "bar", "baz"});
-        EXPECT_EQ(1, repo.SettingsCount());
+        std::set<std::string> provider1Settings;
+        std::set<std::string> provider2Settings;
+        std::shared_ptr<testing::NiceMock<MockSettingProvider>> mockProvider1;
+        std::shared_ptr<testing::NiceMock<MockSettingProvider>> mockProvider2;
+        SettingRepository repository;
+    };
+
+    TEST_F(SettingRepositoryTest, ItStartsWithNoSettings)
+    {
+        EXPECT_EQ(0, repository.CountSettings());
     }
 
-    TEST(SettingRepository, AddSettingValueDoesntOverwrite)
+    TEST_F(SettingRepositoryTest, ItAddsSettingProviders)
     {
-        StrictMock<MockWinApi> winApiMock;
-        SettingRepository repo(winApiMock);
-
-        EXPECT_CALL(
-            winApiMock, WriteToFile(std::wstring(L"settings/baz"), nlohmann::json{{"foo", "bar"}}.dump(4), true, false))
-            .Times(1);
-
-        EXPECT_CALL(
-            winApiMock,
-            WriteToFile(std::wstring(L"settings/barrie"), nlohmann::json{{"foo", "bob"}}.dump(4), true, false))
-            .Times(0);
-
-        repo.AddSettingValue({"foo", "bar", "baz"});
-        repo.AddSettingValue({"foo", "bob", "barrie"});
-
-        EXPECT_EQ("bar", repo.GetSetting("foo"));
-        EXPECT_EQ(1, repo.SettingsCount());
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+        EXPECT_EQ(3, repository.CountSettings());
+        EXPECT_TRUE(repository.HasSetting("setting1"));
+        EXPECT_TRUE(repository.HasSetting("setting2"));
+        EXPECT_TRUE(repository.HasSetting("setting3"));
     }
 
-    TEST(SettingRepository, AddSettingsFromJsonFileStopsIfFileDoesntExist)
+    TEST_F(SettingRepositoryTest, ItDoesntAddDuplicateProviders)
     {
-        StrictMock<MockWinApi> winApiMock;
-
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(false));
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        EXPECT_EQ(0, repo.SettingsCount());
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+        repository.AddProvider(mockProvider2);
+        repository.AddProvider(mockProvider2);
+        EXPECT_EQ(3, repository.CountSettings());
+        EXPECT_TRUE(repository.HasSetting("setting1"));
+        EXPECT_TRUE(repository.HasSetting("setting2"));
+        EXPECT_TRUE(repository.HasSetting("setting3"));
     }
 
-    TEST(SettingRepository, AddSettingsFromJsonFileStopsIfFileReadError)
+    TEST_F(SettingRepositoryTest, ItReturnsDefaultValueIfNoProviderForSetting)
     {
-        StrictMock<MockWinApi> winApiMock;
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
 
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(true));
-
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
-            .Times(1)
-            .WillOnce(Throw(std::ifstream::failure("test")));
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        EXPECT_EQ(0, repo.SettingsCount());
+        EXPECT_EQ("abc", repository.GetSetting("test1", "abc"));
     }
 
-    TEST(SettingRepository, AddSettingsFromJsonFileStopsIfInvalidJson)
+    TEST_F(SettingRepositoryTest, ItReturnsEmptyValueIfNoProviderForSettingAndNoDefaultProvided)
     {
-        StrictMock<MockWinApi> winApiMock;
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
 
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(true));
-
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
-            .Times(1)
-            .WillOnce(Return("{{}"));
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        EXPECT_EQ(0, repo.SettingsCount());
+        EXPECT_EQ("", repository.GetSetting("test1"));
     }
 
-    TEST(SettingRepository, AddSettingsFromJsonFileStopsIfNotJsonObject)
+    TEST_F(SettingRepositoryTest, ItReturnsDefaultValueIfProviderReturnsEmpty)
     {
-        StrictMock<MockWinApi> winApiMock;
+        EXPECT_CALL(*mockProvider1, Get("setting1")).Times(1).WillOnce(testing::Return(""));
 
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(true));
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
 
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
-            .Times(1)
-            .WillOnce(Return("abcd"));
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        EXPECT_EQ(0, repo.SettingsCount());
+        EXPECT_EQ("abc", repository.GetSetting("setting1", "abc"));
     }
 
-    TEST(SettingRepository, AddSettingsFromJsonFileAddsSettings)
+    TEST_F(SettingRepositoryTest, ItReturnsValueFromProvider)
     {
-        StrictMock<MockWinApi> winApiMock;
+        EXPECT_CALL(*mockProvider1, Get("setting1")).Times(1).WillOnce(testing::Return("123"));
 
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(true));
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
 
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        EXPECT_EQ(2, repo.SettingsCount());
-        EXPECT_TRUE(repo.HasSetting("test1"));
-        EXPECT_TRUE(repo.HasSetting("test2"));
-        EXPECT_TRUE(repo.GetSetting("test1") == "testValue1");
-        EXPECT_TRUE(repo.GetSetting("test2") == "testValue2");
+        EXPECT_EQ("123", repository.GetSetting("setting1"));
     }
 
-    TEST(SettingRepository, AddSettingsFromJsonFileIgnoresDuplicateSettings)
+    TEST_F(SettingRepositoryTest, ItDoesntUpdateSettingIfNoProvider)
     {
-        StrictMock<MockWinApi> winApiMock;
+        EXPECT_CALL(*mockProvider1, Save(testing::_, testing::_)).Times(0);
 
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test1.json"))).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*mockProvider2, Save(testing::_, testing::_)).Times(0);
 
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test2.json"))).Times(1).WillOnce(Return(true));
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
 
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test1.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test1\": \"testValue1\"}"));
-
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test2.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test1\": \"testValue2\"}"));
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test1.json");
-        repo.AddSettingsFromJsonFile("test/test2.json");
-        EXPECT_TRUE(repo.HasSetting("test1"));
-        EXPECT_TRUE(repo.GetSetting("test1") == "testValue1");
+        repository.UpdateSetting("setting4", "abc");
     }
 
-    TEST(SettingRepository, GetSettingReturnsEmptyStringByDefaultIfNotSet)
+    TEST_F(SettingRepositoryTest, ItUpdatesSetting)
     {
-        StrictMock<MockWinApi> winApiMock;
+        EXPECT_CALL(*mockProvider1, Save(testing::_, testing::_)).Times(0);
 
-        SettingRepository repo(winApiMock);
-        EXPECT_TRUE("" == repo.GetSetting("test"));
+        EXPECT_CALL(*mockProvider2, Save("setting3", "abc")).Times(1);
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        repository.UpdateSetting("setting3", "abc");
     }
 
-    TEST(SettingRepository, GetSettingReturnsDefaultvalueIfProvided)
+    TEST_F(SettingRepositoryTest, ItDoesntReloadSettingIfNoProvider)
     {
-        StrictMock<MockWinApi> winApiMock;
+        EXPECT_CALL(*mockProvider1, Reload()).Times(0);
 
-        SettingRepository repo(winApiMock);
-        EXPECT_TRUE("test2" == repo.GetSetting("test", "test2"));
+        EXPECT_CALL(*mockProvider2, Reload()).Times(0);
+
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
+
+        repository.ReloadSetting("setting4");
     }
 
-    TEST(SettingRepository, UpdateSettingChangesSettingValue)
+    TEST_F(SettingRepositoryTest, ItReloadsSetting)
     {
-        StrictMock<MockWinApi> winApiMock;
+        EXPECT_CALL(*mockProvider1, Reload()).Times(0);
 
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(true));
+        EXPECT_CALL(*mockProvider2, Reload()).Times(1);
 
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
+        repository.AddProvider(mockProvider1);
+        repository.AddProvider(mockProvider2);
 
-        EXPECT_CALL(
-            winApiMock,
-            WriteToFile(
-                std::wstring(L"settings/test/test.json"),
-                nlohmann::json{{"test1", "notTestValue1"}, {"test2", "testValue2"}}.dump(4),
-                true,
-                false))
-            .Times(1);
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        repo.UpdateSetting("test1", "notTestValue1");
-        EXPECT_TRUE(repo.HasSetting("test1"));
-        EXPECT_TRUE(repo.GetSetting("test1") == "notTestValue1");
-    }
-
-    TEST(SettingRepository, UpdateSettingDoesNothingIfSettingDoesNotExist)
-    {
-        StrictMock<MockWinApi> winApiMock;
-        SettingRepository repo(winApiMock);
-        repo.UpdateSetting("test1", "notTestValue1");
-        EXPECT_FALSE(repo.HasSetting("test2"));
-    }
-
-    TEST(SettingRepository, WriteAllSettingsToFileHandlesSingleFile)
-    {
-        StrictMock<MockWinApi> winApiMock;
-
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(true));
-
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
-
-        EXPECT_CALL(
-            winApiMock,
-            WriteToFile(
-                std::wstring(L"settings/test/test.json"),
-                "{\n    \"test1\": \"testValue1\",\n    \"test2\": \"testValue2\"\n}",
-                true,
-                false))
-            .Times(1);
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        repo.WriteAllSettingsToFile();
-    }
-
-    TEST(SettingRepository, WriteAllSettingsToFileHandlesUpdatedSettings)
-    {
-        StrictMock<MockWinApi> winApiMock;
-
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test.json"))).Times(1).WillOnce(Return(true));
-
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test1\": \"testValue1\", \"test2\": \"testValue2\"}"));
-
-        EXPECT_CALL(
-            winApiMock,
-            WriteToFile(
-                std::wstring(L"settings/test/test.json"),
-                "{\n    \"test1\": \"notTestValue1\",\n    \"test2\": \"testValue2\"\n}",
-                true,
-                false))
-            .Times(2);
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test.json");
-        repo.UpdateSetting("test1", "notTestValue1");
-        repo.WriteAllSettingsToFile();
-    }
-
-    TEST(SettingRepository, WriteAllSettingsToFileHandlesMultipleFiles)
-    {
-        StrictMock<MockWinApi> winApiMock;
-
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test1.json"))).Times(1).WillOnce(Return(true));
-
-        EXPECT_CALL(winApiMock, FileExists(std::wstring(L"settings/test/test2.json"))).Times(1).WillOnce(Return(true));
-
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test1.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test1\": \"testValue1\"}"));
-
-        EXPECT_CALL(winApiMock, ReadFromFileMock(std::wstring(L"settings/test/test2.json"), true))
-            .Times(1)
-            .WillOnce(Return("{\"test2\": \"testValue2\"}"));
-
-        EXPECT_CALL(
-            winApiMock,
-            WriteToFile(std::wstring(L"settings/test/test1.json"), "{\n    \"test1\": \"testValue1\"\n}", true, false))
-            .Times(1);
-
-        EXPECT_CALL(
-            winApiMock,
-            WriteToFile(std::wstring(L"settings/test/test2.json"), "{\n    \"test2\": \"testValue2\"\n}", true, false))
-            .Times(1);
-
-        SettingRepository repo(winApiMock);
-        repo.AddSettingsFromJsonFile("test/test1.json");
-        repo.AddSettingsFromJsonFile("test/test2.json");
-        repo.WriteAllSettingsToFile();
+        repository.ReloadSetting("setting3");
     }
 } // namespace UKControllerPluginUtilsTest::Setting

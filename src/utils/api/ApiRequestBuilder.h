@@ -2,6 +2,10 @@
 #include "curl/CurlRequest.h"
 #include "srd/SrdSearchParameters.h"
 
+namespace UKControllerPluginUtils::Api {
+    class ApiSettings;
+} // namespace UKControllerPluginUtils::Api
+
 namespace UKControllerPlugin::Api {
 
     /*
@@ -11,7 +15,7 @@ namespace UKControllerPlugin::Api {
     class ApiRequestBuilder
     {
         public:
-        ApiRequestBuilder(std::string apiDomain, std::string apiKey);
+        ApiRequestBuilder(const UKControllerPluginUtils::Api::ApiSettings& settings);
         [[nodiscard]] auto BuildAuthCheckRequest() const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildDependencyListRequest() const -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildGetUriRequest(std::string uri) const -> UKControllerPlugin::Curl::CurlRequest;
@@ -93,15 +97,12 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto BuildMissedApproachAcknowledgeMessage(int id, const std::string& remarks) const
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildGetAllMetarsRequest() const -> UKControllerPlugin::Curl::CurlRequest;
-
-        [[nodiscard]] auto GetApiDomain() const -> std::string;
-        [[nodiscard]] auto GetApiKey() const -> std::string;
-        void SetApiDomain(std::string domain);
-        void SetApiKey(std::string key);
+        [[nodiscard]] auto GetApiDomain() const -> const std::string&;
 
         private:
         [[nodiscard]] auto AddCommonHeaders(UKControllerPlugin::Curl::CurlRequest request) const
             -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildUrl(const std::string uri) const -> std::string;
 
         // The type string to send in the payload if we want a general squawk
         const std::string generalSquawkAssignmentType = "general";
@@ -109,10 +110,7 @@ namespace UKControllerPlugin::Api {
         // The type string to send in the payload if we want a local squawk
         const std::string localSquawkAssignmentType = "local";
 
-        // The base URL of the API
-        std::string apiDomain;
-
-        // Our API key
-        std::string apiKey;
+        // Api settings
+        const UKControllerPluginUtils::Api::ApiSettings& settings;
     };
 } // namespace UKControllerPlugin::Api

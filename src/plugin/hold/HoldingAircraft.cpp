@@ -3,17 +3,16 @@
 namespace UKControllerPlugin::Hold {
 
     HoldingAircraft::HoldingAircraft(std::string callsign, std::string assignedHold)
-        : callsign(std::move(callsign)), entryTime(std::chrono::system_clock::now()),
-          assignedHold(std::move(assignedHold))
+        : callsign(std::move(callsign)), assignedHold(std::move(assignedHold))
     {
     }
 
-    HoldingAircraft::HoldingAircraft(std::string callsign, std::set<std::string> proximityHolds)
-        : callsign(std::move(callsign)), proximityHolds(std::move(proximityHolds))
+    HoldingAircraft::HoldingAircraft(std::string callsign, std::shared_ptr<ProximityHold> proximityHold)
+        : callsign(std::move(callsign)), proximityHolds({proximityHold})
     {
     }
 
-    void HoldingAircraft::AddProximityHold(const std::string& hold)
+    void HoldingAircraft::AddProximityHold(std::shared_ptr<ProximityHold> hold)
     {
         this->proximityHolds.insert(hold);
     }
@@ -23,17 +22,13 @@ namespace UKControllerPlugin::Hold {
         return this->assignedHold;
     }
 
-    auto HoldingAircraft::GetAssignedHoldEntryTime() const -> const std::chrono::system_clock::time_point&
-    {
-        return this->entryTime;
-    }
-
     auto HoldingAircraft::GetCallsign() const -> std::string
     {
         return this->callsign;
     }
 
-    auto HoldingAircraft::GetProximityHolds() const -> std::set<std::string>
+    auto HoldingAircraft::GetProximityHolds() const
+        -> const std::set<std::shared_ptr<ProximityHold>, CompareProximityHolds>&
     {
         return this->proximityHolds;
     }
@@ -56,7 +51,6 @@ namespace UKControllerPlugin::Hold {
     void HoldingAircraft::SetAssignedHold(std::string hold)
     {
         this->assignedHold = std::move(hold);
-        this->entryTime = std::chrono::system_clock::now();
     }
 
     void HoldingAircraft::RemoveAssignedHold()
@@ -77,5 +71,11 @@ namespace UKControllerPlugin::Hold {
     auto HoldingAircraft::GetNoHoldAssigned() const -> const std::string&
     {
         return this->noHoldAssigned;
+    }
+
+    auto HoldingAircraft::GetProximityHold(const std::string& hold) const -> std::shared_ptr<ProximityHold>
+    {
+        auto proximity = this->proximityHolds.find(hold);
+        return proximity == this->proximityHolds.cend() ? nullptr : *proximity;
     }
 } // namespace UKControllerPlugin::Hold

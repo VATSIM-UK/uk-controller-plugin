@@ -148,22 +148,6 @@ namespace UKControllerPlugin::Api {
             this->MakeApiRequest(this->requestBuilder.BuildSquawkAssignmentCheckRequest(callsign)), callsign);
     }
 
-    /*
-        Returns the API domain being used by the request builder
-    */
-    auto ApiHelper::GetApiDomain() const -> std::string
-    {
-        return this->requestBuilder.GetApiDomain();
-    }
-
-    /*
-        Returns the API key being used to authenticate requests
-    */
-    auto ApiHelper::GetApiKey() const -> std::string
-    {
-        return this->requestBuilder.GetApiKey();
-    }
-
     auto ApiHelper::GetDependencyList() const -> nlohmann::json
     {
         return this->MakeApiRequest(this->requestBuilder.BuildDependencyListRequest()).GetRawData();
@@ -207,7 +191,7 @@ namespace UKControllerPlugin::Api {
 
     auto ApiHelper::GetUri(std::string uri) const -> nlohmann::json
     {
-        if (uri.find(this->GetApiDomain()) == std::string::npos) {
+        if (uri.find(this->requestBuilder.GetApiDomain()) == std::string::npos) {
             LogCritical("Attempted to get URI on non-ukcp route");
             throw ApiException("Attempted to get URI on non-ukcp route");
         }
@@ -325,22 +309,6 @@ namespace UKControllerPlugin::Api {
     void ApiHelper::ReadNotification(int id) const
     {
         static_cast<void>(this->MakeApiRequest(this->requestBuilder.BuildReadNotificationRequest(id)));
-    }
-
-    /*
-        Set api key on the request builder
-    */
-    void ApiHelper::SetApiKey(std::string key)
-    {
-        this->requestBuilder.SetApiKey(key);
-    }
-
-    /*
-        Set api domain on the request builder
-    */
-    void ApiHelper::SetApiDomain(std::string domain)
-    {
-        this->requestBuilder.SetApiDomain(domain);
     }
 
     auto ApiHelper::CreatePrenoteMessage(

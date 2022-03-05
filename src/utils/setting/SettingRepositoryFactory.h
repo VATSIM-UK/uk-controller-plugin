@@ -5,8 +5,8 @@
 namespace UKControllerPlugin {
     namespace Windows {
         class WinApiInterface;
-    }  // namespace Windows
-}  // namespace UKControllerPlugin
+    } // namespace Windows
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Setting {
@@ -18,9 +18,7 @@ namespace UKControllerPlugin {
         class SettingRepositoryFactory
         {
             public:
-                static std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> Create(
-                    UKControllerPlugin::Windows::WinApiInterface & winApi
-                );
+            static std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> Create();
         };
-    }  // namespace Setting
-}  // namespace UKControllerPlugin
+    } // namespace Setting
+} // namespace UKControllerPlugin

@@ -57,5 +57,8 @@ namespace UKControllerPlugin::Hold {
 
         // How far from a navaid an aircraft can be before its considered in proximity of the hold
         const double proximityDistance = 12.0;
+
+        // How far from a navaid an aircraft can be before its considered to have entered the hold
+        const double enterDistance = 3.0;
     };
 } // namespace UKControllerPlugin::Hold
