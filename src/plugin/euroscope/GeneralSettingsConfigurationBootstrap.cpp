@@ -10,6 +10,7 @@
 #include "euroscope/UserSettingAwareCollection.h"
 #include "setting/SettingRepository.h"
 #include "setting/JsonFileSettingProvider.h"
+#include "update/BootstrapReleaseChannelSettings.h"
 
 using UKControllerPlugin::Command::CommandHandlerCollection;
 using UKControllerPlugin::Dialog::DialogData;
@@ -22,6 +23,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Setting::JsonFileSettingProvider;
 using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPluginUtils::Update::BootstrapReleaseChannelSettings;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -33,8 +35,7 @@ namespace UKControllerPlugin {
             Setting::SettingRepository& settings,
             WinApiInterface& windows)
         {
-            settings.AddProvider(std::make_shared<JsonFileSettingProvider>(
-                L"release-channel.json", std::set<std::string>{"release_channel"}, windows));
+            BootstrapReleaseChannelSettings(settings, windows);
             std::shared_ptr<GeneralSettingsDialog> dialog =
                 std::make_shared<GeneralSettingsDialog>(userSettings, userSettingsHandlers, settings);
             dialogManager.AddDialog(

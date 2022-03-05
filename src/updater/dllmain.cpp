@@ -6,6 +6,7 @@
 #include "setting/SettingRepositoryFactory.h"
 #include "curl/CurlApi.h"
 #include "log/LoggerBootstrap.h"
+#include "update/BootstrapReleaseChannelSettings.h"
 #include "update/PluginVersion.h"
 #include "duplicate/DuplicatePlugin.h"
 
@@ -36,6 +37,7 @@ UKCP_UPDATER_API bool PerformUpdates()
     UKControllerPlugin::Curl::CurlApi curl;
     std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
         UKControllerPlugin::Setting::SettingRepositoryFactory::Create();
+    UKControllerPluginUtils::Update::BootstrapReleaseChannelSettings(*settings, *windows);
 
     auto factory = UKControllerPluginUtils::Api::Bootstrap(*settings, *windows);
     auto api = UKControllerPluginUtils::Api::BootstrapLegacy(*factory, curl);

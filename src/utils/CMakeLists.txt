@@ -163,7 +163,7 @@ set(update
     "update/PluginVersion.h"
     "update/UpdateBinaries.cpp"
     "update/UpdateBinaries.h"
-)
+        update/BootstrapReleaseChannelSettings.cpp update/BootstrapReleaseChannelSettings.h)
 source_group("update" FILES ${update})
 
 set(windows
