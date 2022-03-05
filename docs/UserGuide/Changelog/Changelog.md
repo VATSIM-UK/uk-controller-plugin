@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [4.4.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.3.0...4.4.0-beta.1) (2022-03-05)
+
+
+### Features
+
+* **holds:** Hold timer is triggered by entry time ([f6925aa](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f6925aa2c68744e43db6e4c92f9a2718c26882a9)), closes [#416](https://github.com/VATSIM-UK/uk-controller-plugin/issues/416)
+
 # [4.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.2...4.3.0) (2022-03-02)
 
 
