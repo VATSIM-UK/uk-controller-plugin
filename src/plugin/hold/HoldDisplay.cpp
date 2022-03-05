@@ -937,12 +937,10 @@ namespace UKControllerPlugin {
                             // Time in hold, if it's assigned to this one
                             if ((*it)->GetAssignedHold() == navaid.identifier) {
                                 auto holdProximity = (*it)->GetProximityHold(navaid.identifier);
-                                if (holdProximity == nullptr || !holdProximity->HasEntered()) {
-                                    return;
+                                if (holdProximity != nullptr && holdProximity->HasEntered()) {
+                                    std::wstring timeString = GetTimeInHoldDisplayString(holdProximity->EnteredAt());
+                                    graphics.DrawString(timeString, timeInHoldDisplay, this->dataBrush);
                                 }
-
-                                std::wstring timeString = GetTimeInHoldDisplayString(holdProximity->EnteredAt());
-                                graphics.DrawString(timeString, timeInHoldDisplay, this->dataBrush);
                             }
                         }
 
