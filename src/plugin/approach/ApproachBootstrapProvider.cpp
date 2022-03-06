@@ -1,5 +1,6 @@
 #include "ApproachBootstrapProvider.h"
 #include "ApproachSequencerDisplay.h"
+#include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSpacingRingRenderer.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/UKPlugin.h"
@@ -25,9 +26,10 @@ namespace UKControllerPlugin::Approach {
         auto sequencerRendererId = radarRenderables.ReserveRendererIdentifier();
         auto sequencerScreenObjectId = radarRenderables.ReserveScreenObjectIdentifier(sequencerRendererId);
 
+        auto displayOptions = std::make_shared<ApproachSequencerDisplayOptions>();
         radarRenderables.RegisterRenderer(
             sequencerRendererId,
-            std::make_shared<ApproachSequencerDisplay>(sequencerScreenObjectId),
+            std::make_shared<ApproachSequencerDisplay>(displayOptions, sequencerScreenObjectId),
             radarRenderables.beforeTags);
     }
 } // namespace UKControllerPlugin::Approach
