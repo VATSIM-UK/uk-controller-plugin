@@ -9,6 +9,7 @@
 #pragma warning(push)
 #pragma warning(disable : 26495 26451)
 #define SPDLOG_WCHAR_FILENAMES
+#define CONTINUABLE_HAS_DISABLED_COROUTINE
 #include <curl/curl.h>
 #include <json/json.hpp>
 #include <spdlog/include/spdlog/logger.h>
