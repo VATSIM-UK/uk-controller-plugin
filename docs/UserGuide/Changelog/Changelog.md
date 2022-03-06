@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [4.4.0-beta.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0-beta.2...4.4.0-beta.3) (2022-03-06)
+
+
+### Bug Fixes
+
+* **async:** Properly shutdown async tasks on unload ([d58c32b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d58c32b38d0e137b62ff4687bdeb83c3fb3c624f))
+* **graphics:** Crash on shutdown ([d0ddd23](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d0ddd2384274297ccb21779a48cb53a73a7654a0))
+
 # [4.4.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0-beta.1...4.4.0-beta.2) (2022-03-05)
 
 
