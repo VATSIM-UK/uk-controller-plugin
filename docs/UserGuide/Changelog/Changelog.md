@@ -1,5 +1,36 @@
 # UK Controller Plugin Changelog
 
+# [4.4.0-beta.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0-beta.2...4.4.0-beta.3) (2022-03-06)
+
+
+### Bug Fixes
+
+* **async:** Properly shutdown async tasks on unload ([d58c32b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d58c32b38d0e137b62ff4687bdeb83c3fb3c624f))
+* **graphics:** Crash on shutdown ([d0ddd23](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d0ddd2384274297ccb21779a48cb53a73a7654a0))
+
+# [4.4.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0-beta.1...4.4.0-beta.2) (2022-03-05)
+
+
+### Bug Fixes
+
+* **hold:** Hold display breaking when aircraft not in proximity ([d51fc06](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d51fc063532b0cf2b1f9d39402b1ea904cafdb0f))
+* **updater:** Updater not respecting selected release channel ([3b5865d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3b5865ded2428e14b9b25c55e222a1e14fb02698))
+
+# [4.4.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.3.0...4.4.0-beta.1) (2022-03-05)
+
+
+### Features
+
+* **holds:** Hold timer is triggered by entry time ([f6925aa](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f6925aa2c68744e43db6e4c92f9a2718c26882a9)), closes [#416](https://github.com/VATSIM-UK/uk-controller-plugin/issues/416)
+
+# [4.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.2...4.3.0) (2022-03-02)
+
+
+### Features
+
+* **intentioncode:** Dont cancel intention codes after leaving the FIR ([#437](https://github.com/VATSIM-UK/uk-controller-plugin/issues/437)) ([fed8a43](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fed8a438ccdccb0523b87ac2b3a10a41e17c394e))
+* **wake:** Arrival interval calculations ([#438](https://github.com/VATSIM-UK/uk-controller-plugin/issues/438)) ([45e97a3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/45e97a39611de23777f9b8a86b0927d47c542a97))
+
 ## [4.2.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.1...4.2.2) (2022-02-14)
 
 
@@ -8,13 +39,15 @@
 * **fonts:** Provide fallback font if EuroScope is not installed ([#434](https://github.com/VATSIM-UK/uk-controller-plugin/issues/434)) ([ce434f3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ce434f363ab4e2e4747420ab1145ddf2533ac0d0)), closes [#433](https://github.com/VATSIM-UK/uk-controller-plugin/issues/433)
 
 ## [4.2.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.0...4.2.1) (2022-02-12)
-
-
-### Bug Fixes
-
 * **initialaltitude:** Dont allow initial altitude recycle on aircraft out of range ([#430](https://github.com/VATSIM-UK/uk-controller-plugin/issues/430)) ([cd3fd0e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cd3fd0e553626d256863377d1cbe30c6b521261a))
 * **initialheading:** Dont allow initial heading recycle on aircraft out of range ([#431](https://github.com/VATSIM-UK/uk-controller-plugin/issues/431)) ([e4fd211](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e4fd211bfde01b0829deaf58a962f1c043654faf)), closes [#429](https://github.com/VATSIM-UK/uk-controller-plugin/issues/429)
 
+# [5.0.0-alpha.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.2.0...5.0.0-alpha.1) (2022-02-12)
+
+### Features
+
+* **holds**: Hold timer by entry time rather than assigned time
+* 
 # [4.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.1.1...4.2.0) (2022-02-10)
 
 
@@ -58,22 +91,7 @@ to the service provision options, rather than a filter for which airfields to us
 
 * chore(release): 4.0.0-beta.1 [skip ci]
 
-# [4.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/3.13.1...4.0.0-beta.1) (2022-01-05)
-
-### Features
-* The old lists are replaced by a single list. New ASR settings
-are also used for this list.
-
-* chore(release): 4.0.0-beta.2 [skip ci]
-
-# [4.0.0-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.1...4.0.0-beta.2) (2022-01-05)
-
-### Features
-
-* **departure:** Combine pending prenotes and departure releases lists into one ([91c0614](https://github.com/VATSIM-UK/uk-controller-plugin/commit/91c0614982e061a29e18db23e2d9c70c86449fcb))
-
 # [4.0.0-beta.7](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.0.0-beta.6...4.0.0-beta.7) (2022-01-23)
-
 
 ### Features
 

@@ -20,6 +20,9 @@ namespace UKControllerPlugin {
     namespace Setting {
         class SettingRepository;
     } // namespace Setting
+    namespace Windows {
+        class WinApiInterface;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
@@ -35,7 +38,8 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Dialog::DialogManager& dialogManager,
                 UKControllerPlugin::Euroscope::UserSetting& userSettings,
                 UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers,
-                Setting::SettingRepository& settings);
+                Setting::SettingRepository& settings,
+                Windows::WinApiInterface& windows);
 
             static void BootstrapRadarScreen(
                 UKControllerPlugin::Plugin::FunctionCallEventHandler& functionCalls,

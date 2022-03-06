@@ -3,6 +3,7 @@
 #include "aircraft/AircraftTypeMapperInterface.h"
 #include "aircraft/CallsignSelectionListFactory.h"
 #include "airfield/AirfieldCollection.h"
+#include "api/ApiFactory.h"
 #include "api/ApiInterface.h"
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/ModuleFactories.h"

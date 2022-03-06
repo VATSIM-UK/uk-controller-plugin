@@ -4,6 +4,7 @@
 #include "RadarScreenFactory.h"
 #include "ScreenControlsBootstrap.h"
 #include "UKRadarScreen.h"
+#include "api/BootstrapApi.h"
 #include "approach/ApproachBootstrapProvider.h"
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/HelperBootstrap.h"
@@ -26,6 +27,7 @@
 #include "srd/SrdModule.h"
 #include "wake/WakeModule.h"
 
+using UKControllerPlugin::Api::BootstrapConfigurationMenuItem;
 using UKControllerPlugin::Bootstrap::HelperBootstrap;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Command::CommandHandlerCollection;
@@ -59,7 +61,7 @@ namespace UKControllerPlugin::RadarScreen {
         MenuToggleableDisplayFactory displayFactory(*this->persistence.pluginFunctionHandlers, configurableDisplays);
 
         // Run bootstrap
-        HelperBootstrap::BootstrapApiConfigurationItem(persistence, configurableDisplays);
+        BootstrapConfigurationMenuItem(persistence, configurableDisplays);
 
         SectorFile::BootstrapRadarScreen(persistence, userSettingHandlers);
 

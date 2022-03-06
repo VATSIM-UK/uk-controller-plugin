@@ -129,12 +129,7 @@ namespace UKControllerPlugin {
             const std::string selectedChannel = reinterpret_cast<const char*>(
                 SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETITEMDATA, selectedReleaseChannelIndex, 0));
 
-            if (this->settings.HasSetting("release_channel")) {
-                this->settings.UpdateSetting("release_channel", selectedChannel);
-            } else {
-                this->settings.AddSettingValue({"release_channel", selectedChannel, "release-channel.json"});
-            }
-
+            this->settings.UpdateSetting("release_channel", selectedChannel);
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }
 

@@ -12,7 +12,7 @@ namespace UKControllerPlugin::Approach {
 
     ApproachSequencerDisplay::ApproachSequencerDisplay(
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions, int screenObjectId)
-        : displayOptions(displayOptions), titleBar(CollapsibleWindowTitleBar::Create(
+        : displayOptions(std::move(displayOptions)), titleBar(CollapsibleWindowTitleBar::Create(
                                               L"Approach Sequencer",
                                               titleBarArea,
                                               [this]() -> bool { return this->contentCollapsed; },

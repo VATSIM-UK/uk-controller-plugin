@@ -10,11 +10,12 @@ namespace UKControllerPlugin::Graphics {
         [[nodiscard]] static auto Instance() -> StringFormatManager&;
         [[nodiscard]] auto GetCentreAlign() -> const Gdiplus::StringFormat&;
         [[nodiscard]] auto GetLeftAlign() -> const Gdiplus::StringFormat&;
+        static void UnsetInstance();
 
         protected:
         StringFormatManager();
         auto GetAligned(int id, Gdiplus::StringAlignment alignment) -> const Gdiplus::StringFormat&;
-        static std::unique_ptr<StringFormatManager> instance;
+        inline static std::unique_ptr<StringFormatManager> instance;
 
         private:
         // The fonts

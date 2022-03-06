@@ -1,8 +1,11 @@
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
-#include "approach/ApproachBootstrapProvider.h"
-#include "api/ApiAuthChecker.h"
+#include "api/ApiFactory.h"
+#include "api/ApiRequestFactory.h"
+#include "api/BootstrapApi.h"
+#include "api/FirstTimeApiConfigLoader.h"
+#include "api/FirstTimeApiAuthorisationChecker.h"
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
@@ -56,11 +59,11 @@
 #include "squawk/SquawkModule.h"
 #include "srd/SrdModule.h"
 #include "stands/StandModule.h"
+#include "task/RunAsyncTask.h"
 #include "task/TaskRunnerInterface.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
 
-using UKControllerPlugin::Api::ApiAuthChecker;
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
 using UKControllerPlugin::Bootstrap::ExternalsBootstrap;
@@ -96,7 +99,9 @@ namespace UKControllerPlugin {
     */
     void InitialisePlugin::EuroScopeCleanup()
     {
+        this->container->apiFactory->RequestFactory().AwaitRequestCompletion();
         this->container->taskRunner.reset();
+        UnsetTaskRunner();
         this->container.reset();
         this->duplicatePlugin.reset();
 
@@ -159,16 +164,19 @@ namespace UKControllerPlugin {
         // User messager
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
 
-        // API + Websocket
+        // Settings, api, websocket
         HelperBootstrap::Bootstrap(*this->container);
+        Api::BootstrapApi(*this->container);
         Push::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         // Datetime
         Datablock::BootstrapPlugin(*this->container);
 
-        // If we're not allowed to use the API because we've been banned or something... It's no go.
-        ApiAuthChecker::IsAuthorised(
-            *this->container->api, *this->container->windows, *this->container->settingsRepository);
+        // Perform a first-time load of API config and check we're authorised.
+        if (Api::LocateConfig(*this->container->apiFactory->SettingsProvider())) {
+            Api::FirstTimeApiAuthorisationCheck(
+                *this->container->apiFactory->SettingsProvider(), *this->container->windows);
+        };
 
         // Dependency loading can happen regardless of plugin version or API status.
         Dependency::UpdateDependencies(*this->container->api, *this->container->windows);
@@ -219,7 +227,8 @@ namespace UKControllerPlugin {
             *this->container->dialogManager,
             *this->container->pluginUserSettingHandler,
             *this->container->userSettingHandlers,
-            *this->container->settingsRepository);
+            *this->container->settingsRepository,
+            *this->container->windows);
 
         // Bootstrap the modules
         Metar::BootstrapPlugin(*this->container);

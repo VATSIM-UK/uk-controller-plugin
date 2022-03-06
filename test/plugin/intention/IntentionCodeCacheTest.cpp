@@ -74,69 +74,6 @@ namespace UKControllerPluginTest::IntentionCode {
         EXPECT_EQ(1, cache.TotalCached());
     }
 
-    TEST(IntentionCodeCache, IntentionCodeValidReturnsFalseIfNotCached)
-    {
-        IntentionCodeCache cache;
-        StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-        EXPECT_FALSE(cache.IntentionCodeValid("BAW123", mockFlightplan));
-    }
-
-    TEST(IntentionCodeCache, IntentionCodeValidReturnsTrueIfNotExiting)
-    {
-        IntentionCodeCache cache;
-        StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-        cache.RegisterAircraft("BAW123", IntentionCodeData("--", -1, -1, "", ""));
-        EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
-    }
-
-    TEST(IntentionCodeCache, IntentionCodeValidReturnsTrueDirectGivenExitIfNotPassed)
-    {
-        IntentionCodeCache cache;
-        StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-        EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(7));
-
-        EXPECT_CALL(mockFlightplan, GetPointsCalculatedIndex()).Times(1).WillOnce(Return(4));
-
-        cache.RegisterAircraft("BAW123", IntentionCodeData("--", 5, 5, "", ""));
-        EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
-    }
-
-    TEST(IntentionCodeCache, IntentionCodeValidReturnsTrueDirectGivenButCloserToExit)
-    {
-        IntentionCodeCache cache;
-        StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-        EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(7));
-
-        EXPECT_CALL(mockFlightplan, GetPointsCalculatedIndex()).Times(1).WillOnce(Return(5));
-
-        cache.RegisterAircraft("BAW123", IntentionCodeData("--", 5, 5, "", ""));
-        EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
-    }
-
-    TEST(IntentionCodeCache, IntentionCodeValidReturnsFalseNoDirectPointPassed)
-    {
-        IntentionCodeCache cache;
-        StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-        EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(mockFlightplan.noDirect));
-
-        EXPECT_CALL(mockFlightplan, GetPointDistanceInMinutes(5)).Times(1).WillOnce(Return(mockFlightplan.pointPassed));
-
-        cache.RegisterAircraft("BAW123", IntentionCodeData("--", 5, 5, "", ""));
-        EXPECT_FALSE(cache.IntentionCodeValid("BAW123", mockFlightplan));
-    }
-
-    TEST(IntentionCodeCache, IntentionCodeValidReturnsTrueNoDirectPointNotPassed)
-    {
-        IntentionCodeCache cache;
-        StrictMock<MockEuroscopeExtractedRouteInterface> mockFlightplan;
-        EXPECT_CALL(mockFlightplan, GetPointsAssignedIndex()).Times(1).WillOnce(Return(mockFlightplan.noDirect));
-
-        EXPECT_CALL(mockFlightplan, GetPointDistanceInMinutes(5)).Times(1).WillOnce(Return(999));
-
-        cache.RegisterAircraft("BAW123", IntentionCodeData("--", 5, 5, "", ""));
-        EXPECT_TRUE(cache.IntentionCodeValid("BAW123", mockFlightplan));
-    }
-
     TEST(IntentionCodeCache, ClearCacheEmptiesCache)
     {
         IntentionCodeCache cache;
