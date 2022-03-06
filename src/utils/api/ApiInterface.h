@@ -28,8 +28,6 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] virtual auto FetchRemoteFile(std::string uri) const -> std::string = 0;
         [[nodiscard]] virtual auto GetAssignedSquawk(std::string callsign) const
             -> UKControllerPlugin::Squawk::ApiSquawkAllocation = 0;
-        [[nodiscard]] virtual auto GetApiDomain() const -> std::string = 0;
-        [[nodiscard]] virtual auto GetApiKey() const -> std::string = 0;
         [[nodiscard]] virtual auto GetHoldDependency() const -> nlohmann::json = 0;
         [[nodiscard]] virtual auto GetAssignedHolds() const -> nlohmann::json = 0;
         virtual void AssignAircraftToHold(std::string callsign, std::string navaid) const = 0;
@@ -86,8 +84,5 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] virtual auto CreateMissedApproach(const std::string& callsign) const -> nlohmann::json = 0;
         virtual void AcknowledgeMissedApproach(int id, const std::string& remarks) const = 0;
         [[nodiscard]] virtual auto GetAllMetars() const -> nlohmann::json = 0;
-
-        virtual void SetApiKey(std::string key) = 0;
-        virtual void SetApiDomain(std::string domain) = 0;
     };
 } // namespace UKControllerPlugin::Api

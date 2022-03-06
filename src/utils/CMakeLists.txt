@@ -25,8 +25,6 @@ ENDIF()
 # Source groups
 ################################################################################
 set(api
-    "api/ApiAuthChecker.cpp"
-    "api/ApiAuthChecker.h"
     "api/ApiBootstrap.cpp"
     "api/ApiBootstrap.h"
     "api/ApiException.h"
@@ -43,9 +41,24 @@ set(api
     "api/ApiResponseFactory.h"
     "api/ApiResponseValidator.cpp"
     "api/ApiResponseValidator.h"
-    "api/LocateApiSettings.cpp"
-    "api/LocateApiSettings.h"
-)
+    api/ApiRequestFactory.cpp api/ApiRequestFactory.h
+    api/ApiSettings.cpp api/ApiSettings.h api/ApiRequestFactoryInterface.h
+    api/ApiRequestPerformerInterface.h
+    api/Response.cpp api/Response.h
+    api/ApiRequestData.h api/ApiRequestData.cpp
+    api/CurlApiRequestPerformer.cpp api/CurlApiRequestPerformer.h
+    api/ApiUrlBuilder.cpp api/ApiUrlBuilder.h
+    api/ApiHeaderApplicator.cpp api/ApiHeaderApplicator.h
+    api/ApiCurlRequestFactory.cpp api/ApiCurlRequestFactory.h
+    api/ApiRequest.cpp api/ApiRequest.h
+    api/ApiFactory.cpp api/ApiFactory.h
+    api/AbstractApiRequestPerformerFactory.h api/CurlApiRequestPerformerFactory.cpp
+    api/CurlApiRequestPerformerFactory.h
+    api/ChainableRequest.cpp api/ChainableRequest.h
+    api/ApiSettingsProviderInterface.h
+    api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h
+    api/ApiRequestFacade.cpp api/ApiRequestFacade.h
+    api/ApiRequestException.cpp api/ApiRequestException.h)
 source_group("api" FILES ${api})
 
 set(curl
@@ -57,7 +70,7 @@ set(curl
     "curl/CurlResponse.cpp"
     "curl/CurlResponse.h"
     "curl/HttpException.h"
-        curl/CurlInterface.cpp)
+    curl/CurlInterface.cpp)
 source_group("curl" FILES ${curl})
 
 set(data
@@ -89,6 +102,12 @@ set(helper
 )
 source_group("helper" FILES ${helper})
 
+set(http
+        http/HttpStatusCode.h
+        http/HttpMethod.h
+        http/HttpMethod.cpp)
+source_group("http" FILES ${http})
+
 set(log
     "log/LoggerBootstrap.cpp"
     "log/LoggerBootstrap.h"
@@ -108,8 +127,9 @@ set(setting
     "setting/SettingRepository.h"
     "setting/SettingRepositoryFactory.cpp"
     "setting/SettingRepositoryFactory.h"
-    "setting/SettingValue.h"
-)
+    setting/SettingRepositoryInterface.h
+    setting/SettingProviderInterface.h
+    setting/JsonFileSettingProvider.cpp setting/JsonFileSettingProvider.h)
 source_group("setting" FILES ${setting})
 
 set(squawk
@@ -123,6 +143,10 @@ set(srd
     "srd/SrdSearchParameters.h"
 )
 source_group("srd" FILES ${srd})
+
+set(string
+        string/StringTrimFunctions.cpp string/StringTrimFunctions.h)
+source_group("string" FILES ${string})
 
 set(task
         "../utils/task/TaskRunner.cpp"
@@ -139,7 +163,7 @@ set(update
     "update/PluginVersion.h"
     "update/UpdateBinaries.cpp"
     "update/UpdateBinaries.h"
-)
+        update/BootstrapReleaseChannelSettings.cpp update/BootstrapReleaseChannelSettings.h)
 source_group("update" FILES ${update})
 
 set(windows
@@ -158,15 +182,16 @@ set(ALL_FILES
     ${dialog}
     ${duplicate}
     ${helper}
+    ${http}
     ${log}
     ${pch}
     ${setting}
     ${squawk}
     ${srd}
+    ${string}
     ${task}
     ${update}
-    ${windows}
-)
+    ${windows})
 
 ################################################################################
 # Target
@@ -204,6 +229,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/continuable/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/function2/include"
 )
 
 ################################################################################

@@ -1,18 +1,54 @@
 #include "ApiConfigurationMenuItem.h"
-#include "api/LocateApiSettings.h"
+#include "api/ApiRequestException.h"
+#include "api/ApiRequestFactory.h"
+#include "api/Response.h"
+#include "api/ApiSettingsProviderInterface.h"
 
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPluginUtils::Api::ApiRequestException;
+using UKControllerPluginUtils::Api::ApiSettingsProviderInterface;
+using UKControllerPluginUtils::Api::Response;
 
 namespace UKControllerPlugin::Api {
-    ApiConfigurationMenuItem::ApiConfigurationMenuItem(WinApiInterface& winApi, int menuCallbackId)
-        : menuCallbackId(menuCallbackId), winApi(winApi)
+    ApiConfigurationMenuItem::ApiConfigurationMenuItem(
+        UKControllerPluginUtils::Api::ApiSettingsProviderInterface& provider,
+        Windows::WinApiInterface& windows,
+        int menuCallbackId)
+        : provider(provider), windows(windows), menuCallbackId(menuCallbackId)
     {
     }
 
     void ApiConfigurationMenuItem::Configure(int functionId, std::string subject, RECT area)
     {
-        UserRequestedKeyUpdate(this->winApi);
+        if (!provider.Reload()) {
+            return;
+        };
+
+        ApiRequest()
+            .Get("authorise")
+            .Then([this]() {
+                LogInfo("Api configuration updated successfully");
+                windows.OpenMessageBox(
+                    L"API configuration has been replaced sucessfully",
+                    L"Configuration Updated",
+                    MB_OK | MB_ICONINFORMATION);
+            })
+            .Catch([this](const ApiRequestException& exception) {
+                if (UKControllerPluginUtils::Http::IsAuthenticationError(exception.StatusCode())) {
+                    windows.OpenMessageBox(
+                        L"API authentication failed. Please re-download your credentails from the VATSIM UK website "
+                        "and try again. If this problem persists, please contact the Web Services Department. Some "
+                        "functionality such as stand and squawk allocations may not work as expected.",
+                        L"UKCP API Config Invalid",
+                        MB_OK | MB_ICONWARNING);
+                } else if (UKControllerPluginUtils::Http::IsServerError(exception.StatusCode()))
+                    windows.OpenMessageBox(
+                        L"Unable to perform API config check as the API responded with an error. Please try again "
+                        L"later. Some functionality such as stand and squawk allocations may not work as expected.",
+                        L"Server Error",
+                        MB_OK | MB_ICONERROR);
+            });
     }
 
     /*

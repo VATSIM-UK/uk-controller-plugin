@@ -2,6 +2,7 @@
 
 using ::testing::Test;
 using UKControllerPlugin::Time::invalidTime;
+using UKControllerPlugin::Time::ParseIsoZuluString;
 using UKControllerPlugin::Time::ParseTimeString;
 using UKControllerPlugin::Time::ToDateTimeString;
 
@@ -48,5 +49,16 @@ namespace UKControllerPluginTest::Time {
     TEST_F(ParseTimeStringsTest, ItConvertsTimePointsToString)
     {
         EXPECT_EQ("2021-11-12 13:14:15", ToDateTimeString(ParseTimeString("2021-11-12 13:14:15")));
+    }
+
+    TEST_F(ParseTimeStringsTest, ItReturnsParsesCorrectIso8601ZuluTimeSingleDigits)
+    {
+        EXPECT_EQ(this->GetFromTimeNumbers(2021, 1, 9, 1, 2, 3), ParseIsoZuluString("2021-01-09T01:02:03.000000Z"));
+    }
+
+    TEST_F(ParseTimeStringsTest, ItReturnsParsesCorrectIso8601ZuluTimeDoubleDigits)
+    {
+        EXPECT_EQ(
+            this->GetFromTimeNumbers(2021, 11, 12, 13, 14, 15), ParseIsoZuluString("2021-11-12T13:14:15.000000Z"));
     }
 } // namespace UKControllerPluginTest::Time

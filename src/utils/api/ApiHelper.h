@@ -29,8 +29,6 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto FetchRemoteFile(std::string uri) const -> std::string override;
         [[nodiscard]] auto GetAssignedSquawk(std::string callsign) const
             -> UKControllerPlugin::Squawk::ApiSquawkAllocation override;
-        [[nodiscard]] auto GetApiDomain() const -> std::string override;
-        [[nodiscard]] auto GetApiKey() const -> std::string override;
         [[nodiscard]] auto GetDependencyList() const -> nlohmann::json override;
         [[nodiscard]] auto GetHoldDependency() const -> nlohmann::json override;
         [[nodiscard]] auto GetAssignedHolds() const -> nlohmann::json override;
@@ -74,8 +72,6 @@ namespace UKControllerPlugin::Api {
             -> nlohmann::json override;
         void CancelDepartureReleaseRequest(int releaseId) const override;
         void ReadNotification(int id) const override;
-        void SetApiKey(std::string key) override;
-        void SetApiDomain(std::string domain) override;
         [[nodiscard]] auto CreatePrenoteMessage(
             const std::string& callsign,
             const std::string& departureAirfield,

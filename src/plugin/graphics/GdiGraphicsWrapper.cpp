@@ -8,6 +8,12 @@ using UKControllerPlugin::Graphics::StringFormatManager;
 namespace UKControllerPlugin {
     namespace Windows {
 
+        GdiGraphicsWrapper::~GdiGraphicsWrapper()
+        {
+            StringFormatManager::UnsetInstance();
+            FontManager::UnsetInstance();
+        }
+
         /*
             Draws the outline of a rectangle to the screen.
         */

@@ -1,12 +1,14 @@
 #include "HoldingAircraft.h"
 #include "HoldEventHandler.h"
 #include "HoldManager.h"
+#include "ProximityHold.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
 #include "navaids/NavaidCollection.h"
 #include "tag/TagData.h"
+#include "time/SystemClock.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
@@ -56,7 +58,16 @@ namespace UKControllerPlugin::Hold {
                                                        const std::shared_ptr<EuroScopeCRadarTargetInterface>& rt) {
             for (auto navaids = this->navaids.cbegin(); navaids != this->navaids.cend(); ++navaids) {
                 if (rt->GetPosition().DistanceTo(navaids->coordinates) <= this->proximityDistance) {
-                    this->holdManager.AddAircraftToProximityHold(fp->GetCallsign(), navaids->identifier);
+                    this->holdManager.AddAircraftToProximityHold(
+                        std::make_shared<ProximityHold>(fp->GetCallsign(), navaids->identifier));
+
+                    if (rt->GetPosition().DistanceTo(navaids->coordinates) <= this->enterDistance) {
+                        auto proximity = this->holdManager.GetHoldingAircraft(fp->GetCallsign())
+                                             ->GetProximityHold(navaids->identifier);
+                        if (!proximity->HasEntered()) {
+                            proximity->Enter();
+                        }
+                    }
                 } else {
                     this->holdManager.RemoveAircraftFromProximityHold(fp->GetCallsign(), navaids->identifier);
                 }

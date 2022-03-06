@@ -1,6 +1,7 @@
+#include "api/ApiException.h"
 #include "hold/HoldingAircraft.h"
 #include "hold/HoldManager.h"
-#include "api/ApiException.h"
+#include "hold/ProximityHold.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -10,6 +11,7 @@ using ::testing::Throw;
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Hold::HoldingAircraft;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::ProximityHold;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
@@ -43,28 +45,38 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, AddingAircraftToProximityHoldsCreatesNewInstance)
         {
-            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "LAM"));
 
-            std::set<std::string> expectedProximityHolds({"LAM"});
-            EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
             EXPECT_EQ(
                 this->manager.GetHoldingAircraft("BAW123")->GetNoHoldAssigned(),
                 this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
-            auto test = this->manager.GetAircraftForHold("LAM");
+
             EXPECT_EQ(1, this->manager.GetAircraftForHold("LAM").size());
             EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("LAM").cbegin())->GetCallsign());
+            EXPECT_EQ(1, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds().size());
+            EXPECT_NE(nullptr, this->manager.GetHoldingAircraft("BAW123")->GetProximityHold("LAM"));
+            EXPECT_EQ("BAW123", this->manager.GetHoldingAircraft("BAW123")->GetProximityHold("LAM")->Callsign());
+            EXPECT_EQ("LAM", this->manager.GetHoldingAircraft("BAW123")->GetProximityHold("LAM")->Navaid());
         }
 
         TEST_F(HoldManagerTest, AddingAircraftToProximityHoldsUpdatesExistingInstance)
         {
-            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
-            this->manager.AddAircraftToProximityHold("BAW123", "BNN");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "LAM"));
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "BNN"));
 
-            std::set<std::string> expectedProximityHolds({"LAM", "BNN"});
-            EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
             EXPECT_EQ(
                 this->manager.GetHoldingAircraft("BAW123")->GetNoHoldAssigned(),
                 this->manager.GetHoldingAircraft("BAW123")->GetAssignedHold());
+
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("LAM").size());
+            EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("LAM").cbegin())->GetCallsign());
+            EXPECT_EQ(1, this->manager.GetAircraftForHold("BNN").size());
+            EXPECT_EQ("BAW123", (*this->manager.GetAircraftForHold("BNN").cbegin())->GetCallsign());
+
+            EXPECT_EQ(2, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds().size());
+            EXPECT_NE(nullptr, this->manager.GetHoldingAircraft("BAW123")->GetProximityHold("BNN"));
+            EXPECT_EQ("BAW123", this->manager.GetHoldingAircraft("BAW123")->GetProximityHold("BNN")->Callsign());
+            EXPECT_EQ("BNN", this->manager.GetHoldingAircraft("BAW123")->GetProximityHold("BNN")->Navaid());
         }
 
         TEST_F(HoldManagerTest, AssigningAircraftToHoldCreatesNewInstance)
@@ -97,7 +109,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(this->mockApi, AssignAircraftToHold(_, _)).Times(0);
 
-            this->manager.AddAircraftToProximityHold("BAW123", "LAM");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "LAM"));
             this->manager.AssignAircraftToHold("BAW123", "LAM", false);
             this->manager.AssignAircraftToHold("BAW123", "BNN", false);
 
@@ -149,7 +161,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(this->mockApi, UnassignAircraftHold(_)).Times(0);
 
-            this->manager.AddAircraftToProximityHold("EZY234", "TIMBA");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("EZY234", "TIMBA"));
             this->manager.UnassignAircraftFromHold("EZY234", false);
             EXPECT_EQ(
                 this->manager.GetHoldingAircraft("EZY234")->GetNoHoldAssigned(),
@@ -179,7 +191,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, RemoveAircraftFromProximityRemovesAircraftEntirelyIfNoHolds)
         {
-            this->manager.AddAircraftToProximityHold("BAW123", "WILLO");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "WILLO"));
             this->manager.RemoveAircraftFromProximityHold("BAW123", "WILLO");
             EXPECT_EQ(this->manager.invalidAircraft, this->manager.GetHoldingAircraft("BAW123"));
             EXPECT_EQ(0, this->manager.GetAircraftForHold("WILLO").size());
@@ -187,13 +199,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldManagerTest, RemoveAircraftFromProximityRetainsAircraftIfHoldingSomewhere)
         {
-            this->manager.AddAircraftToProximityHold("BAW123", "MAY");
-            this->manager.AddAircraftToProximityHold("BAW123", "WILLO");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "MAY"));
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "WILLO"));
             this->manager.RemoveAircraftFromProximityHold("BAW123", "MAY");
 
-            std::set<std::string> expectedProximityHolds({"WILLO"});
             EXPECT_EQ("BAW123", this->manager.GetHoldingAircraft("BAW123")->GetCallsign());
-            EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds());
+            EXPECT_EQ(1, this->manager.GetHoldingAircraft("BAW123")->GetProximityHolds().size());
+            EXPECT_NE(nullptr, this->manager.GetHoldingAircraft("BAW123")->GetProximityHold("WILLO"));
             EXPECT_EQ(0, this->manager.GetAircraftForHold("MAY").size());
             EXPECT_EQ(1, this->manager.GetAircraftForHold("WILLO").size());
         }

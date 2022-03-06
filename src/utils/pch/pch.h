@@ -17,6 +17,7 @@
 #include <spdlog/include/spdlog/spdlog.h>
 #pragma warning(pop)
 
+#include <cstdint>
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <Mmsystem.h>
@@ -36,4 +37,6 @@
 #include <thread>
 
 // Custom headers
+#include "api/ApiRequestFacade.h"
+#include "continuable/continuable.hpp"
 #include "log/LoggerFunctions.h"
