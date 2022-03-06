@@ -1,8 +1,10 @@
 #include "tag/TagData.h"
+#include "wake/ArrivalWakeInterval.h"
 #include "wake/WakeCategory.h"
 #include "wake/WakeCategoryEventHandler.h"
 
 using UKControllerPlugin::Tag::TagData;
+using UKControllerPlugin::Wake::ArrivalWakeInterval;
 using UKControllerPlugin::Wake::DepartureWakeInterval;
 using UKControllerPlugin::Wake::WakeCategory;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
@@ -62,25 +64,50 @@ namespace UKControllerPluginTest {
             {
                 ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplan)))
                     .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
-                        1, "LM", "Lower Medium", 15, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+                        1,
+                        "LM",
+                        "Lower Medium",
+                        15,
+                        std::list<std::shared_ptr<DepartureWakeInterval>>{},
+                        std::list<std::shared_ptr<ArrivalWakeInterval>>{})));
 
                 ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplan2)))
                     .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
-                        1, "H", "Heavy", 20, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+                        1,
+                        "H",
+                        "Heavy",
+                        20,
+                        std::list<std::shared_ptr<DepartureWakeInterval>>{},
+                        std::list<std::shared_ptr<ArrivalWakeInterval>>{})));
 
                 ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplanLongType)))
                     .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
-                        1, "UM", "Upper Medium", 999, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+                        1,
+                        "UM",
+                        "Upper Medium",
+                        999,
+                        std::list<std::shared_ptr<DepartureWakeInterval>>{},
+                        std::list<std::shared_ptr<ArrivalWakeInterval>>{})));
 
                 ON_CALL(mapper, MapForFlightplan(testing::Ref(flightplan3))).WillByDefault(testing::Return(nullptr));
 
                 ON_CALL(recatMapper, MapForFlightplan(testing::Ref(flightplan)))
                     .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
-                        1, "D", "Category D", 15, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+                        1,
+                        "D",
+                        "Category D",
+                        15,
+                        std::list<std::shared_ptr<DepartureWakeInterval>>{},
+                        std::list<std::shared_ptr<ArrivalWakeInterval>>{})));
 
                 ON_CALL(recatMapper, MapForFlightplan(testing::Ref(flightplan2)))
                     .WillByDefault(testing::Return(std::make_shared<WakeCategory>(
-                        1, "B", "Category B", 15, std::list<std::shared_ptr<DepartureWakeInterval>>{})));
+                        1,
+                        "B",
+                        "Category B",
+                        15,
+                        std::list<std::shared_ptr<DepartureWakeInterval>>{},
+                        std::list<std::shared_ptr<ArrivalWakeInterval>>{})));
 
                 ON_CALL(recatMapper, MapForFlightplan(testing::Ref(flightplan3)))
                     .WillByDefault(testing::Return(nullptr));

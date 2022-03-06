@@ -6,6 +6,7 @@
 #include "HoldModule.h"
 #include "HoldingAircraft.h"
 #include "HoldingData.h"
+#include "ProximityHold.h"
 #include "PublishedHoldCollection.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -933,10 +934,13 @@ namespace UKControllerPlugin {
                                  clearedLevelDisplay.Y + clearedLevelDisplay.Height},
                                 false);
 
-                            // Time in hold, if it's assigned
-                            if ((*it)->GetAssignedHold() != (*it)->GetNoHoldAssigned()) {
-                                std::wstring timeString = GetTimeInHoldDisplayString((*it)->GetAssignedHoldEntryTime());
-                                graphics.DrawString(timeString, timeInHoldDisplay, this->dataBrush);
+                            // Time in hold, if it's assigned to this one
+                            if ((*it)->GetAssignedHold() == navaid.identifier) {
+                                auto holdProximity = (*it)->GetProximityHold(navaid.identifier);
+                                if (holdProximity != nullptr && holdProximity->HasEntered()) {
+                                    std::wstring timeString = GetTimeInHoldDisplayString(holdProximity->EnteredAt());
+                                    graphics.DrawString(timeString, timeInHoldDisplay, this->dataBrush);
+                                }
                             }
                         }
 

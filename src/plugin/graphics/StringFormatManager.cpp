@@ -8,12 +8,11 @@ namespace UKControllerPlugin::Graphics {
 
     auto StringFormatManager::Instance() -> StringFormatManager&
     {
-        static std::unique_ptr<StringFormatManager> instance;
-        if (instance == nullptr) {
-            instance = std::unique_ptr<StringFormatManager>(new StringFormatManager);
+        if (StringFormatManager::instance == nullptr) {
+            StringFormatManager::instance = std::unique_ptr<StringFormatManager>(new StringFormatManager);
         }
 
-        return *instance;
+        return *StringFormatManager::instance;
     }
 
     auto StringFormatManager::GetAligned(int id, Gdiplus::StringAlignment textAlign) -> const Gdiplus::StringFormat&
@@ -36,5 +35,10 @@ namespace UKControllerPlugin::Graphics {
     auto StringFormatManager::GetLeftAlign() -> const Gdiplus::StringFormat&
     {
         return this->GetAligned(2, Gdiplus::StringAlignment::StringAlignmentNear);
+    }
+
+    void StringFormatManager::UnsetInstance()
+    {
+        StringFormatManager::instance = nullptr;
     }
 } // namespace UKControllerPlugin::Graphics

@@ -17,6 +17,7 @@
 #include "json/json.hpp"
 #include "fmt/include/fmt/chrono.h"
 
+#include "api/ApiRequestFacade.h"
 #include "log/LoggerFunctions.h"
 #include "task/RunAsyncTask.h"
 #pragma warning(pop)

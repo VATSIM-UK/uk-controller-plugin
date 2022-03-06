@@ -3,6 +3,7 @@
 
 namespace UKControllerPlugin {
     namespace Euroscope {
+        class EuroScopeCFlightPlanInterface;
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
 
@@ -28,6 +29,9 @@ namespace UKControllerPlugin::Wake {
         void CallsignSelected(const std::string& callsign) override;
 
         private:
+        [[nodiscard]] auto
+        RelevantAirfieldForFlightplan(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> std::string;
+
         // Whos providing what, where
         const Ownership::AirfieldServiceProviderCollection& serviceProvisions;
 

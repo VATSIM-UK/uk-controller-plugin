@@ -1,6 +1,8 @@
+#include "wake/ArrivalWakeInterval.h"
 #include "wake/DepartureWakeInterval.h"
 #include "wake/WakeIntervalFormatter.h"
 
+using UKControllerPlugin::Wake::ArrivalWakeInterval;
 using UKControllerPlugin::Wake::DepartureWakeInterval;
 using UKControllerPlugin::Wake::FormatInterval;
 
@@ -18,7 +20,13 @@ namespace UKControllerPluginTest::Wake {
     TEST_F(WakeIntervalFormatterTest, ItReturnsUnitNauticalMiles)
     {
         DepartureWakeInterval interval{1, 60, "nm", true};
-        EXPECT_EQ(L"60 nm", FormatInterval(interval));
+        EXPECT_EQ(L"60.0 nm", FormatInterval(interval));
+    }
+
+    TEST_F(WakeIntervalFormatterTest, ItReturnsUnitDecimalNauticalMiles)
+    {
+        ArrivalWakeInterval interval{1, 60.5};
+        EXPECT_EQ(L"60.5 nm", FormatInterval(interval));
     }
 
     TEST_F(WakeIntervalFormatterTest, ItReturnsMinutes)

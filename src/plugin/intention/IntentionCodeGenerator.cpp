@@ -50,23 +50,6 @@ namespace UKControllerPlugin::IntentionCode {
                     continue;
                 }
 
-                // If they're cleared direct beyond their SEP, but not yet close to it
-                // then keep the intention code for now.
-                if (route.GetPointsAssignedIndex() > i && route.GetPointsCalculatedIndex() <= i) {
-                    this->SetExitIndexes(exitIndexes, i);
-                    if (this->FoundAllExitPoints(exitIndexes)) {
-                        return exitIndexes;
-                    }
-
-                    i++;
-                    continue;
-                }
-
-                // Otherwise, if they're past the exit fix, they're not going to exit.
-                if (route.GetPointDistanceInMinutes(i) == this->exitPointPassed) {
-                    return invalidExitPair;
-                }
-
                 this->SetExitIndexes(exitIndexes, i);
                 if (this->FoundAllExitPoints(exitIndexes)) {
                     return exitIndexes;

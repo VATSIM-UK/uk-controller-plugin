@@ -3,13 +3,15 @@
 #include "hold/HoldingAircraft.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldEventHandler.h"
+#include "hold/HoldingData.h"
+#include "hold/ProximityHold.h"
 #include "plugin/PopupMenuItem.h"
 #include "navaids/NavaidCollection.h"
-#include "hold/HoldingData.h"
 #include "push/PushEventSubscription.h"
 #include "push/PushEvent.h"
 #include "sectorfile/SectorFileCoordinates.h"
 #include "tag/TagData.h"
+#include "time/SystemClock.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -19,12 +21,15 @@ using ::testing::Throw;
 using UKControllerPlugin::Hold::HoldEventHandler;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::HoldManager;
+using UKControllerPlugin::Hold::ProximityHold;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::SectorFile::ParseSectorFileCoordinates;
 using UKControllerPlugin::Tag::TagData;
+using UKControllerPlugin::Time::SetTestNow;
+using UKControllerPlugin::Time::TimeNow;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
@@ -61,6 +66,8 @@ namespace UKControllerPluginTest {
                 ON_CALL(this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW123"));
 
                 this->manager.AssignAircraftToHold("BAW123", "TIMBA", false);
+
+                SetTestNow(TimeNow());
             }
 
             void CreateFlightplanRadarTargetPair(std::string callsign, EuroScopePlugIn::CPosition position)
@@ -116,7 +123,7 @@ namespace UKControllerPluginTest {
         TEST_F(HoldEventHandlerTest, ItReturnsNoHoldIfAircraftNotAssignedToHold)
         {
             this->manager.UnassignAircraftFromHold("BAW123", false);
-            this->manager.AddAircraftToProximityHold("BAW123", "TIMBA");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("BAW123", "TIMBA"));
             handler.SetTagItemData(this->tagData);
             EXPECT_EQ("NOHOLD", this->tagData.GetItemString());
         }
@@ -314,15 +321,62 @@ namespace UKControllerPluginTest {
 
             this->handler.TimedEventTrigger();
 
-            std::set<std::string> expectedProximityHoldsEzy234({"MAY", "OLEVI", "TIMBA"});
+            // EZY234
             EXPECT_EQ("EZY234", (*this->manager.GetAircraftForHold("TIMBA").cbegin())->GetCallsign());
             EXPECT_EQ("EZY234", (*this->manager.GetAircraftForHold("MAY").cbegin())->GetCallsign());
-            EXPECT_EQ(expectedProximityHoldsEzy234, this->manager.GetHoldingAircraft("EZY234")->GetProximityHolds());
 
-            std::set<std::string> expectedProximityHoldsRyr123({"MAY", "TIMBA"});
+            EXPECT_EQ(3, this->manager.GetHoldingAircraft("EZY234")->GetProximityHolds().size());
+            auto mayfieldEzy234 = this->manager.GetHoldingAircraft("EZY234")->GetProximityHold("MAY");
+            EXPECT_NE(nullptr, mayfieldEzy234);
+            EXPECT_EQ("EZY234", mayfieldEzy234->Callsign());
+            EXPECT_EQ("MAY", mayfieldEzy234->Navaid());
+            EXPECT_TRUE(mayfieldEzy234->HasEntered());
+
+            auto oleviEzy234 = this->manager.GetHoldingAircraft("EZY234")->GetProximityHold("OLEVI");
+            EXPECT_NE(nullptr, oleviEzy234);
+            EXPECT_EQ("EZY234", oleviEzy234->Callsign());
+            EXPECT_EQ("OLEVI", oleviEzy234->Navaid());
+            EXPECT_FALSE(oleviEzy234->HasEntered());
+
+            auto timbaEzy234 = this->manager.GetHoldingAircraft("EZY234")->GetProximityHold("TIMBA");
+            EXPECT_NE(nullptr, timbaEzy234);
+            EXPECT_EQ("EZY234", timbaEzy234->Callsign());
+            EXPECT_EQ("TIMBA", timbaEzy234->Navaid());
+            EXPECT_FALSE(oleviEzy234->HasEntered());
+
+            // RYR123
             EXPECT_EQ("RYR123", (*++this->manager.GetAircraftForHold("TIMBA").cbegin())->GetCallsign());
             EXPECT_EQ("RYR123", (*++this->manager.GetAircraftForHold("MAY").cbegin())->GetCallsign());
-            EXPECT_EQ(expectedProximityHoldsRyr123, this->manager.GetHoldingAircraft("RYR123")->GetProximityHolds());
+
+            EXPECT_EQ(2, this->manager.GetHoldingAircraft("RYR123")->GetProximityHolds().size());
+            auto mayfieldRyr123 = this->manager.GetHoldingAircraft("RYR123")->GetProximityHold("MAY");
+            EXPECT_NE(nullptr, mayfieldRyr123);
+            EXPECT_EQ("RYR123", mayfieldRyr123->Callsign());
+            EXPECT_EQ("MAY", mayfieldRyr123->Navaid());
+            EXPECT_FALSE(mayfieldRyr123->HasEntered());
+
+            auto timbaRyr123 = this->manager.GetHoldingAircraft("RYR123")->GetProximityHold("TIMBA");
+            EXPECT_NE(nullptr, timbaRyr123);
+            EXPECT_EQ("RYR123", timbaRyr123->Callsign());
+            EXPECT_EQ("TIMBA", timbaRyr123->Navaid());
+            EXPECT_TRUE(timbaRyr123->HasEntered());
+        }
+
+        TEST_F(HoldEventHandlerTest, ItDoesntResetTheHoldEnteredTimer)
+        {
+            this->manager.UnassignAircraftFromHold("BAW123", false);
+
+            // Aircraft is at TIMBA
+            this->CreateFlightplanRadarTargetPair(
+                "RYR123", ParseSectorFileCoordinates("N050.56.44.000", "E000.15.42.000"));
+
+            this->handler.TimedEventTrigger();
+
+            auto timeBefore = TimeNow();
+            EXPECT_EQ(timeBefore, this->manager.GetHoldingAircraft("RYR123")->GetProximityHold("TIMBA")->EnteredAt());
+            SetTestNow(TimeNow() + std::chrono::seconds(10));
+            this->handler.TimedEventTrigger();
+            EXPECT_EQ(timeBefore, this->manager.GetHoldingAircraft("RYR123")->GetProximityHold("TIMBA")->EnteredAt());
         }
 
         TEST_F(HoldEventHandlerTest, TimedEventRemovesAircraftFromProximityHoldsIfNotCloseEnough)
@@ -331,18 +385,16 @@ namespace UKControllerPluginTest {
             this->CreateFlightplanRadarTargetPair(
                 "RYR123", ParseSectorFileCoordinates("N050.57.18.900", "W001.20.42.200"));
 
-            this->manager.AddAircraftToProximityHold("RYR123", "OLEVI");
-            this->manager.AddAircraftToProximityHold("RYR123", "MAY");
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("RYR123", "OLEVI"));
+            this->manager.AddAircraftToProximityHold(std::make_shared<ProximityHold>("RYR123", "MAY"));
 
             this->handler.TimedEventTrigger();
 
-            std::set<std::string> expectedProximityHolds({
-                "SAM",
-            });
             EXPECT_EQ("RYR123", (*this->manager.GetAircraftForHold("SAM").cbegin())->GetCallsign());
             EXPECT_EQ(0, this->manager.GetAircraftForHold("OLEVI").size());
             EXPECT_EQ(0, this->manager.GetAircraftForHold("MAY").size());
-            EXPECT_EQ(expectedProximityHolds, this->manager.GetHoldingAircraft("RYR123")->GetProximityHolds());
+            EXPECT_EQ(1, this->manager.GetHoldingAircraft("RYR123")->GetProximityHolds().size());
+            EXPECT_NE(nullptr, this->manager.GetHoldingAircraft("RYR123")->GetProximityHold("SAM"));
         }
     } // namespace Hold
 } // namespace UKControllerPluginTest

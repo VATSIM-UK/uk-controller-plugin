@@ -22,6 +22,9 @@
 #include "spdlog/include/spdlog/logger.h"
 #include "spdlog/include/spdlog/sinks/basic_file_sink.h"
 #include "spdlog/include/spdlog/sinks/null_sink.h"
+#include "mock/MockApiRequestPerformer.h"
+#include "mock/MockApiRequestPerformerFactory.h"
+#include "mock/MockApiSettingsProvider.h"
 using std::max;
 using std::min;
 #include <gdiplus.h>

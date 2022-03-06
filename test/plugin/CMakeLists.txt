@@ -24,7 +24,7 @@ source_group("test\\airfield" FILES ${test__airfield})
 
 set(test__api
     "api/ApiConfigurationMenuItemTest.cpp"
-)
+        api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__bootstrap
@@ -178,7 +178,7 @@ set(test__hold
     "hold/MinStackHoldLevelRestrictionTest.cpp"
     "hold/PublishedHoldCollectionFactoryTest.cpp"
     "hold/PublishedHoldCollectionTest.cpp"
-        hold/AssignHoldCommandTest.cpp hold/AddToHoldCallsignProviderTest.cpp)
+        hold/AssignHoldCommandTest.cpp hold/AddToHoldCallsignProviderTest.cpp hold/CompareProximityHoldsTest.cpp hold/AircraftEnteredHoldingAreaEventHandlerTest.cpp hold/AircraftExitedHoldingAreaEventHandlerTest.cpp hold/ProximityHoldTest.cpp)
 source_group("test\\hold" FILES ${test__hold})
 
 set(test__initialaltitude
@@ -549,7 +549,7 @@ set(test__wake
     wake/WakeSchemeFactoryTest.cpp
     wake/WakeSchemeCollectionTest.cpp
     wake/WakeSchemeCollectionFactoryTest.cpp
-    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp)
+    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp wake/ArrivalWakeIntervalFactoryTest.cpp wake/ArrivalWakeIntervalTest.cpp wake/DepartureWakeIntervalTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
@@ -717,6 +717,7 @@ if(MSVC)
         $<$<CONFIG:Debug>:
             /DEBUG:FASTLINK;
             /INCREMENTAL
+            -flto=thin
         >
         $<$<CONFIG:Release>:
             /DEBUG;

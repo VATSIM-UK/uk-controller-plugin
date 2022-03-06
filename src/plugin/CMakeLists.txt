@@ -36,7 +36,9 @@ source_group("src\\airfield" FILES ${src__airfield})
 set(src__api
     "api/ApiConfigurationMenuItem.cpp"
     "api/ApiConfigurationMenuItem.h"
-)
+    api/FirstTimeApiConfigLoader.cpp api/FirstTimeApiConfigLoader.h
+    api/BootstrapApi.cpp api/BootstrapApi.h
+    api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h)
 source_group("src\\api" FILES ${src__api})
 
 set(src__bootstrap
@@ -339,7 +341,7 @@ set(src__hold
     "hold/PublishedHoldCollection.h"
     "hold/PublishedHoldCollectionFactory.cpp"
     "hold/PublishedHoldCollectionFactory.h"
-        hold/AssignHoldCommand.cpp hold/AssignHoldCommand.h hold/AddToHoldCallsignProvider.cpp hold/AddToHoldCallsignProvider.h)
+        hold/AssignHoldCommand.cpp hold/AssignHoldCommand.h hold/AddToHoldCallsignProvider.cpp hold/AddToHoldCallsignProvider.h hold/ProximityHold.h hold/CompareProximityHolds.cpp hold/CompareProximityHolds.h hold/AircraftEnteredHoldingAreaEventHandler.cpp hold/AircraftEnteredHoldingAreaEventHandler.h hold/AircraftExitedHoldingAreaEventHandler.cpp hold/AircraftExitedHoldingAreaEventHandler.h hold/ProximityHold.cpp)
 source_group("src\\hold" FILES ${src__hold})
 
 set(src__initialaltitude
@@ -891,7 +893,7 @@ set(src__wake
     wake/WakeScheme.cpp wake/WakeScheme.h
     wake/WakeCategory.cpp wake/WakeCategory.h
     wake/WakeCategoryFactory.cpp wake/WakeCategoryFactory.h
-    wake/DepartureWakeInterval.h
+    wake/DepartureWakeInterval.cpp wake/DepartureWakeInterval.h
     wake/DepartureWakeIntervalFactory.cpp wake/DepartureWakeIntervalFactory.h
     wake/WakeSchemeFactory.cpp wake/WakeSchemeFactory.h wake/WakeSchemeCollection.cpp
     wake/WakeSchemeCollection.h
@@ -900,7 +902,14 @@ set(src__wake
     wake/WakeCategoryMapperInterface.h
     wake/FlightplanWakeCategoryMapper.cpp wake/FlightplanWakeCategoryMapper.h
     wake/WakeCalculatorDisplay.cpp wake/WakeCalculatorDisplay.h
-    wake/WakeCalculatorOptions.cpp wake/WakeCalculatorOptions.h wake/LeadWakeCallsignProvider.cpp wake/LeadWakeCallsignProvider.h wake/FollowingWakeCallsignProvider.cpp wake/FollowingWakeCallsignProvider.h wake/WakeSchemeProvider.cpp wake/WakeSchemeProvider.h wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h)
+    wake/WakeCalculatorOptions.cpp wake/WakeCalculatorOptions.h
+    wake/LeadWakeCallsignProvider.cpp wake/LeadWakeCallsignProvider.h
+    wake/FollowingWakeCallsignProvider.cpp wake/FollowingWakeCallsignProvider.h
+    wake/WakeSchemeProvider.cpp wake/WakeSchemeProvider.h
+    wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h
+    wake/ArrivalWakeInterval.cpp wake/ArrivalWakeInterval.h
+    wake/ArrivalWakeIntervalFactory.cpp wake/ArrivalWakeIntervalFactory.h
+    wake/WakeIntervalInterface.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
@@ -1074,7 +1083,8 @@ if(MSVC)
         $<$<CONFIG:Debug>:
             /DEBUG:FASTLINK;
             /INCREMENTAL
-        >
+            -flto=thin
+            >
         $<$<CONFIG:Release>:
             /DEBUG;
             /OPT:REF;

@@ -32,30 +32,6 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     /*
-        Returns true if the intention code is still valid.
-    */
-    bool IntentionCodeCache::IntentionCodeValid(const std::string& callsign, EuroscopeExtractedRouteInterface& route)
-    {
-        if (!this->HasIntentionCodeForAircraft(callsign)) {
-            return false;
-        }
-
-        // If they don't have an exit point, or they're cleared direct beyond it but aren't yet close.
-        if (this->intentionCodeMap[callsign].exitPointIndex == IntentionCodeData::INVALID_EXIT_POINT ||
-            (route.GetPointsAssignedIndex() > this->intentionCodeMap[callsign].exitPointIndex &&
-             route.GetPointsCalculatedIndex() <= this->intentionCodeMap[callsign].exitPointIndex)) {
-            return true;
-        }
-
-        // If they've passed their exit point, then the intention code is no longer valid.
-        if (route.GetPointDistanceInMinutes(this->intentionCodeMap[callsign].exitPointIndex) == this->exitPointPassed) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /*
         Registers an aircraft with the cache.
     */
     void IntentionCodeCache::RegisterAircraft(const std::string& callsign, IntentionCodeData intentionCode)

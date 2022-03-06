@@ -17,8 +17,6 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         void Clear(void);
-        bool IntentionCodeValid(
-            const std::string& callsign, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route);
         std::string GetIntentionCodeForAircraft(const std::string& callsign) const;
         bool HasIntentionCodeForAircraft(const std::string& callsign) const;
         auto GetDataForAircraft(const std::string& callsign) const -> IntentionCodeData;

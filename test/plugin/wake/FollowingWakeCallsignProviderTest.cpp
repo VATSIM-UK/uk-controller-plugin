@@ -18,6 +18,7 @@ namespace UKControllerPluginTest::Wake {
 
             ON_CALL(*flightplan1, GetCallsign).WillByDefault(testing::Return("BAW123"));
             ON_CALL(*flightplan1, GetOrigin).WillByDefault(testing::Return("EGLL"));
+            ON_CALL(*flightplan1, GetDestination).WillByDefault(testing::Return("EGLL"));
 
             ON_CALL(*flightplan2, GetCallsign).WillByDefault(testing::Return("BAW456"));
 
@@ -42,6 +43,30 @@ namespace UKControllerPluginTest::Wake {
         plugin.AddAllFlightplansItem({flightplan2, radarTarget2});
 
         EXPECT_EQ(std::set<std::string>{"BAW456"}, callsignProvider.GetCallsigns());
+    }
+
+    TEST_F(FollowingWakeCallsignProviderTest, ItReturnsRelevantArrivalCallsigns)
+    {
+        options->ToggleArrivals();
+        ON_CALL(plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(flightplan1));
+
+        ON_CALL(*flightplan2, GetDestination).WillByDefault(testing::Return("EGLL"));
+        plugin.AddAllFlightplansItem({flightplan1, radarTarget1});
+        plugin.AddAllFlightplansItem({flightplan2, radarTarget2});
+
+        EXPECT_EQ(std::set<std::string>{"BAW456"}, callsignProvider.GetCallsigns());
+    }
+
+    TEST_F(FollowingWakeCallsignProviderTest, ItDoesntReturnWrongArrivalCallsigns)
+    {
+        options->ToggleArrivals();
+        ON_CALL(plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(flightplan1));
+
+        ON_CALL(*flightplan2, GetDestination).WillByDefault(testing::Return("EGKK"));
+        plugin.AddAllFlightplansItem({flightplan1, radarTarget1});
+        plugin.AddAllFlightplansItem({flightplan2, radarTarget2});
+
+        EXPECT_EQ(std::set<std::string>{}, callsignProvider.GetCallsigns());
     }
 
     TEST_F(FollowingWakeCallsignProviderTest, ItIgnoresCallsignIfOriginDoesntMatchLead)

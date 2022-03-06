@@ -16,4 +16,12 @@ namespace UKControllerPlugin::Time {
     {
         return fmt::format("{:%F %T}", fmt::gmtime(std::chrono::floor<std::chrono::seconds>(timePoint)));
     }
+
+    auto ParseIsoZuluString(const std::string& time) -> std::chrono::system_clock::time_point
+    {
+        std::chrono::system_clock::time_point timePoint;
+        std::istringstream inputStream(time);
+        inputStream >> std::chrono::parse(std::string{"%FT%T%Z"}, timePoint);
+        return static_cast<bool>(inputStream) ? timePoint : invalidTime;
+    }
 } // namespace UKControllerPlugin::Time

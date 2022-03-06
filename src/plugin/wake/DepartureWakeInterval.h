@@ -1,15 +1,18 @@
 #pragma once
+#include "WakeIntervalInterface.h"
 
 namespace UKControllerPlugin::Wake {
-    using DepartureWakeInterval = struct DepartureWakeInterval
+    class DepartureWakeInterval : public WakeIntervalInterface
     {
+        public:
         DepartureWakeInterval(
-            int subsequentWakeCategoryId, int intervalValue, std::string intervalUnit, bool intervalIsIntermediate)
-            : subsequentWakeCategoryId(subsequentWakeCategoryId), intervalValue(intervalValue),
-              intervalUnit(intervalUnit), intervalIsIntermediate(intervalIsIntermediate)
-        {
-        }
+            int subsequentWakeCategoryId, int intervalValue, std::string intervalUnit, bool intervalIsIntermediate);
+        auto SubsequentCategory() const -> int;
+        auto Value() const -> double override;
+        auto Unit() const -> const std::string& override;
+        auto Intermediate() const -> bool;
 
+        private:
         // The wake category id of the subsequent departing aircraft
         int subsequentWakeCategoryId;
 

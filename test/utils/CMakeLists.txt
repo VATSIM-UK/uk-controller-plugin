@@ -4,13 +4,25 @@ set(PROJECT_NAME UKControllerPluginUtilsTest)
 # Source groups
 ################################################################################
 set(test__api
-    "api/ApiAuthCheckerTest.cpp"
     "api/ApiHelperTest.cpp"
     "api/ApiRequestBuilderTest.cpp"
     "api/ApiResponseFactoryTest.cpp"
     "api/ApiResponseTest.cpp"
     "api/ApiResponseValidatorTest.cpp"
-)
+    api/ApiBootstrapTest.cpp
+    api/ApiCurlRequestFactoryTest.cpp
+    api/ApiFactoryTest.cpp
+    api/ApiHeaderApplicatorTest.cpp
+    api/ApiRequestTest.cpp
+    api/ApiRequestDataTest.cpp
+    api/ApiRequestExceptionTest.cpp
+    api/ApiRequestFactoryTest.cpp
+    api/ApiSettingsTest.cpp
+    api/ApiUrlBuilderTest.cpp
+    api/ConfigApiSettingsProviderTest.cpp
+    api/CurlApiRequestPerformerTest.cpp
+    api/CurlApiRequestPerformerFactoryTest.cpp
+    api/ResponseTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl
@@ -41,10 +53,19 @@ set(test__helper
 )
 source_group("test\\helper" FILES ${test__helper})
 
+set(test__http
+        "helper/HelperFunctionsTest.cpp"
+        http/HttpMethodTest.cpp http/HttpStatusCodeTest.cpp)
+source_group("test\\http" FILES ${test__http})
+
 set(test__log
     "log/LoggerBootstrapTest.cpp"
 )
 source_group("test\\log" FILES ${test__log})
+
+set(test__mock
+        mock/MockSettingProvider.h)
+source_group("test\\mock" FILES ${test__mock})
 
 set(test__pch
     "pch/pch.cpp"
@@ -55,7 +76,7 @@ source_group("test\\pch" FILES ${test__pch})
 set(test__setting
     "setting/SettingRepositoryFactoryTest.cpp"
     "setting/SettingRepositoryTest.cpp"
-)
+        setting/JsonFileSettingProviderTest.cpp)
 source_group("test\\setting" FILES ${test__setting})
 
 set(test__squawk
@@ -63,10 +84,14 @@ set(test__squawk
 )
 source_group("test\\squawk" FILES ${test__squawk})
 
+set(test__string
+        string/StringTrimFunctionTest.cpp)
+source_group("test\\string" FILES ${test__string})
+
 set(test__update
     "update/UpdateBinariesTest.cpp"
     "update/CheckDevelopmentVersionTest.cpp"
-)
+        update/BootstrapReleaseChannelSettingsTest.cpp)
 source_group("test\\update" FILES ${test__update})
 
 set(ALL_FILES
@@ -76,10 +101,13 @@ set(ALL_FILES
     ${test__dialog}
     ${test__duplicate}
     ${test__helper}
+    ${test__http}
     ${test__log}
+    ${test__mock}
     ${test__pch}
     ${test__setting}
     ${test__squawk}
+    ${test__string}
     ${test__update}
 )
 
@@ -134,6 +162,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/continuable/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/function2/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/spdlog/include"
 )
 
@@ -244,6 +274,9 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "crypt32;"
     "Winmm;"
     "dbghelp"
+    "Ws2_32;"
+    "Wldap32;"
+    "normaliz;"
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 

@@ -1,6 +1,6 @@
 #include "bootstrap/LocateApiSettings.h"
 #include "setting/SettingRepository.h"
-#include "setting/SettingValue.h"
+#include "setting/Setting.h"
 #include "helper/Matchers.h"
 
 using testing::_;

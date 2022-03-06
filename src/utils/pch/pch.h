@@ -18,6 +18,7 @@
 #include <fmt/include/fmt/chrono.h>
 #pragma warning(pop)
 
+#include <cstdint>
 #include <CommCtrl.h>
 #include <CommDlg.h>
 #include <codecvt>
@@ -39,4 +40,6 @@
 #include <thread>
 
 // Custom headers
+#include "api/ApiRequestFacade.h"
+#include "continuable/continuable.hpp"
 #include "log/LoggerFunctions.h"

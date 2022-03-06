@@ -16,6 +16,7 @@ namespace UKControllerPlugin {
         class GdiGraphicsWrapper : public GdiGraphicsInterface
         {
             public:
+            ~GdiGraphicsWrapper();
             void DrawRect(const Gdiplus::RectF& area, const Gdiplus::Pen& pen) override;
             void DrawRect(const Gdiplus::Rect& area, const Gdiplus::Pen& pen) override;
             void DrawRect(const RECT& area, const Gdiplus::Pen& pen) override;

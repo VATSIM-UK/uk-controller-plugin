@@ -4,13 +4,12 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
+    } // namespace Bootstrap
     namespace RadarScreen {
         class ConfigurableDisplayCollection;
-    }  // namespace RadarScreen
-}  // namespace UKControllerPlugin
+    } // namespace RadarScreen
+} // namespace UKControllerPlugin
 // END
-
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -21,11 +20,7 @@ namespace UKControllerPlugin {
         class HelperBootstrap
         {
             public:
-                static void Bootstrap(UKControllerPlugin::Bootstrap::PersistenceContainer & persistence);
-                static void BootstrapApiConfigurationItem(
-                    const UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
-                    UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays
-                );
+            static void Bootstrap(UKControllerPlugin::Bootstrap::PersistenceContainer& persistence);
         };
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
