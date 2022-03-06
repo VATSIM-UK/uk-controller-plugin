@@ -1,5 +1,20 @@
 # UK Controller Plugin Changelog
 
+# [4.4.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.3.0...4.4.0) (2022-03-06)
+
+
+### Bug Fixes
+
+* **async:** Properly shutdown async tasks on unload ([d58c32b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d58c32b38d0e137b62ff4687bdeb83c3fb3c624f))
+* **graphics:** Crash on shutdown ([d0ddd23](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d0ddd2384274297ccb21779a48cb53a73a7654a0))
+* **hold:** Hold display breaking when aircraft not in proximity ([d51fc06](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d51fc063532b0cf2b1f9d39402b1ea904cafdb0f))
+* **updater:** Updater not respecting selected release channel ([3b5865d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3b5865ded2428e14b9b25c55e222a1e14fb02698))
+
+
+### Features
+
+* **holds:** Hold timer is triggered by entry time ([f6925aa](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f6925aa2c68744e43db6e4c92f9a2718c26882a9)), closes [#416](https://github.com/VATSIM-UK/uk-controller-plugin/issues/416)
+
 # [4.4.0-beta.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0-beta.2...4.4.0-beta.3) (2022-03-06)
 
 
