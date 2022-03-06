@@ -57,6 +57,7 @@
 #include "squawk/SquawkModule.h"
 #include "srd/SrdModule.h"
 #include "stands/StandModule.h"
+#include "task/RunAsyncTask.h"
 #include "task/TaskRunnerInterface.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
@@ -98,6 +99,7 @@ namespace UKControllerPlugin {
     {
         this->container->apiFactory->RequestFactory().AwaitRequestCompletion();
         this->container->taskRunner.reset();
+        UnsetTaskRunner();
         this->container.reset();
         this->duplicatePlugin.reset();
 

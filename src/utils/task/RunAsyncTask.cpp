@@ -22,3 +22,8 @@ void SetTaskRunner(std::shared_ptr<TaskRunnerInterface> runner)
 
     taskRunner = std::move(runner);
 }
+
+void UnsetTaskRunner()
+{
+    taskRunner = nullptr;
+}
