@@ -22,4 +22,11 @@ namespace UKControllerPluginTest::Approach {
         display.LeftClick(radarScreen, 1, "collapseButton", {}, {});
         EXPECT_FALSE(display.ContentCollapsed());
     }
+
+    TEST_F(ApproachSequencerDisplayTest, ItCanBeClosed)
+    {
+        EXPECT_TRUE(display.IsVisible());
+        display.LeftClick(radarScreen, 1, "closeButton", {}, {});
+        EXPECT_FALSE(display.IsVisible());
+    }
 } // namespace UKControllerPluginTest::Approach
