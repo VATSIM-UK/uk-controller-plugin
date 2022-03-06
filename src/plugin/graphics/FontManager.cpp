@@ -4,15 +4,14 @@ namespace UKControllerPlugin::Graphics {
 
     auto FontManager::Instance() -> FontManager&
     {
-        static std::unique_ptr<FontManager> instance;
-        if (instance == nullptr) {
+        if (FontManager::instance == nullptr) {
             auto euroscopeFontFamily = std::make_unique<Gdiplus::FontFamily>(L"EuroScope");
-            instance = std::unique_ptr<FontManager>(new FontManager(
+            FontManager::instance = std::unique_ptr<FontManager>(new FontManager(
                 euroscopeFontFamily->IsAvailable() ? std::move(euroscopeFontFamily)
                                                    : std::make_unique<Gdiplus::FontFamily>(L"Segoe UI")));
         }
 
-        return *instance;
+        return *FontManager::instance;
     }
 
     auto FontManager::GetDefault() -> const Gdiplus::Font&
@@ -31,5 +30,10 @@ namespace UKControllerPlugin::Graphics {
 
     FontManager::FontManager(std::unique_ptr<Gdiplus::FontFamily> family) : family(std::move(family))
     {
+    }
+
+    void FontManager::UnsetInstance()
+    {
+        FontManager::instance = nullptr;
     }
 } // namespace UKControllerPlugin::Graphics

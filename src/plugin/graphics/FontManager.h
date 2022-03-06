@@ -11,10 +11,11 @@ namespace UKControllerPlugin::Graphics {
         [[nodiscard]] static auto Instance() -> FontManager&;
         [[nodiscard]] auto Get(int size) -> const Gdiplus::Font&;
         [[nodiscard]] auto GetDefault() -> const Gdiplus::Font&;
+        static void UnsetInstance();
 
         protected:
         FontManager(std::unique_ptr<Gdiplus::FontFamily> family);
-        static std::unique_ptr<FontManager> instance;
+        inline static std::unique_ptr<FontManager> instance;
 
         private:
         // The font family
