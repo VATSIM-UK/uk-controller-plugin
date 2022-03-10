@@ -79,21 +79,32 @@ namespace UKControllerPlugin::Approach {
 
         // Get all the iterators
         auto aircraft = *aircraftIterator;
-        auto nextAircraftIterator = this->AircraftMatchingCallsign(aircraft->Next()->Callsign());
-        auto previousAircraftIterator = this->AircraftMatchingCallsign(aircraft->Previous()->Callsign());
+        auto nextAircraftIterator = aircraft->Next() ? this->AircraftMatchingCallsign(aircraft->Next()->Callsign())
+                                                     : this->sequencedAircraft.cend();
+        auto previousAircraftIterator = aircraft->Previous()
+                                            ? this->AircraftMatchingCallsign(aircraft->Previous()->Callsign())
+                                            : this->sequencedAircraft.cend();
 
         // Sort out the relationship between the two aircraft being switched
-        auto previousAircraft = *previousAircraftIterator;
-        if (previousAircraft->Previous()) {
-            previousAircraft->Previous()->Next(aircraft);
+        auto previousAircraft =
+            previousAircraftIterator == sequencedAircraft.cend() ? nullptr : *previousAircraftIterator;
+        if (previousAircraft) {
+            if (previousAircraft->Previous()) {
+                previousAircraft->Previous()->Next(aircraft);
+            }
+
+            aircraft->Previous(previousAircraft->Previous());
+            previousAircraft->Previous(aircraft);
         }
-        aircraft->Previous(previousAircraft->Previous());
+
         aircraft->Next(previousAircraft);
-        previousAircraft->Previous(aircraft);
 
         // Sort out the relationship between the aircraft thats moving down and the "next aircraft"
         auto nextAircraft = nextAircraftIterator != this->sequencedAircraft.cend() ? *nextAircraftIterator : nullptr;
-        nextAircraft->Previous(previousAircraft);
+        if (nextAircraft) {
+            nextAircraft->Previous(previousAircraft);
+        }
+
         previousAircraft->Next(nextAircraft);
 
         // Re-sequence the list
@@ -110,22 +121,29 @@ namespace UKControllerPlugin::Approach {
 
         // Get all the iterators
         auto aircraft = *aircraftIterator;
-        auto nextAircraftIterator = this->AircraftMatchingCallsign(aircraft->Next()->Callsign());
-        auto previousAircraftIterator = this->AircraftMatchingCallsign(aircraft->Previous()->Callsign());
+        auto nextAircraftIterator = aircraft->Next() ? this->AircraftMatchingCallsign(aircraft->Next()->Callsign())
+                                                     : this->sequencedAircraft.cend();
+        auto previousAircraftIterator = aircraft->Previous()
+                                            ? this->AircraftMatchingCallsign(aircraft->Previous()->Callsign())
+                                            : this->sequencedAircraft.cend();
 
         // Sort out the relationship between the two aircraft being switched
         auto nextAircraft = *nextAircraftIterator;
-        if (nextAircraft->Next()) {
-            nextAircraft->Next()->Previous(aircraft);
+        if (nextAircraft) {
+            if (nextAircraft->Next()) {
+                nextAircraft->Next()->Previous(aircraft);
+            }
+            aircraft->Next(nextAircraft->Next());
+            nextAircraft->Next(aircraft);
         }
-        aircraft->Next(nextAircraft->Next());
         aircraft->Previous(nextAircraft);
-        nextAircraft->Next(aircraft);
 
         // Sort out the relationship between the aircraft thats moving up and the "previous aircraft"
         auto previousAircraft =
             previousAircraftIterator != this->sequencedAircraft.cend() ? *previousAircraftIterator : nullptr;
-        previousAircraft->Next(nextAircraft);
+        if (previousAircraft) {
+            previousAircraft->Next(nextAircraft);
+        }
         nextAircraft->Previous(previousAircraft);
 
         // Re-sequence the list

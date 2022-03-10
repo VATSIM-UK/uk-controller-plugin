@@ -16,6 +16,8 @@ namespace UKControllerPlugin::Approach {
             const std::string& callsign,
             ApproachSequencingMode mode,
             const std::string& insertBefore);
+        void MoveAircraftUp(const std::string& airfield, const std::string& callsign);
+        void MoveAircraftDown(const std::string& airfield, const std::string& callsign);
         [[nodiscard]] auto GetForAirfield(const std::string& airfield) -> const ApproachSequence&;
         void RemoveAircraftFromSequences(const std::string& callsign);
 

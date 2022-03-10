@@ -50,4 +50,14 @@ namespace UKControllerPlugin::Approach {
             }
         }
     }
+
+    void ApproachSequencer::MoveAircraftDown(const std::string& airfield, const std::string& callsign)
+    {
+        GetOrCreate(airfield).MoveAircraftDown(callsign);
+    }
+
+    void ApproachSequencer::MoveAircraftUp(const std::string& airfield, const std::string& callsign)
+    {
+        GetOrCreate(airfield).MoveAircraftUp(callsign);
+    }
 } // namespace UKControllerPlugin::Approach

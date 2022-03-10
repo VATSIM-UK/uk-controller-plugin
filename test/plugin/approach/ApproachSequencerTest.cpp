@@ -68,4 +68,22 @@ namespace UKControllerPluginTest::Approach {
         sequencer.RemoveAircraftFromSequences("BAW123");
         EXPECT_EQ(nullptr, sequencer.GetForAirfield("EGKK").First());
     }
+
+    TEST_F(ApproachSequencerTest, ItMovesAircraftUp)
+    {
+        sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
+        sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::WakeTurbulence);
+        sequencer.MoveAircraftUp("EGKK", "BAW456");
+
+        EXPECT_EQ(std::list<std::string>({"BAW456", "BAW123"}), sequencer.GetForAirfield("EGKK").Callsigns());
+    }
+
+    TEST_F(ApproachSequencerTest, ItMovesAircraftDown)
+    {
+        sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
+        sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::WakeTurbulence);
+        sequencer.MoveAircraftDown("EGKK", "BAW123");
+
+        EXPECT_EQ(std::list<std::string>({"BAW456", "BAW123"}), sequencer.GetForAirfield("EGKK").Callsigns());
+    }
 } // namespace UKControllerPluginTest::Approach
