@@ -126,7 +126,7 @@ set(ROOT_NAMESPACE UKControllerPluginTest)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 ################################################################################
 # Output directory
 ################################################################################
@@ -164,6 +164,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/continuable/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/function2/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/spdlog/include"
 )
 
 ################################################################################
@@ -209,7 +210,7 @@ if(MSVC)
             /Gy;
             -Zm120
         >
-        /std:c++17;
+        /std:c++20;
         /sdl;
         /W4;
         /WX;

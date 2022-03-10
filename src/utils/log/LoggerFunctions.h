@@ -1,5 +1,9 @@
 #pragma once
 
+namespace spdlog {
+    class logger;
+} // namespace spdlog
+
 void LogCritical(std::string message);
 void LogDebug(std::string message);
 void LogError(std::string message);

@@ -21,3 +21,5 @@
 #include "../../testingutils/mock/MockDialogProvider.h"
 #include "../../testingutils/mock/MockSettingRepository.h"
 #include "../../testingutils/mock/MockWinApi.h"
+
+#include <chrono>

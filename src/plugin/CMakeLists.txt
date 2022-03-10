@@ -1023,7 +1023,7 @@ string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
     $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 ################################################################################
 # Include directories
 ################################################################################
@@ -1079,7 +1079,7 @@ if(MSVC)
             /Oi;
             /Gy
         >
-        /std:c++17;
+        /std:c++20;
         /sdl;
         /W4;
         /WX;

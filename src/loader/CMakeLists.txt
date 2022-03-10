@@ -34,7 +34,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     VS_GLOBAL_KEYWORD "Win32Proj"
 )
 
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 ################################################################################
 # Target name
 ################################################################################
@@ -103,7 +103,7 @@ if(MSVC)
             /Gy
         >
         /permissive-;
-        /std:c++17;
+        /std:c++20;
         /sdl;
         /W4;
         /WX;
