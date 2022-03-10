@@ -51,6 +51,11 @@ namespace UKControllerPluginTest::Time {
         EXPECT_EQ("2021-11-12 13:14:15", ToDateTimeString(ParseTimeString("2021-11-12 13:14:15")));
     }
 
+    TEST_F(ParseTimeStringsTest, ItConvertsDaylightSavingsTimePointsToString)
+    {
+        EXPECT_EQ("2021-06-12 13:14:15", ToDateTimeString(ParseTimeString("2021-06-12 13:14:15")));
+    }
+
     TEST_F(ParseTimeStringsTest, ItReturnsParsesCorrectIso8601ZuluTimeSingleDigits)
     {
         EXPECT_EQ(this->GetFromTimeNumbers(2021, 1, 9, 1, 2, 3), ParseIsoZuluString("2021-01-09T01:02:03.000000Z"));

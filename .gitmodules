@@ -7,3 +7,9 @@
 [submodule "third_party/function2"]
 	path = third_party/function2
 	url = https://github.com/Naios/function2.git
+[submodule "third_party/fmt"]
+	path = third_party/fmt
+	url = git@github.com:fmtlib/fmt.git
+[submodule "third_party/spdlog"]
+	path = third_party/spdlog
+	url = git@github.com:gabime/spdlog.git

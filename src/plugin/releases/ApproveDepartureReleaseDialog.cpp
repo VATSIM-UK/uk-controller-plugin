@@ -122,9 +122,9 @@ namespace UKControllerPlugin {
 
             // Min time is now
             auto currentTime = Time::TimeNow();
-            auto dp = date::floor<date::days>(currentTime);
-            auto ymd = date::year_month_day(dp);
-            auto time = date::make_time(std::chrono::duration_cast<std::chrono::minutes>(currentTime - dp));
+            auto dp = std::chrono::floor<std::chrono::days>(currentTime);
+            auto ymd = std::chrono::year_month_day(dp);
+            auto time = std::chrono::hh_mm_ss(std::chrono::duration_cast<std::chrono::minutes>(currentTime - dp));
             SYSTEMTIME minTime;
             minTime.wYear = static_cast<int>(ymd.year());
             minTime.wMonth = static_cast<unsigned>(ymd.month());
@@ -146,9 +146,9 @@ namespace UKControllerPlugin {
 
             // Max time is 10 minutes from now
             auto timeInTenMinutes = Time::TimeNow() + std::chrono::minutes(10);
-            auto dpTenMinutes = date::floor<date::days>(timeInTenMinutes);
-            auto timeTenMinutes =
-                date::make_time(std::chrono::duration_cast<std::chrono::minutes>(timeInTenMinutes - dpTenMinutes));
+            auto dpTenMinutes = std::chrono::floor<std::chrono::days>(timeInTenMinutes);
+            auto timeTenMinutes = std::chrono::hh_mm_ss(
+                std::chrono::duration_cast<std::chrono::minutes>(timeInTenMinutes - dpTenMinutes));
             SYSTEMTIME maxTime;
             maxTime.wYear = static_cast<int>(ymd.year());
             maxTime.wMonth = static_cast<unsigned>(ymd.month());
