@@ -1,16 +1,20 @@
 #include "approach/ApproachSequencerDisplay.h"
+#include "approach/ApproachSequencerDisplayOptions.h"
 
 using UKControllerPlugin::Approach::ApproachSequencerDisplay;
+using UKControllerPlugin::Approach::ApproachSequencerDisplayOptions;
 
 namespace UKControllerPluginTest::Approach {
     class ApproachSequencerDisplayTest : public testing::Test
     {
         public:
-        ApproachSequencerDisplayTest() : display(55)
+        ApproachSequencerDisplayTest()
+            : options(std::make_shared<ApproachSequencerDisplayOptions>()), display(options, 55)
         {
         }
 
         testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
+        std::shared_ptr<ApproachSequencerDisplayOptions> options;
         ApproachSequencerDisplay display;
     };
 
