@@ -48,6 +48,8 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(thirdAircraft, secondAircraft->Next());
         EXPECT_EQ(secondAircraft, thirdAircraft->Previous());
         EXPECT_EQ(nullptr, thirdAircraft->Next());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456", "BAW789"}), sequencer.Callsigns());
     }
 
     TEST_F(ApproachSequenceTest, ItAddsAircraftBeforeAnotherInSequenceIfSequenceEmpty)
@@ -76,6 +78,8 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(thirdAircraft, secondAircraft->Next());
         EXPECT_EQ(secondAircraft, thirdAircraft->Previous());
         EXPECT_EQ(nullptr, thirdAircraft->Next());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456", "BAW789"}), sequencer.Callsigns());
     }
 
     TEST_F(ApproachSequenceTest, ItAddsAircraftBeforeAnotherInSequence)
@@ -106,6 +110,8 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(firstAircraft, thirdAircraft->Next());
         EXPECT_EQ(thirdAircraft, firstAircraft->Previous());
         EXPECT_EQ(nullptr, firstAircraft->Next());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW456", "BAW789", "BAW123"}), sequencer.Callsigns());
     }
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftSingleSequence)
@@ -113,6 +119,8 @@ namespace UKControllerPluginTest::Approach {
         sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
         sequencer.RemoveAircraft("BAW123");
         EXPECT_EQ(nullptr, sequencer.Get("BAW123"));
+        
+        EXPECT_EQ(std::list<std::string>({}), sequencer.Callsigns());
     }
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftMidSequence)
@@ -125,6 +133,8 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(nullptr, sequencer.Get("BAW456"));
         EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW123")->Next());
         EXPECT_EQ(sequencer.Get("BAW123"), sequencer.Get("BAW789")->Previous());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW789"}), sequencer.Callsigns());
     }
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftEndOfSequence)
@@ -136,6 +146,8 @@ namespace UKControllerPluginTest::Approach {
         sequencer.RemoveAircraft("BAW789");
         EXPECT_EQ(nullptr, sequencer.Get("BAW789"));
         EXPECT_EQ(nullptr, sequencer.Get("BAW456")->Next());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456"}), sequencer.Callsigns());
     }
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftStartOfSequence)
@@ -148,6 +160,8 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(nullptr, sequencer.Get("BAW123"));
         EXPECT_EQ(sequencer.Get("BAW456"), sequencer.First());
         EXPECT_EQ(nullptr, sequencer.Get("BAW456")->Previous());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW456", "BAW789"}), sequencer.Callsigns());
     }
 
     TEST_F(ApproachSequenceTest, ItHandlesRemoveAircraftNotInSequence)
@@ -157,5 +171,144 @@ namespace UKControllerPluginTest::Approach {
         sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
 
         EXPECT_NO_THROW(sequencer.RemoveAircraft("BAW999"));
+    }
+    
+    TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftUpSequenceIfTop)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftUp("BAW123");
+        
+        EXPECT_EQ("BAW123", sequencer.First()->Callsign());
+        EXPECT_EQ(nullptr, sequencer.First()->Previous());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.First()->Next());
+        EXPECT_EQ(sequencer.First(), sequencer.Get("BAW456")->Previous());
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456", "BAW789", "BAW112"}), sequencer.Callsigns());
+    }
+    
+    TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftUpSequenceIfNotInSequence)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftUp("BAW111");
+        
+        EXPECT_EQ("BAW123", sequencer.First()->Callsign());
+        EXPECT_EQ(nullptr, sequencer.First()->Previous());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.First()->Next());
+        EXPECT_EQ(sequencer.First(), sequencer.Get("BAW456")->Previous());
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456", "BAW789", "BAW112"}), sequencer.Callsigns());
+    }
+    
+    TEST_F(ApproachSequenceTest, ItMovesSecondInSequenceToTop)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftUp("BAW456");
+        
+        EXPECT_EQ("BAW456", sequencer.First()->Callsign());
+        EXPECT_EQ(nullptr, sequencer.First()->Previous());
+        EXPECT_EQ(sequencer.Get("BAW123"), sequencer.First()->Next());
+        
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.Get("BAW123")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW123")->Next());
+        EXPECT_EQ(sequencer.Get("BAW123"), sequencer.Get("BAW789")->Previous());
+        EXPECT_EQ(std::list<std::string>({"BAW456", "BAW123", "BAW789", "BAW112"}), sequencer.Callsigns());
+    }
+    
+    TEST_F(ApproachSequenceTest, ItMovesThirdInSequenceUp)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftUp("BAW789");
+        
+        EXPECT_EQ("BAW123", sequencer.First()->Callsign());
+        EXPECT_EQ(nullptr, sequencer.First()->Previous());
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.First()->Next());
+        
+        EXPECT_EQ(sequencer.Get("BAW123"), sequencer.Get("BAW789")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.Get("BAW789")->Next());
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW456")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW112"), sequencer.Get("BAW456")->Next());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.Get("BAW112")->Previous());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW789", "BAW456", "BAW112"}), sequencer.Callsigns());
+    }
+    
+    TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftDownSequenceIfBottom)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftDown("BAW112");
+        
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW112")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW112"), sequencer.Get("BAW789")->Next());
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456", "BAW789", "BAW112"}), sequencer.Callsigns());
+    }
+    
+    TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftDownSequenceIfNotInSequence)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftDown("BAW111");
+        
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW112")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW112"), sequencer.Get("BAW789")->Next());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456", "BAW789", "BAW112"}), sequencer.Callsigns());
+    }
+    
+    TEST_F(ApproachSequenceTest, ItMovesSecondToLastInSequenceToBottom)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftDown("BAW789");
+        
+        EXPECT_EQ("BAW123", sequencer.First()->Callsign());
+        EXPECT_EQ(nullptr, sequencer.First()->Previous());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.First()->Next());
+        
+        EXPECT_EQ(nullptr, sequencer.Get("BAW789")->Next());
+        EXPECT_EQ(sequencer.Get("BAW112"), sequencer.Get("BAW789")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW112")->Next());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.Get("BAW112")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW112"), sequencer.Get("BAW456")->Next());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW456", "BAW112", "BAW789"}), sequencer.Callsigns());
+    }
+    
+    TEST_F(ApproachSequenceTest, ItMovesThirdToLastInSequenceDown)
+    {
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.MoveAircraftDown("BAW456");
+        
+        EXPECT_EQ("BAW123", sequencer.First()->Callsign());
+        EXPECT_EQ(nullptr, sequencer.First()->Previous());
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.First()->Next());
+        
+        EXPECT_EQ(sequencer.Get("BAW123"), sequencer.Get("BAW789")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW123")->Next());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.Get("BAW789")->Next());
+        EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW456")->Previous());
+        EXPECT_EQ(sequencer.Get("BAW112"), sequencer.Get("BAW456")->Next());
+        EXPECT_EQ(sequencer.Get("BAW456"), sequencer.Get("BAW112")->Previous());
+        
+        EXPECT_EQ(std::list<std::string>({"BAW123", "BAW789", "BAW456", "BAW112"}), sequencer.Callsigns());
     }
 } // namespace UKControllerPluginTest::Approach

@@ -70,6 +70,79 @@ namespace UKControllerPlugin::Approach {
         return this->sequencedAircraft.empty() ? nullptr : this->sequencedAircraft.front();
     }
 
+    void ApproachSequence::MoveAircraftUp(const std::string& callsign)
+    {
+        auto aircraftIterator = this->AircraftMatchingCallsign(callsign);
+        if (aircraftIterator == this->sequencedAircraft.cend() || (*aircraftIterator)->Previous() == nullptr) {
+            return;
+        }
+
+        // Get all the iterators
+        auto aircraft = *aircraftIterator;
+        auto nextAircraftIterator = this->AircraftMatchingCallsign(aircraft->Next()->Callsign());
+        auto previousAircraftIterator = this->AircraftMatchingCallsign(aircraft->Previous()->Callsign());
+
+        // Sort out the relationship between the two aircraft being switched
+        auto previousAircraft = *previousAircraftIterator;
+        if (previousAircraft->Previous()) {
+            previousAircraft->Previous()->Next(aircraft);
+        }
+        aircraft->Previous(previousAircraft->Previous());
+        aircraft->Next(previousAircraft);
+        previousAircraft->Previous(aircraft);
+
+        // Sort out the relationship between the aircraft thats moving down and the "next aircraft"
+        auto nextAircraft = nextAircraftIterator != this->sequencedAircraft.cend() ? *nextAircraftIterator : nullptr;
+        nextAircraft->Previous(previousAircraft);
+        previousAircraft->Next(nextAircraft);
+
+        // Re-sequence the list
+        this->sequencedAircraft.erase(aircraftIterator);
+        this->sequencedAircraft.insert(previousAircraftIterator, aircraft);
+    }
+
+    void ApproachSequence::MoveAircraftDown(const std::string& callsign)
+    {
+        auto aircraftIterator = this->AircraftMatchingCallsign(callsign);
+        if (aircraftIterator == this->sequencedAircraft.cend() || (*aircraftIterator)->Next() == nullptr) {
+            return;
+        }
+
+        // Get all the iterators
+        auto aircraft = *aircraftIterator;
+        auto nextAircraftIterator = this->AircraftMatchingCallsign(aircraft->Next()->Callsign());
+        auto previousAircraftIterator = this->AircraftMatchingCallsign(aircraft->Previous()->Callsign());
+
+        // Sort out the relationship between the two aircraft being switched
+        auto nextAircraft = *nextAircraftIterator;
+        if (nextAircraft->Next()) {
+            nextAircraft->Next()->Previous(aircraft);
+        }
+        aircraft->Next(nextAircraft->Next());
+        aircraft->Previous(nextAircraft);
+        nextAircraft->Next(aircraft);
+
+        // Sort out the relationship between the aircraft thats moving up and the "previous aircraft"
+        auto previousAircraft =
+            previousAircraftIterator != this->sequencedAircraft.cend() ? *previousAircraftIterator : nullptr;
+        previousAircraft->Next(nextAircraft);
+        nextAircraft->Previous(previousAircraft);
+
+        // Re-sequence the list
+        this->sequencedAircraft.erase(nextAircraftIterator);
+        this->sequencedAircraft.insert(aircraftIterator, nextAircraft);
+    }
+
+    auto ApproachSequence::Callsigns() const -> std::list<std::string>
+    {
+        std::list<std::string> callsigns;
+        for (const auto& aircraft : this->sequencedAircraft) {
+            callsigns.push_back(aircraft->Callsign());
+        }
+
+        return callsigns;
+    }
+
     auto ApproachSequence::AircraftMatchingCallsign(const std::string& callsign) const
         -> std::list<std::shared_ptr<ApproachSequencedAircraft>>::const_iterator
     {
