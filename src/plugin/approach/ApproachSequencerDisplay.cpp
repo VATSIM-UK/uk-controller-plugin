@@ -25,7 +25,8 @@ namespace UKControllerPlugin::Approach {
           airfieldClickspot(Components::ClickableArea::Create(
               this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
-          textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR))
+          textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR)),
+          dividingPen(std::make_shared<Gdiplus::Pen>(TEXT_COLOUR))
     {
     }
 
@@ -52,6 +53,8 @@ namespace UKControllerPlugin::Approach {
                 graphics.FillRect(contentArea, *backgroundBrush);
                 this->titleBar->Draw(graphics, radarScreen);
                 this->RenderAirfield(graphics, radarScreen);
+                this->RenderDivider(graphics);
+                this->RenderHeaders(graphics);
             });
     }
 
@@ -98,5 +101,18 @@ namespace UKControllerPlugin::Approach {
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->airfieldClickspot->Apply(graphics, radarScreen);
+    }
+
+    void ApproachSequencerDisplay::RenderDivider(Windows::GdiGraphicsInterface& graphics)
+    {
+        graphics.DrawLine(*dividingPen, dividerLeft, dividerRight);
+    }
+
+    void ApproachSequencerDisplay::RenderHeaders(Windows::GdiGraphicsInterface& graphics)
+    {
+        graphics.DrawString(L"#", numberHeader, *textBrush);
+        graphics.DrawString(L"Callsign", callsignHeader, *textBrush);
+        graphics.DrawString(L"Target", targetHeader, *textBrush);
+        graphics.DrawString(L"Display", displayHeader, *textBrush);
     }
 } // namespace UKControllerPlugin::Approach

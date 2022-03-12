@@ -39,6 +39,8 @@ namespace UKControllerPlugin::Approach {
         private:
         void RenderAirfield(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
+        void RenderDivider(Windows::GdiGraphicsInterface& graphics);
+        void RenderHeaders(Windows::GdiGraphicsInterface& graphics);
 
         // Dimensions
         inline static const int WINDOW_WIDTH = 435;
@@ -55,11 +57,18 @@ namespace UKControllerPlugin::Approach {
         // Selects an airfield
         std::shared_ptr<List::PopupListInterface> airfieldSelector;
 
-        Gdiplus::Rect titleBarArea = {0, 0, WINDOW_WIDTH, TITLE_BAR_HEIGHT};
-        Gdiplus::Rect contentArea = {0, TITLE_BAR_HEIGHT, WINDOW_WIDTH, CONTENT_HEIGHT};
-        Gdiplus::Rect airfieldStaticArea = {INSETS, TITLE_BAR_HEIGHT + INSETS, 75, TITLE_BAR_HEIGHT};
-        Gdiplus::Rect airfieldTextArea = {
+        // Components
+        const Gdiplus::Rect titleBarArea = {0, 0, WINDOW_WIDTH, TITLE_BAR_HEIGHT};
+        const Gdiplus::Rect contentArea = {0, TITLE_BAR_HEIGHT, WINDOW_WIDTH, CONTENT_HEIGHT};
+        const Gdiplus::Rect airfieldStaticArea = {INSETS, TITLE_BAR_HEIGHT + INSETS, 75, TITLE_BAR_HEIGHT};
+        const Gdiplus::Rect airfieldTextArea = {
             airfieldStaticArea.GetRight() + INSETS, airfieldStaticArea.GetTop(), 40, TITLE_BAR_HEIGHT};
+        const Gdiplus::Point dividerLeft = {0, airfieldTextArea.GetBottom() + INSETS};
+        const Gdiplus::Point dividerRight = {WINDOW_WIDTH, airfieldTextArea.GetBottom() + INSETS};
+        const Gdiplus::Rect numberHeader = {INSETS, dividerLeft.Y + INSETS, 15, 25};
+        const Gdiplus::Rect callsignHeader = {numberHeader.GetRight() + INSETS, numberHeader.GetTop(), 100, 25};
+        const Gdiplus::Rect targetHeader = {callsignHeader.GetRight() + INSETS, callsignHeader.GetTop(), 100, 25};
+        const Gdiplus::Rect displayHeader = {targetHeader.GetRight() + INSETS, targetHeader.GetTop(), 100, 25};
 
         std::shared_ptr<Components::TitleBar> titleBar;
         std::shared_ptr<Components::ClickableArea> airfieldClickspot;
@@ -68,5 +77,6 @@ namespace UKControllerPlugin::Approach {
         const Gdiplus::Color TEXT_COLOUR = Gdiplus::Color(225, 225, 225);
         std::shared_ptr<Gdiplus::Brush> backgroundBrush;
         std::shared_ptr<Gdiplus::Brush> textBrush;
+        std::shared_ptr<Gdiplus::Pen> dividingPen;
     };
 } // namespace UKControllerPlugin::Approach
