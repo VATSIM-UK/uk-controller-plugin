@@ -3,9 +3,11 @@
 #include "ApproachSequencerDisplayAsrLoader.h"
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSpacingRingRenderer.h"
+#include "ToggleApproachSequencerDisplay.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "plugin/UKPlugin.h"
+#include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
 namespace UKControllerPlugin::Approach {
@@ -18,7 +20,8 @@ namespace UKControllerPlugin::Approach {
         const Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& radarRenderables,
         RadarScreen::ConfigurableDisplayCollection& configurables,
-        Euroscope::AsrEventHandlerCollection& asrHandlers)
+        Euroscope::AsrEventHandlerCollection& asrHandlers,
+        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory)
     {
         // Ring renderer
         radarRenderables.RegisterRenderer(
@@ -37,5 +40,7 @@ namespace UKControllerPlugin::Approach {
             radarRenderables.beforeTags);
 
         asrHandlers.RegisterHandler(std::make_shared<ApproachSequencerDisplayAsrLoader>(displayOptions));
+        toggleableDisplayFactory.RegisterDisplay(
+            std::make_shared<ToggleApproachSequencerDisplay>(displayOptions), "Approach sequencer display toggle");
     }
 } // namespace UKControllerPlugin::Approach

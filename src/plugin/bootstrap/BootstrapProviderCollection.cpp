@@ -27,10 +27,12 @@ namespace UKControllerPlugin::Bootstrap {
         const PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& radarRenderables,
         RadarScreen::ConfigurableDisplayCollection& configurables,
-        Euroscope::AsrEventHandlerCollection& asrHandlers)
+        Euroscope::AsrEventHandlerCollection& asrHandlers,
+        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory)
     {
         for (const auto& provider : providers) {
-            provider->BootstrapRadarScreen(container, radarRenderables, configurables, asrHandlers);
+            provider->BootstrapRadarScreen(
+                container, radarRenderables, configurables, asrHandlers, toggleableDisplayFactory);
         }
     }
 

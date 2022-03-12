@@ -42,7 +42,7 @@ set(src__api
 source_group("src\\api" FILES ${src__api})
 
 set(src__approach
-        approach/ApproachSpacingRingRenderer.cpp approach/ApproachSpacingRingRenderer.h approach/ApproachBootstrapProvider.cpp approach/ApproachBootstrapProvider.h approach/ApproachModuleFactory.cpp approach/ApproachModuleFactory.h approach/ApproachSequence.cpp approach/ApproachSequence.h approach/ApproachSequencedAircraft.h approach/ApproachSequencingMode.h approach/ApproachSequencerDisplay.cpp approach/ApproachSequencerDisplay.h approach/ApproachSequencedAircraft.cpp approach/ApproachSequencer.cpp approach/ApproachSequencer.h approach/ApproachSequencerDisplayOptions.cpp approach/ApproachSequencerDisplayOptions.h approach/ApproachSequencerDisplayAsrLoader.cpp approach/ApproachSequencerDisplayAsrLoader.h)
+        approach/ApproachSpacingRingRenderer.cpp approach/ApproachSpacingRingRenderer.h approach/ApproachBootstrapProvider.cpp approach/ApproachBootstrapProvider.h approach/ApproachModuleFactory.cpp approach/ApproachModuleFactory.h approach/ApproachSequence.cpp approach/ApproachSequence.h approach/ApproachSequencedAircraft.h approach/ApproachSequencingMode.h approach/ApproachSequencerDisplay.cpp approach/ApproachSequencerDisplay.h approach/ApproachSequencedAircraft.cpp approach/ApproachSequencer.cpp approach/ApproachSequencer.h approach/ApproachSequencerDisplayOptions.cpp approach/ApproachSequencerDisplayOptions.h approach/ApproachSequencerDisplayAsrLoader.cpp approach/ApproachSequencerDisplayAsrLoader.h approach/ToggleApproachSequencerDisplay.cpp approach/ToggleApproachSequencerDisplay.h)
 source_group("src\\approach" FILES ${src__approach})
 
 set(src__bootstrap

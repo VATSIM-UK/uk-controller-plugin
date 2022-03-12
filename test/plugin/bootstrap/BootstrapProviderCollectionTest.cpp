@@ -1,13 +1,17 @@
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
+#include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapProviderCollection;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::RadarScreen::MenuToggleableDisplayFactory;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 
 namespace UKControllerPluginTest::Bootstrap {
@@ -16,7 +20,8 @@ namespace UKControllerPluginTest::Bootstrap {
         public:
         BootstrapProviderCollectionTest()
             : provider(std::make_shared<testing::NiceMock<MockBootstrapProvider>>()),
-              provider2(std::make_shared<testing::NiceMock<MockBootstrapProvider>>())
+              provider2(std::make_shared<testing::NiceMock<MockBootstrapProvider>>()),
+              displayFactory(functions, configurables)
         {
         }
 
@@ -26,6 +31,8 @@ namespace UKControllerPluginTest::Bootstrap {
         PersistenceContainer container;
         RadarRenderableCollection radarRenderables;
         ConfigurableDisplayCollection configurables;
+        FunctionCallEventHandler functions;
+        MenuToggleableDisplayFactory displayFactory;
         AsrEventHandlerCollection asrHandler;
     };
 
@@ -95,7 +102,8 @@ namespace UKControllerPluginTest::Bootstrap {
                 testing::Ref(container),
                 testing::Ref(radarRenderables),
                 testing::Ref(configurables),
-                testing::Ref(asrHandler)))
+                testing::Ref(asrHandler),
+                testing::Ref(displayFactory)))
             .Times(1);
 
         EXPECT_CALL(
@@ -104,9 +112,10 @@ namespace UKControllerPluginTest::Bootstrap {
                 testing::Ref(container),
                 testing::Ref(radarRenderables),
                 testing::Ref(configurables),
-                testing::Ref(asrHandler)))
+                testing::Ref(asrHandler),
+                testing::Ref(displayFactory)))
             .Times(1);
 
-        collection.BootstrapRadarScreen(container, radarRenderables, configurables, asrHandler);
+        collection.BootstrapRadarScreen(container, radarRenderables, configurables, asrHandler, displayFactory);
     }
 } // namespace UKControllerPluginTest::Bootstrap

@@ -12,6 +12,7 @@ namespace UKControllerPlugin::Approach {
             const Bootstrap::PersistenceContainer& container,
             RadarScreen::RadarRenderableCollection& radarRenderables,
             RadarScreen::ConfigurableDisplayCollection& configurables,
-            Euroscope::AsrEventHandlerCollection& asrHandlers) override;
+            Euroscope::AsrEventHandlerCollection& asrHandlers,
+            const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory) override;
     };
 } // namespace UKControllerPlugin::Approach

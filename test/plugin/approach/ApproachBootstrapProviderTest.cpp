@@ -1,4 +1,5 @@
 #include "approach/ApproachBootstrapProvider.h"
+#include "plugin/FunctionCallEventHandler.h"
 
 using UKControllerPlugin::Approach::ApproachBootstrapProvider;
 
@@ -20,5 +21,12 @@ namespace UKControllerPluginTest::Approach {
     {
         this->RunBootstrapRadarScreen(provider);
         EXPECT_EQ(1, asrHandlers.CountHandlers());
+    }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersMenuToggle)
+    {
+        this->RunBootstrapRadarScreen(provider);
+        EXPECT_EQ(1, configurableDisplays.CountDisplays());
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Approach sequencer display toggle"));
     }
 } // namespace UKControllerPluginTest::Approach

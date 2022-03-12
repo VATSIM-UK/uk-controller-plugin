@@ -4,6 +4,7 @@ using UKControllerPlugin::Bootstrap::BootstrapProviderInterface;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::RadarScreen::MenuToggleableDisplayFactory;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 
 namespace UKControllerPluginTest::Bootstrap {
@@ -17,7 +18,8 @@ namespace UKControllerPluginTest::Bootstrap {
             (const PersistenceContainer&,
              RadarRenderableCollection&,
              ConfigurableDisplayCollection&,
-             AsrEventHandlerCollection&),
+             AsrEventHandlerCollection&,
+             const MenuToggleableDisplayFactory&),
             (override));
     };
 } // namespace UKControllerPluginTest::Bootstrap

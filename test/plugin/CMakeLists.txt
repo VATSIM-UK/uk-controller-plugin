@@ -28,7 +28,7 @@ set(test__api
 source_group("test\\api" FILES ${test__api})
 
 set(test__approach
-        approach/ApproachBootstrapProviderTest.cpp approach/ApproachSequenceTest.cpp approach/ApproachSequencedAircraftTest.cpp approach/ApproachSequencerDisplayTest.cpp approach/ApproachSequencerTest.cpp approach/ApproachSequencerDisplayOptionsTest.cpp approach/ApproachSequencerDisplayAsrLoaderTest.cpp)
+        approach/ApproachBootstrapProviderTest.cpp approach/ApproachSequenceTest.cpp approach/ApproachSequencedAircraftTest.cpp approach/ApproachSequencerDisplayTest.cpp approach/ApproachSequencerTest.cpp approach/ApproachSequencerDisplayOptionsTest.cpp approach/ApproachSequencerDisplayAsrLoaderTest.cpp approach/ToggleApproachSequencerDisplayTest.cpp)
 source_group("test\\approach" FILES ${test__approach})
 
 set(test__bootstrap
@@ -532,7 +532,7 @@ set(test__tag
 source_group("test\\tag" FILES ${test__tag})
 
 set(test__test
-        test/BootstrapProviderTestCase.h)
+        test/BootstrapProviderTestCase.h test/BootstrapProviderTestCase.cpp)
 source_group("test\\test" FILES ${test__test})
 
 set(test__time

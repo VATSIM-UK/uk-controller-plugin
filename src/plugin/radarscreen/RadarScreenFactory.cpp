@@ -117,7 +117,7 @@ namespace UKControllerPlugin::RadarScreen {
         Wake::BootstrapRadarScreen(this->persistence, renderers, userSettingHandlers, displayFactory);
 
         this->persistence.bootstrapProviders->BootstrapRadarScreen(
-            this->persistence, renderers, configurableDisplays, userSettingHandlers);
+            this->persistence, renderers, configurableDisplays, userSettingHandlers, displayFactory);
 
         // Register command for position resets
         this->persistence.commandHandlers->RegisterHandler(std::make_shared<PositionResetCommand>(renderers));
