@@ -30,7 +30,6 @@ namespace UKControllerPlugin::Approach {
         void Render(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
         void ResetPosition() override;
-        [[nodiscard]] auto ContentCollapsed() const -> bool;
 
         private:
         void RenderAirfield(Windows::GdiGraphicsInterface& graphics);
@@ -41,8 +40,6 @@ namespace UKControllerPlugin::Approach {
         inline static const int INSETS = 5;
 
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions;
-
-        POINT windowPosition{200, 200};
 
         Gdiplus::Rect titleBarArea = {0, 0, WINDOW_WIDTH, TITLE_BAR_HEIGHT};
         Gdiplus::Rect contentArea = {0, TITLE_BAR_HEIGHT, WINDOW_WIDTH, CONTENT_HEIGHT};
@@ -56,8 +53,5 @@ namespace UKControllerPlugin::Approach {
         const Gdiplus::Color TEXT_COLOUR = Gdiplus::Color(225, 225, 225);
         std::shared_ptr<Gdiplus::Brush> backgroundBrush;
         std::shared_ptr<Gdiplus::Brush> textBrush;
-
-        bool contentCollapsed = false;
-        bool isVisible = true;
     };
 } // namespace UKControllerPlugin::Approach

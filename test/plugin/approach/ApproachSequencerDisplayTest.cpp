@@ -20,16 +20,16 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayTest, ItTogglesContentCollapsing)
     {
-        EXPECT_FALSE(display.ContentCollapsed());
+        EXPECT_FALSE(options->ContentCollapsed());
         display.LeftClick(radarScreen, 1, "collapseButton", {}, {});
-        EXPECT_TRUE(display.ContentCollapsed());
+        EXPECT_TRUE(options->ContentCollapsed());
         display.LeftClick(radarScreen, 1, "collapseButton", {}, {});
-        EXPECT_FALSE(display.ContentCollapsed());
+        EXPECT_FALSE(options->ContentCollapsed());
     }
 
     TEST_F(ApproachSequencerDisplayTest, ItCanBeClosed)
     {
-        EXPECT_TRUE(display.IsVisible());
+        options->SetVisible(true);
         display.LeftClick(radarScreen, 1, "closeButton", {}, {});
         EXPECT_FALSE(display.IsVisible());
     }
