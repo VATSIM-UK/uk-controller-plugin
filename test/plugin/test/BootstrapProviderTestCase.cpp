@@ -1,6 +1,9 @@
 #include "BootstrapProviderTestCase.h"
+#include "list/PopupListFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "plugin/UKPlugin.h"
 
+using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 
 namespace UKControllerPluginTest {
@@ -26,6 +29,8 @@ namespace UKControllerPluginTest {
     {
         PersistenceContainer container;
         container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
+        container.popupListFactory =
+            std::make_unique<PopupListFactory>(*container.pluginFunctionHandlers, *container.plugin);
         return container;
     }
 } // namespace UKControllerPluginTest

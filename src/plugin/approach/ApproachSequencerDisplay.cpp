@@ -1,23 +1,29 @@
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayOptions.h"
+#include "components/ClickableArea.h"
 #include "components/CollapsibleWindowTitleBar.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/StringFormatManager.h"
 #include "helper/HelperFunctions.h"
+#include "list/PopupListInterface.h"
 
 using UKControllerPlugin::Components::CollapsibleWindowTitleBar;
 
 namespace UKControllerPlugin::Approach {
 
     ApproachSequencerDisplay::ApproachSequencerDisplay(
-        std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions, int screenObjectId)
-        : displayOptions(std::move(displayOptions)),
+        std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
+        std::shared_ptr<List::PopupListInterface> airfieldSelector,
+        int screenObjectId)
+        : displayOptions(std::move(displayOptions)), airfieldSelector(airfieldSelector),
           titleBar(CollapsibleWindowTitleBar::Create(
               L"Approach Sequencer",
               titleBarArea,
               [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
               screenObjectId)),
+          airfieldClickspot(Components::ClickableArea::Create(
+              this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
           textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR))
     {
@@ -45,7 +51,7 @@ namespace UKControllerPlugin::Approach {
 
                 graphics.FillRect(contentArea, *backgroundBrush);
                 this->titleBar->Draw(graphics, radarScreen);
-                this->RenderAirfield(graphics);
+                this->RenderAirfield(graphics, radarScreen);
             });
     }
 
@@ -66,11 +72,16 @@ namespace UKControllerPlugin::Approach {
         }
 
         if (objectDescription == "closeButton") {
-            this->displayOptions->ToggleVisible();
+            this->displayOptions->SetVisible(false);
+        }
+
+        if (objectDescription == AIRFIELD_SELECTOR_CLICKSPOT) {
+            this->airfieldSelector->Trigger(mousePos);
         }
     }
 
-    void ApproachSequencerDisplay::RenderAirfield(Windows::GdiGraphicsInterface& graphics)
+    void ApproachSequencerDisplay::RenderAirfield(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         graphics.DrawString(
             L"Airfield:",
@@ -86,5 +97,6 @@ namespace UKControllerPlugin::Approach {
             *textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
+        this->airfieldClickspot->Apply(graphics, radarScreen);
     }
 } // namespace UKControllerPlugin::Approach

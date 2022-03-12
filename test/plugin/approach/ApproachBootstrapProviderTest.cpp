@@ -29,4 +29,10 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(1, configurableDisplays.CountDisplays());
         EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Approach sequencer display toggle"));
     }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersPopupList)
+    {
+        this->RunBootstrapRadarScreen(provider);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle sequencer airfield selector"));
+    }
 } // namespace UKControllerPluginTest::Approach

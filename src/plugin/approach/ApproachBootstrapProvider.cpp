@@ -3,9 +3,11 @@
 #include "ApproachSequencerDisplayAsrLoader.h"
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSpacingRingRenderer.h"
+#include "SequencerAirfieldSelector.h"
 #include "ToggleApproachSequencerDisplay.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "list/PopupListFactory.h"
 #include "plugin/UKPlugin.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -36,7 +38,12 @@ namespace UKControllerPlugin::Approach {
         auto displayOptions = std::make_shared<ApproachSequencerDisplayOptions>();
         radarRenderables.RegisterRenderer(
             sequencerRendererId,
-            std::make_shared<ApproachSequencerDisplay>(displayOptions, sequencerScreenObjectId),
+            std::make_shared<ApproachSequencerDisplay>(
+                displayOptions,
+                container.popupListFactory->Create(
+                    std::make_shared<SequencerAirfieldSelector>(displayOptions, *container.airfields),
+                    "Toggle sequencer airfield selector"),
+                sequencerScreenObjectId),
             radarRenderables.beforeTags);
 
         asrHandlers.RegisterHandler(std::make_shared<ApproachSequencerDisplayAsrLoader>(displayOptions));

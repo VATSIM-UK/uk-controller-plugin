@@ -28,7 +28,15 @@ set(test__api
 source_group("test\\api" FILES ${test__api})
 
 set(test__approach
-        approach/ApproachBootstrapProviderTest.cpp approach/ApproachSequenceTest.cpp approach/ApproachSequencedAircraftTest.cpp approach/ApproachSequencerDisplayTest.cpp approach/ApproachSequencerTest.cpp approach/ApproachSequencerDisplayOptionsTest.cpp approach/ApproachSequencerDisplayAsrLoaderTest.cpp approach/ToggleApproachSequencerDisplayTest.cpp)
+        approach/ApproachBootstrapProviderTest.cpp
+        approach/ApproachSequenceTest.cpp
+        approach/ApproachSequencedAircraftTest.cpp
+        approach/ApproachSequencerDisplayTest.cpp
+        approach/ApproachSequencerTest.cpp
+        approach/ApproachSequencerDisplayOptionsTest.cpp
+        approach/ApproachSequencerDisplayAsrLoaderTest.cpp
+        approach/ToggleApproachSequencerDisplayTest.cpp
+        approach/SequencerAirfieldSelectorTest.cpp)
 source_group("test\\approach" FILES ${test__approach})
 
 set(test__bootstrap
@@ -37,7 +45,10 @@ set(test__bootstrap
     "bootstrap/EventHandlerCollectionBootstrapTest.cpp"
     "bootstrap/ExternalsBootstrapTest.cpp"
     "bootstrap/HelperBootstrapTest.cpp"
-        bootstrap/ModuleBootstrapTest.cpp bootstrap/ModuleFactoriesTest.cpp bootstrap/BootstrapProviderCollectionTest.cpp bootstrap/BootstrapProviderCollectionFactoryTest.cpp)
+    bootstrap/ModuleBootstrapTest.cpp
+    bootstrap/ModuleFactoriesTest.cpp
+    bootstrap/BootstrapProviderCollectionTest.cpp
+    bootstrap/BootstrapProviderCollectionFactoryTest.cpp)
 source_group("test\\bootstrap" FILES ${test__bootstrap})
 
 set(test__command
