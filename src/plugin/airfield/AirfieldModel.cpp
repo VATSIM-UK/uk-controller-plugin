@@ -8,9 +8,11 @@ namespace UKControllerPlugin::Airfield {
         std::string icao,
         std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder,
         std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>> airfieldPairingPrenotes,
-        int defaultHandoffId)
+        int defaultHandoffId,
+        int wakeSchemeId)
         : id(id), icao(std::move(icao)), topDownOrder(std::move(topDownOrder)),
-          airfieldPairingPrenotes(std::move(airfieldPairingPrenotes)), defaultHandoffId(defaultHandoffId)
+          airfieldPairingPrenotes(std::move(airfieldPairingPrenotes)), defaultHandoffId(defaultHandoffId),
+          wakeSchemeId(wakeSchemeId)
     {
     }
 
@@ -52,5 +54,10 @@ namespace UKControllerPlugin::Airfield {
     auto AirfieldModel::HasDefaultHandoff() const -> bool
     {
         return this->defaultHandoffId != NO_HANDOFF_ID;
+    }
+    
+    auto AirfieldModel::WakeScheme() const -> int
+    {
+        return this->wakeSchemeId;
     }
 } // namespace UKControllerPlugin::Airfield

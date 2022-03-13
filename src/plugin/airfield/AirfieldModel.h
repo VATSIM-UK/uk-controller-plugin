@@ -23,7 +23,8 @@ namespace UKControllerPlugin::Airfield {
             std::string icao,
             std::unique_ptr<Controller::ControllerPositionHierarchy> topDownOrder,
             std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>> airfieldPairingPrenotes = {},
-            int defaultHandoffId = NO_HANDOFF_ID);
+            int defaultHandoffId = NO_HANDOFF_ID,
+            int wakeSchemeId = NO_WAKE_SCHEME_ID);
         ~AirfieldModel();
         AirfieldModel(const AirfieldModel&) = delete;
         AirfieldModel(AirfieldModel&&) noexcept;
@@ -36,10 +37,12 @@ namespace UKControllerPlugin::Airfield {
             -> const std::vector<std::shared_ptr<Prenote::PairedAirfieldPrenote>>&;
         [[nodiscard]] auto HasDefaultHandoff() const -> bool;
         [[nodiscard]] auto DefaultHandoff() const -> int;
+        [[nodiscard]] auto WakeScheme() const -> int;
         auto operator==(const AirfieldModel& compare) const -> bool;
 
         // The default handoff id if there is none
         inline static const int NO_HANDOFF_ID = 0;
+        inline static const int NO_WAKE_SCHEME_ID = 1;
 
         private:
         // The id of the airfield
@@ -56,5 +59,8 @@ namespace UKControllerPlugin::Airfield {
 
         // The default handoff order to use for this airfield
         int defaultHandoffId;
+        
+        // The wake scheme used at the airfield
+        int wakeSchemeId;
     };
 } // namespace UKControllerPlugin::Airfield
