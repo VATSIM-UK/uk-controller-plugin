@@ -41,4 +41,10 @@ namespace UKControllerPluginTest::Approach {
         this->RunBootstrapRadarScreen(provider);
         EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle sequencer callsign selector"));
     }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersTargetPopupList)
+    {
+        this->RunBootstrapRadarScreen(provider);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle sequencer target selector"));
+    }
 } // namespace UKControllerPluginTest::Approach

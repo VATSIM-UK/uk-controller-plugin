@@ -18,16 +18,16 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, GetReturnsNullptrAircraftNotFound)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
         EXPECT_EQ(nullptr, sequencer.Get("BAW456"));
     }
 
     TEST_F(ApproachSequenceTest, ItAddsAircraftToTheBackOfTheSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
         auto firstAircraft = sequencer.First();
         EXPECT_EQ("BAW123", firstAircraft->Callsign());
-        EXPECT_EQ(ApproachSequencingMode::Minimum, firstAircraft->Mode());
+        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, firstAircraft->Mode());
         EXPECT_EQ(nullptr, firstAircraft->Previous());
         EXPECT_EQ(nullptr, firstAircraft->Next());
 
@@ -54,10 +54,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItAddsAircraftBeforeAnotherInSequenceIfSequenceEmpty)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum, "BAW456");
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance, "BAW456");
         auto firstAircraft = sequencer.First();
         EXPECT_EQ("BAW123", firstAircraft->Callsign());
-        EXPECT_EQ(ApproachSequencingMode::Minimum, firstAircraft->Mode());
+        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, firstAircraft->Mode());
         EXPECT_EQ(nullptr, firstAircraft->Previous());
         EXPECT_EQ(nullptr, firstAircraft->Next());
 
@@ -84,10 +84,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItAddsAircraftBeforeAnotherInSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
         auto firstAircraft = sequencer.First();
         EXPECT_EQ("BAW123", firstAircraft->Callsign());
-        EXPECT_EQ(ApproachSequencingMode::Minimum, firstAircraft->Mode());
+        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, firstAircraft->Mode());
         EXPECT_EQ(nullptr, firstAircraft->Previous());
         EXPECT_EQ(nullptr, firstAircraft->Next());
 
@@ -116,7 +116,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftSingleSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
         sequencer.RemoveAircraft("BAW123");
         EXPECT_EQ(nullptr, sequencer.Get("BAW123"));
 
@@ -125,9 +125,9 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftMidSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
 
         sequencer.RemoveAircraft("BAW456");
         EXPECT_EQ(nullptr, sequencer.Get("BAW456"));
@@ -139,9 +139,9 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftEndOfSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
 
         sequencer.RemoveAircraft("BAW789");
         EXPECT_EQ(nullptr, sequencer.Get("BAW789"));
@@ -152,9 +152,9 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItRemovesAnAircraftStartOfSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
 
         sequencer.RemoveAircraft("BAW123");
         EXPECT_EQ(nullptr, sequencer.Get("BAW123"));
@@ -166,19 +166,19 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItHandlesRemoveAircraftNotInSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
 
         EXPECT_NO_THROW(sequencer.RemoveAircraft("BAW999"));
     }
 
     TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftUpSequenceIfTop)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftUp("BAW123");
 
         EXPECT_EQ("BAW123", sequencer.First()->Callsign());
@@ -190,10 +190,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftUpSequenceIfNotInSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftUp("BAW111");
 
         EXPECT_EQ("BAW123", sequencer.First()->Callsign());
@@ -205,10 +205,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItMovesSecondInSequenceToTop)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftUp("BAW456");
 
         EXPECT_EQ("BAW456", sequencer.First()->Callsign());
@@ -223,10 +223,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItMovesThirdInSequenceUp)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftUp("BAW789");
 
         EXPECT_EQ("BAW123", sequencer.First()->Callsign());
@@ -244,8 +244,8 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItMovesSwapsAircraftMovingUp)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftUp("BAW456");
 
         EXPECT_EQ(sequencer.Get("BAW456"), sequencer.Get("BAW123")->Previous());
@@ -255,10 +255,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftDownSequenceIfBottom)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftDown("BAW112");
 
         EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW112")->Previous());
@@ -268,10 +268,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItDoesntMoveAircraftDownSequenceIfNotInSequence)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftDown("BAW111");
 
         EXPECT_EQ(sequencer.Get("BAW789"), sequencer.Get("BAW112")->Previous());
@@ -282,10 +282,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItMovesSecondToLastInSequenceToBottom)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftDown("BAW789");
 
         EXPECT_EQ("BAW123", sequencer.First()->Callsign());
@@ -303,10 +303,10 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItMovesThirdToLastInSequenceDown)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW789", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW112", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftDown("BAW456");
 
         EXPECT_EQ("BAW123", sequencer.First()->Callsign());
@@ -325,8 +325,8 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequenceTest, ItMovesSwapsAircraftMovingDown)
     {
-        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::Minimum);
-        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::Minimum);
+        sequencer.AddAircraftToSequence("BAW123", ApproachSequencingMode::MinimumDistance);
+        sequencer.AddAircraftToSequence("BAW456", ApproachSequencingMode::MinimumDistance);
         sequencer.MoveAircraftDown("BAW123");
 
         EXPECT_EQ(sequencer.Get("BAW123"), sequencer.Get("BAW456")->Next());

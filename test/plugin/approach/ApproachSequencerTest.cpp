@@ -48,10 +48,10 @@ namespace UKControllerPluginTest::Approach {
     TEST_F(ApproachSequencerTest, ItAddsAircraftToASequenceBeforeAnother)
     {
         sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
-        sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::Minimum, "BAW123");
+        sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::MinimumDistance, "BAW123");
         auto aircraft = sequencer.GetForAirfield("EGKK").First();
         EXPECT_EQ("BAW456", aircraft->Callsign());
-        EXPECT_EQ(ApproachSequencingMode::Minimum, aircraft->Mode());
+        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, aircraft->Mode());
     }
 
     TEST_F(ApproachSequencerTest, ItAssertsAircraftCannotBeInMoreThanOneSequenceWhenInsertedBeforeAnother)

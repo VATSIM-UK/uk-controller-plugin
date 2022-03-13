@@ -36,7 +36,7 @@ set(test__approach
         approach/ApproachSequencerDisplayOptionsTest.cpp
         approach/ApproachSequencerDisplayAsrLoaderTest.cpp
         approach/ToggleApproachSequencerDisplayTest.cpp
-        approach/SequencerAirfieldSelectorTest.cpp approach/ApproachModuleFactoryTest.cpp approach/AircraftSelectionProviderTest.cpp)
+        approach/SequencerAirfieldSelectorTest.cpp approach/ApproachModuleFactoryTest.cpp approach/AircraftSelectionProviderTest.cpp approach/TargetSelectorListTest.cpp)
 source_group("test\\approach" FILES ${test__approach})
 
 set(test__bootstrap

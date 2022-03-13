@@ -6,6 +6,9 @@ namespace UKControllerPlugin {
         class ClickableArea;
         class TitleBar;
     } // namespace Components
+    namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+    } // namespace Euroscope
     namespace List {
         class PopupListInterface;
     } // namespace List
@@ -26,6 +29,8 @@ namespace UKControllerPlugin::Approach {
             std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
             std::shared_ptr<List::PopupListInterface> airfieldSelector,
             std::shared_ptr<List::PopupListInterface> callsignSelector,
+            std::shared_ptr<List::PopupListInterface> targetSelector,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin,
             int screenObjectId);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(
@@ -70,6 +75,12 @@ namespace UKControllerPlugin::Approach {
 
         // Selects callsigns to add
         std::shared_ptr<List::PopupListInterface> callsignSelector;
+
+        // Selecting the target
+        std::shared_ptr<List::PopupListInterface> targetSelector;
+        
+        // The plugin
+        Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
         // The screen object id
         int screenObjectId;

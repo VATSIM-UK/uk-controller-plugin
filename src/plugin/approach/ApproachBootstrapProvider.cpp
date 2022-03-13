@@ -6,6 +6,7 @@
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSpacingRingRenderer.h"
 #include "SequencerAirfieldSelector.h"
+#include "TargetSelectorList.h"
 #include "ToggleApproachSequencerDisplay.h"
 #include "aircraft/CallsignSelectionListFactory.h"
 #include "bootstrap/ModuleFactories.h"
@@ -29,12 +30,6 @@ namespace UKControllerPlugin::Approach {
         Euroscope::AsrEventHandlerCollection& asrHandlers,
         const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory)
     {
-        // Ring renderer
-        radarRenderables.RegisterRenderer(
-            radarRenderables.ReserveRendererIdentifier(),
-            std::make_shared<ApproachSpacingRingRenderer>(*container.plugin),
-            radarRenderables.beforeTags);
-
         // Sequencer display
         auto sequencerRendererId = radarRenderables.ReserveRendererIdentifier();
         auto sequencerScreenObjectId = radarRenderables.ReserveScreenObjectIdentifier(sequencerRendererId);
@@ -52,11 +47,23 @@ namespace UKControllerPlugin::Approach {
                     std::make_shared<AircraftSelectionProvider>(
                         container.moduleFactories->Approach().Sequencer(), displayOptions, *container.plugin),
                     "Toggle sequencer callsign selector"),
+                container.popupListFactory->Create(
+                    std::make_shared<TargetSelectorList>(
+                        container.moduleFactories->Approach().Sequencer(), displayOptions, *container.plugin),
+                    "Toggle sequencer target selector"),
+                *container.plugin,
                 sequencerScreenObjectId),
             radarRenderables.beforeTags);
 
         asrHandlers.RegisterHandler(std::make_shared<ApproachSequencerDisplayAsrLoader>(displayOptions));
         toggleableDisplayFactory.RegisterDisplay(
             std::make_shared<ToggleApproachSequencerDisplay>(displayOptions), "Approach sequencer display toggle");
+
+        // Ring renderer
+        radarRenderables.RegisterRenderer(
+            radarRenderables.ReserveRendererIdentifier(),
+            std::make_shared<ApproachSpacingRingRenderer>(
+                container.moduleFactories->Approach().Sequencer(), displayOptions, *container.plugin),
+            radarRenderables.beforeTags);
     }
 } // namespace UKControllerPlugin::Approach

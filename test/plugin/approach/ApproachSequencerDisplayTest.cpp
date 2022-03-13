@@ -15,13 +15,16 @@ namespace UKControllerPluginTest::Approach {
         ApproachSequencerDisplayTest()
             : selectorList(std::make_shared<List::MockPopupList>()),
               callsignSelectorList(std::make_shared<List::MockPopupList>()),
+              targetList(std::make_shared<List::MockPopupList>()),
               options(std::make_shared<ApproachSequencerDisplayOptions>()),
-              display(sequencer, options, selectorList, callsignSelectorList, 55)
+              display(sequencer, options, selectorList, callsignSelectorList, targetList, plugin, 55)
         {
         }
 
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         std::shared_ptr<List::MockPopupList> selectorList;
         std::shared_ptr<List::MockPopupList> callsignSelectorList;
+        std::shared_ptr<List::MockPopupList> targetList;
         testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
         ApproachSequencer sequencer;
         std::shared_ptr<ApproachSequencerDisplayOptions> options;
@@ -86,5 +89,30 @@ namespace UKControllerPluginTest::Approach {
 
         display.LeftClick(radarScreen, 1, "deleteButtonBAW123", {1, 2}, {});
         EXPECT_EQ(std::list<std::string>({"BAW456"}), sequencer.GetForAirfield("EGKK").Callsigns());
+    }
+
+    TEST_F(ApproachSequencerDisplayTest, ItTriggersTargetListForAircraft)
+    {
+        auto flightplan = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
+        ON_CALL(*flightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
+
+        ON_CALL(plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(flightplan));
+
+        EXPECT_CALL(plugin, SetEuroscopeSelectedFlightplanPointer(testing::_)).Times(1);
+
+        EXPECT_CALL(*targetList, Trigger(PointEq(POINT{1, 2}))).Times(1);
+
+        display.LeftClick(radarScreen, 1, "approachTargetBAW123", {1, 2}, {});
+    }
+
+    TEST_F(ApproachSequencerDisplayTest, ItDoesntTriggerTargetListForAircraftIfFlightplanNotFound)
+    {
+        ON_CALL(plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(nullptr));
+
+        EXPECT_CALL(plugin, SetEuroscopeSelectedFlightplanPointer(testing::_)).Times(0);
+
+        EXPECT_CALL(*targetList, Trigger(testing::_)).Times(0);
+
+        display.LeftClick(radarScreen, 1, "approachTargetBAW123", {1, 2}, {});
     }
 } // namespace UKControllerPluginTest::Approach

@@ -30,8 +30,8 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencedAircraftTest, ModeCanBeSet)
     {
-        aircraft.Mode(ApproachSequencingMode::ExactDistance);
-        EXPECT_EQ(ApproachSequencingMode::ExactDistance, aircraft.Mode());
+        aircraft.Mode(ApproachSequencingMode::MinimumDistance);
+        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, aircraft.Mode());
     }
 
     TEST_F(ApproachSequencedAircraftTest, ItHasAnExpectedDistance)

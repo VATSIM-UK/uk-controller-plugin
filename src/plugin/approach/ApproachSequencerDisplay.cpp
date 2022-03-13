@@ -7,6 +7,7 @@
 #include "components/ClickableArea.h"
 #include "components/CollapsibleWindowTitleBar.h"
 #include "components/StandardButtons.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/StringFormatManager.h"
@@ -22,14 +23,17 @@ namespace UKControllerPlugin::Approach {
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
         std::shared_ptr<List::PopupListInterface> airfieldSelector,
         std::shared_ptr<List::PopupListInterface> callsignSelector,
+        std::shared_ptr<List::PopupListInterface> targetSelector,
+        Euroscope::EuroscopePluginLoopbackInterface& plugin,
         int screenObjectId)
         : sequencer(sequencer), displayOptions(std::move(displayOptions)),
           airfieldSelector(std::move(airfieldSelector)), callsignSelector(std::move(callsignSelector)),
-          screenObjectId(screenObjectId), titleBar(CollapsibleWindowTitleBar::Create(
-                                              L"Approach Sequencer",
-                                              titleBarArea,
-                                              [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
-                                              screenObjectId)),
+          targetSelector(std::move(targetSelector)), plugin(plugin), screenObjectId(screenObjectId),
+          titleBar(CollapsibleWindowTitleBar::Create(
+              L"Approach Sequencer",
+              titleBarArea,
+              [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
+              screenObjectId)),
           airfieldClickspot(Components::ClickableArea::Create(
               this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           addClickspot(
@@ -116,6 +120,17 @@ namespace UKControllerPlugin::Approach {
             sequencer.RemoveAircraftFromSequences(objectDescription.substr(12));
             return;
         }
+
+        if (objectDescription.substr(0, 14) == "approachTarget") {
+            auto flightplan = plugin.GetFlightplanForCallsign(objectDescription.substr(14));
+            if (!flightplan) {
+                return;
+            }
+
+            plugin.SetEuroscopeSelectedFlightplan(flightplan);
+            targetSelector->Trigger(mousePos);
+            return;
+        }
     }
 
     void ApproachSequencerDisplay::RenderAirfield(
@@ -197,7 +212,19 @@ namespace UKControllerPlugin::Approach {
             graphics.DrawString(std::to_wstring(sequenceNumber), numberRect, *textBrush);
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()), callsignRect, *textBrush);
-            graphics.DrawString(L"Wake", targetRect, *textBrush);
+
+            // The target distance / wake
+            if (aircraftToProcess->Mode() == ApproachSequencingMode::WakeTurbulence) {
+                graphics.DrawString(L"Wake", targetRect, *textBrush);
+            } else {
+                char distanceString[25];                                                  // NOLINT
+                sprintf_s(distanceString, "%.1f", aircraftToProcess->ExpectedDistance()); // NOLINT
+                graphics.DrawString(HelperFunctions::ConvertToWideString(distanceString), targetRect, *textBrush);
+            }
+            Components::ClickableArea::Create(
+                targetRect, screenObjectId, "approachTarget" + aircraftToProcess->Callsign(), false)
+                ->Apply(graphics, radarScreen);
+
             graphics.DrawString(L"Wke", actualRect, *textBrush);
 
             auto upButton = Components::Button::Create(

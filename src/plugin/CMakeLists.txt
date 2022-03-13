@@ -53,7 +53,7 @@ set(src__approach
         approach/ApproachSequencerDisplayOptions.cpp approach/ApproachSequencerDisplayOptions.h
         approach/ApproachSequencerDisplayAsrLoader.cpp approach/ApproachSequencerDisplayAsrLoader.h
         approach/ToggleApproachSequencerDisplay.cpp approach/ToggleApproachSequencerDisplay.h
-        approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h)
+        approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h approach/TargetSelectorList.cpp approach/TargetSelectorList.h)
 source_group("src\\approach" FILES ${src__approach})
 
 set(src__bootstrap
