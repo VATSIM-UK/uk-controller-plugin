@@ -5,8 +5,8 @@
 #include "ApproachSequencerDisplayOptions.h"
 #include "components/Button.h"
 #include "components/ClickableArea.h"
-#include "components/StandardButtons.h"
 #include "components/CollapsibleWindowTitleBar.h"
+#include "components/StandardButtons.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/StringFormatManager.h"
@@ -107,7 +107,7 @@ namespace UKControllerPlugin::Approach {
             return;
         }
 
-        if (objectDescription.substr(0, 7) == "moveDown") {
+        if (objectDescription.substr(0, 8) == "moveDown") {
             sequencer.MoveAircraftDown(displayOptions->Airfield(), objectDescription.substr(8));
             return;
         }

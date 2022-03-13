@@ -60,6 +60,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayTest, ItMovesAnAircraftUp)
     {
+        options->Airfield("EGKK");
         sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
         sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::WakeTurbulence);
 
@@ -69,6 +70,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayTest, ItMovesAnAircraftDown)
     {
+        options->Airfield("EGKK");
         sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
         sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::WakeTurbulence);
 
@@ -78,6 +80,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayTest, ItRemovesAnAircraft)
     {
+        options->Airfield("EGKK");
         sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
         sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::WakeTurbulence);
 
