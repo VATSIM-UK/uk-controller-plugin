@@ -82,4 +82,24 @@ namespace UKControllerPlugin::Components {
         pen->ResetTransform();
         pen->ScaleTransform(1 / scaleX, 1 / scaleY);
     }
+
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> DeleteButton(Gdiplus::Color colour)
+    {
+        return CloseButton(colour);
+    }
+
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> DeleteButton()
+    {
+        return CloseButton();
+    }
+
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> UpArrow(Gdiplus::Color colour)
+    {
+        return CollapseButton(colour, []() { return false; });
+    }
+
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> DownArrow(Gdiplus::Color colour)
+    {
+        return CollapseButton(colour, []() { return true; });
+    }
 } // namespace UKControllerPlugin::Components

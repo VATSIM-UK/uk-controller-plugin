@@ -40,8 +40,7 @@ namespace UKControllerPlugin::Approach {
         void ResetPosition() override;
 
         private:
-        void RenderBackground(
-            Windows::GdiGraphicsInterface& graphics);
+        void RenderBackground(Windows::GdiGraphicsInterface& graphics);
         void RenderAirfield(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
         void RenderDivider(Windows::GdiGraphicsInterface& graphics);
@@ -71,6 +70,9 @@ namespace UKControllerPlugin::Approach {
 
         // Selects callsigns to add
         std::shared_ptr<List::PopupListInterface> callsignSelector;
+
+        // The screen object id
+        int screenObjectId;
 
         // Components
         const Gdiplus::Rect titleBarArea = {0, 0, WINDOW_WIDTH, TITLE_BAR_HEIGHT};

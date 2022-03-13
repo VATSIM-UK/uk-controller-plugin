@@ -3,7 +3,9 @@
 #include "ApproachSequencer.h"
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayOptions.h"
+#include "components/Button.h"
 #include "components/ClickableArea.h"
+#include "components/StandardButtons.h"
 #include "components/CollapsibleWindowTitleBar.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
@@ -23,11 +25,11 @@ namespace UKControllerPlugin::Approach {
         int screenObjectId)
         : sequencer(sequencer), displayOptions(std::move(displayOptions)),
           airfieldSelector(std::move(airfieldSelector)), callsignSelector(std::move(callsignSelector)),
-          titleBar(CollapsibleWindowTitleBar::Create(
-              L"Approach Sequencer",
-              titleBarArea,
-              [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
-              screenObjectId)),
+          screenObjectId(screenObjectId), titleBar(CollapsibleWindowTitleBar::Create(
+                                              L"Approach Sequencer",
+                                              titleBarArea,
+                                              [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
+                                              screenObjectId)),
           airfieldClickspot(Components::ClickableArea::Create(
               this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           addClickspot(
@@ -82,18 +84,37 @@ namespace UKControllerPlugin::Approach {
     {
         if (objectDescription == "collapseButton") {
             this->displayOptions->ToggleCollapsed();
+            return;
         }
 
         if (objectDescription == "closeButton") {
             this->displayOptions->SetVisible(false);
+            return;
         }
 
         if (objectDescription == AIRFIELD_SELECTOR_CLICKSPOT) {
             this->airfieldSelector->Trigger(mousePos);
+            return;
         }
 
         if (objectDescription == ADD_AIRCRAFT_CLICKSPOT) {
             this->callsignSelector->Trigger(mousePos);
+            return;
+        }
+
+        if (objectDescription.substr(0, 6) == "moveUp") {
+            sequencer.MoveAircraftUp(displayOptions->Airfield(), objectDescription.substr(6));
+            return;
+        }
+
+        if (objectDescription.substr(0, 7) == "moveDown") {
+            sequencer.MoveAircraftDown(displayOptions->Airfield(), objectDescription.substr(8));
+            return;
+        }
+
+        if (objectDescription.substr(0, 12) == "deleteButton") {
+            sequencer.RemoveAircraftFromSequences(objectDescription.substr(12));
+            return;
         }
     }
 
@@ -155,8 +176,21 @@ namespace UKControllerPlugin::Approach {
             targetHeader.X, targetHeader.GetBottom() + INSETS, targetHeader.Width, targetHeader.Height};
         Gdiplus::Rect actualRect{
             actualHeader.X, actualHeader.GetBottom() + INSETS, actualHeader.Width, actualHeader.Height};
-        Gdiplus::Rect actionsRect{
-            actionsHeader.X, actionsHeader.GetBottom() + INSETS, actionsHeader.Width, actionsHeader.Height};
+        Gdiplus::Rect upButtonRect{
+            actionsHeader.X + 30,
+            actionsHeader.GetBottom() + INSETS,
+            actionsHeader.Height - INSETS,
+            actionsHeader.Height - INSETS};
+        Gdiplus::Rect downButtonRect{
+            upButtonRect.GetRight() + INSETS,
+            actionsHeader.GetBottom() + INSETS,
+            actionsHeader.Height - INSETS,
+            actionsHeader.Height - INSETS};
+        Gdiplus::Rect deleteButtonRect{
+            downButtonRect.GetRight() + INSETS,
+            actionsHeader.GetBottom() + INSETS,
+            actionsHeader.Height - INSETS,
+            actionsHeader.Height - INSETS};
         int sequenceNumber = 1;
 
         while (aircraftToProcess != nullptr) {
@@ -165,7 +199,27 @@ namespace UKControllerPlugin::Approach {
                 HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()), callsignRect, *textBrush);
             graphics.DrawString(L"Wake", targetRect, *textBrush);
             graphics.DrawString(L"Wke", actualRect, *textBrush);
-            graphics.DrawString(L"Act", actionsRect, *textBrush);
+
+            auto upButton = Components::Button::Create(
+                upButtonRect,
+                screenObjectId,
+                "moveUp" + aircraftToProcess->Callsign(),
+                Components::UpArrow(TEXT_COLOUR));
+            upButton->Draw(graphics, radarScreen);
+
+            auto downButton = Components::Button::Create(
+                downButtonRect,
+                screenObjectId,
+                "moveDown" + aircraftToProcess->Callsign(),
+                Components::DownArrow(TEXT_COLOUR));
+            downButton->Draw(graphics, radarScreen);
+
+            auto deleteButton = Components::Button::Create(
+                deleteButtonRect,
+                screenObjectId,
+                "deleteButton" + aircraftToProcess->Callsign(),
+                Components::DeleteButton(TEXT_COLOUR));
+            deleteButton->Draw(graphics, radarScreen);
 
             sequenceNumber++;
             aircraftToProcess = aircraftToProcess->Next();
@@ -173,7 +227,9 @@ namespace UKControllerPlugin::Approach {
             callsignRect.Y = callsignRect.GetBottom();
             targetRect.Y = targetRect.GetBottom();
             actualRect.Y = actualRect.GetBottom();
-            actionsRect.Y = actionsRect.GetBottom();
+            upButtonRect.Y = upButtonRect.GetBottom();
+            downButtonRect.Y = downButtonRect.GetBottom();
+            deleteButtonRect.Y = deleteButtonRect.GetBottom();
         }
     }
 
