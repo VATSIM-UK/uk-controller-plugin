@@ -23,8 +23,9 @@ namespace UKControllerPlugin::Approach {
         ApproachSequencerDisplay(
             std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
             std::shared_ptr<List::PopupListInterface> airfieldSelector,
+            std::shared_ptr<List::PopupListInterface> callsignSelector,
             int screenObjectId);
-        auto IsVisible() const -> bool override;
+        [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
@@ -41,6 +42,8 @@ namespace UKControllerPlugin::Approach {
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
         void RenderDivider(Windows::GdiGraphicsInterface& graphics);
         void RenderHeaders(Windows::GdiGraphicsInterface& graphics);
+        void RenderAddButton(
+            Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
 
         // Dimensions
         inline static const int WINDOW_WIDTH = 435;
@@ -50,12 +53,16 @@ namespace UKControllerPlugin::Approach {
 
         // Clickspot
         const std::string AIRFIELD_SELECTOR_CLICKSPOT = "aircraftSelector";
+        const std::string ADD_AIRCRAFT_CLICKSPOT = "addAircraft";
 
         // Display options
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions;
 
         // Selects an airfield
         std::shared_ptr<List::PopupListInterface> airfieldSelector;
+        
+        // Selects callsigns to add
+        std::shared_ptr<List::PopupListInterface> callsignSelector;
 
         // Components
         const Gdiplus::Rect titleBarArea = {0, 0, WINDOW_WIDTH, TITLE_BAR_HEIGHT};
@@ -63,15 +70,19 @@ namespace UKControllerPlugin::Approach {
         const Gdiplus::Rect airfieldStaticArea = {INSETS, TITLE_BAR_HEIGHT + INSETS, 75, TITLE_BAR_HEIGHT};
         const Gdiplus::Rect airfieldTextArea = {
             airfieldStaticArea.GetRight() + INSETS, airfieldStaticArea.GetTop(), 40, TITLE_BAR_HEIGHT};
+        const Gdiplus::Rect addButton = {
+            airfieldTextArea.GetRight() + INSETS, airfieldStaticArea.GetTop(), 40, TITLE_BAR_HEIGHT};
         const Gdiplus::Point dividerLeft = {0, airfieldTextArea.GetBottom() + INSETS};
         const Gdiplus::Point dividerRight = {WINDOW_WIDTH, airfieldTextArea.GetBottom() + INSETS};
         const Gdiplus::Rect numberHeader = {INSETS, dividerLeft.Y + INSETS, 15, 25};
         const Gdiplus::Rect callsignHeader = {numberHeader.GetRight() + INSETS, numberHeader.GetTop(), 100, 25};
         const Gdiplus::Rect targetHeader = {callsignHeader.GetRight() + INSETS, callsignHeader.GetTop(), 100, 25};
         const Gdiplus::Rect displayHeader = {targetHeader.GetRight() + INSETS, targetHeader.GetTop(), 100, 25};
+        const Gdiplus::Rect moveHeader = {displayHeader.GetRight() + INSETS, displayHeader.GetTop(), 50, 25};
 
         std::shared_ptr<Components::TitleBar> titleBar;
         std::shared_ptr<Components::ClickableArea> airfieldClickspot;
+        std::shared_ptr<Components::ClickableArea> addClickspot;
 
         const Gdiplus::Color BACKGROUND_COLOUR = Gdiplus::Color(64, 64, 64);
         const Gdiplus::Color TEXT_COLOUR = Gdiplus::Color(225, 225, 225);

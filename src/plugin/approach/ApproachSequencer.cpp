@@ -60,4 +60,9 @@ namespace UKControllerPlugin::Approach {
     {
         GetOrCreate(airfield).MoveAircraftUp(callsign);
     }
+
+    auto ApproachSequencer::CountSequences() const -> size_t
+    {
+        return sequences.size();
+    }
 } // namespace UKControllerPlugin::Approach

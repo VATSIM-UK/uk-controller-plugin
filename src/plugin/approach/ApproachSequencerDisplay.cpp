@@ -15,8 +15,10 @@ namespace UKControllerPlugin::Approach {
     ApproachSequencerDisplay::ApproachSequencerDisplay(
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
         std::shared_ptr<List::PopupListInterface> airfieldSelector,
+        std::shared_ptr<List::PopupListInterface> callsignSelector,
         int screenObjectId)
-        : displayOptions(std::move(displayOptions)), airfieldSelector(airfieldSelector),
+        : displayOptions(std::move(displayOptions)), airfieldSelector(std::move(airfieldSelector)),
+          callsignSelector(std::move(callsignSelector)),
           titleBar(CollapsibleWindowTitleBar::Create(
               L"Approach Sequencer",
               titleBarArea,
@@ -24,6 +26,8 @@ namespace UKControllerPlugin::Approach {
               screenObjectId)),
           airfieldClickspot(Components::ClickableArea::Create(
               this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
+          addClickspot(
+              Components::ClickableArea::Create(this->addButton, screenObjectId, ADD_AIRCRAFT_CLICKSPOT, false)),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
           textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR)),
           dividingPen(std::make_shared<Gdiplus::Pen>(TEXT_COLOUR))
@@ -53,6 +57,7 @@ namespace UKControllerPlugin::Approach {
                 graphics.FillRect(contentArea, *backgroundBrush);
                 this->titleBar->Draw(graphics, radarScreen);
                 this->RenderAirfield(graphics, radarScreen);
+                this->RenderAddButton(graphics, radarScreen);
                 this->RenderDivider(graphics);
                 this->RenderHeaders(graphics);
             });
@@ -80,6 +85,10 @@ namespace UKControllerPlugin::Approach {
 
         if (objectDescription == AIRFIELD_SELECTOR_CLICKSPOT) {
             this->airfieldSelector->Trigger(mousePos);
+        }
+
+        if (objectDescription == ADD_AIRCRAFT_CLICKSPOT) {
+            this->callsignSelector->Trigger(mousePos);
         }
     }
 
@@ -114,5 +123,14 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(L"Callsign", callsignHeader, *textBrush);
         graphics.DrawString(L"Target", targetHeader, *textBrush);
         graphics.DrawString(L"Display", displayHeader, *textBrush);
+        graphics.DrawString(L"Move", moveHeader, *textBrush);
+    }
+
+    void ApproachSequencerDisplay::RenderAddButton(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        graphics.DrawRect(addButton, *dividingPen);
+        graphics.DrawString(L"Add", addButton, *textBrush);
+        addClickspot->Apply(graphics, radarScreen);
     }
 } // namespace UKControllerPlugin::Approach

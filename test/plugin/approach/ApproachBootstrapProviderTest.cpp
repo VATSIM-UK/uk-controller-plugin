@@ -35,4 +35,10 @@ namespace UKControllerPluginTest::Approach {
         this->RunBootstrapRadarScreen(provider);
         EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle sequencer airfield selector"));
     }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersCallsignPopupList)
+    {
+        this->RunBootstrapRadarScreen(provider);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle sequencer callsign selector"));
+    }
 } // namespace UKControllerPluginTest::Approach

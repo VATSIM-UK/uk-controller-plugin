@@ -1,10 +1,14 @@
+#include "AircraftSelectionProvider.h"
 #include "ApproachBootstrapProvider.h"
+#include "ApproachModuleFactory.h"
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayAsrLoader.h"
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSpacingRingRenderer.h"
 #include "SequencerAirfieldSelector.h"
 #include "ToggleApproachSequencerDisplay.h"
+#include "aircraft/CallsignSelectionListFactory.h"
+#include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "list/PopupListFactory.h"
@@ -43,6 +47,10 @@ namespace UKControllerPlugin::Approach {
                 container.popupListFactory->Create(
                     std::make_shared<SequencerAirfieldSelector>(displayOptions, *container.airfields),
                     "Toggle sequencer airfield selector"),
+                container.callsignSelectionListFactory->Create(
+                    std::make_shared<AircraftSelectionProvider>(
+                        container.moduleFactories->Approach().Sequencer(), displayOptions, *container.plugin),
+                    "Toggle sequencer callsign selector"),
                 sequencerScreenObjectId),
             radarRenderables.beforeTags);
 

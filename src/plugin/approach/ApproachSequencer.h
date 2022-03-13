@@ -1,4 +1,5 @@
 #pragma once
+#include "ApproachSequencingMode.h"
 
 namespace UKControllerPlugin::Approach {
     class ApproachSequence;
@@ -20,6 +21,7 @@ namespace UKControllerPlugin::Approach {
         void MoveAircraftDown(const std::string& airfield, const std::string& callsign);
         [[nodiscard]] auto GetForAirfield(const std::string& airfield) -> const ApproachSequence&;
         void RemoveAircraftFromSequences(const std::string& callsign);
+        [[nodiscard]] auto CountSequences() const -> size_t;
 
         private:
         void AssertAircraftNotInSequence(const std::string& callsign);

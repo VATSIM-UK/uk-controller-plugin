@@ -10,11 +10,14 @@ namespace UKControllerPluginTest::Approach {
         public:
         ApproachSequencerDisplayTest()
             : selectorList(std::make_shared<List::MockPopupList>()),
-              options(std::make_shared<ApproachSequencerDisplayOptions>()), display(options, selectorList, 55)
+              callsignSelectorList(std::make_shared<List::MockPopupList>()),
+              options(std::make_shared<ApproachSequencerDisplayOptions>()),
+              display(options, selectorList, callsignSelectorList, 55)
         {
         }
 
         std::shared_ptr<List::MockPopupList> selectorList;
+        std::shared_ptr<List::MockPopupList> callsignSelectorList;
         testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
         std::shared_ptr<ApproachSequencerDisplayOptions> options;
         ApproachSequencerDisplay display;
@@ -41,5 +44,12 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_CALL(*selectorList, Trigger(PointEq(POINT{1, 2}))).Times(1);
 
         display.LeftClick(radarScreen, 1, "aircraftSelector", {1, 2}, {});
+    }
+
+    TEST_F(ApproachSequencerDisplayTest, ItTriggersCallsignList)
+    {
+        EXPECT_CALL(*callsignSelectorList, Trigger(PointEq(POINT{1, 2}))).Times(1);
+
+        display.LeftClick(radarScreen, 1, "addAircraft", {1, 2}, {});
     }
 } // namespace UKControllerPluginTest::Approach

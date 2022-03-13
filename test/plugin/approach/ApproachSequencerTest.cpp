@@ -12,14 +12,21 @@ namespace UKControllerPluginTest::Approach {
         ApproachSequencer sequencer;
     };
 
+    TEST_F(ApproachSequencerTest, ItStartsWithNoSequences)
+    {
+        EXPECT_EQ(0, sequencer.CountSequences());
+    }
+
     TEST_F(ApproachSequencerTest, ItReturnsSequence)
     {
         EXPECT_EQ(nullptr, sequencer.GetForAirfield("EGKK").First());
+        EXPECT_EQ(1, sequencer.CountSequences());
     }
 
     TEST_F(ApproachSequencerTest, ItReturnsTheSameSequence)
     {
         EXPECT_EQ(&sequencer.GetForAirfield("EGKK"), &sequencer.GetForAirfield("EGKK"));
+        EXPECT_EQ(1, sequencer.CountSequences());
     }
 
     TEST_F(ApproachSequencerTest, ItAddsAircraftToASequence)
