@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [4.4.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0...4.4.1) (2022-03-13)
+
+
+### Bug Fixes
+
+* **historytrails:** Missing first dot on faded trails ([87521f2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/87521f2d9e2a6250b2cd3917133d2d02963c53ea))
+* **historytrails:** Missing first dot on faded trails ([fa5d517](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fa5d517bc3e71fb3c4f49e37163f713f240b7c39)), closes [#436](https://github.com/VATSIM-UK/uk-controller-plugin/issues/436)
+
 # [4.4.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.3.0...4.4.0) (2022-03-06)
 
 
