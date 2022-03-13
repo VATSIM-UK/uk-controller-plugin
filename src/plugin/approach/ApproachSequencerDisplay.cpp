@@ -1,3 +1,6 @@
+#include "ApproachSequence.h"
+#include "ApproachSequencedAircraft.h"
+#include "ApproachSequencer.h"
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayOptions.h"
 #include "components/ClickableArea.h"
@@ -13,12 +16,13 @@ using UKControllerPlugin::Components::CollapsibleWindowTitleBar;
 namespace UKControllerPlugin::Approach {
 
     ApproachSequencerDisplay::ApproachSequencerDisplay(
+        ApproachSequencer& sequencer,
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
         std::shared_ptr<List::PopupListInterface> airfieldSelector,
         std::shared_ptr<List::PopupListInterface> callsignSelector,
         int screenObjectId)
-        : displayOptions(std::move(displayOptions)), airfieldSelector(std::move(airfieldSelector)),
-          callsignSelector(std::move(callsignSelector)),
+        : sequencer(sequencer), displayOptions(std::move(displayOptions)),
+          airfieldSelector(std::move(airfieldSelector)), callsignSelector(std::move(callsignSelector)),
           titleBar(CollapsibleWindowTitleBar::Create(
               L"Approach Sequencer",
               titleBarArea,
@@ -54,12 +58,13 @@ namespace UKControllerPlugin::Approach {
                     return;
                 }
 
-                graphics.FillRect(contentArea, *backgroundBrush);
+                this->RenderBackground(graphics);
                 this->titleBar->Draw(graphics, radarScreen);
                 this->RenderAirfield(graphics, radarScreen);
                 this->RenderAddButton(graphics, radarScreen);
                 this->RenderDivider(graphics);
                 this->RenderHeaders(graphics);
+                this->RenderContent(graphics, radarScreen);
             });
     }
 
@@ -122,8 +127,8 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(L"#", numberHeader, *textBrush);
         graphics.DrawString(L"Callsign", callsignHeader, *textBrush);
         graphics.DrawString(L"Target", targetHeader, *textBrush);
-        graphics.DrawString(L"Display", displayHeader, *textBrush);
-        graphics.DrawString(L"Move", moveHeader, *textBrush);
+        graphics.DrawString(L"Actual", actualHeader, *textBrush);
+        graphics.DrawString(L"Actions", actionsHeader, *textBrush);
     }
 
     void ApproachSequencerDisplay::RenderAddButton(
@@ -132,5 +137,56 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawRect(addButton, *dividingPen);
         graphics.DrawString(L"Add", addButton, *textBrush);
         addClickspot->Apply(graphics, radarScreen);
+    }
+
+    void ApproachSequencerDisplay::RenderContent(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        if (displayOptions->Airfield().empty()) {
+            return;
+        }
+
+        auto aircraftToProcess = sequencer.GetForAirfield(displayOptions->Airfield()).First();
+        Gdiplus::Rect numberRect{
+            numberHeader.X, numberHeader.GetBottom() + INSETS, numberHeader.Width, numberHeader.Height};
+        Gdiplus::Rect callsignRect{
+            callsignHeader.X, callsignHeader.GetBottom() + INSETS, callsignHeader.Width, callsignHeader.Height};
+        Gdiplus::Rect targetRect{
+            targetHeader.X, targetHeader.GetBottom() + INSETS, targetHeader.Width, targetHeader.Height};
+        Gdiplus::Rect actualRect{
+            actualHeader.X, actualHeader.GetBottom() + INSETS, actualHeader.Width, actualHeader.Height};
+        Gdiplus::Rect actionsRect{
+            actionsHeader.X, actionsHeader.GetBottom() + INSETS, actionsHeader.Width, actionsHeader.Height};
+        int sequenceNumber = 1;
+
+        while (aircraftToProcess != nullptr) {
+            graphics.DrawString(std::to_wstring(sequenceNumber), numberRect, *textBrush);
+            graphics.DrawString(
+                HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()), callsignRect, *textBrush);
+            graphics.DrawString(L"Wake", targetRect, *textBrush);
+            graphics.DrawString(L"Wke", actualRect, *textBrush);
+            graphics.DrawString(L"Act", actionsRect, *textBrush);
+
+            sequenceNumber++;
+            aircraftToProcess = aircraftToProcess->Next();
+            numberRect.Y = numberRect.GetBottom();
+            callsignRect.Y = callsignRect.GetBottom();
+            targetRect.Y = targetRect.GetBottom();
+            actualRect.Y = actualRect.GetBottom();
+            actionsRect.Y = actionsRect.GetBottom();
+        }
+    }
+
+    void ApproachSequencerDisplay::RenderBackground(Windows::GdiGraphicsInterface& graphics)
+    {
+        auto numberOfCallsigns = displayOptions->Airfield().empty()
+                                     ? 0
+                                     : sequencer.GetForAirfield(displayOptions->Airfield()).Callsigns().size();
+        const Gdiplus::Rect contentArea{
+            0,
+            TITLE_BAR_HEIGHT,
+            WINDOW_WIDTH,
+            static_cast<INT>(callsignHeader.GetBottom() + INSETS + (numberOfCallsigns * callsignHeader.Height))};
+        graphics.FillRect(contentArea, *backgroundBrush);
     }
 } // namespace UKControllerPlugin::Approach

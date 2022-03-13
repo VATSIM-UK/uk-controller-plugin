@@ -43,6 +43,7 @@ namespace UKControllerPlugin::Approach {
         radarRenderables.RegisterRenderer(
             sequencerRendererId,
             std::make_shared<ApproachSequencerDisplay>(
+                container.moduleFactories->Approach().Sequencer(),
                 displayOptions,
                 container.popupListFactory->Create(
                     std::make_shared<SequencerAirfieldSelector>(displayOptions, *container.airfields),

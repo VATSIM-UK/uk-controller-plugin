@@ -1,6 +1,8 @@
+#include "approach/ApproachSequencer.h"
 #include "approach/ApproachSequencerDisplay.h"
 #include "approach/ApproachSequencerDisplayOptions.h"
 
+using UKControllerPlugin::Approach::ApproachSequencer;
 using UKControllerPlugin::Approach::ApproachSequencerDisplay;
 using UKControllerPlugin::Approach::ApproachSequencerDisplayOptions;
 
@@ -12,13 +14,14 @@ namespace UKControllerPluginTest::Approach {
             : selectorList(std::make_shared<List::MockPopupList>()),
               callsignSelectorList(std::make_shared<List::MockPopupList>()),
               options(std::make_shared<ApproachSequencerDisplayOptions>()),
-              display(options, selectorList, callsignSelectorList, 55)
+              display(sequencer, options, selectorList, callsignSelectorList, 55)
         {
         }
 
         std::shared_ptr<List::MockPopupList> selectorList;
         std::shared_ptr<List::MockPopupList> callsignSelectorList;
         testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
+        ApproachSequencer sequencer;
         std::shared_ptr<ApproachSequencerDisplayOptions> options;
         ApproachSequencerDisplay display;
     };

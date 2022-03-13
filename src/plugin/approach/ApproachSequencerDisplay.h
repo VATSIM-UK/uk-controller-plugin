@@ -12,6 +12,7 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Approach {
+    class ApproachSequencer;
     class ApproachSequencerDisplayOptions;
 
     /**
@@ -21,6 +22,7 @@ namespace UKControllerPlugin::Approach {
     {
         public:
         ApproachSequencerDisplay(
+            ApproachSequencer& sequencer,
             std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
             std::shared_ptr<List::PopupListInterface> airfieldSelector,
             std::shared_ptr<List::PopupListInterface> callsignSelector,
@@ -38,35 +40,40 @@ namespace UKControllerPlugin::Approach {
         void ResetPosition() override;
 
         private:
+        void RenderBackground(
+            Windows::GdiGraphicsInterface& graphics);
         void RenderAirfield(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
         void RenderDivider(Windows::GdiGraphicsInterface& graphics);
         void RenderHeaders(Windows::GdiGraphicsInterface& graphics);
         void RenderAddButton(
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
+        void
+        RenderContent(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen);
 
         // Dimensions
         inline static const int WINDOW_WIDTH = 435;
         inline static const int TITLE_BAR_HEIGHT = 20;
-        inline static const int CONTENT_HEIGHT = 150;
         inline static const int INSETS = 5;
 
         // Clickspot
         const std::string AIRFIELD_SELECTOR_CLICKSPOT = "aircraftSelector";
         const std::string ADD_AIRCRAFT_CLICKSPOT = "addAircraft";
 
+        // The sequences
+        ApproachSequencer& sequencer;
+
         // Display options
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions;
 
         // Selects an airfield
         std::shared_ptr<List::PopupListInterface> airfieldSelector;
-        
+
         // Selects callsigns to add
         std::shared_ptr<List::PopupListInterface> callsignSelector;
 
         // Components
         const Gdiplus::Rect titleBarArea = {0, 0, WINDOW_WIDTH, TITLE_BAR_HEIGHT};
-        const Gdiplus::Rect contentArea = {0, TITLE_BAR_HEIGHT, WINDOW_WIDTH, CONTENT_HEIGHT};
         const Gdiplus::Rect airfieldStaticArea = {INSETS, TITLE_BAR_HEIGHT + INSETS, 75, TITLE_BAR_HEIGHT};
         const Gdiplus::Rect airfieldTextArea = {
             airfieldStaticArea.GetRight() + INSETS, airfieldStaticArea.GetTop(), 40, TITLE_BAR_HEIGHT};
@@ -76,9 +83,9 @@ namespace UKControllerPlugin::Approach {
         const Gdiplus::Point dividerRight = {WINDOW_WIDTH, airfieldTextArea.GetBottom() + INSETS};
         const Gdiplus::Rect numberHeader = {INSETS, dividerLeft.Y + INSETS, 15, 25};
         const Gdiplus::Rect callsignHeader = {numberHeader.GetRight() + INSETS, numberHeader.GetTop(), 100, 25};
-        const Gdiplus::Rect targetHeader = {callsignHeader.GetRight() + INSETS, callsignHeader.GetTop(), 100, 25};
-        const Gdiplus::Rect displayHeader = {targetHeader.GetRight() + INSETS, targetHeader.GetTop(), 100, 25};
-        const Gdiplus::Rect moveHeader = {displayHeader.GetRight() + INSETS, displayHeader.GetTop(), 50, 25};
+        const Gdiplus::Rect targetHeader = {callsignHeader.GetRight() + INSETS, callsignHeader.GetTop(), 75, 25};
+        const Gdiplus::Rect actualHeader = {targetHeader.GetRight() + INSETS, targetHeader.GetTop(), 75, 25};
+        const Gdiplus::Rect actionsHeader = {actualHeader.GetRight() + INSETS, actualHeader.GetTop(), 125, 25};
 
         std::shared_ptr<Components::TitleBar> titleBar;
         std::shared_ptr<Components::ClickableArea> airfieldClickspot;
