@@ -305,7 +305,8 @@ namespace UKControllerPlugin::Api {
         nlohmann::json body;
         body["controller_position_id"] = controllerPositionId;
         body["remarks"] = remarks;
-        body["released_at"] = date::format("%Y-%m-%d %H:%M:%S", date::floor<std::chrono::seconds>(releasedAt));
+        body["released_at"] =
+            fmt::format("{:%Y-%m-%d %H:%M:%S}", fmt::gmtime(std::chrono::floor<std::chrono::seconds>(releasedAt)));
         if (expiresInSeconds == -1) {
             body["expires_in_seconds"] = nlohmann::json::value_t::null;
         } else {

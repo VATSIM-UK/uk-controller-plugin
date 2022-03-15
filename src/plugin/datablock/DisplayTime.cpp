@@ -3,8 +3,8 @@
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
-using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::UserSetting;
 
 namespace UKControllerPlugin {
     namespace Datablock {
@@ -14,7 +14,7 @@ namespace UKControllerPlugin {
         */
         std::string DisplayTime::FromTimestamp(time_t time) const
         {
-            return date::format(this->timeFormat, std::chrono::system_clock::from_time_t(time));
+            return fmt::format("{:%H:%M}", fmt::gmtime(std::chrono::system_clock::from_time_t(time)));
         }
 
         /*
@@ -23,7 +23,7 @@ namespace UKControllerPlugin {
         */
         std::string DisplayTime::FromSystemTime(void) const
         {
-            return date::format(this->timeFormat, std::chrono::system_clock::now());
+            return fmt::format("{:%H:%M}", fmt::gmtime(std::chrono::system_clock::now()));
         }
 
         /*
@@ -32,18 +32,16 @@ namespace UKControllerPlugin {
         */
         std::string DisplayTime::FromTimePoint(std::chrono::system_clock::time_point tp) const
         {
-            return date::format(this->timeFormat, tp);
+            return fmt::format("{:%H:%M}", fmt::gmtime(tp));
         }
 
         /*
             Handle the fact that user settings have been updated
         */
-        void DisplayTime::UserSettingsUpdated(UserSetting & userSettings)
+        void DisplayTime::UserSettingsUpdated(UserSetting& userSettings)
         {
-            this->useBlankTimeForUnknown = userSettings.GetBooleanEntry(
-                GeneralSettingsEntries::unknownTimeFormatBlankKey,
-                false
-            );
+            this->useBlankTimeForUnknown =
+                userSettings.GetBooleanEntry(GeneralSettingsEntries::unknownTimeFormatBlankKey, false);
         }
-    }  // namespace Datablock
-}  // namespace UKControllerPlugin
+    } // namespace Datablock
+} // namespace UKControllerPlugin

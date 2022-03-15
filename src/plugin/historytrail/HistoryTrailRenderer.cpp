@@ -336,6 +336,8 @@ namespace UKControllerPlugin {
                 // Round number used to govern fade and degrade, reset the colour
                 roundNumber = 0;
                 currentColourArgb = *this->startColour;
+                this->pen->SetColor(currentColourArgb);
+                this->brush->SetColor(currentColourArgb);
 
                 // Reset the dot height and width
                 dot.Width = this->historyTrailDotSizeFloat;

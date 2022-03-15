@@ -74,7 +74,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 set_target_properties(${PROJECT_NAME} PROPERTIES
     INTERPROCEDURAL_OPTIMIZATION_RELEASE "TRUE"
 )
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 ################################################################################
 # Include directories
 ################################################################################
@@ -88,6 +88,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/spdlog/include"
 )
 
 ################################################################################
@@ -116,7 +117,7 @@ if(MSVC)
             /Gy
         >
         /permissive-;
-        /std:c++17;
+        /std:c++20;
         /sdl;
         /W4;
         /WX;

@@ -34,7 +34,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(DisplayTimeTest, FromSystemTimeReturnsTimeString)
         {
-            std::string expectedTime = date::format("%H:%M", std::chrono::system_clock::now());
+            std::string expectedTime = fmt::format("{:%H:%M}", fmt::gmtime(std::chrono::system_clock::now()));
             EXPECT_TRUE(expectedTime == timeDisplay.FromSystemTime());
         }
 
