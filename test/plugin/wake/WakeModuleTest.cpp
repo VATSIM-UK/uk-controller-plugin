@@ -8,6 +8,7 @@
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagItemCollection.h"
+#include "wake/WakeCategoryMapperCollection.h"
 #include "wake/WakeModule.h"
 #include "wake/WakeSchemeCollection.h"
 
@@ -60,6 +61,17 @@ namespace UKControllerPluginTest::Wake {
         BootstrapPlugin(this->container, this->dependencies);
 
         EXPECT_EQ(0, this->container.wakeSchemes->Count());
+    }
+
+    TEST_F(WakeModuleTest, ItRegistersTheCategoryMapperCollection)
+    {
+        EXPECT_CALL(dependencies, LoadDependency("DEPENDENCY_WAKE_SCHEME", nlohmann::json::array()))
+            .Times(1)
+            .WillOnce(testing::Return(nlohmann::json::array()));
+
+        BootstrapPlugin(this->container, this->dependencies);
+
+        EXPECT_EQ(0, this->container.wakeCategoryMappers->Count());
     }
 
     TEST_F(WakeModuleTest, ItAddsToFlightplanHandler)

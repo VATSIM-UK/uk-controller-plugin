@@ -67,6 +67,7 @@
 #include "tag/TagItemCollection.h"
 #include "task/TaskRunnerInterface.h"
 #include "timedevent/TimedEventCollection.h"
+#include "wake/WakeCategoryMapperCollection.h"
 #include "wake/WakeSchemeCollection.h"
 #include "windows/WinApiInterface.h"
 

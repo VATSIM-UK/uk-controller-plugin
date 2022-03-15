@@ -147,6 +147,7 @@ namespace UKControllerPlugin {
         class TimedEventCollection;
     } // namespace TimedEvent
     namespace Wake {
+        class WakeCategoryMapperCollection;
         class WakeSchemeCollection;
     } // namespace Wake
     namespace Windows {
@@ -255,6 +256,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::unique_ptr<UKControllerPlugin::Wake::WakeSchemeCollection> wakeSchemes;
+        std::unique_ptr<UKControllerPlugin::Wake::WakeCategoryMapperCollection> wakeCategoryMappers;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
         std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
         std::unique_ptr<UKControllerPlugin::Runway::RunwayCollection> runwayCollection;

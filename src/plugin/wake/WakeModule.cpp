@@ -5,6 +5,8 @@
 #include "WakeCalculatorDisplay.h"
 #include "WakeCalculatorOptions.h"
 #include "WakeCategoryEventHandler.h"
+#include "WakeCategoryMapperCollection.h"
+#include "WakeCategoryMapperCollectionFactory.h"
 #include "WakeModule.h"
 #include "WakeScheme.h"
 #include "WakeSchemeCollection.h"
@@ -27,9 +29,8 @@ using UKControllerPlugin::Wake::WakeCategoryEventHandler;
 
 namespace UKControllerPlugin::Wake {
 
-    std::unique_ptr<WakeScheme> defaultScheme; // NOLINT
-    std::shared_ptr<FlightplanWakeCategoryMapper> ukMapper;
-    std::shared_ptr<FlightplanWakeCategoryMapper> recatMapper;
+    std::unique_ptr<WakeScheme> defaultScheme;
+    std::shared_ptr<FlightplanWakeCategoryMapper> defaultMapper;
 
     /*
         Bootstrap everything
@@ -42,16 +43,23 @@ namespace UKControllerPlugin::Wake {
 
         defaultScheme =
             std::make_unique<WakeScheme>(-1, "DEF", "UK Default", std::list<std::shared_ptr<WakeCategory>>{});
+        defaultMapper = std::make_shared<FlightplanWakeCategoryMapper>(*defaultScheme, *container.aircraftTypeMapper);
 
         // Create the mappers
-        const auto ukScheme = container.wakeSchemes->GetByKey("UK");
-        const auto recatScheme = container.wakeSchemes->GetByKey("RECAT_EU");
-        ukMapper = std::make_shared<FlightplanWakeCategoryMapper>(
-            ukScheme ? *ukScheme : *defaultScheme, *container.aircraftTypeMapper);
-        recatMapper = std::make_shared<FlightplanWakeCategoryMapper>(
-            recatScheme ? *recatScheme : *defaultScheme, *container.aircraftTypeMapper);
+        container.wakeCategoryMappers = MakeMapperCollection(*container.wakeSchemes, *container.aircraftTypeMapper);
 
         // Create handler and register
+        const auto ukScheme = container.wakeSchemes->GetByKey("UK");
+        const auto recatScheme = container.wakeSchemes->GetByKey("RECAT_EU");
+        const auto ukMapper = ukScheme ? (container.wakeCategoryMappers->Get(ukScheme->Id())
+                                              ? container.wakeCategoryMappers->Get(ukScheme->Id())
+                                              : defaultMapper)
+                                       : defaultMapper;
+
+        const auto recatMapper = recatScheme ? (container.wakeCategoryMappers->Get(recatScheme->Id())
+                                                    ? container.wakeCategoryMappers->Get(recatScheme->Id())
+                                                    : defaultMapper)
+                                             : defaultMapper;
         auto handler = std::make_shared<WakeCategoryEventHandler>(*ukMapper, *recatMapper);
 
         container.flightplanHandler->RegisterHandler(handler);
@@ -70,6 +78,12 @@ namespace UKControllerPlugin::Wake {
     {
         auto options = std::make_shared<WakeCalculatorOptions>();
         options->Scheme("UK");
+
+        const auto ukScheme = container.wakeSchemes->GetByKey("UK");
+        const auto ukMapper = ukScheme ? (container.wakeCategoryMappers->Get(ukScheme->Id())
+                                              ? container.wakeCategoryMappers->Get(ukScheme->Id())
+                                              : defaultMapper)
+                                       : defaultMapper;
         options->SchemeMapper(ukMapper);
 
         const auto rendererId = renderables.ReserveRendererIdentifier();
