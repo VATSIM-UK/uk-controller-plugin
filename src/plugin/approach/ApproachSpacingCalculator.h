@@ -4,6 +4,9 @@ namespace UKControllerPlugin {
     namespace Airfield {
         class AirfieldCollection;
     } // namespace Airfield
+    namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+    } // namespace Euroscope
     namespace Wake {
         class WakeCategoryMapperCollection;
     } // namespace Wake
@@ -19,7 +22,9 @@ namespace UKControllerPlugin::Approach {
     {
         public:
         ApproachSpacingCalculator(
-            const Airfield::AirfieldCollection& airfields, const Wake::WakeCategoryMapperCollection& wakeMappers);
+            const Airfield::AirfieldCollection& airfields,
+            const Wake::WakeCategoryMapperCollection& wakeMappers,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin);
         [[nodiscard]] auto Calculate(const std::string& airfield, const ApproachSequencedAircraft& aircraft) const
             -> double;
         [[nodiscard]] static auto NoSpacing() -> double;
@@ -32,5 +37,8 @@ namespace UKControllerPlugin::Approach {
 
         // The wake schemes
         const Wake::WakeCategoryMapperCollection& wakeMappers;
+
+        // Plugin for getting flightplans
+        Euroscope::EuroscopePluginLoopbackInterface& plugin;
     };
 } // namespace UKControllerPlugin::Approach

@@ -118,6 +118,7 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeModuleTest, ItRegistersCalculatorForRenderers)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_EQ(1, radarRenderables.CountRenderers());
         EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
@@ -125,30 +126,35 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeModuleTest, ItRegistersCalculatorForAsrEvents)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_EQ(1, asrEventHandlers.CountHandlers());
     }
 
     TEST_F(WakeModuleTest, ItRegistersLeadAircraftCallback)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Lead Aircraft"));
     }
 
     TEST_F(WakeModuleTest, ItRegistersFollowingAircraftCallback)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Following Aircraft"));
     }
 
     TEST_F(WakeModuleTest, ItRegistersSchemeCallback)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Scheme"));
     }
 
     TEST_F(WakeModuleTest, ItRegistersToggleableDisplay)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Toggle Wake Turbulence Calculator"));
     }
