@@ -122,7 +122,7 @@ namespace UKControllerPlugin {
     */
     auto InitialisePlugin::GetPlugin() -> EuroScopePlugIn::CPlugIn*
     {
-        return this->container->plugin.get();
+        return static_cast<UKControllerPlugin::UKPlugin*>(this->container->plugin.get());
     }
 
     /*

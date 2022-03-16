@@ -13,7 +13,6 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "list/PopupListFactory.h"
-#include "plugin/UKPlugin.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
@@ -39,6 +38,7 @@ namespace UKControllerPlugin::Approach {
             sequencerRendererId,
             std::make_shared<ApproachSequencerDisplay>(
                 container.moduleFactories->Approach().Sequencer(),
+                container.moduleFactories->Approach().SpacingCalculator(container),
                 displayOptions,
                 container.popupListFactory->Create(
                     std::make_shared<SequencerAirfieldSelector>(displayOptions, *container.airfields),
@@ -63,7 +63,10 @@ namespace UKControllerPlugin::Approach {
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(),
             std::make_shared<ApproachSpacingRingRenderer>(
-                container.moduleFactories->Approach().Sequencer(), displayOptions, *container.plugin),
+                container.moduleFactories->Approach().Sequencer(),
+                container.moduleFactories->Approach().SpacingCalculator(container),
+                displayOptions,
+                *container.plugin),
             radarRenderables.beforeTags);
     }
 } // namespace UKControllerPlugin::Approach

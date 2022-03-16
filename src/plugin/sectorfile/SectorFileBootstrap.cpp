@@ -12,7 +12,7 @@ namespace UKControllerPlugin::SectorFile {
 
     void BootstrapPlugin(PersistenceContainer& container)
     {
-        container.runways = std::make_shared<RunwayCollection>(*container.plugin);
+        container.runways = std::make_shared<RunwayCollection>(static_cast<UKPlugin&>(*container.plugin));
         container.runwayDialogEventHandlers->AddHandler(container.runways);
     }
 

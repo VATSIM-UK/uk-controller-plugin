@@ -10,6 +10,6 @@ namespace UKControllerPlugin::Euroscope {
 
     void PluginUserSettingBootstrap::BootstrapPlugin(PersistenceContainer& container)
     {
-        container.pluginUserSettingHandler = std::make_unique<UserSetting>(*container.plugin);
+        container.pluginUserSettingHandler = std::make_unique<UserSetting>(static_cast<UKPlugin&>(*container.plugin));
     }
 } // namespace UKControllerPlugin::Euroscope

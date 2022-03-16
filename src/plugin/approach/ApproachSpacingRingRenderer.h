@@ -8,6 +8,7 @@ namespace UKControllerPlugin::Euroscope {
 namespace UKControllerPlugin::Approach {
     class ApproachSequencer;
     class ApproachSequencerDisplayOptions;
+    class ApproachSpacingCalculator;
 
     /**
      * Draws rings around aircraft on approach based on
@@ -18,6 +19,7 @@ namespace UKControllerPlugin::Approach {
         public:
         ApproachSpacingRingRenderer(
             ApproachSequencer& sequencer,
+            ApproachSpacingCalculator& spacingCalculator,
             std::shared_ptr<ApproachSequencerDisplayOptions> options,
             Euroscope::EuroscopePluginLoopbackInterface& plugin);
         auto IsVisible() const -> bool override;
@@ -27,6 +29,9 @@ namespace UKControllerPlugin::Approach {
         private:
         // The sequencer
         ApproachSequencer& sequencer;
+
+        // Calculates required spacings
+        ApproachSpacingCalculator& spacingCalculator;
 
         // Display options
         std::shared_ptr<ApproachSequencerDisplayOptions> options;

@@ -17,6 +17,7 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin::Approach {
     class ApproachSequencer;
     class ApproachSequencerDisplayOptions;
+    class ApproachSpacingCalculator;
 
     /**
      * Displays the approach sequencer.
@@ -26,6 +27,7 @@ namespace UKControllerPlugin::Approach {
         public:
         ApproachSequencerDisplay(
             ApproachSequencer& sequencer,
+            ApproachSpacingCalculator& spacingCalculator,
             std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
             std::shared_ptr<List::PopupListInterface> airfieldSelector,
             std::shared_ptr<List::PopupListInterface> callsignSelector,
@@ -66,6 +68,9 @@ namespace UKControllerPlugin::Approach {
 
         // The sequences
         ApproachSequencer& sequencer;
+        
+        // The calculator for the spacing
+        ApproachSpacingCalculator& spacingCalculator;
 
         // Display options
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions;

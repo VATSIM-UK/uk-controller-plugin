@@ -20,14 +20,15 @@ namespace UKControllerPlugin::Bootstrap {
     {
         container.tagHandler->RegisterAllItemsWithEuroscope(*container.plugin);
         container.pluginFunctionHandlers->RegisterTagFunctionsWithEuroscope(*container.plugin);
-        container.plugin->PostInit();
+
+        UKPlugin& ukPlugin = static_cast<UKPlugin&>(*container.plugin);
+        ukPlugin.PostInit();
         UKControllerPlugin::Euroscope::LoadDefaultUserSettings(*container.pluginUserSettingHandler);
         UKControllerPlugin::Countdown::CountdownModule::LoadDefaultUserSettings(*container.pluginUserSettingHandler);
         container.userSettingHandlers->UserSettingsUpdateEvent(*container.pluginUserSettingHandler);
 
         std::string versionMessage =
             "UK Controller Plugin Loaded Successfully: Version " + std::string(PluginVersion::version);
-        container.plugin->DisplayUserMessage(
-            "message", "UKCP", versionMessage.c_str(), false, false, false, false, false);
+        ukPlugin.DisplayUserMessage("message", "UKCP", versionMessage.c_str(), false, false, false, false, false);
     }
 } // namespace UKControllerPlugin::Bootstrap

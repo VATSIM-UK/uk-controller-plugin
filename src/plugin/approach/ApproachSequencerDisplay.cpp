@@ -3,6 +3,7 @@
 #include "ApproachSequencer.h"
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayOptions.h"
+#include "ApproachSpacingCalculator.h"
 #include "components/Button.h"
 #include "components/ClickableArea.h"
 #include "components/CollapsibleWindowTitleBar.h"
@@ -20,13 +21,14 @@ namespace UKControllerPlugin::Approach {
 
     ApproachSequencerDisplay::ApproachSequencerDisplay(
         ApproachSequencer& sequencer,
+        ApproachSpacingCalculator& spacingCalculator,
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
         std::shared_ptr<List::PopupListInterface> airfieldSelector,
         std::shared_ptr<List::PopupListInterface> callsignSelector,
         std::shared_ptr<List::PopupListInterface> targetSelector,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         int screenObjectId)
-        : sequencer(sequencer), displayOptions(std::move(displayOptions)),
+        : sequencer(sequencer), spacingCalculator(spacingCalculator), displayOptions(std::move(displayOptions)),
           airfieldSelector(std::move(airfieldSelector)), callsignSelector(std::move(callsignSelector)),
           targetSelector(std::move(targetSelector)), plugin(plugin), screenObjectId(screenObjectId),
           titleBar(CollapsibleWindowTitleBar::Create(
@@ -225,7 +227,14 @@ namespace UKControllerPlugin::Approach {
                 targetRect, screenObjectId, "approachTarget" + aircraftToProcess->Callsign(), false)
                 ->Apply(graphics, radarScreen);
 
-            graphics.DrawString(L"Wke", actualRect, *textBrush);
+            double requiredSpacing = spacingCalculator.Calculate(displayOptions->Airfield(), *aircraftToProcess);
+            if (requiredSpacing == spacingCalculator.NoSpacing()) {
+                graphics.DrawString(L"--", actualRect, *textBrush);
+            } else {
+                char distanceString[25];                            // NOLINT
+                sprintf_s(distanceString, "%.1f", requiredSpacing); // NOLINT
+                graphics.DrawString(HelperFunctions::ConvertToWideString(distanceString), actualRect, *textBrush);
+            }
 
             auto upButton = Components::Button::Create(
                 upButtonRect,

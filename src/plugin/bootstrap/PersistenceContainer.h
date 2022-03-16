@@ -47,6 +47,7 @@ namespace UKControllerPlugin {
         class DialogManager;
     } // namespace Dialog
     namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
         class RadarTargetEventHandlerCollection;
         class RunwayDialogAwareCollection;
         class UserSetting;
@@ -213,7 +214,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<Integration::IntegrationPersistenceContainer> integrationModuleContainer;
 
         // The plugin
-        std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;
+        std::unique_ptr<UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface> plugin;
 
         // The modules
         std::unique_ptr<ModuleFactories> moduleFactories;

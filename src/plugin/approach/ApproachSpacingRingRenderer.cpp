@@ -2,6 +2,7 @@
 #include "ApproachSequencedAircraft.h"
 #include "ApproachSequencer.h"
 #include "ApproachSequencerDisplayOptions.h"
+#include "ApproachSpacingCalculator.h"
 #include "ApproachSpacingRingRenderer.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
@@ -13,9 +14,10 @@ namespace UKControllerPlugin::Approach {
 
     ApproachSpacingRingRenderer::ApproachSpacingRingRenderer(
         ApproachSequencer& sequencer,
+        ApproachSpacingCalculator& spacingCalculator,
         std::shared_ptr<ApproachSequencerDisplayOptions> options,
         Euroscope::EuroscopePluginLoopbackInterface& plugin)
-        : sequencer(sequencer), options(std::move(options)), plugin(plugin),
+        : sequencer(sequencer), spacingCalculator(spacingCalculator), options(std::move(options)), plugin(plugin),
           circleBrush(Gdiplus::SolidBrush(Gdiplus::Color(50, 255, 255, 255)))
     {
     }
@@ -41,15 +43,19 @@ namespace UKControllerPlugin::Approach {
                 return;
             }
 
-            double circleRadius = Geometry::ScreenRadiusFromDistance(6, radarScreen);
-            auto position = radarScreen.ConvertCoordinateToScreenPoint(radarTarget->GetPosition());
+            double requiredDistance = spacingCalculator.Calculate(options->Airfield(), *aircraft);
+            if (requiredDistance != spacingCalculator.NoSpacing()) {
+                double circleRadius = Geometry::ScreenRadiusFromDistance(requiredDistance, radarScreen);
+                auto position = radarScreen.ConvertCoordinateToScreenPoint(radarTarget->GetPosition());
 
-            graphics.FillCircle(
-                {static_cast<Gdiplus::REAL>(position.x - circleRadius),
-                 static_cast<Gdiplus::REAL>(position.y - circleRadius),
-                 static_cast<Gdiplus::REAL>(circleRadius * 2),
-                 static_cast<Gdiplus::REAL>(circleRadius * 2)},
-                circleBrush);
+                graphics.FillCircle(
+                    {static_cast<Gdiplus::REAL>(position.x - circleRadius),
+                     static_cast<Gdiplus::REAL>(position.y - circleRadius),
+                     static_cast<Gdiplus::REAL>(circleRadius * 2),
+                     static_cast<Gdiplus::REAL>(circleRadius * 2)},
+                    circleBrush);
+            }
+
             aircraft = aircraft->Next();
         }
     }

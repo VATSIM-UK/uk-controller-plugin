@@ -1,5 +1,8 @@
 #include "ApproachModuleFactory.h"
 #include "ApproachSequencer.h"
+#include "ApproachSpacingCalculator.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "plugin/UKPlugin.h"
 
 namespace UKControllerPlugin::Approach {
 
@@ -13,5 +16,19 @@ namespace UKControllerPlugin::Approach {
         }
 
         return *this->sequencer;
+    }
+
+    auto ApproachModuleFactory::SpacingCalculator(const Bootstrap::PersistenceContainer& container)
+        -> ApproachSpacingCalculator&
+    {
+        if (!this->spacingCalculator) {
+            assert(container.airfields && "Airfield collection is not set on container");
+            assert(container.wakeCategoryMappers && "Wake category mappers is not set on container");
+            assert(container.plugin && "Plugin is not set on container");
+            this->spacingCalculator = std::make_unique<ApproachSpacingCalculator>(
+                *container.airfields, *container.wakeCategoryMappers, *container.plugin);
+        }
+
+        return *this->spacingCalculator;
     }
 } // namespace UKControllerPlugin::Approach

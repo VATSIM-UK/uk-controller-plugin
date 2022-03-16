@@ -1,27 +1,36 @@
+#include "approach/ApproachSpacingCalculator.h"
 #include "approach/ApproachSequence.h"
 #include "approach/ApproachSequencer.h"
 #include "approach/ApproachSequencerDisplay.h"
 #include "approach/ApproachSequencerDisplayOptions.h"
+#include "airfield/AirfieldCollection.h"
+#include "wake/WakeCategoryMapperCollection.h"
 
+using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Approach::ApproachSequencer;
 using UKControllerPlugin::Approach::ApproachSequencerDisplay;
 using UKControllerPlugin::Approach::ApproachSequencerDisplayOptions;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
+using UKControllerPlugin::Approach::ApproachSpacingCalculator;
+using UKControllerPlugin::Wake::WakeCategoryMapperCollection;
 
 namespace UKControllerPluginTest::Approach {
     class ApproachSequencerDisplayTest : public testing::Test
     {
         public:
         ApproachSequencerDisplayTest()
-            : selectorList(std::make_shared<List::MockPopupList>()),
+            : spacingCalculator(airfields, wakeMapper, plugin), selectorList(std::make_shared<List::MockPopupList>()),
               callsignSelectorList(std::make_shared<List::MockPopupList>()),
               targetList(std::make_shared<List::MockPopupList>()),
               options(std::make_shared<ApproachSequencerDisplayOptions>()),
-              display(sequencer, options, selectorList, callsignSelectorList, targetList, plugin, 55)
+              display(sequencer, spacingCalculator, options, selectorList, callsignSelectorList, targetList, plugin, 55)
         {
         }
 
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
+        AirfieldCollection airfields;
+        WakeCategoryMapperCollection wakeMapper;
+        ApproachSpacingCalculator spacingCalculator;
         std::shared_ptr<List::MockPopupList> selectorList;
         std::shared_ptr<List::MockPopupList> callsignSelectorList;
         std::shared_ptr<List::MockPopupList> targetList;
