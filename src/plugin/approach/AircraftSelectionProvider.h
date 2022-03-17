@@ -15,7 +15,7 @@ namespace UKControllerPlugin::Approach {
         public:
         AircraftSelectionProvider(
             ApproachSequencer& sequencer,
-            const ApproachSequencerOptions& sequencerOptions,
+            ApproachSequencerOptions& sequencerOptions,
             std::shared_ptr<ApproachSequencerDisplayOptions> options,
             Euroscope::EuroscopePluginLoopbackInterface& plugin);
         auto GetCallsigns() -> std::set<std::string> override;
@@ -26,7 +26,7 @@ namespace UKControllerPlugin::Approach {
         ApproachSequencer& sequencer;
         
         // Sequencer options
-        const ApproachSequencerOptions& sequencerOptions;
+        ApproachSequencerOptions& sequencerOptions;
 
         // Display options
         std::shared_ptr<ApproachSequencerDisplayOptions> options;

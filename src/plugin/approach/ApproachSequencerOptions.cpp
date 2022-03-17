@@ -1,37 +1,18 @@
+#include "AirfieldApproachOptions.h"
 #include "ApproachSequencerOptions.h"
 
 namespace UKControllerPlugin::Approach {
-
-    void ApproachSequencerOptions::DefaultMode(const std::string& airfield, ApproachSequencingMode mode)
+    void ApproachSequencerOptions::Set(const std::string& airfield, std::shared_ptr<AirfieldApproachOptions> options)
     {
-        defaultModes[airfield] = mode;
+        airfieldOptions[airfield] = options;
     }
 
-    auto ApproachSequencerOptions::DefaultMode(const std::string& airfield) const -> ApproachSequencingMode
+    auto ApproachSequencerOptions::Get(const std::string& airfield) -> const AirfieldApproachOptions&
     {
-        auto mode = defaultModes.find(airfield);
-        return mode == defaultModes.cend() ? DEFAULT_MODE : mode->second;
-    }
+        if (airfieldOptions.count(airfield) == 0) {
+            airfieldOptions[airfield] = std::make_shared<AirfieldApproachOptions>();
+        }
 
-    void ApproachSequencerOptions::MinimumSeparation(const std::string& airfield, double separation)
-    {
-        minimumSeparations[airfield] = separation;
-    }
-
-    auto ApproachSequencerOptions::MinimumSeparation(const std::string& airfield) const -> double
-    {
-        auto separation = minimumSeparations.find(airfield);
-        return separation == minimumSeparations.cend() ? DEFAULT_SEPARATION : separation->second;
-    }
-
-    void ApproachSequencerOptions::TargetDistance(const std::string& airfield, double target)
-    {
-        targetDistances[airfield] = target;
-    }
-
-    auto ApproachSequencerOptions::TargetDistance(const std::string& airfield) const -> double
-    {
-        auto target = targetDistances.find(airfield);
-        return target == targetDistances.cend() ? DEFAULT_TARGET_DISTANCE : target->second;
+        return *airfieldOptions.at(airfield);
     }
 } // namespace UKControllerPlugin::Approach

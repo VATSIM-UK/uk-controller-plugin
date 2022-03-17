@@ -1,4 +1,5 @@
 #include "AircraftSelectionProvider.h"
+#include "AirfieldApproachOptions.h"
 #include "ApproachSequence.h"
 #include "ApproachSequencedAircraft.h"
 #include "ApproachSequencer.h"
@@ -13,7 +14,7 @@ namespace UKControllerPlugin::Approach {
 
     AircraftSelectionProvider::AircraftSelectionProvider(
         ApproachSequencer& sequencer,
-        const ApproachSequencerOptions& sequencerOptions,
+        ApproachSequencerOptions& sequencerOptions,
         std::shared_ptr<ApproachSequencerDisplayOptions> options,
         Euroscope::EuroscopePluginLoopbackInterface& plugin)
         : sequencer(sequencer), sequencerOptions(sequencerOptions), options(std::move(options)), plugin(plugin)
@@ -50,12 +51,14 @@ namespace UKControllerPlugin::Approach {
         }
 
         this->sequencer.RemoveAircraftFromSequences(callsign);
-        this->sequencer.AddAircraftToSequence(
-            options->Airfield(), callsign, sequencerOptions.DefaultMode(options->Airfield()));
-        if (sequencerOptions.DefaultMode(options->Airfield()) == ApproachSequencingMode::MinimumDistance) {
+
+        auto& airfieldOptions = sequencerOptions.Get(options->Airfield());
+
+        this->sequencer.AddAircraftToSequence(options->Airfield(), callsign, airfieldOptions.defaultMode);
+        if (airfieldOptions.defaultMode == ApproachSequencingMode::MinimumDistance) {
             sequencer.GetForAirfield(options->Airfield())
                 .Get(callsign)
-                ->ExpectedDistance(sequencerOptions.TargetDistance(options->Airfield()));
+                ->ExpectedDistance(airfieldOptions.targetDistance);
         }
     }
 } // namespace UKControllerPlugin::Approach

@@ -1,4 +1,5 @@
 #include "approach/AircraftSelectionProvider.h"
+#include "approach/AirfieldApproachOptions.h"
 #include "approach/ApproachSequence.h"
 #include "approach/ApproachSequencedAircraft.h"
 #include "approach/ApproachSequencer.h"
@@ -6,6 +7,7 @@
 #include "approach/ApproachSequencerOptions.h"
 
 using UKControllerPlugin::Approach::AircraftSelectionProvider;
+using UKControllerPlugin::Approach::AirfieldApproachOptions;
 using UKControllerPlugin::Approach::ApproachSequencer;
 using UKControllerPlugin::Approach::ApproachSequencerDisplayOptions;
 using UKControllerPlugin::Approach::ApproachSequencerOptions;
@@ -104,8 +106,8 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(AircraftSelectionProviderTest, ItAddsAircraftToSequenceForAirfieldInDistanceMode)
     {
-        sequencerOptions.DefaultMode("EGLL", ApproachSequencingMode::MinimumDistance);
-        sequencerOptions.TargetDistance("EGLL", 4.5);
+        sequencerOptions.Set(
+            "EGLL", std::make_shared<AirfieldApproachOptions>(ApproachSequencingMode::MinimumDistance, 4.5, 3.5));
         options->Airfield("EGLL");
         provider.CallsignSelected("BAW123");
 

@@ -1,5 +1,7 @@
+#include "approach/AirfieldApproachOptions.h"
 #include "approach/ApproachSequencerOptions.h"
 
+using UKControllerPlugin::Approach::AirfieldApproachOptions;
 using UKControllerPlugin::Approach::ApproachSequencerOptions;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 
@@ -10,39 +12,13 @@ namespace UKControllerPluginTest::Approach {
         ApproachSequencerOptions options;
     };
 
-    TEST_F(ApproachSequencerOptionsTest, ItHasADefaultModeValue)
+    TEST_F(ApproachSequencerOptionsTest, ItHasSetsOptionsForAirfield)
     {
-        EXPECT_EQ(ApproachSequencingMode::WakeTurbulence, options.DefaultMode("EGKK"));
-    }
-
-    TEST_F(ApproachSequencerOptionsTest, ItSetsDefaultModeForAirfield)
-    {
-        options.DefaultMode("EGKK", ApproachSequencingMode::MinimumDistance);
-        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, options.DefaultMode("EGKK"));
-        EXPECT_EQ(ApproachSequencingMode::WakeTurbulence, options.DefaultMode("EGLL"));
-    }
-
-    TEST_F(ApproachSequencerOptionsTest, ItHasADefaultMinimumSeparationValue)
-    {
-        EXPECT_DOUBLE_EQ(3.0, options.MinimumSeparation("EGKK"));
-    }
-
-    TEST_F(ApproachSequencerOptionsTest, ItSetsAMinimumSeparationValueForAirfield)
-    {
-        options.MinimumSeparation("EGKK", 4.5);
-        EXPECT_DOUBLE_EQ(4.5, options.MinimumSeparation("EGKK"));
-        EXPECT_DOUBLE_EQ(3.0, options.MinimumSeparation("EGLL"));
-    }
-
-    TEST_F(ApproachSequencerOptionsTest, ItHasADefaultTargetValue)
-    {
-        EXPECT_DOUBLE_EQ(6.0, options.TargetDistance("EGKK"));
-    }
-
-    TEST_F(ApproachSequencerOptionsTest, ItSetsATargetValueForAirfield)
-    {
-        options.TargetDistance("EGKK", 4.5);
-        EXPECT_DOUBLE_EQ(4.5, options.TargetDistance("EGKK"));
-        EXPECT_DOUBLE_EQ(6.0, options.TargetDistance("EGLL"));
+        options.Set(
+            "EGKK", std::make_shared<AirfieldApproachOptions>(ApproachSequencingMode::MinimumDistance, 4.5, 6.5));
+        auto settings = options.Get("EGKK");
+        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, settings.defaultMode);
+        EXPECT_DOUBLE_EQ(6.5, settings.minimumSeparationRequirement);
+        EXPECT_DOUBLE_EQ(4.5, settings.targetDistance);
     }
 } // namespace UKControllerPluginTest::Approach
