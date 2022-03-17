@@ -1,5 +1,6 @@
 #include "ApproachModuleFactory.h"
 #include "ApproachSequencer.h"
+#include "ApproachSequencerOptions.h"
 #include "ApproachSpacingCalculator.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/UKPlugin.h"
@@ -16,6 +17,15 @@ namespace UKControllerPlugin::Approach {
         }
 
         return *this->sequencer;
+    }
+    
+    auto ApproachModuleFactory::SequencerOptions() -> ApproachSequencerOptions&
+    {
+        if (!this->sequencerOptions) {
+            this->sequencerOptions = std::make_unique<ApproachSequencerOptions>();
+        }
+        
+        return *this->sequencerOptions;
     }
 
     auto ApproachModuleFactory::SpacingCalculator(const Bootstrap::PersistenceContainer& container)

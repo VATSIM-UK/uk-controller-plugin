@@ -34,6 +34,16 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(&factory.Sequencer(), &factory.Sequencer());
     }
 
+    TEST_F(ApproachModuleFactoryTest, ItMakesASequencerOptions)
+    {
+        EXPECT_NE(nullptr, &factory.SequencerOptions());
+    }
+
+    TEST_F(ApproachModuleFactoryTest, ItOnlyHasOneSequencerOptions)
+    {
+        EXPECT_EQ(&factory.SequencerOptions(), &factory.SequencerOptions());
+    }
+
     TEST_F(ApproachModuleFactoryTest, ItMakesACalculator)
     {
         EXPECT_NE(nullptr, &factory.SpacingCalculator(container));

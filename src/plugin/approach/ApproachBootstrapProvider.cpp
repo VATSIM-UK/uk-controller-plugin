@@ -45,7 +45,10 @@ namespace UKControllerPlugin::Approach {
                     "Toggle sequencer airfield selector"),
                 container.callsignSelectionListFactory->Create(
                     std::make_shared<AircraftSelectionProvider>(
-                        container.moduleFactories->Approach().Sequencer(), displayOptions, *container.plugin),
+                        container.moduleFactories->Approach().Sequencer(),
+                        container.moduleFactories->Approach().SequencerOptions(),
+                        displayOptions,
+                        *container.plugin),
                     "Toggle sequencer callsign selector"),
                 container.popupListFactory->Create(
                     std::make_shared<TargetSelectorList>(

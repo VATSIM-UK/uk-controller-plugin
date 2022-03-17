@@ -3,10 +3,12 @@
 #include "approach/ApproachSequencedAircraft.h"
 #include "approach/ApproachSequencer.h"
 #include "approach/ApproachSequencerDisplayOptions.h"
+#include "approach/ApproachSequencerOptions.h"
 
 using UKControllerPlugin::Approach::AircraftSelectionProvider;
 using UKControllerPlugin::Approach::ApproachSequencer;
 using UKControllerPlugin::Approach::ApproachSequencerDisplayOptions;
+using UKControllerPlugin::Approach::ApproachSequencerOptions;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 
 namespace UKControllerPluginTest::Approach {
@@ -14,7 +16,8 @@ namespace UKControllerPluginTest::Approach {
     {
         public:
         AircraftSelectionProviderTest()
-            : options(std::make_shared<ApproachSequencerDisplayOptions>()), provider(sequencer, options, plugin)
+            : options(std::make_shared<ApproachSequencerDisplayOptions>()),
+              provider(sequencer, sequencerOptions, options, plugin)
         {
             flightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
             radarTarget1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
@@ -39,6 +42,7 @@ namespace UKControllerPluginTest::Approach {
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         ApproachSequencer sequencer;
         std::shared_ptr<ApproachSequencerDisplayOptions> options;
+        ApproachSequencerOptions sequencerOptions;
         AircraftSelectionProvider provider;
     };
 
@@ -85,7 +89,7 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(0, sequencer.CountSequences());
     }
 
-    TEST_F(AircraftSelectionProviderTest, ItAddsAircraftToSequenceForAirfield)
+    TEST_F(AircraftSelectionProviderTest, ItAddsAircraftToSequenceForAirfieldInWakeMode)
     {
         options->Airfield("EGLL");
         provider.CallsignSelected("BAW123");
@@ -96,6 +100,22 @@ namespace UKControllerPluginTest::Approach {
         auto aircraft = sequence.Get("BAW123");
         EXPECT_EQ("BAW123", aircraft->Callsign());
         EXPECT_EQ(ApproachSequencingMode::WakeTurbulence, aircraft->Mode());
+    }
+
+    TEST_F(AircraftSelectionProviderTest, ItAddsAircraftToSequenceForAirfieldInDistanceMode)
+    {
+        sequencerOptions.DefaultMode("EGLL", ApproachSequencingMode::MinimumDistance);
+        sequencerOptions.TargetDistance("EGLL", 4.5);
+        options->Airfield("EGLL");
+        provider.CallsignSelected("BAW123");
+
+        auto sequence = sequencer.GetForAirfield("EGLL");
+        EXPECT_EQ(1, sequencer.CountSequences());
+        EXPECT_EQ(1, sequence.Callsigns().size());
+        auto aircraft = sequence.Get("BAW123");
+        EXPECT_EQ("BAW123", aircraft->Callsign());
+        EXPECT_EQ(ApproachSequencingMode::MinimumDistance, aircraft->Mode());
+        EXPECT_DOUBLE_EQ(4.5, aircraft->ExpectedDistance());
     }
 
     TEST_F(AircraftSelectionProviderTest, ItRemovesAircraftFromOtherSequencesIfSelected)
