@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [4.4.2-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.2-beta.1...4.4.2-beta.2) (2022-03-16)
+
+
+### Bug Fixes
+
+* **loader:** Display more debug information when unable to load core binary ([2e8e87d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/2e8e87da05471527a98d8bb126409771046719eb))
+
 ## [4.4.2-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.1...4.4.2-beta.1) (2022-03-15)
 
 
