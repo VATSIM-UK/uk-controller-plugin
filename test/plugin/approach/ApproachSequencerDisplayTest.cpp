@@ -22,8 +22,19 @@ namespace UKControllerPluginTest::Approach {
             : spacingCalculator(airfields, wakeMapper, plugin), selectorList(std::make_shared<List::MockPopupList>()),
               callsignSelectorList(std::make_shared<List::MockPopupList>()),
               targetList(std::make_shared<List::MockPopupList>()),
-              options(std::make_shared<ApproachSequencerDisplayOptions>()),
-              display(sequencer, spacingCalculator, options, selectorList, callsignSelectorList, targetList, plugin, 55)
+              airfieldTargetList(std::make_shared<List::MockPopupList>()),
+              airfieldSeparationList(std::make_shared<List::MockPopupList>()),
+              options(std::make_shared<ApproachSequencerDisplayOptions>()), display(
+                                                                                sequencer,
+                                                                                spacingCalculator,
+                                                                                options,
+                                                                                selectorList,
+                                                                                callsignSelectorList,
+                                                                                targetList,
+                                                                                airfieldTargetList,
+                                                                                airfieldSeparationList,
+                                                                                plugin,
+                                                                                55)
         {
         }
 
@@ -34,6 +45,8 @@ namespace UKControllerPluginTest::Approach {
         std::shared_ptr<List::MockPopupList> selectorList;
         std::shared_ptr<List::MockPopupList> callsignSelectorList;
         std::shared_ptr<List::MockPopupList> targetList;
+        std::shared_ptr<List::MockPopupList> airfieldTargetList;
+        std::shared_ptr<List::MockPopupList> airfieldSeparationList;
         testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
         ApproachSequencer sequencer;
         std::shared_ptr<ApproachSequencerDisplayOptions> options;
@@ -68,6 +81,20 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_CALL(*callsignSelectorList, Trigger(PointEq(POINT{1, 2}))).Times(1);
 
         display.LeftClick(radarScreen, 1, "addAircraft", {1, 2}, {});
+    }
+
+    TEST_F(ApproachSequencerDisplayTest, ItTriggersAirfieldTargetList)
+    {
+        EXPECT_CALL(*airfieldTargetList, Trigger(PointEq(POINT{1, 2}))).Times(1);
+
+        display.LeftClick(radarScreen, 1, "airfieldTarget", {1, 2}, {});
+    }
+
+    TEST_F(ApproachSequencerDisplayTest, ItTriggersAirfieldSeparationList)
+    {
+        EXPECT_CALL(*airfieldTargetList, Trigger(PointEq(POINT{1, 2}))).Times(1);
+
+        display.LeftClick(radarScreen, 1, "airfieldSeparation", {1, 2}, {});
     }
 
     TEST_F(ApproachSequencerDisplayTest, ItMovesAnAircraftUp)

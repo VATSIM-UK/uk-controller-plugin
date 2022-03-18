@@ -23,7 +23,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsPosition)
     {
-        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(2).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
 
         EXPECT_CALL(settingProvider, GetKey("approachSequencerXPosition")).Times(1).WillOnce(testing::Return("250"));
 
@@ -36,7 +36,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsDefaultPosition)
     {
-        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(2).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerXPosition")).Times(1).WillOnce(testing::Return(""));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerYPosition")).Times(1).WillOnce(testing::Return(""));
 
@@ -47,7 +47,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsVisible)
     {
-        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(4).WillRepeatedly(testing::Return(""));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerVisible")).Times(1).WillOnce(testing::Return("1"));
 
         loader.AsrLoadedEvent(settings);
@@ -56,7 +56,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsDefaultVisibility)
     {
-        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(4).WillRepeatedly(testing::Return(""));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerVisible")).Times(1).WillOnce(testing::Return(""));
 
         loader.AsrLoadedEvent(settings);
@@ -65,7 +65,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsContentCollapsed)
     {
-        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(4).WillRepeatedly(testing::Return(""));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerContentCollapsed"))
             .Times(1)
             .WillOnce(testing::Return("1"));
@@ -76,7 +76,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsDefaultContentCollapsed)
     {
-        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(4).WillRepeatedly(testing::Return(""));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerContentCollapsed"))
             .Times(1)
             .WillOnce(testing::Return(""));
@@ -85,8 +85,27 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_FALSE(options->ContentCollapsed());
     }
 
+    TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsAirfield)
+    {
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(4).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey("approachSequencerAirfield")).Times(1).WillOnce(testing::Return("EGBB"));
+
+        loader.AsrLoadedEvent(settings);
+        EXPECT_EQ("EGBB", options->Airfield());
+    }
+
+    TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrLoadingLoadsDefaultAirfield)
+    {
+        EXPECT_CALL(settingProvider, GetKey(testing::_)).Times(4).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(settingProvider, GetKey("approachSequencerAirfield")).Times(1).WillOnce(testing::Return(""));
+
+        loader.AsrLoadedEvent(settings);
+        EXPECT_TRUE(options->Airfield().empty());
+    }
+
     TEST_F(ApproachSequencerDisplayAsrLoaderTest, AsrClosingSavesFields)
     {
+        options->Airfield("EGBB");
         options->SetVisible(true);
         options->SetCollapsed(true);
         options->Position({350, 450});
@@ -103,6 +122,8 @@ namespace UKControllerPluginTest::Approach {
                 "Approach Sequencer Content "
                 "Collapsed",
                 "1"))
+            .Times(1);
+        EXPECT_CALL(settingProvider, SetKey("approachSequencerAirfield", "Approach Sequencer Airfield", "EGBB"))
             .Times(1);
 
         loader.AsrClosingEvent(settings);

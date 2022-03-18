@@ -14,6 +14,7 @@ namespace UKControllerPlugin::Approach {
         [[nodiscard]] auto CountAirfieldOptions() const -> size_t;
         void Set(const std::string& airfield, std::shared_ptr<AirfieldApproachOptions> options);
         [[nodiscard]] auto Get(const std::string& airfield) -> const AirfieldApproachOptions&;
+        [[nodiscard]] auto HasAirfield(const std::string& airfield) const -> bool;
         void ForEach(const std::function<void(const std::string&, const AirfieldApproachOptions&)> callback) const;
 
         private:

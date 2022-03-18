@@ -19,6 +19,7 @@ namespace UKControllerPlugin::Approach {
         options->SetVisible(userSetting.GetBooleanEntry(this->VISIBLE_ASR_KEY, false));
 
         options->SetCollapsed(userSetting.GetBooleanEntry(this->COLLAPSED_ASR_KEY, false));
+        options->Airfield(userSetting.GetStringEntry(this->AIRFIELD_ASR_KEY));
     }
 
     void ApproachSequencerDisplayAsrLoader::AsrClosingEvent(Euroscope::UserSetting& userSetting)
@@ -27,5 +28,6 @@ namespace UKControllerPlugin::Approach {
         userSetting.Save(this->Y_POSITION_ASR_KEY, this->Y_POSITION_ASR_DESC, options->Position().y);
         userSetting.Save(this->VISIBLE_ASR_KEY, this->VISIBLE_ASR_DESC, options->IsVisible());
         userSetting.Save(this->COLLAPSED_ASR_KEY, this->COLLAPSED_ASR_DESC, options->ContentCollapsed());
+        userSetting.Save(this->AIRFIELD_ASR_KEY, this->AIRFIELD_ASR_DESC, options->Airfield());
     }
 } // namespace UKControllerPlugin::Approach

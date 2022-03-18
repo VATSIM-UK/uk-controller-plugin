@@ -26,16 +26,19 @@ namespace UKControllerPlugin::Approach {
         std::shared_ptr<List::PopupListInterface> airfieldSelector,
         std::shared_ptr<List::PopupListInterface> callsignSelector,
         std::shared_ptr<List::PopupListInterface> targetSelector,
+        std::shared_ptr<List::PopupListInterface> airfieldTargetSelector,
+        std::shared_ptr<List::PopupListInterface> airfieldSeparationSelector,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         int screenObjectId)
         : sequencer(sequencer), spacingCalculator(spacingCalculator), displayOptions(std::move(displayOptions)),
           airfieldSelector(std::move(airfieldSelector)), callsignSelector(std::move(callsignSelector)),
-          targetSelector(std::move(targetSelector)), plugin(plugin), screenObjectId(screenObjectId),
-          titleBar(CollapsibleWindowTitleBar::Create(
-              L"Approach Sequencer",
-              titleBarArea,
-              [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
-              screenObjectId)),
+          targetSelector(std::move(targetSelector)), airfieldTargetSelector(std::move(airfieldTargetSelector)),
+          airfieldSeparationSelector(std::move(airfieldSeparationSelector)), plugin(plugin),
+          screenObjectId(screenObjectId), titleBar(CollapsibleWindowTitleBar::Create(
+                                              L"Approach Sequencer",
+                                              titleBarArea,
+                                              [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
+                                              screenObjectId)),
           airfieldClickspot(Components::ClickableArea::Create(
               this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           addClickspot(
@@ -131,6 +134,16 @@ namespace UKControllerPlugin::Approach {
 
             plugin.SetEuroscopeSelectedFlightplan(flightplan);
             targetSelector->Trigger(mousePos);
+            return;
+        }
+
+        if (objectDescription == "airfieldTarget") {
+            airfieldTargetSelector->Trigger(mousePos);
+            return;
+        }
+
+        if (objectDescription == "airfieldSeparation") {
+            airfieldTargetSelector->Trigger(mousePos);
             return;
         }
     }

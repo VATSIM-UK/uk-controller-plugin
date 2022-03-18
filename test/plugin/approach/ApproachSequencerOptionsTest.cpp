@@ -17,6 +17,17 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(0, options.CountAirfieldOptions());
     }
 
+    TEST_F(ApproachSequencerOptionsTest, ItDoesntHaveOptionsForAirfield)
+    {
+        EXPECT_FALSE(options.HasAirfield("EGKK"));
+    }
+
+    TEST_F(ApproachSequencerOptionsTest, ItHasOptionsForAirfield)
+    {
+        options.Set("EGKK", nullptr);
+        EXPECT_TRUE(options.HasAirfield("EGKK"));
+    }
+
     TEST_F(ApproachSequencerOptionsTest, ItHasSetsOptionsForAirfield)
     {
         options.Set(

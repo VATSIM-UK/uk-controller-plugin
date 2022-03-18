@@ -2,6 +2,7 @@
 #include "ApproachSequencedAircraft.h"
 #include "ApproachSequencer.h"
 #include "ApproachSequencerDisplayOptions.h"
+#include "ApproachSequencerDistanceOptions.h"
 #include "TargetSelectorList.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
@@ -69,7 +70,7 @@ namespace UKControllerPlugin::Approach {
                                                                        : ListItemCheckedStatus::NotChecked));
 
         // Distance items
-        for (const auto& distance : distances) {
+        for (const auto& distance : DistanceOptions()) {
             const auto selected =
                 aircraft->Mode() == ApproachSequencingMode::MinimumDistance && aircraft->ExpectedDistance() == distance
                     ? ListItemCheckedStatus::Checked

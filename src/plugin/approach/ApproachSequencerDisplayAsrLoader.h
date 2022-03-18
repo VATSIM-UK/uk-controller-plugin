@@ -25,5 +25,8 @@ namespace UKControllerPlugin::Approach {
 
         const std::string COLLAPSED_ASR_KEY = "approachSequencerContentCollapsed";
         const std::string COLLAPSED_ASR_DESC = "Approach Sequencer Content Collapsed";
+
+        const std::string AIRFIELD_ASR_KEY = "approachSequencerAirfield";
+        const std::string AIRFIELD_ASR_DESC = "Approach Sequencer Airfield";
     };
 } // namespace UKControllerPlugin::Approach

@@ -28,4 +28,9 @@ namespace UKControllerPlugin::Approach {
     {
         return airfieldOptions.size();
     }
+
+    auto ApproachSequencerOptions::HasAirfield(const std::string& airfield) const -> bool
+    {
+        return airfieldOptions.count(airfield) != 0;
+    }
 } // namespace UKControllerPlugin::Approach

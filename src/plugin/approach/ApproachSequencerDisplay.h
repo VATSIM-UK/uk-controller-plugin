@@ -32,6 +32,8 @@ namespace UKControllerPlugin::Approach {
             std::shared_ptr<List::PopupListInterface> airfieldSelector,
             std::shared_ptr<List::PopupListInterface> callsignSelector,
             std::shared_ptr<List::PopupListInterface> targetSelector,
+            std::shared_ptr<List::PopupListInterface> airfieldTargetSelector,
+            std::shared_ptr<List::PopupListInterface> airfieldSeparationSelector,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             int screenObjectId);
         [[nodiscard]] auto IsVisible() const -> bool override;
@@ -68,7 +70,7 @@ namespace UKControllerPlugin::Approach {
 
         // The sequences
         ApproachSequencer& sequencer;
-        
+
         // The calculator for the spacing
         ApproachSpacingCalculator& spacingCalculator;
 
@@ -83,7 +85,13 @@ namespace UKControllerPlugin::Approach {
 
         // Selecting the target
         std::shared_ptr<List::PopupListInterface> targetSelector;
-        
+
+        // For selecting the default airfield target
+        std::shared_ptr<List::PopupListInterface> airfieldTargetSelector;
+
+        // For selecting an airfields separation requirement
+        std::shared_ptr<List::PopupListInterface> airfieldSeparationSelector;
+
         // The plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 

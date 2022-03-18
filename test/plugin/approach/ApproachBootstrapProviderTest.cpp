@@ -68,4 +68,18 @@ namespace UKControllerPluginTest::Approach {
         this->RunBootstrapRadarScreen(provider);
         EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Toggle sequencer target selector"));
     }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersAirfieldTargetPopupList)
+    {
+        this->RunBootstrapRadarScreen(provider);
+        EXPECT_TRUE(
+            container.pluginFunctionHandlers->HasCallbackByDescription("Toggle sequencer airfield target selector"));
+    }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersAirfieldSeparationPopupList)
+    {
+        this->RunBootstrapRadarScreen(provider);
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription(
+            "Toggle sequencer airfield separation selector"));
+    }
 } // namespace UKControllerPluginTest::Approach

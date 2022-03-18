@@ -1,4 +1,6 @@
 #include "AircraftSelectionProvider.h"
+#include "AirfieldTargetSelectorList.h"
+#include "AirfieldMinimumSeparationSelectorList.h"
 #include "ApproachBootstrapProvider.h"
 #include "ApproachModuleFactory.h"
 #include "ApproachSequencerDisplay.h"
@@ -58,6 +60,14 @@ namespace UKControllerPlugin::Approach {
                     std::make_shared<TargetSelectorList>(
                         container.moduleFactories->Approach().Sequencer(), displayOptions, *container.plugin),
                     "Toggle sequencer target selector"),
+                container.popupListFactory->Create(
+                    std::make_shared<AirfieldTargetSelectorList>(
+                        container.moduleFactories->Approach().SequencerOptions(), displayOptions),
+                    "Toggle sequencer airfield target selector"),
+                container.popupListFactory->Create(
+                    std::make_shared<AirfieldMinimumSeparationSelectorList>(
+                        container.moduleFactories->Approach().SequencerOptions(), displayOptions),
+                    "Toggle sequencer airfield separation selector"),
                 *container.plugin,
                 sequencerScreenObjectId),
             radarRenderables.beforeTags);
