@@ -1,5 +1,39 @@
 # UK Controller Plugin Changelog
 
+# [5.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.2-beta.3...5.0.0-beta.1) (2022-03-17)
+
+
+### Bug Fixes
+
+* **loader:** Trigger major version bump ([9fa7052](https://github.com/VATSIM-UK/uk-controller-plugin/commit/9fa7052b0b2993fa95576d8be5ba70998cc374be))
+
+
+### BREAKING CHANGES
+
+* **loader:** Members may need to download a new version of the loader
+to get things to work.
+
+## [4.4.2-beta.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.2-beta.2...4.4.2-beta.3) (2022-03-17)
+
+
+### Bug Fixes
+
+* **updater:** Make sure new loader works for everyone ([22f1d30](https://github.com/VATSIM-UK/uk-controller-plugin/commit/22f1d308cfec480a09bedc640be9d3a4edc24ec6))
+
+## [4.4.2-beta.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.2-beta.1...4.4.2-beta.2) (2022-03-16)
+
+
+### Bug Fixes
+
+* **loader:** Display more debug information when unable to load core binary ([2e8e87d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/2e8e87da05471527a98d8bb126409771046719eb))
+
+## [4.4.2-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.1...4.4.2-beta.1) (2022-03-15)
+
+
+### Bug Fixes
+
+* **updater:** Fix updates not applying properly ([3fa342f](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3fa342f594ab6c935ce5bbb99236c763c23ab0e1))
+
 ## [4.4.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.0...4.4.1) (2022-03-13)
 
 
