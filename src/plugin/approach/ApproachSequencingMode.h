@@ -1,9 +1,9 @@
 #pragma once
 
 namespace UKControllerPlugin::Approach {
-    enum class ApproachSequencingMode
+    enum class ApproachSequencingMode : unsigned int
     {
-        WakeTurbulence,
-        MinimumDistance,
+        WakeTurbulence = 0,
+        MinimumDistance = 1,
     };
 } // namespace UKControllerPlugin::Approach

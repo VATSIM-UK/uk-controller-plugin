@@ -48,6 +48,7 @@ namespace UKControllerPlugin {
     } // namespace Dialog
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
+        class PluginSettingsProviderCollection;
         class RadarTargetEventHandlerCollection;
         class RunwayDialogAwareCollection;
         class UserSetting;
@@ -191,6 +192,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
         std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
         std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> pluginUserSettingHandler;
+        std::unique_ptr<UKControllerPlugin::Euroscope::PluginSettingsProviderCollection> pluginSettingsProviders;
         std::shared_ptr<UKControllerPlugin::Controller::Login> login;
         std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
         std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;

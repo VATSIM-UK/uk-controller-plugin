@@ -127,6 +127,11 @@ namespace UKControllerPlugin::RadarScreen {
 
         // Last thing we do is ScreenControls
         ScreenControlsBootstrap::BootstrapRadarScreen(configurableDisplays, renderers, *persistence.brushes);
-        return new UKRadarScreen(userSettingHandlers, renderers, commandHandlers, *this->persistence.graphics);
+        return new UKRadarScreen(
+            userSettingHandlers,
+            renderers,
+            commandHandlers,
+            *this->persistence.graphics,
+            *persistence.pluginSettingsProviders);
     }
 } // namespace UKControllerPlugin::RadarScreen

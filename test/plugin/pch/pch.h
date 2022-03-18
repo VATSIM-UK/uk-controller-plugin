@@ -55,6 +55,7 @@
 #include "../mock/MockMenuToggleableDisplay.h"
 #include "../mock/MockMetarEventHandler.h"
 #include "../mock/MockOutboundIntegrationEventHandler.h"
+#include "../mock/MockPluginSettingsProvider.h"
 #include "../mock/MockPopupList.h"
 #include "../mock/MockPushEventConnection.h"
 #include "../mock/MockPushEventProcessor.h"

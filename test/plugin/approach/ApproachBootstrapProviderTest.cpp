@@ -1,10 +1,12 @@
 #include "airfield/AirfieldCollection.h"
 #include "approach/ApproachBootstrapProvider.h"
+#include "euroscope/PluginSettingsProviderCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "wake/WakeCategoryMapperCollection.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Approach::ApproachBootstrapProvider;
+using UKControllerPlugin::Euroscope::PluginSettingsProviderCollection;
 using UKControllerPlugin::Wake::WakeCategoryMapperCollection;
 
 namespace UKControllerPluginTest::Approach {
@@ -16,9 +18,18 @@ namespace UKControllerPluginTest::Approach {
             container.plugin = std::make_unique<testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface>>();
             container.airfields = std::make_unique<AirfieldCollection>();
             container.wakeCategoryMappers = std::make_unique<WakeCategoryMapperCollection>();
+            container.pluginSettingsProviders =
+                std::make_unique<PluginSettingsProviderCollection>(*container.pluginUserSettingHandler);
         }
+
         ApproachBootstrapProvider provider;
     };
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersTheOptionsLoader)
+    {
+        this->RunBootstrapPlugin(provider);
+        EXPECT_EQ(1, container.pluginSettingsProviders->Count());
+    }
 
     TEST_F(ApproachBootstrapProviderTest, ItRegistersTheRenderers)
     {

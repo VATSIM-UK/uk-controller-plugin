@@ -11,8 +11,10 @@ namespace UKControllerPlugin::Approach {
     class ApproachSequencerOptions
     {
         public:
+        [[nodiscard]] auto CountAirfieldOptions() const -> size_t;
         void Set(const std::string& airfield, std::shared_ptr<AirfieldApproachOptions> options);
         [[nodiscard]] auto Get(const std::string& airfield) -> const AirfieldApproachOptions&;
+        void ForEach(const std::function<void(const std::string&, const AirfieldApproachOptions&)> callback) const;
 
         private:
         // The options for the airfield

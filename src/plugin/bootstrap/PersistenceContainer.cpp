@@ -20,6 +20,7 @@
 #include "dependency/DependencyLoaderInterface.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "euroscope/PluginSettingsProviderCollection.h"
 #include "euroscope/RadarTargetEventHandlerCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "euroscope/UserSetting.h"

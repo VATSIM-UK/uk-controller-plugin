@@ -2,6 +2,7 @@
 #include "PostInit.h"
 #include "countdown/CountdownModule.h"
 #include "euroscope/LoadDefaultUserSettings.h"
+#include "euroscope/PluginSettingsProviderCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
@@ -26,6 +27,7 @@ namespace UKControllerPlugin::Bootstrap {
         UKControllerPlugin::Euroscope::LoadDefaultUserSettings(*container.pluginUserSettingHandler);
         UKControllerPlugin::Countdown::CountdownModule::LoadDefaultUserSettings(*container.pluginUserSettingHandler);
         container.userSettingHandlers->UserSettingsUpdateEvent(*container.pluginUserSettingHandler);
+        container.pluginSettingsProviders->Load();
 
         std::string versionMessage =
             "UK Controller Plugin Loaded Successfully: Version " + std::string(PluginVersion::version);

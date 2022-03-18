@@ -36,7 +36,7 @@ set(test__approach
         approach/ApproachSequencerDisplayOptionsTest.cpp
         approach/ApproachSequencerDisplayAsrLoaderTest.cpp
         approach/ToggleApproachSequencerDisplayTest.cpp
-        approach/SequencerAirfieldSelectorTest.cpp approach/ApproachModuleFactoryTest.cpp approach/AircraftSelectionProviderTest.cpp approach/TargetSelectorListTest.cpp wake/ApproachSpacingCalculatorTest.cpp approach/ApproachSequencerOptionsTest.cpp)
+        approach/SequencerAirfieldSelectorTest.cpp approach/ApproachModuleFactoryTest.cpp approach/AircraftSelectionProviderTest.cpp approach/TargetSelectorListTest.cpp wake/ApproachSpacingCalculatorTest.cpp approach/ApproachSequencerOptionsTest.cpp approach/ApproachSequencerOptionsLoaderTest.cpp)
 source_group("test\\approach" FILES ${test__approach})
 
 set(test__bootstrap
@@ -120,7 +120,7 @@ set(test__euroscope
     "euroscope/RunwayDialogAwareCollectionTest.cpp"
     "euroscope/UserSettingAwareCollectionTest.cpp"
     "euroscope/UserSettingTest.cpp"
-)
+        euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
 
 set(test__flightinformationservice
@@ -356,7 +356,7 @@ set(test__mock
     mock/MockCallsignSelectionProvider.h
     mock/MockAircraftTypeMapper.h
     mock/MockWakeCategoryMapper.h
-    mock/MockListItemProvider.h mock/MockPopupList.h mock/MockBootstrapProvider.h)
+    mock/MockListItemProvider.h mock/MockPopupList.h mock/MockBootstrapProvider.h mock/MockPluginSettingsProvider.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids

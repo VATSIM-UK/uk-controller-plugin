@@ -4,6 +4,7 @@
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayAsrLoader.h"
 #include "ApproachSequencerDisplayOptions.h"
+#include "ApproachSequencerOptionsLoader.h"
 #include "ApproachSpacingRingRenderer.h"
 #include "SequencerAirfieldSelector.h"
 #include "TargetSelectorList.h"
@@ -12,6 +13,7 @@
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/PluginSettingsProviderCollection.h"
 #include "list/PopupListFactory.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -20,6 +22,8 @@ namespace UKControllerPlugin::Approach {
 
     void ApproachBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
     {
+        container.pluginSettingsProviders->AddProvider(std::make_shared<ApproachSequencerOptionsLoader>(
+            container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
     }
 
     void ApproachBootstrapProvider::BootstrapRadarScreen(
