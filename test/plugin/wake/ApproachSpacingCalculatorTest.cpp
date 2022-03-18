@@ -1,6 +1,8 @@
-#include "airfield/AirfieldModel.h"
 #include "airfield/AirfieldCollection.h"
+#include "airfield/AirfieldModel.h"
+#include "approach/AirfieldApproachOptions.h"
 #include "approach/ApproachSequencedAircraft.h"
+#include "approach/ApproachSequencerOptions.h"
 #include "approach/ApproachSpacingCalculator.h"
 #include "controller/ControllerPositionHierarchy.h"
 #include "wake/ArrivalWakeInterval.h"
@@ -9,7 +11,9 @@
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Airfield::AirfieldModel;
+using UKControllerPlugin::Approach::AirfieldApproachOptions;
 using UKControllerPlugin::Approach::ApproachSequencedAircraft;
+using UKControllerPlugin::Approach::ApproachSequencerOptions;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 using UKControllerPlugin::Approach::ApproachSpacingCalculator;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
@@ -49,7 +53,7 @@ namespace UKControllerPluginTest::Approach {
               aircraft(std::make_shared<ApproachSequencedAircraft>("BAW123", ApproachSequencingMode::WakeTurbulence)),
               previousAircraft(
                   std::make_shared<ApproachSequencedAircraft>("EZY456", ApproachSequencingMode::WakeTurbulence)),
-              calculator(airfields, wakeMappers, plugin)
+              calculator(sequencerOptions, airfields, wakeMappers, plugin)
         {
             ON_CALL(plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(flightplan));
             ON_CALL(plugin, GetFlightplanForCallsign("EZY456")).WillByDefault(testing::Return(previousFlightplan));
@@ -84,6 +88,7 @@ namespace UKControllerPluginTest::Approach {
             aircraft->Previous(previousAircraft);
         }
 
+        ApproachSequencerOptions sequencerOptions;
         std::list<std::shared_ptr<ArrivalWakeInterval>> arrivalWakeIntervals;
         std::shared_ptr<WakeCategory> category;
         std::shared_ptr<WakeCategory> previousCategory;
@@ -104,10 +109,17 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_DOUBLE_EQ(3.5, calculator.Calculate("EGKK", *aircraft));
     }
 
-    TEST_F(ApproachSpacingCalculatorTest, ItReturnsNoIntervalIfNoWakeIntervalPresentInWakeMode)
+    TEST_F(ApproachSpacingCalculatorTest, ItReturnsMinimumSeparationIfLargetThanWakeInterval)
+    {
+        sequencerOptions.Set(
+            "EGKK", std::make_shared<AirfieldApproachOptions>(ApproachSequencingMode::WakeTurbulence, 3.0, 5.5));
+        EXPECT_DOUBLE_EQ(3.5, calculator.Calculate("EGKK", *aircraft));
+    }
+
+    TEST_F(ApproachSpacingCalculatorTest, ItReturnsAirfieldDefaultSeparationIfNoWakeIntervalPresentInWakeMode)
     {
         previousAircraft->Previous(aircraft);
-        EXPECT_DOUBLE_EQ(ApproachSpacingCalculator::NoSpacing(), calculator.Calculate("EGKK", *previousAircraft));
+        EXPECT_DOUBLE_EQ(3.0, calculator.Calculate("EGKK", *previousAircraft));
     }
 
     TEST_F(ApproachSpacingCalculatorTest, ItReturnsTargetDistanceIfNoWakeIntervalPresentInDistanceMode)
@@ -125,6 +137,15 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_DOUBLE_EQ(4.2, calculator.Calculate("EGKK", *aircraft));
     }
 
+    TEST_F(ApproachSpacingCalculatorTest, ItReturnsMinimumSeparationIfGreaterThanTargetDistanceInDistanceMode)
+    {
+        sequencerOptions.Set(
+            "EGKK", std::make_shared<AirfieldApproachOptions>(ApproachSequencingMode::WakeTurbulence, 3.0, 4.5));
+        aircraft->Mode(ApproachSequencingMode::MinimumDistance);
+        aircraft->ExpectedDistance(4.2);
+        EXPECT_DOUBLE_EQ(4.5, calculator.Calculate("EGKK", *aircraft));
+    }
+
     TEST_F(ApproachSpacingCalculatorTest, ItReturnsWakeDistanceIfGreaterThanTargetInDistanceMode)
     {
         aircraft->Mode(ApproachSequencingMode::MinimumDistance);
@@ -132,17 +153,26 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_DOUBLE_EQ(3.5, calculator.Calculate("EGKK", *aircraft));
     }
 
-    TEST_F(ApproachSpacingCalculatorTest, ItReturnsNoSpacingIfAircraftDoesntHaveWakeCategory)
+    TEST_F(ApproachSpacingCalculatorTest, ItReturnsAirfieldSeparationIfGreaterThanWakeInDistanceMode)
     {
-        ON_CALL(*wakeMapper1, MapForFlightplan(testing::Ref(*flightplan))).WillByDefault(testing::Return(nullptr));
-        EXPECT_DOUBLE_EQ(ApproachSpacingCalculator::NoSpacing(), calculator.Calculate("EGKK", *aircraft));
+        sequencerOptions.Set(
+            "EGKK", std::make_shared<AirfieldApproachOptions>(ApproachSequencingMode::WakeTurbulence, 3.0, 4.0));
+        aircraft->Mode(ApproachSequencingMode::MinimumDistance);
+        aircraft->ExpectedDistance(3.1);
+        EXPECT_DOUBLE_EQ(4.0, calculator.Calculate("EGKK", *aircraft));
     }
 
-    TEST_F(ApproachSpacingCalculatorTest, ItReturnsNoSpacingIfPreviousAircraftDoesntHaveWakeCategory)
+    TEST_F(ApproachSpacingCalculatorTest, ItReturnsAirfieldDefaultSpacingIfAircraftDoesntHaveWakeCategory)
+    {
+        ON_CALL(*wakeMapper1, MapForFlightplan(testing::Ref(*flightplan))).WillByDefault(testing::Return(nullptr));
+        EXPECT_DOUBLE_EQ(3.0, calculator.Calculate("EGKK", *aircraft));
+    }
+
+    TEST_F(ApproachSpacingCalculatorTest, ItReturnsAirfieldDefaultSpacingIfPreviousAircraftDoesntHaveWakeCategory)
     {
         ON_CALL(*wakeMapper1, MapForFlightplan(testing::Ref(*previousFlightplan)))
             .WillByDefault(testing::Return(nullptr));
-        EXPECT_DOUBLE_EQ(ApproachSpacingCalculator::NoSpacing(), calculator.Calculate("EGKK", *aircraft));
+        EXPECT_DOUBLE_EQ(3.0, calculator.Calculate("EGKK", *aircraft));
     }
 
     TEST_F(ApproachSpacingCalculatorTest, ItReturnsNoSpacingIfAircraftDoesntHaveFlightplan)
@@ -157,9 +187,9 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_DOUBLE_EQ(ApproachSpacingCalculator::NoSpacing(), calculator.Calculate("EGKK", *aircraft));
     }
 
-    TEST_F(ApproachSpacingCalculatorTest, ItReturnsNoSpacingIfNoWakeMapperAtAirfield)
+    TEST_F(ApproachSpacingCalculatorTest, ItReturnsMinimumSeparationIfNoWakeMapperAtAirfield)
     {
-        EXPECT_DOUBLE_EQ(ApproachSpacingCalculator::NoSpacing(), calculator.Calculate("EGLL", *aircraft));
+        EXPECT_DOUBLE_EQ(3.0, calculator.Calculate("EGLL", *aircraft));
     }
 
     TEST_F(ApproachSpacingCalculatorTest, ItReturnsNoSpacingIfAirfieldNotFound)

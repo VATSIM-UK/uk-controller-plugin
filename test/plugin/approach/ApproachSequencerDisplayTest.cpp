@@ -3,6 +3,7 @@
 #include "approach/ApproachSequencer.h"
 #include "approach/ApproachSequencerDisplay.h"
 #include "approach/ApproachSequencerDisplayOptions.h"
+#include "approach/ApproachSequencerOptions.h"
 #include "airfield/AirfieldCollection.h"
 #include "wake/WakeCategoryMapperCollection.h"
 
@@ -10,6 +11,7 @@ using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Approach::ApproachSequencer;
 using UKControllerPlugin::Approach::ApproachSequencerDisplay;
 using UKControllerPlugin::Approach::ApproachSequencerDisplayOptions;
+using UKControllerPlugin::Approach::ApproachSequencerOptions;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 using UKControllerPlugin::Approach::ApproachSpacingCalculator;
 using UKControllerPlugin::Wake::WakeCategoryMapperCollection;
@@ -19,7 +21,8 @@ namespace UKControllerPluginTest::Approach {
     {
         public:
         ApproachSequencerDisplayTest()
-            : spacingCalculator(airfields, wakeMapper, plugin), selectorList(std::make_shared<List::MockPopupList>()),
+            : spacingCalculator(sequencerOptions, airfields, wakeMapper, plugin),
+              selectorList(std::make_shared<List::MockPopupList>()),
               callsignSelectorList(std::make_shared<List::MockPopupList>()),
               targetList(std::make_shared<List::MockPopupList>()),
               airfieldTargetList(std::make_shared<List::MockPopupList>()),
@@ -38,6 +41,7 @@ namespace UKControllerPluginTest::Approach {
         {
         }
 
+        ApproachSequencerOptions sequencerOptions;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         AirfieldCollection airfields;
         WakeCategoryMapperCollection wakeMapper;

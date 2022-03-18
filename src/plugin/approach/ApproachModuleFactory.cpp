@@ -18,13 +18,13 @@ namespace UKControllerPlugin::Approach {
 
         return *this->sequencer;
     }
-    
+
     auto ApproachModuleFactory::SequencerOptions() -> ApproachSequencerOptions&
     {
         if (!this->sequencerOptions) {
             this->sequencerOptions = std::make_unique<ApproachSequencerOptions>();
         }
-        
+
         return *this->sequencerOptions;
     }
 
@@ -36,7 +36,7 @@ namespace UKControllerPlugin::Approach {
             assert(container.wakeCategoryMappers && "Wake category mappers is not set on container");
             assert(container.plugin && "Plugin is not set on container");
             this->spacingCalculator = std::make_unique<ApproachSpacingCalculator>(
-                *container.airfields, *container.wakeCategoryMappers, *container.plugin);
+                SequencerOptions(), *container.airfields, *container.wakeCategoryMappers, *container.plugin);
         }
 
         return *this->spacingCalculator;

@@ -1,4 +1,6 @@
+#include "AirfieldApproachOptions.h"
 #include "ApproachSequencedAircraft.h"
+#include "ApproachSequencerOptions.h"
 #include "ApproachSpacingCalculator.h"
 #include "airfield/AirfieldCollection.h"
 #include "airfield/AirfieldModel.h"
@@ -11,10 +13,11 @@
 namespace UKControllerPlugin::Approach {
 
     ApproachSpacingCalculator::ApproachSpacingCalculator(
+        ApproachSequencerOptions& sequencerOptions,
         const Airfield::AirfieldCollection& airfields,
         const Wake::WakeCategoryMapperCollection& wakeMappers,
         Euroscope::EuroscopePluginLoopbackInterface& plugin)
-        : airfields(airfields), wakeMappers(wakeMappers), plugin(plugin)
+        : sequencerOptions(sequencerOptions), airfields(airfields), wakeMappers(wakeMappers), plugin(plugin)
     {
     }
 
@@ -35,38 +38,49 @@ namespace UKControllerPlugin::Approach {
             return NoSpacing();
         }
 
-        auto wakeMapper = wakeMappers.Get(airfieldModel->WakeScheme());
-        if (!wakeMapper) {
-            return NoSpacing();
-        }
-
         const auto thisFlightplan = plugin.GetFlightplanForCallsign(aircraft.Callsign());
         const auto previousFlightplan = plugin.GetFlightplanForCallsign(aircraft.Previous()->Callsign());
         if (!thisFlightplan || !previousFlightplan) {
             return NoSpacing();
         }
 
+        auto minimumSeparation = AirfieldMinimumSeparation(airfield);
+        auto wakeMapper = wakeMappers.Get(airfieldModel->WakeScheme());
+        if (!wakeMapper) {
+            return minimumSeparation;
+        }
+
         auto thisWakeCategory = wakeMapper->MapForFlightplan(*thisFlightplan);
         auto previousWakeCategory = wakeMapper->MapForFlightplan(*previousFlightplan);
         if (!thisWakeCategory || !previousWakeCategory) {
-            return NoSpacing();
+            return minimumSeparation;
         }
 
         auto requiredWakeDistance = previousWakeCategory->ArrivalInterval(*thisWakeCategory);
 
         // If the target is wake, return the required arrival interval
         if (aircraft.Mode() == ApproachSequencingMode::WakeTurbulence) {
-            return requiredWakeDistance ? requiredWakeDistance->Value() : NoSpacing();
+            return requiredWakeDistance ? requiredWakeDistance->Value() : AirfieldMinimumSeparation(airfield);
         }
 
         // If we're in minimum distance mode, then take the larger of the two.
         return requiredWakeDistance && requiredWakeDistance->Value() > aircraft.ExpectedDistance()
-                   ? requiredWakeDistance->Value()
-                   : aircraft.ExpectedDistance();
+                   ? GreaterOf(requiredWakeDistance->Value(), minimumSeparation)
+                   : GreaterOf(aircraft.ExpectedDistance(), minimumSeparation);
     }
 
     auto ApproachSpacingCalculator::NoSpacing() -> double
     {
         return NO_SPACING_DETECTED;
+    }
+
+    auto ApproachSpacingCalculator::AirfieldMinimumSeparation(const std::string& airfield) const -> double
+    {
+        return sequencerOptions.Get(airfield).minimumSeparationRequirement;
+    }
+
+    auto ApproachSpacingCalculator::GreaterOf(double value1, double value2) -> double
+    {
+        return value1 > value2 ? value1 : value2;
     }
 } // namespace UKControllerPlugin::Approach
