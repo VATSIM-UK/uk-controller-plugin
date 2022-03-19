@@ -45,6 +45,7 @@ namespace UKControllerPlugin::Approach {
             std::make_shared<ApproachSequencerDisplay>(
                 container.moduleFactories->Approach().Sequencer(),
                 container.moduleFactories->Approach().SpacingCalculator(container),
+                container.moduleFactories->Approach().SequencerOptions(),
                 displayOptions,
                 container.popupListFactory->Create(
                     std::make_shared<SequencerAirfieldSelector>(displayOptions, *container.airfields),

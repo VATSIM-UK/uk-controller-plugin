@@ -1,8 +1,10 @@
+#include "AirfieldApproachOptions.h"
 #include "ApproachSequence.h"
 #include "ApproachSequencedAircraft.h"
 #include "ApproachSequencer.h"
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayOptions.h"
+#include "ApproachSequencerOptions.h"
 #include "ApproachSpacingCalculator.h"
 #include "components/Button.h"
 #include "components/ClickableArea.h"
@@ -14,14 +16,18 @@
 #include "graphics/StringFormatManager.h"
 #include "helper/HelperFunctions.h"
 #include "list/PopupListInterface.h"
+#include "number/NumberFormat.h"
 
 using UKControllerPlugin::Components::CollapsibleWindowTitleBar;
+using UKControllerPlugin::Number::To1Dp;
+using UKControllerPlugin::Number::To1DpWide;
 
 namespace UKControllerPlugin::Approach {
 
     ApproachSequencerDisplay::ApproachSequencerDisplay(
         ApproachSequencer& sequencer,
         ApproachSpacingCalculator& spacingCalculator,
+        ApproachSequencerOptions& options,
         std::shared_ptr<ApproachSequencerDisplayOptions> displayOptions,
         std::shared_ptr<List::PopupListInterface> airfieldSelector,
         std::shared_ptr<List::PopupListInterface> callsignSelector,
@@ -30,9 +36,10 @@ namespace UKControllerPlugin::Approach {
         std::shared_ptr<List::PopupListInterface> airfieldSeparationSelector,
         Euroscope::EuroscopePluginLoopbackInterface& plugin,
         int screenObjectId)
-        : sequencer(sequencer), spacingCalculator(spacingCalculator), displayOptions(std::move(displayOptions)),
-          airfieldSelector(std::move(airfieldSelector)), callsignSelector(std::move(callsignSelector)),
-          targetSelector(std::move(targetSelector)), airfieldTargetSelector(std::move(airfieldTargetSelector)),
+        : sequencer(sequencer), spacingCalculator(spacingCalculator), options(options),
+          displayOptions(std::move(displayOptions)), airfieldSelector(std::move(airfieldSelector)),
+          callsignSelector(std::move(callsignSelector)), targetSelector(std::move(targetSelector)),
+          airfieldTargetSelector(std::move(airfieldTargetSelector)),
           airfieldSeparationSelector(std::move(airfieldSeparationSelector)), plugin(plugin),
           screenObjectId(screenObjectId), titleBar(CollapsibleWindowTitleBar::Create(
                                               L"Approach Sequencer",
@@ -43,6 +50,10 @@ namespace UKControllerPlugin::Approach {
               this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           addClickspot(
               Components::ClickableArea::Create(this->addButton, screenObjectId, ADD_AIRCRAFT_CLICKSPOT, false)),
+          airfieldTargetClickspot(Components::ClickableArea::Create(
+              this->airfieldTargetTextArea, screenObjectId, AIRFIELD_TARGET_CLICKSPOT, false)),
+          airfieldSeparationClickspot(Components::ClickableArea::Create(
+              this->airfieldSeparationTextArea, screenObjectId, AIRFIELD_SEPARATION_CLICKSPOT, false)),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
           textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR)),
           dividingPen(std::make_shared<Gdiplus::Pen>(TEXT_COLOUR))
@@ -73,6 +84,8 @@ namespace UKControllerPlugin::Approach {
                 this->titleBar->Draw(graphics, radarScreen);
                 this->RenderAirfield(graphics, radarScreen);
                 this->RenderAddButton(graphics, radarScreen);
+                this->RenderAirfieldTarget(graphics, radarScreen);
+                this->RenderAirfieldSeparation(graphics, radarScreen);
                 this->RenderDivider(graphics);
                 this->RenderHeaders(graphics);
                 this->RenderContent(graphics, radarScreen);
@@ -137,13 +150,13 @@ namespace UKControllerPlugin::Approach {
             return;
         }
 
-        if (objectDescription == "airfieldTarget") {
+        if (objectDescription == AIRFIELD_TARGET_CLICKSPOT) {
             airfieldTargetSelector->Trigger(mousePos);
             return;
         }
 
-        if (objectDescription == "airfieldSeparation") {
-            airfieldTargetSelector->Trigger(mousePos);
+        if (objectDescription == AIRFIELD_SEPARATION_CLICKSPOT) {
+            airfieldSeparationSelector->Trigger(mousePos);
             return;
         }
     }
@@ -186,7 +199,7 @@ namespace UKControllerPlugin::Approach {
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         graphics.DrawRect(addButton, *dividingPen);
-        graphics.DrawString(L"Add", addButton, *textBrush);
+        graphics.DrawString(L"Add Aircraft", addButton, *textBrush);
         addClickspot->Apply(graphics, radarScreen);
     }
 
@@ -232,9 +245,7 @@ namespace UKControllerPlugin::Approach {
             if (aircraftToProcess->Mode() == ApproachSequencingMode::WakeTurbulence) {
                 graphics.DrawString(L"Wake", targetRect, *textBrush);
             } else {
-                char distanceString[25];                                                  // NOLINT
-                sprintf_s(distanceString, "%.1f", aircraftToProcess->ExpectedDistance()); // NOLINT
-                graphics.DrawString(HelperFunctions::ConvertToWideString(distanceString), targetRect, *textBrush);
+                graphics.DrawString(To1DpWide(aircraftToProcess->ExpectedDistance()), targetRect, *textBrush);
             }
             Components::ClickableArea::Create(
                 targetRect, screenObjectId, "approachTarget" + aircraftToProcess->Callsign(), false)
@@ -293,5 +304,53 @@ namespace UKControllerPlugin::Approach {
             WINDOW_WIDTH,
             static_cast<INT>(callsignHeader.GetBottom() + INSETS + (numberOfCallsigns * callsignHeader.Height))};
         graphics.FillRect(contentArea, *backgroundBrush);
+    }
+
+    void ApproachSequencerDisplay::RenderAirfieldTarget(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        graphics.DrawString(
+            L"Target:",
+            airfieldTargetStatic,
+            *textBrush,
+            Graphics::StringFormatManager::Instance().GetLeftAlign(),
+            Graphics::FontManager::Instance().GetDefault());
+
+        // The target distance / wake
+        std::wstring targetString = L"--";
+        if (!displayOptions->Airfield().empty()) {
+            targetString = options.Get(displayOptions->Airfield()).defaultMode == ApproachSequencingMode::WakeTurbulence
+                               ? L"Wake"
+                               : To1DpWide(options.Get(displayOptions->Airfield()).targetDistance);
+        }
+
+        graphics.DrawString(
+            targetString,
+            airfieldTargetTextArea,
+            *textBrush,
+            Graphics::StringFormatManager::Instance().GetLeftAlign(),
+            Graphics::FontManager::Instance().GetDefault());
+        this->airfieldTargetClickspot->Apply(graphics, radarScreen);
+    }
+
+    void ApproachSequencerDisplay::RenderAirfieldSeparation(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        graphics.DrawString(
+            L"Separation:",
+            airfieldSeparationStatic,
+            *textBrush,
+            Graphics::StringFormatManager::Instance().GetLeftAlign(),
+            Graphics::FontManager::Instance().GetDefault());
+
+        graphics.DrawString(
+            displayOptions->Airfield().empty()
+                ? L"--"
+                : To1DpWide(options.Get(displayOptions->Airfield()).minimumSeparationRequirement),
+            airfieldSeparationTextArea,
+            *textBrush,
+            Graphics::StringFormatManager::Instance().GetLeftAlign(),
+            Graphics::FontManager::Instance().GetDefault());
+        this->airfieldSeparationClickspot->Apply(graphics, radarScreen);
     }
 } // namespace UKControllerPlugin::Approach

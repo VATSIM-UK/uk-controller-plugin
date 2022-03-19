@@ -378,6 +378,10 @@ set(test__notifications
 )
 source_group("test\\notifications" FILES ${test__notifications})
 
+set(test__number
+        number/NumberFormatTest.cpp)
+source_group("test\\number" FILES ${test__number})
+
 set(test__oceanic
     "oceanic/OceanicEventHandlerTest.cpp"
     "oceanic/OceanicModuleTest.cpp"
@@ -610,6 +614,7 @@ set(ALL_FILES
     ${test__mock}
     ${test__navaids}
     ${test__notifications}
+    ${test__number}
     ${test__oceanic}
     ${test__offblock}
     ${test__ownership}

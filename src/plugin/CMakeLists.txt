@@ -599,6 +599,10 @@ set(src__notifications
 )
 source_group("src\\notifications" FILES ${src__notifications})
 
+set(src__number
+        number/NumberFormat.cpp number/NumberFormat.h)
+source_group("src\\number" FILES ${src__number})
+
 set(src__oceanic
     "oceanic/Clearance.h"
     "oceanic/OceanicClearanceDialog.cpp"
@@ -967,6 +971,7 @@ set(ALL_FILES
     ${src__missedapproach}
     ${src__navaids}
     ${src__notifications}
+    ${src__number}
     ${src__oceanic}
     ${src__offblock}
     ${src__ownership}

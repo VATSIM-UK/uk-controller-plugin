@@ -30,6 +30,7 @@ namespace UKControllerPluginTest::Approach {
               options(std::make_shared<ApproachSequencerDisplayOptions>()), display(
                                                                                 sequencer,
                                                                                 spacingCalculator,
+                                                                                sequencerOptions,
                                                                                 options,
                                                                                 selectorList,
                                                                                 callsignSelectorList,
@@ -96,7 +97,7 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerDisplayTest, ItTriggersAirfieldSeparationList)
     {
-        EXPECT_CALL(*airfieldTargetList, Trigger(PointEq(POINT{1, 2}))).Times(1);
+        EXPECT_CALL(*airfieldSeparationList, Trigger(PointEq(POINT{1, 2}))).Times(1);
 
         display.LeftClick(radarScreen, 1, "airfieldSeparation", {1, 2}, {});
     }
