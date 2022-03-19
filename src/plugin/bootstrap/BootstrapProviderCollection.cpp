@@ -7,7 +7,7 @@ namespace UKControllerPlugin::Bootstrap {
 
     void BootstrapProviderCollection::AddProvider(std::shared_ptr<BootstrapProviderInterface> provider)
     {
-        auto inserted = providers.insert(std::move(provider)).second;
+        [[maybe_unused]] auto inserted = providers.insert(std::move(provider)).second;
         assert(inserted && "Duplicate bootstrap provider added");
     }
 
