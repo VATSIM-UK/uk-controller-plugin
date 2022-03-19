@@ -58,4 +58,18 @@ namespace UKControllerPluginTest::Approach {
         aircraft.Previous(anotherAircraft);
         EXPECT_EQ(anotherAircraft, aircraft.Previous());
     }
+
+    TEST_F(ApproachSequencedAircraftTest, ItDrawsByDefault)
+    {
+        EXPECT_TRUE(aircraft.ShouldDraw());
+    }
+
+    TEST_F(ApproachSequencedAircraftTest, ItTogglesDraw)
+    {
+        EXPECT_TRUE(aircraft.ShouldDraw());
+        aircraft.ToggleDraw();
+        EXPECT_FALSE(aircraft.ShouldDraw());
+        aircraft.ToggleDraw();
+        EXPECT_TRUE(aircraft.ShouldDraw());
+    }
 } // namespace UKControllerPluginTest::Approach

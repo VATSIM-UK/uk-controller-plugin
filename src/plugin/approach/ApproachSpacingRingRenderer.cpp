@@ -18,7 +18,7 @@ namespace UKControllerPlugin::Approach {
         std::shared_ptr<ApproachSequencerDisplayOptions> options,
         Euroscope::EuroscopePluginLoopbackInterface& plugin)
         : sequencer(sequencer), spacingCalculator(spacingCalculator), options(std::move(options)), plugin(plugin),
-          circleBrush(Gdiplus::SolidBrush(Gdiplus::Color(50, 255, 255, 255)))
+          circleBrush(Gdiplus::SolidBrush(Gdiplus::Color(30, 255, 255, 255)))
     {
     }
 
@@ -36,6 +36,11 @@ namespace UKControllerPlugin::Approach {
 
         auto aircraft = sequencer.GetForAirfield(options->Airfield()).First();
         while (aircraft != nullptr) {
+            if (!aircraft->ShouldDraw()) {
+                aircraft = aircraft->Next();
+                continue;
+            }
+
             const auto flightplan = plugin.GetFlightplanForCallsign(aircraft->Callsign());
             const auto radarTarget = plugin.GetRadarTargetForCallsign(aircraft->Callsign());
             if (!flightplan || !radarTarget) {
@@ -49,10 +54,11 @@ namespace UKControllerPlugin::Approach {
                 auto position = radarScreen.ConvertCoordinateToScreenPoint(radarTarget->GetPosition());
 
                 graphics.FillCircle(
-                    {static_cast<Gdiplus::REAL>(position.x - circleRadius),
-                     static_cast<Gdiplus::REAL>(position.y - circleRadius),
-                     static_cast<Gdiplus::REAL>(circleRadius * 2),
-                     static_cast<Gdiplus::REAL>(circleRadius * 2)},
+                    Gdiplus::RectF{
+                        static_cast<Gdiplus::REAL>(position.x - circleRadius),
+                        static_cast<Gdiplus::REAL>(position.y - circleRadius),
+                        static_cast<Gdiplus::REAL>(circleRadius * 2),
+                        static_cast<Gdiplus::REAL>(circleRadius * 2)},
                     circleBrush);
             }
 

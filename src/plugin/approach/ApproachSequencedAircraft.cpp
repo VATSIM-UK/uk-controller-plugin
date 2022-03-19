@@ -51,4 +51,14 @@ namespace UKControllerPlugin::Approach {
     {
         return callsign;
     }
+
+    auto ApproachSequencedAircraft::ShouldDraw() const -> bool
+    {
+        return shouldDraw;
+    }
+
+    void ApproachSequencedAircraft::ToggleDraw()
+    {
+        shouldDraw = !shouldDraw;
+    }
 } // namespace UKControllerPlugin::Approach

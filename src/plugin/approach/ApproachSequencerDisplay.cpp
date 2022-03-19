@@ -139,6 +139,12 @@ namespace UKControllerPlugin::Approach {
             return;
         }
 
+        if (objectDescription.substr(0, 10) == "toggleDraw") {
+            const std::string callsign = objectDescription.substr(10);
+            sequencer.GetForAirfield(sequencer.AirfieldForAircraft(callsign)).Get(callsign)->ToggleDraw();
+            return;
+        }
+
         if (objectDescription.substr(0, 14) == "approachTarget") {
             auto flightplan = plugin.GetFlightplanForCallsign(objectDescription.substr(14));
             if (!flightplan) {
@@ -234,6 +240,11 @@ namespace UKControllerPlugin::Approach {
             actionsHeader.GetBottom() + INSETS,
             actionsHeader.Height - INSETS,
             actionsHeader.Height - INSETS};
+        Gdiplus::Rect toggleButtonRect{
+            deleteButtonRect.GetRight() + INSETS,
+            actionsHeader.GetBottom() + INSETS,
+            actionsHeader.Height - INSETS,
+            actionsHeader.Height - INSETS};
         int sequenceNumber = 1;
 
         while (aircraftToProcess != nullptr) {
@@ -279,6 +290,25 @@ namespace UKControllerPlugin::Approach {
                 Components::DeleteButton(TEXT_COLOUR));
             deleteButton->Draw(graphics, radarScreen);
 
+            auto toggleButton = Components::Button::Create(
+                toggleButtonRect,
+                screenObjectId,
+                "toggleDraw" + aircraftToProcess->Callsign(),
+                [&aircraftToProcess, &radarScreen, this](
+                    Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& area) {
+                    Gdiplus::Rect drawArea = {0, 0, area.Width, area.Height};
+                    graphics.FillCircle(drawArea, *textBrush);
+                    if (!aircraftToProcess->ShouldDraw()) {
+                        Components::Button::Create(
+                            drawArea,
+                            screenObjectId,
+                            "toggleDraw" + aircraftToProcess->Callsign(),
+                            Components::DeleteButton(BACKGROUND_COLOUR))
+                            ->Draw(graphics, radarScreen);
+                    }
+                });
+            toggleButton->Draw(graphics, radarScreen);
+
             sequenceNumber++;
             aircraftToProcess = aircraftToProcess->Next();
             numberRect.Y = numberRect.GetBottom();
@@ -288,6 +318,7 @@ namespace UKControllerPlugin::Approach {
             upButtonRect.Y = upButtonRect.GetBottom();
             downButtonRect.Y = downButtonRect.GetBottom();
             deleteButtonRect.Y = deleteButtonRect.GetBottom();
+            toggleButtonRect.Y = toggleButtonRect.GetBottom();
         }
     }
 

@@ -11,15 +11,6 @@ namespace UKControllerPlugin::Approach {
     {
         public:
         ApproachSequencedAircraft(std::string callsign, ApproachSequencingMode mode);
-
-        private:
-        // Who is the sequenced aircraft
-        std::string callsign;
-
-        // What mode are we using in the sequence
-        ApproachSequencingMode mode;
-
-        public:
         [[nodiscard]] auto Callsign() const -> const std::string&;
         [[nodiscard]] auto Mode() const -> ApproachSequencingMode;
         void Mode(ApproachSequencingMode mode);
@@ -29,8 +20,20 @@ namespace UKControllerPlugin::Approach {
         void Previous(const std::shared_ptr<ApproachSequencedAircraft>& previous);
         [[nodiscard]] auto Next() const -> const std::shared_ptr<ApproachSequencedAircraft>&;
         void Next(const std::shared_ptr<ApproachSequencedAircraft>& next);
+        [[nodiscard]] auto ShouldDraw() const -> bool;
+        void ToggleDraw();
 
         private:
+        
+        // Who is the sequenced aircraft
+        std::string callsign;
+        
+        // What mode are we using in the sequence
+        ApproachSequencingMode mode;
+        
+        // Should we draw to the display
+        bool shouldDraw = true;
+        
         // If we're in distance mode, what distance
         double expectedDistance = 6.0;
 

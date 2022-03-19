@@ -229,6 +229,11 @@ namespace UKControllerPlugin {
         {
             this->api->FillEllipse(&brush, area);
         }
+        
+        void GdiGraphicsWrapper::FillCircle(const Gdiplus::Rect& area, const Gdiplus::Brush& brush)
+        {
+            this->api->FillEllipse(&brush, area);
+        }
 
         void GdiGraphicsWrapper::FillDiamond(const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
         {

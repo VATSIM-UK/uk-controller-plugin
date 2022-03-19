@@ -1,9 +1,10 @@
-#include "approach/ApproachSpacingCalculator.h"
 #include "approach/ApproachSequence.h"
+#include "approach/ApproachSequencedAircraft.h"
 #include "approach/ApproachSequencer.h"
 #include "approach/ApproachSequencerDisplay.h"
 #include "approach/ApproachSequencerDisplayOptions.h"
 #include "approach/ApproachSequencerOptions.h"
+#include "approach/ApproachSpacingCalculator.h"
 #include "airfield/AirfieldCollection.h"
 #include "wake/WakeCategoryMapperCollection.h"
 
@@ -130,6 +131,17 @@ namespace UKControllerPluginTest::Approach {
 
         display.LeftClick(radarScreen, 1, "deleteButtonBAW123", {1, 2}, {});
         EXPECT_EQ(std::list<std::string>({"BAW456"}), sequencer.GetForAirfield("EGKK").Callsigns());
+    }
+
+    TEST_F(ApproachSequencerDisplayTest, ItTogglesDrawOnAnAircraft)
+    {
+        options->Airfield("EGKK");
+        sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
+
+        display.LeftClick(radarScreen, 1, "toggleDrawBAW123", {1, 2}, {});
+        EXPECT_FALSE(sequencer.GetForAirfield("EGKK").Get("BAW123")->ShouldDraw());
+        display.LeftClick(radarScreen, 1, "toggleAircraftBAW123", {1, 2}, {});
+        EXPECT_TRUE(sequencer.GetForAirfield("EGKK").Get("BAW123")->ShouldDraw());
     }
 
     TEST_F(ApproachSequencerDisplayTest, ItTriggersTargetListForAircraft)
