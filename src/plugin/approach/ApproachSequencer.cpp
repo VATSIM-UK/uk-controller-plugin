@@ -36,7 +36,7 @@ namespace UKControllerPlugin::Approach {
 
     void ApproachSequencer::AssertAircraftNotInSequence(const std::string& callsign)
     {
-        for (const auto& sequence : sequences) {
+        for ([[maybe_unused]] const auto& sequence : sequences) {
             assert(sequence.second->Get(callsign) == nullptr && "Aircraft already in arrival sequence");
         }
     }
