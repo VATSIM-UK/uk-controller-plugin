@@ -8,6 +8,7 @@
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSequencerOptionsLoader.h"
 #include "ApproachSpacingRingRenderer.h"
+#include "RemoveLandedAircraft.h"
 #include "SequencerAirfieldSelector.h"
 #include "TargetSelectorList.h"
 #include "ToggleApproachSequencerDisplay.h"
@@ -19,6 +20,7 @@
 #include "list/PopupListFactory.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 namespace UKControllerPlugin::Approach {
 
@@ -26,6 +28,11 @@ namespace UKControllerPlugin::Approach {
     {
         container.pluginSettingsProviders->AddProvider(std::make_shared<ApproachSequencerOptionsLoader>(
             container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
+
+        container.timedHandler->RegisterEvent(
+            std::make_shared<RemoveLandedAircraft>(
+                container.moduleFactories->Approach().Sequencer(), *container.plugin),
+            10);
     }
 
     void ApproachBootstrapProvider::BootstrapRadarScreen(

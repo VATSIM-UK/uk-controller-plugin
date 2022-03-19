@@ -65,4 +65,11 @@ namespace UKControllerPlugin::Approach {
     {
         return sequences.size();
     }
+
+    void ApproachSequencer::ForEach(const std::function<void(const ApproachSequence&)>& callback)
+    {
+        for (const auto& sequence : sequences) {
+            callback(*sequence.second);
+        }
+    }
 } // namespace UKControllerPlugin::Approach

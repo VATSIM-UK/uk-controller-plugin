@@ -53,7 +53,7 @@ set(src__approach
         approach/ApproachSequencerDisplayOptions.cpp approach/ApproachSequencerDisplayOptions.h
         approach/ApproachSequencerDisplayAsrLoader.cpp approach/ApproachSequencerDisplayAsrLoader.h
         approach/ToggleApproachSequencerDisplay.cpp approach/ToggleApproachSequencerDisplay.h
-        approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h approach/TargetSelectorList.cpp approach/TargetSelectorList.h approach/ApproachSpacingCalculator.cpp approach/ApproachSpacingCalculator.h approach/ApproachSequencerOptions.cpp approach/ApproachSequencerOptions.h approach/AirfieldApproachOptions.h approach/ApproachSequencerOptionsLoader.cpp approach/ApproachSequencerOptionsLoader.h approach/AirfieldTargetSelectorList.cpp approach/AirfieldTargetSelectorList.h approach/ApproachSequencerDistanceOptions.cpp approach/ApproachSequencerDistanceOptions.h)
+        approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h approach/TargetSelectorList.cpp approach/TargetSelectorList.h approach/ApproachSpacingCalculator.cpp approach/ApproachSpacingCalculator.h approach/ApproachSequencerOptions.cpp approach/ApproachSequencerOptions.h approach/AirfieldApproachOptions.h approach/ApproachSequencerOptionsLoader.cpp approach/ApproachSequencerOptionsLoader.h approach/AirfieldTargetSelectorList.cpp approach/AirfieldTargetSelectorList.h approach/ApproachSequencerDistanceOptions.cpp approach/ApproachSequencerDistanceOptions.h approach/RemoveLandedAircraft.cpp approach/RemoveLandedAircraft.h)
 source_group("src\\approach" FILES ${src__approach})
 
 set(src__bootstrap

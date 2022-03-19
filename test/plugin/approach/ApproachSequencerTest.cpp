@@ -2,6 +2,7 @@
 #include "approach/ApproachSequencedAircraft.h"
 #include "approach/ApproachSequencer.h"
 
+using UKControllerPlugin::Approach::ApproachSequence;
 using UKControllerPlugin::Approach::ApproachSequencer;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 
@@ -92,5 +93,21 @@ namespace UKControllerPluginTest::Approach {
         sequencer.MoveAircraftDown("EGKK", "BAW123");
 
         EXPECT_EQ(std::list<std::string>({"BAW456", "BAW123"}), sequencer.GetForAirfield("EGKK").Callsigns());
+    }
+
+    TEST_F(ApproachSequencerTest, ItIteratesSequences)
+    {
+        sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
+        sequencer.AddAircraftToSequence("EGLL", "BAW456", ApproachSequencingMode::WakeTurbulence);
+
+        std::vector<std::list<std::string>> expectedCallsigns;
+        expectedCallsigns.push_back({"BAW123"});
+        expectedCallsigns.push_back({"BAW456"});
+
+        std::vector<std::list<std::string>> callsigns;
+        sequencer.ForEach(
+            [&callsigns](const ApproachSequence& sequence) { callsigns.push_back(sequence.Callsigns()); });
+
+        EXPECT_EQ(expectedCallsigns, callsigns);
     }
 } // namespace UKControllerPluginTest::Approach

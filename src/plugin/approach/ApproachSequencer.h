@@ -22,6 +22,7 @@ namespace UKControllerPlugin::Approach {
         [[nodiscard]] auto GetForAirfield(const std::string& airfield) -> const ApproachSequence&;
         void RemoveAircraftFromSequences(const std::string& callsign);
         [[nodiscard]] auto CountSequences() const -> size_t;
+        void ForEach(const std::function<void(const ApproachSequence&)>& callback);
 
         private:
         void AssertAircraftNotInSequence(const std::string& callsign);
