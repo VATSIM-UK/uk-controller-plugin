@@ -53,24 +53,4 @@ namespace UKControllerPluginTest::Approach {
     {
         EXPECT_EQ(&factory.SpacingCalculator(container), &factory.SpacingCalculator(container));
     }
-
-    TEST_F(ApproachModuleFactoryTest, ItAssertsIfContainerPluginNotSet)
-    {
-        container.plugin = nullptr;
-        EXPECT_DEATH(static_cast<void>(factory.SpacingCalculator(container)), "Plugin is not set on container");
-    }
-
-    TEST_F(ApproachModuleFactoryTest, ItAssertsIfContainerAirfieldsNotSet)
-    {
-        container.airfields = nullptr;
-        EXPECT_DEATH(
-            static_cast<void>(factory.SpacingCalculator(container)), "Airfield collection is not set on container");
-    }
-
-    TEST_F(ApproachModuleFactoryTest, ItAssertsIfContainerWakeMappersNotSet)
-    {
-        container.wakeCategoryMappers = nullptr;
-        EXPECT_DEATH(
-            static_cast<void>(factory.SpacingCalculator(container)), "Wake category mappers is not set on container");
-    }
 } // namespace UKControllerPluginTest::Approach

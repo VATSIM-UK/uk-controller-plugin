@@ -38,12 +38,12 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(ApproachSequencingMode::WakeTurbulence, aircraft->Mode());
     }
 
-    TEST_F(ApproachSequencerTest, ItAssertsAircraftCannotBeInMoreThanOneSequence)
+    TEST_F(ApproachSequencerTest, ItRemovesAircraftFromSequenceIfInsertedIntoAnother)
     {
         sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
-        EXPECT_DEATH(
-            sequencer.AddAircraftToSequence("EGLL", "BAW123", ApproachSequencingMode::WakeTurbulence),
-            "Aircraft already in arrival sequence");
+        sequencer.AddAircraftToSequence("EGLL", "BAW123", ApproachSequencingMode::WakeTurbulence);
+        EXPECT_EQ(std::list<std::string>{""}, sequencer.GetForAirfield("EGKK").Callsigns());
+        EXPECT_EQ(std::list<std::string>{"BAW123"}, sequencer.GetForAirfield("EGLL").Callsigns());
     }
 
     TEST_F(ApproachSequencerTest, ItAddsAircraftToASequenceBeforeAnother)
@@ -55,13 +55,12 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(ApproachSequencingMode::MinimumDistance, aircraft->Mode());
     }
 
-    TEST_F(ApproachSequencerTest, ItAssertsAircraftCannotBeInMoreThanOneSequenceWhenInsertedBeforeAnother)
+    TEST_F(ApproachSequencerTest, ItRemovesAircraftFromOneSequenceWhenInsertedBeforeIntoAnother)
     {
         sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
         sequencer.AddAircraftToSequence("EGKK", "BAW456", ApproachSequencingMode::WakeTurbulence, "BAW123");
-        EXPECT_DEATH(
-            sequencer.AddAircraftToSequence("EGLL", "BAW123", ApproachSequencingMode::WakeTurbulence, "BAW123"),
-            "Aircraft already in arrival sequence");
+        sequencer.AddAircraftToSequence("EGLL", "BAW123", ApproachSequencingMode::WakeTurbulence, "BAW123");
+        EXPECT_EQ(std::list<std::string>{"BAW456"}, sequencer.GetForAirfield("EGKK").Callsigns());
     }
 
     TEST_F(ApproachSequencerTest, ItRemovesAnAircraftFromSequence)

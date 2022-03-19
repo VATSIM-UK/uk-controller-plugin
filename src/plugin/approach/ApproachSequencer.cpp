@@ -20,7 +20,7 @@ namespace UKControllerPlugin::Approach {
     void ApproachSequencer::AddAircraftToSequence(
         const std::string& airfield, const std::string& callsign, ApproachSequencingMode mode)
     {
-        AssertAircraftNotInSequence(callsign);
+        RemoveAircraftFromSequences(callsign);
         GetOrCreate(airfield).AddAircraftToSequence(callsign, mode);
     }
 
@@ -30,15 +30,8 @@ namespace UKControllerPlugin::Approach {
         ApproachSequencingMode mode,
         const std::string& insertBefore)
     {
-        AssertAircraftNotInSequence(callsign);
+        RemoveAircraftFromSequences(callsign);
         GetOrCreate(airfield).AddAircraftToSequence(callsign, mode, insertBefore);
-    }
-
-    void ApproachSequencer::AssertAircraftNotInSequence(const std::string& callsign)
-    {
-        for ([[maybe_unused]] const auto& sequence : sequences) {
-            assert(sequence.second->Get(callsign) == nullptr && "Aircraft already in arrival sequence");
-        }
     }
 
     void ApproachSequencer::RemoveAircraftFromSequences(const std::string& callsign)

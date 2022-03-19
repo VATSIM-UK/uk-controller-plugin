@@ -33,12 +33,15 @@ namespace UKControllerPluginTest::Euroscope {
         EXPECT_EQ(2, collection.Count());
     }
 
-    TEST_F(PluginSettingsProviderCollectionTest, ItAssertsAgainstDuplicateProvider)
+    TEST_F(PluginSettingsProviderCollectionTest, ItDoesntAddDuplicateProvider)
     {
         collection.AddProvider(provider1);
+        collection.AddProvider(provider1);
+        collection.AddProvider(provider1);
         collection.AddProvider(provider2);
-
-        EXPECT_DEATH(collection.AddProvider(provider1), "Duplicate PluginSettingsProvider added");
+        collection.AddProvider(provider2);
+        collection.AddProvider(provider2);
+        EXPECT_EQ(2, collection.Count());
     }
 
     TEST_F(PluginSettingsProviderCollectionTest, ItLoadsSettingsOnProviders)

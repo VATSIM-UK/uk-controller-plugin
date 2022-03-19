@@ -29,10 +29,15 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_EQ(2, collection.Count());
     }
 
-    TEST_F(WakeCategoryMapperCollectionTest, ItDiesOnDuplicateMappers)
+    TEST_F(WakeCategoryMapperCollectionTest, ItDoesntAddDuplicateMappers)
     {
         collection.Add(1, mapper1);
-        EXPECT_DEATH(collection.Add(1, mapper2), "Duplicate wake category mapper added");
+        collection.Add(1, mapper1);
+        collection.Add(1, mapper1);
+        collection.Add(2, mapper1);
+        collection.Add(2, mapper1);
+        collection.Add(2, mapper1);
+        EXPECT_EQ(2, collection.Count());
     }
 
     TEST_F(WakeCategoryMapperCollectionTest, ItReturnsMappers)

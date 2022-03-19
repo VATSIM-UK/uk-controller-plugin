@@ -7,8 +7,10 @@ namespace UKControllerPlugin::Bootstrap {
 
     void BootstrapProviderCollection::AddProvider(std::shared_ptr<BootstrapProviderInterface> provider)
     {
-        [[maybe_unused]] auto inserted = providers.insert(std::move(provider)).second;
-        assert(inserted && "Duplicate bootstrap provider added");
+        auto added = providers.insert(std::move(provider)).second;
+        if (!added) {
+            LogError("Duplicate bootstrap provider added");
+        }
     }
 
     auto BootstrapProviderCollection::Count() const -> size_t

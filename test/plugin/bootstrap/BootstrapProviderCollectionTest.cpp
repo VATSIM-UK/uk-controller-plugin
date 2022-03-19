@@ -48,10 +48,15 @@ namespace UKControllerPluginTest::Bootstrap {
         EXPECT_EQ(2, collection.Count());
     }
 
-    TEST_F(BootstrapProviderCollectionTest, ItAssertsOnDuplicateProvider)
+    TEST_F(BootstrapProviderCollectionTest, ItDoesntAddDuplicateProviders)
     {
-        EXPECT_NO_FATAL_FAILURE(collection.AddProvider(provider));
-        EXPECT_DEATH(collection.AddProvider(provider), "Duplicate bootstrap provider added");
+        collection.AddProvider(provider);
+        collection.AddProvider(provider);
+        collection.AddProvider(provider);
+        collection.AddProvider(provider2);
+        collection.AddProvider(provider2);
+        collection.AddProvider(provider2);
+        EXPECT_EQ(2, collection.Count());
     }
 
     TEST_F(BootstrapProviderCollectionTest, ItDoesntHaveAProviderByType)

@@ -9,9 +9,11 @@ namespace UKControllerPlugin::Euroscope {
 
     void PluginSettingsProviderCollection::AddProvider(std::shared_ptr<PluginSettingsProviderInterface> provider)
     {
-        [[maybe_unused]] auto noExisting = std::find(providers.begin(), providers.end(), provider) == providers.cend();
-        assert(noExisting && "Duplicate PluginSettingsProvider added");
-        providers.push_back(provider);
+        auto existing = std::find(providers.begin(), providers.end(), provider) == providers.cend();
+        if (existing) {
+            LogError("Duplicate plugin settings provider added");
+            return;
+        }
     }
 
     void PluginSettingsProviderCollection::Load() const

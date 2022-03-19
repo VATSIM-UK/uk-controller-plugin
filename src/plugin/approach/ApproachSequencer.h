@@ -26,7 +26,6 @@ namespace UKControllerPlugin::Approach {
         [[nodiscard]] auto AirfieldForAircraft(const std::string& callsign) const -> std::string;
 
         private:
-        void AssertAircraftNotInSequence(const std::string& callsign);
         [[nodiscard]] auto GetOrCreate(const std::string& airfield) -> ApproachSequence&;
 
         std::map<std::string, std::shared_ptr<ApproachSequence>> sequences;

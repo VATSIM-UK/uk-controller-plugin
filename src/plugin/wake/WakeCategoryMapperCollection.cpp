@@ -4,7 +4,11 @@ namespace UKControllerPlugin::Wake {
 
     void WakeCategoryMapperCollection::Add(int wakeSchemeId, std::shared_ptr<WakeCategoryMapperInterface> mapper)
     {
-        assert(mappers.count(wakeSchemeId) == 0 && "Duplicate wake category mapper added");
+        if (mappers.count(wakeSchemeId) != 0) {
+            LogError("Duplicate wake category mapper added");
+            return;
+        }
+
         mappers[wakeSchemeId] = mapper;
     }
 
