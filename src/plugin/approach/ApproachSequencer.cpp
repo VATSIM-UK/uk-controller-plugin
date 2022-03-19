@@ -72,4 +72,15 @@ namespace UKControllerPlugin::Approach {
             callback(*sequence.second);
         }
     }
+
+    auto ApproachSequencer::AirfieldForAircraft(const std::string& aircraft) const -> std::string
+    {
+        for (const auto& sequence : sequences) {
+            if (sequence.second->Get(aircraft) != nullptr) {
+                return sequence.first;
+            }
+        }
+
+        return "";
+    }
 } // namespace UKControllerPlugin::Approach

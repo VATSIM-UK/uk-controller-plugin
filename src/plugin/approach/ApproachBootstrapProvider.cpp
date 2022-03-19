@@ -1,7 +1,8 @@
 #include "AircraftSelectionProvider.h"
-#include "AirfieldTargetSelectorList.h"
 #include "AirfieldMinimumSeparationSelectorList.h"
+#include "AirfieldTargetSelectorList.h"
 #include "ApproachBootstrapProvider.h"
+#include "ApproachFlightplanEventHandler.h"
 #include "ApproachModuleFactory.h"
 #include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayAsrLoader.h"
@@ -17,6 +18,7 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/PluginSettingsProviderCollection.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "list/PopupListFactory.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -33,6 +35,9 @@ namespace UKControllerPlugin::Approach {
             std::make_shared<RemoveLandedAircraft>(
                 container.moduleFactories->Approach().Sequencer(), *container.plugin),
             10);
+
+        container.flightplanHandler->RegisterHandler(
+            std::make_shared<ApproachFlightplanEventHandler>(container.moduleFactories->Approach().Sequencer()));
     }
 
     void ApproachBootstrapProvider::BootstrapRadarScreen(
@@ -78,7 +83,7 @@ namespace UKControllerPlugin::Approach {
                     "Toggle sequencer airfield separation selector"),
                 *container.plugin,
                 sequencerScreenObjectId),
-            radarRenderables.beforeTags);
+            RadarScreen::RadarRenderableCollection::beforeTags);
 
         asrHandlers.RegisterHandler(std::make_shared<ApproachSequencerDisplayAsrLoader>(displayOptions));
         toggleableDisplayFactory.RegisterDisplay(
@@ -92,6 +97,6 @@ namespace UKControllerPlugin::Approach {
                 container.moduleFactories->Approach().SpacingCalculator(container),
                 displayOptions,
                 *container.plugin),
-            radarRenderables.beforeTags);
+            RadarScreen::RadarRenderableCollection::beforeTags);
     }
 } // namespace UKControllerPlugin::Approach

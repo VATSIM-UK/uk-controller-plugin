@@ -110,4 +110,20 @@ namespace UKControllerPluginTest::Approach {
 
         EXPECT_EQ(expectedCallsigns, callsigns);
     }
+
+    TEST_F(ApproachSequencerTest, ItReturnsEmptyAirfieldIfAircraftNotInSequence)
+    {
+        sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
+        sequencer.AddAircraftToSequence("EGLL", "BAW456", ApproachSequencingMode::WakeTurbulence);
+
+        EXPECT_TRUE(sequencer.AirfieldForAircraft("BAW999").empty());
+    }
+
+    TEST_F(ApproachSequencerTest, ItReturnsAirfieldForAircraft)
+    {
+        sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
+        sequencer.AddAircraftToSequence("EGLL", "BAW456", ApproachSequencingMode::WakeTurbulence);
+
+        EXPECT_EQ("EGLL", sequencer.AirfieldForAircraft("BAW456"));
+    }
 } // namespace UKControllerPluginTest::Approach

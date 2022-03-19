@@ -1,6 +1,7 @@
 #include "airfield/AirfieldCollection.h"
 #include "approach/ApproachBootstrapProvider.h"
 #include "euroscope/PluginSettingsProviderCollection.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "timedevent/TimedEventCollection.h"
 #include "wake/WakeCategoryMapperCollection.h"
@@ -8,6 +9,7 @@
 using UKControllerPlugin::Airfield::AirfieldCollection;
 using UKControllerPlugin::Approach::ApproachBootstrapProvider;
 using UKControllerPlugin::Euroscope::PluginSettingsProviderCollection;
+using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPlugin::Wake::WakeCategoryMapperCollection;
 
@@ -21,6 +23,7 @@ namespace UKControllerPluginTest::Approach {
             container.airfields = std::make_unique<AirfieldCollection>();
             container.wakeCategoryMappers = std::make_unique<WakeCategoryMapperCollection>();
             container.timedHandler = std::make_unique<TimedEventCollection>();
+            container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             container.pluginSettingsProviders =
                 std::make_unique<PluginSettingsProviderCollection>(*container.pluginUserSettingHandler);
         }
@@ -39,6 +42,12 @@ namespace UKControllerPluginTest::Approach {
         this->RunBootstrapPlugin(provider);
         EXPECT_EQ(1, container.timedHandler->CountHandlers());
         EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(10));
+    }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersTheFlightplanEventHandler)
+    {
+        this->RunBootstrapPlugin(provider);
+        EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
     }
 
     TEST_F(ApproachBootstrapProviderTest, ItRegistersTheRenderers)
