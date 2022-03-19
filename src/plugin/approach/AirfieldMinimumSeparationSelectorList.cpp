@@ -4,8 +4,10 @@
 #include "ApproachSequencerDistanceOptions.h"
 #include "ApproachSequencerOptions.h"
 #include "list/ListItem.h"
+#include "number/NumberFormat.h"
 
 using UKControllerPlugin::List::ListItemCheckedStatus;
+using UKControllerPlugin::Number::To1Dp;
 
 namespace UKControllerPlugin::Approach {
 
@@ -40,9 +42,7 @@ namespace UKControllerPlugin::Approach {
                                       ? ListItemCheckedStatus::Checked
                                       : ListItemCheckedStatus::NotChecked;
 
-            char distanceString[25];                     // NOLINT
-            sprintf_s(distanceString, "%.1f", distance); // NOLINT
-            items.push_back(std::make_shared<List::ListItem>(distanceString, "", false, false, selected));
+            items.push_back(std::make_shared<List::ListItem>(To1Dp(distance), "", false, false, selected));
         }
 
         return items;

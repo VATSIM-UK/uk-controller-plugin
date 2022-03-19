@@ -255,9 +255,7 @@ namespace UKControllerPlugin::Approach {
             if (requiredSpacing == spacingCalculator.NoSpacing()) {
                 graphics.DrawString(L"--", actualRect, *textBrush);
             } else {
-                char distanceString[25];                            // NOLINT
-                sprintf_s(distanceString, "%.1f", requiredSpacing); // NOLINT
-                graphics.DrawString(HelperFunctions::ConvertToWideString(distanceString), actualRect, *textBrush);
+                graphics.DrawString(To1DpWide(requiredSpacing), actualRect, *textBrush);
             }
 
             auto upButton = Components::Button::Create(
