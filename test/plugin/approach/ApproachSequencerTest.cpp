@@ -42,7 +42,7 @@ namespace UKControllerPluginTest::Approach {
     {
         sequencer.AddAircraftToSequence("EGKK", "BAW123", ApproachSequencingMode::WakeTurbulence);
         sequencer.AddAircraftToSequence("EGLL", "BAW123", ApproachSequencingMode::WakeTurbulence);
-        EXPECT_EQ(std::list<std::string>{""}, sequencer.GetForAirfield("EGKK").Callsigns());
+        EXPECT_EQ(std::list<std::string>{}, sequencer.GetForAirfield("EGKK").Callsigns());
         EXPECT_EQ(std::list<std::string>{"BAW123"}, sequencer.GetForAirfield("EGLL").Callsigns());
     }
 

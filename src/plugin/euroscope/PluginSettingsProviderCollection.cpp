@@ -14,6 +14,8 @@ namespace UKControllerPlugin::Euroscope {
             LogError("Duplicate plugin settings provider added");
             return;
         }
+
+        providers.push_back(provider);
     }
 
     void PluginSettingsProviderCollection::Load() const
