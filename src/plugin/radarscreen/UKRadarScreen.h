@@ -39,8 +39,7 @@ namespace UKControllerPlugin {
             const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderers,
             UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
-            const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders
-        );
+            const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders);
         ~UKRadarScreen() override;
         UKRadarScreen(const UKRadarScreen&) = delete;
         UKRadarScreen(UKRadarScreen&&) noexcept = delete;
@@ -83,7 +82,7 @@ namespace UKControllerPlugin {
 
         // Processes Euroscope dot commands
         const UKControllerPlugin::Command::CommandHandlerCollection commandHandlers;
-        
+
         // For handling plugin level settings. See Dtor explanation for why...
         const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders;
 

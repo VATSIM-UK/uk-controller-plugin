@@ -50,7 +50,9 @@ namespace UKControllerPluginTest::Approach {
 
     TEST_F(ApproachSequencerOptionsLoaderTest, ItLoadsTheModeToWakeIfNotValidValue)
     {
-        EXPECT_CALL(settingProvider, GetKey("approachSequencerModeEGKK")).Times(2).WillRepeatedly(testing::Return("66"));
+        EXPECT_CALL(settingProvider, GetKey("approachSequencerModeEGKK"))
+            .Times(2)
+            .WillRepeatedly(testing::Return("66"));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerTargetEGKK")).Times(1).WillOnce(testing::Return("4.5"));
         EXPECT_CALL(settingProvider, GetKey("approachSequencerSepEGKK")).Times(1).WillOnce(testing::Return("6.5"));
 

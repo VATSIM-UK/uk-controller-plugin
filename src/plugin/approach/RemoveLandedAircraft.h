@@ -18,10 +18,9 @@ namespace UKControllerPlugin::Approach {
         void TimedEventTrigger() override;
 
         private:
-        
         // Manages approach sequnces
         ApproachSequencer& sequencer;
-        
+
         // For getting flightplans and radar targets
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
     };

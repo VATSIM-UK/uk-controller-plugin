@@ -140,7 +140,7 @@ namespace UKControllerPluginTest::Approach {
 
         display.LeftClick(radarScreen, 1, "toggleDrawBAW123", {1, 2}, {});
         EXPECT_FALSE(sequencer.GetForAirfield("EGKK").Get("BAW123")->ShouldDraw());
-        display.LeftClick(radarScreen, 1, "toggleAircraftBAW123", {1, 2}, {});
+        display.LeftClick(radarScreen, 1, "toggleDrawBAW123", {1, 2}, {});
         EXPECT_TRUE(sequencer.GetForAirfield("EGKK").Get("BAW123")->ShouldDraw());
     }
 

@@ -55,7 +55,7 @@ namespace UKControllerPlugin::Airfield {
     {
         return this->defaultHandoffId != NO_HANDOFF_ID;
     }
-    
+
     auto AirfieldModel::WakeScheme() const -> int
     {
         return this->wakeSchemeId;

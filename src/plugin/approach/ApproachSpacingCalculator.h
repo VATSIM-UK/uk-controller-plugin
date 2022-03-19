@@ -34,12 +34,12 @@ namespace UKControllerPlugin::Approach {
 
         private:
         [[nodiscard]] static auto GreaterOf(double value1, double value2) -> double;
-        
+
         inline static const double NO_SPACING_DETECTED = -1.0;
 
         // Sequencer options
         ApproachSequencerOptions& sequencerOptions;
-        
+
         // All the airfields
         const Airfield::AirfieldCollection& airfields;
 

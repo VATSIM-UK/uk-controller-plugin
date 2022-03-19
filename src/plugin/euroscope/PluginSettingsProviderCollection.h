@@ -17,10 +17,9 @@ namespace UKControllerPlugin::Euroscope {
         void Save() const;
 
         private:
-        
         // Settings
         UserSetting& settings;
-        
+
         // Providers
         std::list<std::shared_ptr<PluginSettingsProviderInterface>> providers;
     };

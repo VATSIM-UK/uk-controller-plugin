@@ -25,7 +25,7 @@ namespace UKControllerPlugin::Approach {
         private:
         // The approach sequencer
         std::unique_ptr<ApproachSequencer> sequencer;
-        
+
         // The approach sequencer options
         std::unique_ptr<ApproachSequencerOptions> sequencerOptions;
 

@@ -24,7 +24,7 @@ namespace UKControllerPlugin::Approach {
         private:
         // For sequencing approaches
         ApproachSequencer& sequencer;
-        
+
         // Sequencer options
         ApproachSequencerOptions& sequencerOptions;
 

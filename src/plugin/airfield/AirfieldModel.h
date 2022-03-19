@@ -59,7 +59,7 @@ namespace UKControllerPlugin::Airfield {
 
         // The default handoff order to use for this airfield
         int defaultHandoffId;
-        
+
         // The wake scheme used at the airfield
         int wakeSchemeId;
     };

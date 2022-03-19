@@ -24,16 +24,15 @@ namespace UKControllerPlugin::Approach {
         void ToggleDraw();
 
         private:
-        
         // Who is the sequenced aircraft
         std::string callsign;
-        
+
         // What mode are we using in the sequence
         ApproachSequencingMode mode;
-        
+
         // Should we draw to the display
         bool shouldDraw = true;
-        
+
         // If we're in distance mode, what distance
         double expectedDistance = 6.0;
 
