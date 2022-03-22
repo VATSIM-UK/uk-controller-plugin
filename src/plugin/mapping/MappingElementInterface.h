@@ -1,8 +1,8 @@
 #pragma once
 
-namespace UKControllerPlugin::Graphics {
+namespace UKControllerPlugin::Windows {
     class GdiGraphicsInterface;
-} // namespace UKControllerPlugin::Graphics
+} // namespace UKControllerPlugin::Windows
 
 namespace UKControllerPlugin::Mapping {
     /**
@@ -42,6 +42,6 @@ namespace UKControllerPlugin::Mapping {
         /**
          * Draw the mapping element. The area is centered on the centre of the element.
          */
-        virtual void Draw(Graphics::GdiGraphicsInterface& graphics, Gdiplus::Rect& area) = 0;
+        virtual void Draw(Windows::GdiGraphicsInterface& graphics, Gdiplus::Rect& area) = 0;
     };
 } // namespace UKControllerPlugin::Mapping

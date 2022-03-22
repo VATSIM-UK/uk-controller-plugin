@@ -17,14 +17,13 @@ namespace UKControllerPlugin::Mapping {
             std::string label,
             EuroScopePlugIn::CPosition position,
             std::set<std::shared_ptr<DisplayRule>> displayRules,
-            std::shared_ptr<MappingElementDrawer> drawer
-        );
+            std::shared_ptr<MappingElementDrawer> drawer);
         [[nodiscard]] auto Id() const -> int override;
         [[nodiscard]] auto Type() const -> const std::string& override;
         [[nodiscard]] auto Label() const -> const std::string& override;
         [[nodiscard]] auto ShouldDisplay() const -> bool override;
         [[nodiscard]] auto Position() const -> const EuroScopePlugIn::CPosition& override;
-        void Draw(Graphics::GdiGraphicsInterface& graphics, Gdiplus::Rect& area) override;
+        void Draw(Windows::GdiGraphicsInterface& graphics, Gdiplus::Rect& area) override;
 
         private:
         // The id of the element, is only unique within a type
@@ -41,7 +40,7 @@ namespace UKControllerPlugin::Mapping {
 
         // Display rules
         std::set<std::shared_ptr<DisplayRule>> displayRules;
-        
+
         // Draws the element
         std::shared_ptr<MappingElementDrawer> drawer;
     };

@@ -47,7 +47,7 @@ namespace UKControllerPlugin::Mapping {
         return position;
     }
 
-    void MappingElement::Draw(Graphics::GdiGraphicsInterface& graphics, Gdiplus::Rect& area)
+    void MappingElement::Draw(Windows::GdiGraphicsInterface& graphics, Gdiplus::Rect& area)
     {
         this->drawer->Draw(graphics, area);
     }

@@ -72,4 +72,12 @@ namespace UKControllerPluginTest::Mapping {
 
         EXPECT_FALSE(element.ShouldDisplay());
     }
+
+    TEST_F(MappingElementTest, ItDraws)
+    {
+        EXPECT_CALL(*drawer, Draw(testing::_, testing::_)).Times(1);
+
+        Gdiplus::Rect rect{1, 2, 3, 4};
+        element.Draw(graphics, rect);
+    }
 } // namespace UKControllerPluginTest::Mapping
