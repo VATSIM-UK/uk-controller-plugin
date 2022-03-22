@@ -487,6 +487,10 @@ set(src__login
 )
 source_group("src\\login" FILES ${src__login})
 
+set(src__mapping
+        mapping/MappingElement.cpp mapping/MappingElement.h mapping/MappingElementInterface.h mapping/MappingElementDrawer.h mapping/DisplayRule.h)
+source_group("src\\mapping" FILES ${src__mapping})
+
 set(src__message
     "message/MessageSerializableInterface.h"
     "message/UserMessager.cpp"
@@ -965,6 +969,7 @@ set(ALL_FILES
     ${src__intention}
     ${src__list}
     ${src__login}
+    ${src__mapping}
     ${src__message}
     ${src__metar}
     ${src__minstack}
