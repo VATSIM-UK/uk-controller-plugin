@@ -1,11 +1,14 @@
 #include "VisualReferencePoint.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
+#include "helper/HelperFunctions.h"
 #include "graphics/GdiGraphicsInterface.h"
 
 namespace UKControllerPlugin::Mapping {
 
     VisualReferencePoint::VisualReferencePoint(std::string label, EuroScopePlugIn::CPosition position)
-        : label(label), position(std::move(position)), pen(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(50, 127, 168)))
+        : label(label), position(std::move(position)),
+          pen(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(50, 127, 168))),
+          textBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255)))
     {
     }
 
@@ -24,6 +27,8 @@ namespace UKControllerPlugin::Mapping {
             *pen,
             Gdiplus::PointF{0, static_cast<Gdiplus::REAL>(area.Height / 2)},
             Gdiplus::PointF{static_cast<Gdiplus::REAL>(area.Width), static_cast<Gdiplus::REAL>(area.Height / 2)});
+        Gdiplus::Rect labelArea{screenPosition.x - 80, area.GetBottom() + 10, 160, 20};
+        graphics.DrawString(HelperFunctions::ConvertToWideString(label), labelArea, *textBrush);
     }
 
     auto VisualReferencePoint::Position() const -> const EuroScopePlugIn::CPosition&

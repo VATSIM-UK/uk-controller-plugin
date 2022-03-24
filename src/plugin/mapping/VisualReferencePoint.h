@@ -23,5 +23,8 @@ namespace UKControllerPlugin::Mapping {
 
         // A pen for drawing
         std::shared_ptr<Gdiplus::Pen> pen;
+
+        // Text brush
+        std::shared_ptr<Gdiplus::Brush> textBrush;
     };
 } // namespace UKControllerPlugin::Mapping
