@@ -8,11 +8,10 @@ namespace UKControllerPlugin::Mapping {
         int id,
         std::string type,
         std::string label,
-        EuroScopePlugIn::CPosition position,
         std::set<std::shared_ptr<DisplayRule>> displayRules,
         std::shared_ptr<MappingElementDrawer> drawer)
-        : id(id), type(std::move(type)), label(std::move(label)), position(std::move(position)),
-          displayRules(std::move(displayRules)), drawer(std::move(drawer))
+        : id(id), type(std::move(type)), label(std::move(label)), displayRules(std::move(displayRules)),
+          drawer(std::move(drawer))
     {
     }
 
@@ -42,13 +41,14 @@ namespace UKControllerPlugin::Mapping {
         return true;
     }
 
-    auto MappingElement::Position() const -> const EuroScopePlugIn::CPosition&
+    void MappingElement::Draw(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        return position;
+        this->drawer->Draw(graphics, radarScreen);
     }
 
-    void MappingElement::Draw(Windows::GdiGraphicsInterface& graphics, Gdiplus::Rect& area)
+    auto MappingElement::Drawer() const -> std::shared_ptr<MappingElementDrawer>
     {
-        this->drawer->Draw(graphics, area);
+        return drawer;
     }
 } // namespace UKControllerPlugin::Mapping

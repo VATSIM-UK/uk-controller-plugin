@@ -1,8 +1,13 @@
 #pragma once
 
-namespace UKControllerPlugin::Windows {
-    class GdiGraphicsInterface;
-} // namespace UKControllerPlugin::Windows
+namespace UKControllerPlugin {
+    namespace Euroscope {
+        class EuroscopeRadarLoopbackInterface;
+    } // namespace Euroscope
+    namespace Windows {
+        class GdiGraphicsInterface;
+    } // namespace Windows
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Mapping {
     /**
@@ -30,11 +35,6 @@ namespace UKControllerPlugin::Mapping {
         [[nodiscard]] virtual auto Label() const -> const std::string& = 0;
 
         /**
-         * The label associated with the element.
-         */
-        [[nodiscard]] virtual auto Position() const -> const EuroScopePlugIn::CPosition& = 0;
-
-        /**
          * Should we be displaying the mapping element
          */
         [[nodiscard]] virtual auto ShouldDisplay() const -> bool = 0;
@@ -42,6 +42,7 @@ namespace UKControllerPlugin::Mapping {
         /**
          * Draw the mapping element. The area is centered on the centre of the element.
          */
-        virtual void Draw(Windows::GdiGraphicsInterface& graphics, Gdiplus::Rect& area) = 0;
+        virtual void
+        Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) = 0;
     };
 } // namespace UKControllerPlugin::Mapping

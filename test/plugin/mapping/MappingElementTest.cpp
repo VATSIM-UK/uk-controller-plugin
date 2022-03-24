@@ -12,19 +12,11 @@ namespace UKControllerPluginTest::Mapping {
               displayRule2(std::make_shared<testing::NiceMock<Mapping::MockDisplayRule>>()),
               displayRules({displayRule1, displayRule2}),
               drawer(std::make_shared<testing::NiceMock<Mapping::MockMappingElementDrawer>>()),
-              element(1, "visual_reference_point", "M5 Avon Bridge", Position(), displayRules, drawer)
+              element(1, "visual_reference_point", "M5 Avon Bridge", displayRules, drawer)
         {
         }
 
-        [[nodiscard]] static auto Position() -> EuroScopePlugIn::CPosition
-        {
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 1;
-            position.m_Longitude = 2;
-
-            return position;
-        }
-
+        testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
         testing::NiceMock<Windows::MockGraphicsInterface> graphics;
         std::shared_ptr<testing::NiceMock<Mapping::MockDisplayRule>> displayRule1;
         std::shared_ptr<testing::NiceMock<Mapping::MockDisplayRule>> displayRule2;
@@ -48,11 +40,9 @@ namespace UKControllerPluginTest::Mapping {
         EXPECT_EQ("M5 Avon Bridge", element.Label());
     }
 
-    TEST_F(MappingElementTest, ItHasAPosition)
+    TEST_F(MappingElementTest, ItHasADrawer)
     {
-        const auto position = element.Position();
-        EXPECT_EQ(1, position.m_Latitude);
-        EXPECT_EQ(2, position.m_Longitude);
+        EXPECT_EQ(drawer, element.Drawer());
     }
 
     TEST_F(MappingElementTest, ItShouldDisplayIfAllRulesPass)
@@ -77,7 +67,6 @@ namespace UKControllerPluginTest::Mapping {
     {
         EXPECT_CALL(*drawer, Draw(testing::_, testing::_)).Times(1);
 
-        Gdiplus::Rect rect{1, 2, 3, 4};
-        element.Draw(graphics, rect);
+        element.Draw(graphics, radarScreen);
     }
 } // namespace UKControllerPluginTest::Mapping
