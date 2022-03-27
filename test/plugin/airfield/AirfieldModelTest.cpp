@@ -17,7 +17,7 @@ namespace UKControllerPluginTest::Airfield {
         public:
         AirfieldModelTest()
             : prenotes({std::make_shared<PairedAirfieldPrenote>(1, 2, 3)}),
-              airfield(1, "EGKK", std::make_unique<ControllerPositionHierarchy>(), prenotes, 4),
+              airfield(1, "EGKK", std::make_unique<ControllerPositionHierarchy>(), prenotes, 4, 2),
               airfield2(2, "EGLL", std::make_unique<ControllerPositionHierarchy>()),
               airfield3(1, "EGBB", std::make_unique<ControllerPositionHierarchy>())
         {
@@ -77,5 +77,15 @@ namespace UKControllerPluginTest::Airfield {
     TEST_F(AirfieldModelTest, EqualityOperatorReturnsTrueSameId)
     {
         EXPECT_TRUE(airfield == airfield3);
+    }
+
+    TEST_F(AirfieldModelTest, ItHasAWakeSchemeId)
+    {
+        EXPECT_EQ(2, airfield.WakeScheme());
+    }
+
+    TEST_F(AirfieldModelTest, ItHasADefaultWakeSchemeId)
+    {
+        EXPECT_EQ(1, airfield3.WakeScheme());
     }
 } // namespace UKControllerPluginTest::Airfield

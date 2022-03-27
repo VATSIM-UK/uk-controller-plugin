@@ -27,13 +27,28 @@ set(test__api
         api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
+set(test__approach
+        approach/ApproachBootstrapProviderTest.cpp
+        approach/ApproachSequenceTest.cpp
+        approach/ApproachSequencedAircraftTest.cpp
+        approach/ApproachSequencerDisplayTest.cpp
+        approach/ApproachSequencerTest.cpp
+        approach/ApproachSequencerDisplayOptionsTest.cpp
+        approach/ApproachSequencerDisplayAsrLoaderTest.cpp
+        approach/ToggleApproachSequencerDisplayTest.cpp
+        approach/SequencerAirfieldSelectorTest.cpp approach/ApproachModuleFactoryTest.cpp approach/AircraftSelectionProviderTest.cpp approach/TargetSelectorListTest.cpp wake/ApproachSpacingCalculatorTest.cpp approach/ApproachSequencerOptionsTest.cpp approach/ApproachSequencerOptionsLoaderTest.cpp approach/AirfieldTargetSelectorListTest.cpp approach/ApproachSequencerDistanceOptionsTest.cpp approach/AirfieldMinimumSeparationSelectorListTest.cpp approach/RemoveLandedAircraftTest.cpp approach/ApproachFlightplanEventHandlerTest.cpp)
+source_group("test\\approach" FILES ${test__approach})
+
 set(test__bootstrap
     "bootstrap/BootstrapWarningMessageTest.cpp"
     "bootstrap/CollectionBootstrapTest.cpp"
     "bootstrap/EventHandlerCollectionBootstrapTest.cpp"
     "bootstrap/ExternalsBootstrapTest.cpp"
     "bootstrap/HelperBootstrapTest.cpp"
-)
+    bootstrap/ModuleBootstrapTest.cpp
+    bootstrap/ModuleFactoriesTest.cpp
+    bootstrap/BootstrapProviderCollectionTest.cpp
+    bootstrap/BootstrapProviderCollectionFactoryTest.cpp)
 source_group("test\\bootstrap" FILES ${test__bootstrap})
 
 set(test__command
@@ -105,7 +120,7 @@ set(test__euroscope
     "euroscope/RunwayDialogAwareCollectionTest.cpp"
     "euroscope/UserSettingAwareCollectionTest.cpp"
     "euroscope/UserSettingTest.cpp"
-)
+        euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
 
 set(test__flightinformationservice
@@ -126,6 +141,10 @@ source_group("test\\flightplan" FILES ${test__flightplan})
 set(test__flightrule
         flightrule/FlightRuleCollectionTest.cpp flightrule/FlightRuleCollectionFactoryTest.cpp flightrule/FlightRuleModuleTest.cpp)
 source_group("test\\flightrule" FILES ${test__flightrule})
+
+set(test__geometry
+        geometry/LineTest.cpp geometry/DistanceRadiusToScreenRadiusTest.cpp)
+source_group("test\\geometry" FILES ${test__geometry})
 
 set(test__handoff
     "handoff/HandoffCollectionFactoryTest.cpp"
@@ -337,7 +356,7 @@ set(test__mock
     mock/MockCallsignSelectionProvider.h
     mock/MockAircraftTypeMapper.h
     mock/MockWakeCategoryMapper.h
-    mock/MockListItemProvider.h mock/MockPopupList.h)
+    mock/MockListItemProvider.h mock/MockPopupList.h mock/MockBootstrapProvider.h mock/MockPluginSettingsProvider.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -358,6 +377,10 @@ set(test__notifications
     "notifications/UnreadNotificationsMessageTest.cpp"
 )
 source_group("test\\notifications" FILES ${test__notifications})
+
+set(test__number
+        number/NumberFormatTest.cpp)
+source_group("test\\number" FILES ${test__number})
 
 set(test__oceanic
     "oceanic/OceanicEventHandlerTest.cpp"
@@ -523,6 +546,10 @@ set(test__tag
 )
 source_group("test\\tag" FILES ${test__tag})
 
+set(test__test
+        test/BootstrapProviderTestCase.h test/BootstrapProviderTestCase.cpp)
+source_group("test\\test" FILES ${test__test})
+
 set(test__time
     "time/ParseTimeStringsTest.cpp"
     "time/SystemClockTest.cpp"
@@ -549,13 +576,14 @@ set(test__wake
     wake/WakeSchemeFactoryTest.cpp
     wake/WakeSchemeCollectionTest.cpp
     wake/WakeSchemeCollectionFactoryTest.cpp
-    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp wake/ArrivalWakeIntervalFactoryTest.cpp wake/ArrivalWakeIntervalTest.cpp wake/DepartureWakeIntervalTest.cpp)
+    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp wake/ArrivalWakeIntervalFactoryTest.cpp wake/ArrivalWakeIntervalTest.cpp wake/DepartureWakeIntervalTest.cpp wake/WakeCategoryMapperCollectionTest.cpp wake/WakeCategoryMapperCollectionFactoryTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
     ${test__aircraft}
     ${test__airfield}
     ${test__api}
+    ${test__approach}
     ${test__bootstrap}
     ${test__command}
     ${test__components}
@@ -568,6 +596,7 @@ set(ALL_FILES
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__flightrule}
+    ${test__geometry}
     ${test__handoff}
     ${test__headings}
     ${test__historytrail}
@@ -585,6 +614,7 @@ set(ALL_FILES
     ${test__mock}
     ${test__navaids}
     ${test__notifications}
+    ${test__number}
     ${test__oceanic}
     ${test__offblock}
     ${test__ownership}
@@ -602,6 +632,7 @@ set(ALL_FILES
     ${test__srd}
     ${test__stands}
     ${test__tag}
+    ${test__test}
     ${test__time}
     ${test__timedevent}
     ${test__timer}

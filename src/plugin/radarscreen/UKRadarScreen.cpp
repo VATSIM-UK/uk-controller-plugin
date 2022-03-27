@@ -1,5 +1,6 @@
 #include "RadarRenderableCollection.h"
 #include "UKRadarScreen.h"
+#include "euroscope/PluginSettingsProviderCollection.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "update/PluginVersion.h"
@@ -14,14 +15,27 @@ namespace UKControllerPlugin {
         UKControllerPlugin::Euroscope::AsrEventHandlerCollection userSettingEventHandler,
         const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderers,
         UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
-        UKControllerPlugin::Windows::GdiGraphicsInterface& graphics)
+        UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
+        const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders)
         : graphics(graphics), userSettingEventHandler(std::move(userSettingEventHandler)), renderers(renderers),
-          commandHandlers(std::move(commandHandlers)), asrContentLoaded(false), lastContext(nullptr)
+          commandHandlers(std::move(commandHandlers)), pluginSettingsProviders(pluginSettingsProviders),
+          asrContentLoaded(false), lastContext(nullptr)
     {
     }
 
     UKRadarScreen::~UKRadarScreen()
     {
+        /**
+         * So you may be wondering... why are we saving here? Good question.
+         *
+         * Unfortunately, whilst you can trigger saving ASR settings when the DTOR for a RadarScreen is called,
+         * the same cannot be said for plugin-level settings when the plugin destructs.
+         *
+         * So, to workaround this (yay workaround!), we call the plugin-level save when the RadarScreen destructs, as
+         * this is called early enough in the shutdown process to be able to quickly save settings.
+         */
+        pluginSettingsProviders.Save();
+
         this->OnAsrContentToBeSaved(); // NOLINT
     }
 

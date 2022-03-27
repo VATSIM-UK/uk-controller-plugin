@@ -20,6 +20,7 @@ namespace UKControllerPlugin {
             virtual void DrawRect(const RECT& area, const Gdiplus::Pen& pen) = 0;
             virtual void DrawCircle(const Gdiplus::RectF& area, const Gdiplus::Pen& pen) = 0;
             virtual void FillCircle(const Gdiplus::RectF& area, const Gdiplus::Brush& brush) = 0;
+            virtual void FillCircle(const Gdiplus::Rect& area, const Gdiplus::Brush& brush) = 0;
             virtual void DrawCircle(const Gdiplus::Rect& area, const Gdiplus::Pen& pen) = 0;
             virtual void DrawDiamond(const Gdiplus::RectF& area, const Gdiplus::Pen& pen) = 0;
             virtual void FillDiamond(const Gdiplus::RectF& area, const Gdiplus::Brush& brush) = 0;

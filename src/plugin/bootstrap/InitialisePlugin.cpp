@@ -6,11 +6,13 @@
 #include "api/BootstrapApi.h"
 #include "api/FirstTimeApiConfigLoader.h"
 #include "api/FirstTimeApiAuthorisationChecker.h"
+#include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/InitialisePlugin.h"
+#include "bootstrap/ModuleBootstrap.h"
 #include "bootstrap/PostInit.h"
 #include "controller/ControllerBootstrap.h"
 #include "countdown/CountdownModule.h"
@@ -120,7 +122,7 @@ namespace UKControllerPlugin {
     */
     auto InitialisePlugin::GetPlugin() -> EuroScopePlugIn::CPlugIn*
     {
-        return this->container->plugin.get();
+        return static_cast<UKControllerPlugin::UKPlugin*>(this->container->plugin.get());
     }
 
     /*
@@ -178,7 +180,7 @@ namespace UKControllerPlugin {
 
         // Dependency loading can happen regardless of plugin version or API status.
         Dependency::UpdateDependencies(*this->container->api, *this->container->windows);
-        DependencyLoader loader(*this->container->windows);
+        this->container->dependencyLoader = std::make_unique<DependencyLoader>(*this->container->windows);
 
         // Integration module and winsock
         WSADATA winsockData;
@@ -200,23 +202,23 @@ namespace UKControllerPlugin {
         Aircraft::BootstrapPlugin(*this->container);
 
         // Boostrap all the modules at a plugin level
-        Controller::BootstrapPlugin(*this->container, loader);
-        Aircraft::BootstrapPlugin(*this->container, loader);
-        Airfield::BootstrapPlugin(*this->container, loader);
-        Runway::BootstrapPlugin(*this->container, loader);
-        CollectionBootstrap::BootstrapPlugin(*this->container, loader);
+        Controller::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Aircraft::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Airfield::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Runway::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        CollectionBootstrap::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
         FlightplanStorageBootstrap::BootstrapPlugin(*this->container);
-        FlightRules::BootstrapPlugin(*this->container, loader);
-        AirfieldOwnershipModule::BootstrapPlugin(*this->container, loader);
-        Sid::BootstrapPlugin(*this->container, loader);
-        Navaids::BootstrapPlugin(*this->container, loader);
-        Releases::BootstrapPlugin(*this->container, *this->container->plugin, loader);
-        Stands::BootstrapPlugin(*this->container, loader);
+        FlightRules::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        AirfieldOwnershipModule::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Sid::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Navaids::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Releases::BootstrapPlugin(*this->container, *this->container->plugin, *this->container->dependencyLoader);
+        Stands::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
         Notifications::BootstrapPlugin(*this->container);
         FlightInformationService::BootstrapPlugin(*this->container);
         Oceanic::BootstrapPlugin(*this->container);
 
-        Wake::BootstrapPlugin(*this->container, loader);
+        Wake::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
         LoginModule::BootstrapPlugin(*this->container);
         SectorFile::BootstrapPlugin(*this->container);
 
@@ -248,14 +250,14 @@ namespace UKControllerPlugin {
             *this->container->api,
             *this->container->pushEventProcessors,
             *this->container->dialogManager,
-            loader);
-        Hold::BootstrapPlugin(loader, *this->container);
+            *this->container->dependencyLoader);
+        Hold::BootstrapPlugin(*this->container->dependencyLoader, *this->container);
 
         // Don't allow automatic squawk assignment if the plugin is deemed to be a duplicate
         SquawkModule::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
-        PrenoteModule::BootstrapPlugin(*this->container, loader);
-        Handoff::BootstrapPlugin(*this->container, loader);
+        PrenoteModule::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Handoff::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
         MissedApproach::BootstrapPlugin(*this->container);
         Selcal::BootstrapPlugin(*this->container);
 
@@ -266,6 +268,10 @@ namespace UKControllerPlugin {
 
         // Pressure monitor
         Metar::PressureMonitorBootstrap(*this->container);
+
+        // Run the module bootstraps
+        Bootstrap::ModuleBootstrap(*this->container);
+        this->container->bootstrapProviders->BootstrapPlugin(*this->container);
 
         // Do post-init and final setup, which involves running tasks that need to happen on load.
         PostInit::Process(*this->container);

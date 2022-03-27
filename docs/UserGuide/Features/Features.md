@@ -29,3 +29,4 @@ dynamically to the plugin.
 - [Electronic Departure Releases](DepartureReleases.md)
 - [Electronic Prenotes](PrenoteMessages.md)
 - [SELCAL Parsing](Selcal.md)
+- [Approach Sequencing](ApproachSequencer.md)

@@ -20,7 +20,7 @@ set(src__aircraft
         aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h
         aircraft/AircraftModule.cpp aircraft/AircraftModule.h
         aircraft/FlightplanAircraftTypeMapper.cpp aircraft/FlightplanAircraftTypeMapper.h
-        aircraft/AircraftTypeMapperInterface.h)
+        aircraft/AircraftTypeMapperInterface.h approach/AirfieldMinimumSeparationSelectorList.cpp approach/AirfieldMinimumSeparationSelectorList.h)
 source_group("src\\aircraft" FILES ${src__aircraft})
 
 set(src__airfield
@@ -41,6 +41,21 @@ set(src__api
     api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h)
 source_group("src\\api" FILES ${src__api})
 
+set(src__approach
+        approach/ApproachSpacingRingRenderer.cpp approach/ApproachSpacingRingRenderer.h
+        approach/ApproachBootstrapProvider.cpp approach/ApproachBootstrapProvider.h
+        approach/ApproachModuleFactory.cpp approach/ApproachModuleFactory.h
+        approach/ApproachSequence.cpp approach/ApproachSequence.h
+        approach/ApproachSequencedAircraft.h approach/ApproachSequencedAircraft.cpp
+        approach/ApproachSequencingMode.h
+        approach/ApproachSequencerDisplay.cpp approach/ApproachSequencerDisplay.h
+        approach/ApproachSequencer.cpp approach/ApproachSequencer.h
+        approach/ApproachSequencerDisplayOptions.cpp approach/ApproachSequencerDisplayOptions.h
+        approach/ApproachSequencerDisplayAsrLoader.cpp approach/ApproachSequencerDisplayAsrLoader.h
+        approach/ToggleApproachSequencerDisplay.cpp approach/ToggleApproachSequencerDisplay.h
+        approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h approach/TargetSelectorList.cpp approach/TargetSelectorList.h approach/ApproachSpacingCalculator.cpp approach/ApproachSpacingCalculator.h approach/ApproachSequencerOptions.cpp approach/ApproachSequencerOptions.h approach/AirfieldApproachOptions.h approach/ApproachSequencerOptionsLoader.cpp approach/ApproachSequencerOptionsLoader.h approach/AirfieldTargetSelectorList.cpp approach/AirfieldTargetSelectorList.h approach/ApproachSequencerDistanceOptions.cpp approach/ApproachSequencerDistanceOptions.h approach/RemoveLandedAircraft.cpp approach/RemoveLandedAircraft.h approach/ApproachFlightplanEventHandler.cpp approach/ApproachFlightplanEventHandler.h)
+source_group("src\\approach" FILES ${src__approach})
+
 set(src__bootstrap
     "bootstrap/BootstrapWarningMessage.cpp"
     "bootstrap/BootstrapWarningMessage.h"
@@ -58,7 +73,7 @@ set(src__bootstrap
     "bootstrap/PersistenceContainer.h"
     "bootstrap/PostInit.cpp"
     "bootstrap/PostInit.h"
-    bootstrap/PersistenceContainer.cpp)
+    bootstrap/PersistenceContainer.cpp bootstrap/BootstrapProviderInterface.h bootstrap/BootstrapProviderCollection.h bootstrap/BootstrapProviderCollection.cpp bootstrap/BootstrapProviderCollection.h bootstrap/ModuleFactories.h bootstrap/ModuleFactories.cpp bootstrap/ModuleFactories.h bootstrap/BootstrapProviderCollectionFactory.cpp bootstrap/BootstrapProviderCollectionFactory.h bootstrap/ModuleBootstrap.cpp bootstrap/ModuleBootstrap.h)
 source_group("src\\bootstrap" FILES ${src__bootstrap})
 
 set(src__command
@@ -79,7 +94,7 @@ set(src__components
     "components/StandardButtons.h"
     "components/TitleBar.cpp"
     "components/TitleBar.h"
-)
+        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h)
 source_group("src\\components" FILES ${src__components})
 
 set(src__controller
@@ -207,7 +222,7 @@ set(src__euroscope
     "euroscope/UserSettingAwareCollection.h"
     "euroscope/UserSettingAwareInterface.h"
     "euroscope/UserSettingProviderInterface.h"
-        euroscope/AsrEventHandlerInterface.cpp euroscope/UserSettingProviderInterface.cpp euroscope/EuroscopeRadarLoopbackInterface.cpp)
+        euroscope/AsrEventHandlerInterface.cpp euroscope/UserSettingProviderInterface.cpp euroscope/EuroscopeRadarLoopbackInterface.cpp euroscope/PluginSettingsProviderInterface.h euroscope/PluginSettingsProviderCollection.cpp euroscope/PluginSettingsProviderCollection.h)
 source_group("src\\euroscope" FILES ${src__euroscope})
 
 set(src__flightinformationservice
@@ -239,6 +254,10 @@ set(src__flightrule
         flightrule/FlightRuleModule.cpp flightrule/FlightRuleModule.h
         flightrule/FlightRuleCollectionFactory.cpp flightrule/FlightRuleCollectionFactory.h)
 source_group("src\\flightrule" FILES ${src__flightrule})
+
+set(src__geometry
+        geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h)
+source_group("src\\geometry" FILES ${src__geometry})
 
 set(src__graphics
     "graphics/GdiGraphicsInterface.h"
@@ -580,6 +599,10 @@ set(src__notifications
 )
 source_group("src\\notifications" FILES ${src__notifications})
 
+set(src__number
+        number/NumberFormat.cpp number/NumberFormat.h)
+source_group("src\\number" FILES ${src__number})
+
 set(src__oceanic
     "oceanic/Clearance.h"
     "oceanic/OceanicClearanceDialog.cpp"
@@ -909,7 +932,7 @@ set(src__wake
     wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h
     wake/ArrivalWakeInterval.cpp wake/ArrivalWakeInterval.h
     wake/ArrivalWakeIntervalFactory.cpp wake/ArrivalWakeIntervalFactory.h
-    wake/WakeIntervalInterface.h)
+    wake/WakeIntervalInterface.h wake/WakeCategoryMapperCollection.cpp wake/WakeCategoryMapperCollection.h wake/WakeCategoryMapperCollectionFactory.cpp wake/WakeCategoryMapperCollectionFactory.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
@@ -917,6 +940,7 @@ set(ALL_FILES
     ${src__aircraft}
     ${src__airfield}
     ${src__api}
+    ${src__approach}
     ${src__bootstrap}
     ${src__command}
     ${src__components}
@@ -929,6 +953,7 @@ set(ALL_FILES
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}
+    ${src__geometry}
     ${src__graphics}
     ${src__handoff}
     ${src__headings}
@@ -946,6 +971,7 @@ set(ALL_FILES
     ${src__missedapproach}
     ${src__navaids}
     ${src__notifications}
+    ${src__number}
     ${src__oceanic}
     ${src__offblock}
     ${src__ownership}

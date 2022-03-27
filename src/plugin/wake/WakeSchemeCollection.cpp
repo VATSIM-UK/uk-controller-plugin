@@ -60,4 +60,16 @@ namespace UKControllerPlugin::Wake {
             callback(*scheme.second);
         }
     }
+
+    auto WakeSchemeCollection::GetById(int id) const -> std::shared_ptr<WakeScheme>
+    {
+        auto scheme = std::find_if(
+            schemes.cbegin(),
+            schemes.cend(),
+            [&id](const std::pair<int, std::shared_ptr<WakeScheme>>& schemePair) -> bool {
+                return schemePair.second->Id() == id;
+            });
+
+        return scheme == schemes.cend() ? nullptr : scheme->second;
+    }
 } // namespace UKControllerPlugin::Wake
