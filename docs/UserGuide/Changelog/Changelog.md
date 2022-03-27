@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [5.1.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.0.0...5.1.0) (2022-03-27)
+
+
+### Features
+
+* **arrival:** Arrival sequencer and spacing aids ([83953e4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/83953e4633a8887f11a1cfe12584b2080826cf75))
+
 # [5.0.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.1...5.0.0) (2022-03-18)
 
 
