@@ -35,7 +35,7 @@ namespace UKControllerPluginTest {
 
             void SimulateNattrakCall(bool curlError, uint64_t statusCode, std::string body)
             {
-                CurlRequest expectedRequest("https://nattrak.vatsim.net/pluginapi.php", CurlRequest::METHOD_GET);
+                CurlRequest expectedRequest("https://nattrak.vatsim.net/api/plugins", CurlRequest::METHOD_GET);
                 EXPECT_CALL(mockCurl, MakeCurlRequest(expectedRequest))
                     .Times(1)
                     .WillOnce(Return(CurlResponse(body, curlError, statusCode)));
