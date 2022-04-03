@@ -92,5 +92,8 @@ namespace UKControllerPlugin::Oceanic {
         static const int CLEARANCE_ENTRY_POINT_TAG_ITEM_ID = 121;
         static const int CLEARANCE_TRACK_TAG_ITEM_ID = 122;
         static const int CLEARANCE_ENTRY_ESTIMATE_TAG_ITEM_ID = 123;
+
+        // Protects the map during updates
+        mutable std::mutex clearanceMapMutex;
     };
 } // namespace UKControllerPlugin::Oceanic

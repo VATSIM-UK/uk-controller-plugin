@@ -42,6 +42,7 @@ namespace UKControllerPlugin::Oceanic {
             }
 
             // Loop the clearances and update local data
+            auto lock = std::lock_guard(this->clearanceMapMutex);
             this->clearances.clear();
             for (const nlohmann::json& clearance : clearanceData) {
                 if (!NattrakClearanceValid(clearance)) {
@@ -86,11 +87,13 @@ namespace UKControllerPlugin::Oceanic {
 
     auto OceanicEventHandler::CountClearances() const -> size_t
     {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
         return this->clearances.size();
     }
 
     auto OceanicEventHandler::GetClearanceForCallsign(const std::string& callsign) const -> const Clearance&
     {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
         auto clearance = this->clearances.find(callsign);
         return clearance == this->clearances.cend() ? this->invalidClearance : clearance->second;
     }
@@ -121,6 +124,7 @@ namespace UKControllerPlugin::Oceanic {
         const std::string& context,
         const POINT& mousePos)
     {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
         auto storedClearance = this->clearances.find(flightplan.GetCallsign());
         this->currentlySelectedClearance = storedClearance != this->clearances.cend()
                                                ? storedClearance->second
@@ -134,6 +138,7 @@ namespace UKControllerPlugin::Oceanic {
 
     void OceanicEventHandler::SetTagItemData(Tag::TagData& tagData)
     {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
         auto clearance = this->clearances.find(tagData.GetFlightplan().GetCallsign());
 
         if (clearance == this->clearances.cend()) {
