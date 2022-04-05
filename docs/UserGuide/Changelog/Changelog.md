@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.1.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.1.0...5.1.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* **oceanic:** Crash when updating clearances ([c69ebae](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c69ebae324dbeb6ea5824ab84d90b524b604eb79)), closes [#455](https://github.com/VATSIM-UK/uk-controller-plugin/issues/455)
+
 # [5.1.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.0.0...5.1.0) (2022-03-27)
 
 
