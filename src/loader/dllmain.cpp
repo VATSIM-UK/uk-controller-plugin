@@ -55,7 +55,9 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
             LogError("Failed to load plugin binary");
             UnloadPluginLibrary(pluginDllInstance, *windows);
             std::wstring message = L"Unable to load the UKControllerPluginCore DLL.\r\n";
-            message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+            message += L"Please contact the VATSIM UK Web Services Department.\r\n\r\n";
+            message += L"Errno: " + std::to_wstring(errno) + L"\r\n";
+            message += L"LastError: " + std::to_wstring(GetLastError()) + L"\r\n";
 
             MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
             throw std::exception("UKCP broke");
