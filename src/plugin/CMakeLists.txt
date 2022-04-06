@@ -488,7 +488,7 @@ set(src__login
 source_group("src\\login" FILES ${src__login})
 
 set(src__mapping
-        mapping/MappingElement.cpp mapping/MappingElement.h mapping/MappingElementInterface.h mapping/MappingElementDrawer.h mapping/DisplayRule.h mapping/VisualReferencePoint.cpp mapping/VisualReferencePoint.h mapping/MappingElementManager.cpp mapping/MappingElementManager.h mapping/MappingElementManagerFactory.cpp mapping/MappingElementManagerFactory.h mapping/MappingModuleFactory.cpp mapping/MappingModuleFactory.h mapping/MappingBootstrapProvider.cpp mapping/MappingBootstrapProvider.h)
+        mapping/MappingElement.cpp mapping/MappingElement.h mapping/MappingElementInterface.h mapping/MappingElementDrawer.h mapping/DisplayRule.h mapping/VisualReferencePoint.cpp mapping/VisualReferencePoint.h mapping/MappingElementManager.cpp mapping/MappingElementManager.h mapping/MappingElementManagerFactory.cpp mapping/MappingElementManagerFactory.h mapping/MappingModuleFactory.cpp mapping/MappingModuleFactory.h mapping/MappingBootstrapProvider.cpp mapping/MappingBootstrapProvider.h mapping/MappingRenderer.cpp mapping/MappingRenderer.h)
 source_group("src\\mapping" FILES ${src__mapping})
 
 set(src__message

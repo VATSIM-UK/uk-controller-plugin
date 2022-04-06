@@ -1,0 +1,23 @@
+#include "MappingElementInterface.h"
+#include "MappingElementManager.h"
+#include "MappingRenderer.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
+#include "graphics/GdiGraphicsInterface.h"
+
+namespace UKControllerPlugin::Mapping {
+    MappingRenderer::MappingRenderer(const MappingElementManager& elementManager) : elementManager(elementManager)
+    {
+    }
+
+    bool MappingRenderer::IsVisible() const
+    {
+        return true;
+    }
+
+    void MappingRenderer::Render(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
+    {
+        elementManager.ForEachActiveElement(
+            [&graphics, &radarScreen](MappingElementInterface& element) { element.Draw(graphics, radarScreen); });
+    }
+} // namespace UKControllerPlugin::Mapping

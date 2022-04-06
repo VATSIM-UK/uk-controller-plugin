@@ -2,6 +2,7 @@
 
 namespace UKControllerPlugin::Mapping {
     class MappingElement;
+    class MappingElementInterface;
 
     /**
      * Looks after all the mapping elements.
@@ -12,6 +13,7 @@ namespace UKControllerPlugin::Mapping {
         void Add(std::shared_ptr<MappingElement> element);
         [[nodiscard]] auto Count() const -> size_t;
         [[nodiscard]] auto GetByTypeAndId(const std::string& type, int id) const -> std::shared_ptr<MappingElement>;
+        void ForEachActiveElement(const std::function<void(MappingElementInterface&)>& function) const;
 
         private:
         // Active elements - those being drawn

@@ -16,19 +16,17 @@ namespace UKControllerPlugin::Mapping {
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         const auto screenPosition = radarScreen.ConvertCoordinateToScreenPoint(position);
-        Gdiplus::Rect area{screenPosition.x - 20, screenPosition.y - 20, 20, 20};
+        graphics.Translated(screenPosition.x, screenPosition.y, [&graphics, this]() {
+            Gdiplus::Rect area{-10, -10, 20, 20};
 
-        graphics.DrawCircle(area, *pen);
-        graphics.DrawLine(
-            *pen,
-            Gdiplus::PointF{static_cast<Gdiplus::REAL>(area.Width / 2), 0},
-            Gdiplus::PointF{static_cast<Gdiplus::REAL>(area.Width / 2), static_cast<Gdiplus::REAL>(area.Height)});
-        graphics.DrawLine(
-            *pen,
-            Gdiplus::PointF{0, static_cast<Gdiplus::REAL>(area.Height / 2)},
-            Gdiplus::PointF{static_cast<Gdiplus::REAL>(area.Width), static_cast<Gdiplus::REAL>(area.Height / 2)});
-        Gdiplus::Rect labelArea{screenPosition.x - 80, area.GetBottom() + 10, 160, 20};
-        graphics.DrawString(HelperFunctions::ConvertToWideString(label), labelArea, *textBrush);
+            graphics.DrawCircle(area, *pen);
+            graphics.DrawLine(*pen, Gdiplus::PointF{0, -10}, Gdiplus::PointF{0, 10});
+            graphics.DrawLine(*pen, Gdiplus::PointF{-10, 0}, Gdiplus::PointF{10, 0});
+            graphics.DrawString(
+                HelperFunctions::ConvertToWideString(label),
+                Gdiplus::Rect{-90, area.GetBottom() + 5, 180, 20},
+                *textBrush);
+        });
     }
 
     auto VisualReferencePoint::Position() const -> const EuroScopePlugIn::CPosition&

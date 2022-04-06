@@ -23,4 +23,11 @@ namespace UKControllerPlugin::Mapping {
 
         return element == allElements.cend() ? nullptr : *element;
     }
+
+    void MappingElementManager::ForEachActiveElement(const std::function<void(MappingElementInterface&)>& function) const
+    {
+        for (const auto& element : activeElements) {
+            function(*element);
+        }
+    }
 } // namespace UKControllerPlugin::Mapping
