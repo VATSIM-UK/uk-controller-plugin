@@ -43,6 +43,12 @@ namespace UKControllerPluginTest::IntentionCode {
         EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("E"));
     }
 
+    TEST_F(SectorExitPointEtratTest, GetIntentionCodeReturnsCorrectPrimaryCodeNoPointsInRoute)
+    {
+        ON_CALL(routeMock, GetPointsNumber()).WillByDefault(testing::Return(0));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("E"));
+    }
+
     TEST_F(SectorExitPointEtratTest, GetIntentionCodeReturnsCorrectCodeForDeauville)
     {
         ON_CALL(routeMock, GetPointName(0)).WillByDefault(testing::Return("LFRG"));

@@ -1,4 +1,4 @@
-#include "intention/SectorExitPointEtrat.h"
+#include "SectorExitPointEtrat.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
@@ -8,7 +8,10 @@ namespace UKControllerPlugin::IntentionCode {
     std::string SectorExitPointEtrat::GetIntentionCode(
         EuroscopeExtractedRouteInterface& route, int foundPointIndex, int cruiseLevel) const
     {
-        if (destinations.find(route.GetPointName(route.GetPointsNumber() - 1)) != destinations.cend()) {
+        const int numberOfPointsInRoute = route.GetPointsNumber();
+
+        if (numberOfPointsInRoute > 0 &&
+            destinations.find(route.GetPointName(numberOfPointsInRoute - 1)) != destinations.cend()) {
             return "E3";
         }
 
