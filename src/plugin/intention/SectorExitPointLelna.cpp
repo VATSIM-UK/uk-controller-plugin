@@ -18,7 +18,7 @@ namespace UKControllerPlugin::IntentionCode {
         if (numberOfPointsInRoute >= 2) {
             std::string arrivalAirport = route.GetPointName(numberOfPointsInRoute - 1);
             if (arrivalAirport.substr(0, 3) == "LFR" && arrivalAirport != "LFRC") {
-                return "H5";
+                return "H7";
             }
 
             if (arrivalAirport == "LFRC") {

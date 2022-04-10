@@ -44,7 +44,7 @@ namespace UKControllerPluginTest::IntentionCode {
     {
         ON_CALL(routeMock, GetPointsNumber()).WillByDefault(Return(3));
         ON_CALL(routeMock, GetPointName(2)).WillByDefault(Return("LFRO"));
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H5"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H7"));
     }
 
     TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectIntentionCodeForCherbourgArrivals)
