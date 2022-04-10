@@ -28,7 +28,7 @@ namespace UKControllerPlugin::IntentionCode {
 
         while (foundPointIndex < numberOfPointsInRoute) {
             if (strcmp(route.GetPointName(foundPointIndex), "DOMOK") == 0) {
-                return "H7";
+                return "H6";
             }
 
             foundPointIndex++;

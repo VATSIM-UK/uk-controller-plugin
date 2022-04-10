@@ -37,7 +37,7 @@ namespace UKControllerPluginTest::IntentionCode {
         ON_CALL(routeMock, GetPointName(0)).WillByDefault(Return("LELNA"));
         ON_CALL(routeMock, GetPointName(1)).WillByDefault(Return("DOMOK"));
         ON_CALL(routeMock, GetPointName(2)).WillByDefault(Return("LEMD"));
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H7"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H6"));
     }
 
     TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectIntentionCodeForBrestFirArrivals)
