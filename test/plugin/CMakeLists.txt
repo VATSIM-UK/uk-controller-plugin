@@ -143,7 +143,7 @@ set(test__flightrule
 source_group("test\\flightrule" FILES ${test__flightrule})
 
 set(test__geometry
-        geometry/LineTest.cpp geometry/DistanceRadiusToScreenRadiusTest.cpp)
+        geometry/LineTest.cpp geometry/DistanceRadiusToScreenRadiusTest.cpp geometry/RectangleFunctionsTest.cpp)
 source_group("test\\geometry" FILES ${test__geometry})
 
 set(test__handoff

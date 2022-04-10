@@ -1,6 +1,7 @@
 #include "VisualReferencePoint.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "helper/HelperFunctions.h"
+#include "geometry/RectangleFunctions.h"
 #include "graphics/GdiGraphicsInterface.h"
 
 namespace UKControllerPlugin::Mapping {
@@ -15,7 +16,13 @@ namespace UKControllerPlugin::Mapping {
     void VisualReferencePoint::Draw(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
+        const auto viewport = radarScreen.GetRadarViewport();
         const auto screenPosition = radarScreen.ConvertCoordinateToScreenPoint(position);
+
+        if (!Geometry::PointInRect(screenPosition, viewport)) {
+            return;
+        }
+
         graphics.Translated(screenPosition.x, screenPosition.y, [&graphics, this]() {
             Gdiplus::Rect area{-10, -10, 20, 20};
 

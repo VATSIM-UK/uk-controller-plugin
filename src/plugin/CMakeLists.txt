@@ -256,7 +256,7 @@ set(src__flightrule
 source_group("src\\flightrule" FILES ${src__flightrule})
 
 set(src__geometry
-        geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h)
+        geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h geometry/RectangleFunctions.cpp geometry/RectangleFunctions.h)
 source_group("src\\geometry" FILES ${src__geometry})
 
 set(src__graphics
