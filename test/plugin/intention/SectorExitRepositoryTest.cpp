@@ -415,7 +415,7 @@ namespace UKControllerPluginTest {
 
             // LELNA
             ASSERT_TRUE(repo->GetSectorExitPoint("LELNA").GetName().compare("LELNA") == 0);
-            ASSERT_TRUE(repo->GetSectorExitPoint("LELNA").GetIntentionCode(mockRoute, -1, 37000).compare("H2") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("LELNA").GetIntentionCode(mockRoute, -1, 37000).compare("H8") == 0);
             ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("LELNA").GetOutDirection());
 
             // Paris
