@@ -27,10 +27,8 @@ namespace UKControllerPlugin::IntentionCode {
         }
 
         while (foundPointIndex < numberOfPointsInRoute) {
-            // Not ARE, but the airway continues to there.
-            if (strcmp(route.GetPointName(foundPointIndex), "DOMOK") == 0 ||
-                strcmp(route.GetPointName(foundPointIndex), "ARE") == 0) {
-                return "H3";
+            if (strcmp(route.GetPointName(foundPointIndex), "DOMOK") == 0) {
+                return "H7";
             }
 
             foundPointIndex++;

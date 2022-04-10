@@ -31,22 +31,13 @@ namespace UKControllerPluginTest::IntentionCode {
         EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H8"));
     }
 
-    TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectSecondaryCodeArree)
-    {
-        ON_CALL(routeMock, GetPointsNumber()).WillByDefault(Return(3));
-        ON_CALL(routeMock, GetPointName(0)).WillByDefault(Return("LELNA"));
-        ON_CALL(routeMock, GetPointName(1)).WillByDefault(Return("ARE"));
-        ON_CALL(routeMock, GetPointName(2)).WillByDefault(Return("LEMD"));
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H3"));
-    }
-
     TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectSecondaryCodeDomok)
     {
         ON_CALL(routeMock, GetPointsNumber()).WillByDefault(Return(3));
         ON_CALL(routeMock, GetPointName(0)).WillByDefault(Return("LELNA"));
         ON_CALL(routeMock, GetPointName(1)).WillByDefault(Return("DOMOK"));
         ON_CALL(routeMock, GetPointName(2)).WillByDefault(Return("LEMD"));
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H3"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H7"));
     }
 
     TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectIntentionCodeForBrestFirArrivals)
