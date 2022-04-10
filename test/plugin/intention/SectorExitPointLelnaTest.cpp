@@ -10,7 +10,7 @@ namespace UKControllerPluginTest::IntentionCode {
     class SectorExitPointLelnaTest : public testing::Test
     {
         public:
-        SectorExitPointLelnaTest() : exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth)
+        SectorExitPointLelnaTest() : exitPoint("LELNA", "H8", SectorExitPointLelna::outSouth)
         {
         }
 
@@ -28,16 +28,7 @@ namespace UKControllerPluginTest::IntentionCode {
         EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(2));
         EXPECT_CALL(routeMock, GetPointName(0)).Times(3).WillRepeatedly(Return("LELNA"));
         EXPECT_CALL(routeMock, GetPointName(1)).Times(4).WillRepeatedly(Return("LFMN"));
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
-    }
-
-    TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectSecondaryCodeDinard)
-    {
-        EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(3));
-        EXPECT_CALL(routeMock, GetPointName(0)).Times(3).WillRepeatedly(Return("LELNA"));
-        EXPECT_CALL(routeMock, GetPointName(1)).Times(1).WillRepeatedly(Return("DIN"));
-        EXPECT_CALL(routeMock, GetPointName(2)).Times(1).WillRepeatedly(Return("LEMD"));
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H8"));
     }
 
     TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectSecondaryCodeArree)
