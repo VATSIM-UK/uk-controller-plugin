@@ -3,7 +3,7 @@
 
 namespace UKControllerPlugin::Mapping {
     class MappingRenderOptions;
-    
+
     /**
      * Renders the mapping options to the screen
      */
@@ -22,13 +22,12 @@ namespace UKControllerPlugin::Mapping {
             Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) override;
 
         private:
-        
         // The options
         std::shared_ptr<MappingRenderOptions> mappingOptions;
-        
+
         // For clickspots
         const int screenObjectId;
-        
+
         // Brushes
         std::shared_ptr<Gdiplus::Brush> backgroundBrush;
     };

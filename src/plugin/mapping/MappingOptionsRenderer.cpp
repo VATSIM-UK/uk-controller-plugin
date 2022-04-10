@@ -1,5 +1,6 @@
 #include "MappingOptionsRenderer.h"
 #include "MappingRenderOptions.h"
+#include "components/TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 
@@ -33,9 +34,17 @@ namespace UKControllerPlugin::Mapping {
     void MappingOptionsRenderer::Render(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        const auto viewport = radarScreen.GetRadarViewport();
-        graphics.FillRect(
-            Gdiplus::Rect{50, 50, viewport.right - viewport.left - 100, viewport.bottom - viewport.top - 100},
-            *backgroundBrush);
+        graphics.Translated(50, 50, [&graphics, &radarScreen, this]() {
+            const auto viewport = radarScreen.GetRadarViewport();
+            // Background
+            const auto width = viewport.right - viewport.left - 100;
+            graphics.FillRect(Gdiplus::Rect{0, 0, width, viewport.bottom - viewport.top - 100}, *backgroundBrush);
+
+            // Titlebar
+            Components::TitleBar::Create(L"Mapping Options", Gdiplus::Rect{0, 0, width, 25})
+                ->WithDefaultBackgroundBrush()
+                ->WithDefaultTextBrush()
+                ->Draw(graphics, radarScreen);
+        });
     }
 } // namespace UKControllerPlugin::Mapping
