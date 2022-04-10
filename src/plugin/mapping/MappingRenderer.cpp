@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Mapping {
     {
     }
 
-    bool MappingRenderer::IsVisible() const
+    auto MappingRenderer::IsVisible() const -> bool
     {
         return true;
     }

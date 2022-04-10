@@ -261,7 +261,7 @@ set(test__login
 source_group("test\\login" FILES ${test__login})
 
 set(test__mapping
-        mapping/MappingElementTest.cpp mapping/MappingModuleFactoryTest.cpp mapping/MappingElementManagerTest.cpp mapping/MappingElementManagerFactoryTest.cpp mapping/MappingBootstrapProviderTest.cpp)
+        mapping/MappingElementTest.cpp mapping/MappingModuleFactoryTest.cpp mapping/MappingElementManagerTest.cpp mapping/MappingElementManagerFactoryTest.cpp mapping/MappingBootstrapProviderTest.cpp mapping/MappingRenderOptionsTest.cpp mapping/ToggleMappingOptionsRenderTest.cpp)
 source_group("test\\mapping" FILES ${test__mapping})
 
 set(test__message
