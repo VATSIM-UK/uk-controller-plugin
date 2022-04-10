@@ -410,7 +410,7 @@ namespace UKControllerPluginTest {
 
             // LORKU
             ASSERT_TRUE(repo->GetSectorExitPoint("LORKU").GetName().compare("LORKU") == 0);
-            ASSERT_TRUE(repo->GetSectorExitPoint("LORKU").GetIntentionCode(mockRoute, -1, 37000).compare("H4") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("LORKU").GetIntentionCode(mockRoute, -1, 37000).compare("H9") == 0);
             ASSERT_EQ(repo->outSouth, repo->GetSectorExitPoint("LORKU").GetOutDirection());
 
             // LELNA
