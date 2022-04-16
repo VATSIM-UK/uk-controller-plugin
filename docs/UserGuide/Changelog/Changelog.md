@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [5.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.1.1...5.2.0) (2022-04-16)
+
+
+### Features
+
+* **intentioncode:** E3 intention code ([270d57b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/270d57b3a264013e840ad58b61df6c7d01fa9236)), closes [#458](https://github.com/VATSIM-UK/uk-controller-plugin/issues/458)
+
 ## [5.1.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.1.0...5.1.1) (2022-04-05)
 
 
