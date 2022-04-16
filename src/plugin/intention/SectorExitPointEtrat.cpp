@@ -1,24 +1,25 @@
-#include "pch/pch.h"
-#include "intention/SectorExitPointEtrat.h"
+#include "SectorExitPointEtrat.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+namespace UKControllerPlugin::IntentionCode {
 
-        std::string SectorExitPointEtrat::GetIntentionCode(
-            EuroscopeExtractedRouteInterface & route,
-            int foundPointIndex,
-            int cruiseLevel
-        ) const
-        {
-            // Special low level rule for ETRAT
-            if (cruiseLevel <= 27000) {
-                return "E2";
-            }
+    std::string SectorExitPointEtrat::GetIntentionCode(
+        EuroscopeExtractedRouteInterface& route, int foundPointIndex, int cruiseLevel) const
+    {
+        const int numberOfPointsInRoute = route.GetPointsNumber();
 
-            return SectorExitPoint::GetIntentionCode(route, foundPointIndex, cruiseLevel);
+        if (numberOfPointsInRoute > 0 &&
+            destinations.find(route.GetPointName(numberOfPointsInRoute - 1)) != destinations.cend()) {
+            return "E3";
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+
+        // Special low level rule for ETRAT
+        if (cruiseLevel <= 27000) {
+            return "E2";
+        }
+
+        return SectorExitPoint::GetIntentionCode(route, foundPointIndex, cruiseLevel);
+    }
+} // namespace UKControllerPlugin::IntentionCode
