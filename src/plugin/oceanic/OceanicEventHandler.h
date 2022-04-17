@@ -76,7 +76,7 @@ namespace UKControllerPlugin::Oceanic {
         Dialog::DialogManager& dialogManager;
 
         // The URL to find nattrak
-        const std::string nattrakUrl = "https://nattrak.vatsim.net/pluginapi.php";
+        const std::string nattrakUrl = "https://nattrak.vatsim.net/api/plugins";
 
         // Returned if clearance doesnt exist
         const Clearance invalidClearance = Clearance("NOTAVALIDCLEARANCESORRY");
