@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.2.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.0...5.2.1) (2022-04-17)
+
+
+### Bug Fixes
+
+* **oceanic:** Use new Nattrak API endpoint ([717ad68](https://github.com/VATSIM-UK/uk-controller-plugin/commit/717ad68b7832ae74d74ea9b4146162aca9530f81)), closes [#452](https://github.com/VATSIM-UK/uk-controller-plugin/issues/452)
+
 # [5.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.1.1...5.2.0) (2022-04-16)
 
 
