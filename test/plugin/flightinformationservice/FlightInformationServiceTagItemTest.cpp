@@ -108,32 +108,32 @@ namespace UKControllerPluginTest {
         TEST_F(FlightInformationServiceTagItemTest, ItPopulatesTheSelectionMenu)
         {
             PopupMenuItem menuItemBasic;
-            menuItemBasic.firstValue = "BASIC";
-            menuItemBasic.secondValue = "";
+            menuItemBasic.firstValue = "BS";
+            menuItemBasic.secondValue = "Basic";
             menuItemBasic.callbackFunctionId = 55;
             menuItemBasic.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemBasic.disabled = false;
             menuItemBasic.fixedPosition = false;
 
             PopupMenuItem menuItemTraffic;
-            menuItemTraffic.firstValue = "TFC";
-            menuItemTraffic.secondValue = "";
+            menuItemTraffic.firstValue = "TS";
+            menuItemTraffic.secondValue = "Traffic";
             menuItemTraffic.callbackFunctionId = 55;
             menuItemTraffic.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemTraffic.disabled = false;
             menuItemTraffic.fixedPosition = false;
 
             PopupMenuItem menuItemDecon;
-            menuItemDecon.firstValue = "DECON";
-            menuItemDecon.secondValue = "";
+            menuItemDecon.firstValue = "DS";
+            menuItemDecon.secondValue = "Deconfliction";
             menuItemDecon.callbackFunctionId = 55;
             menuItemDecon.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemDecon.disabled = false;
             menuItemDecon.fixedPosition = false;
 
             PopupMenuItem menuItemProcedural;
-            menuItemProcedural.firstValue = "PROC";
-            menuItemProcedural.secondValue = "";
+            menuItemProcedural.firstValue = "PS";
+            menuItemProcedural.secondValue = "Procedural";
             menuItemProcedural.callbackFunctionId = 55;
             menuItemProcedural.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemProcedural.disabled = false;
