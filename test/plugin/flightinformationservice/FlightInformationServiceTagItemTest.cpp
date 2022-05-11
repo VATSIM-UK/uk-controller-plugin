@@ -148,7 +148,7 @@ namespace UKControllerPluginTest {
             menuItemRemove.fixedPosition = false;
 
             RECT expectedArea = {0, 0, 300, 500};
-            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "UKFIS", 1)).Times(1);
+            EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "UKFIS", 2)).Times(1);
 
             EXPECT_CALL(this->plugin, AddItemToPopupList(menuItemBasic)).Times(1);
 
