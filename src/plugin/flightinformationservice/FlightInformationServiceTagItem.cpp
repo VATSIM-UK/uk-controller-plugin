@@ -57,13 +57,12 @@ namespace UKControllerPlugin::FlightInformationService {
 
         this->plugin.TriggerPopupList(popupArea, "UKFIS", 2);
 
-        std::map<std::string, std::string> itemsToAdd {
+        std::map<std::string, std::string> itemsToAdd{
             {"BS", "Basic"},
             {"TS", "Traffic"},
             {"DS", "Deconfliction"},
             {"TS", "Procedural"},
-            {noUkFisSelected, "None"}
-        }
+            {noUkFisSelected, "None"}};
 
         // Use a "different" callback function for each hold, so we can easily determine which one is called
         Plugin::PopupMenuItem menuItem;
@@ -73,8 +72,8 @@ namespace UKControllerPlugin::FlightInformationService {
         menuItem.fixedPosition = false;
 
         std::for_each(itemsToAdd.cbegin(), itemsToAdd.cend(), [this, &menuItem](auto item) {
-            menuItem.firstValue = item->first;
-            menuItem.secondValue = item->second;
+            menuItem.firstValue = item.first;
+            menuItem.secondValue = item.second;
             this->plugin.AddItemToPopupList(menuItem);
         });
     }
