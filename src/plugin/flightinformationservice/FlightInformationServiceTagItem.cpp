@@ -55,20 +55,26 @@ namespace UKControllerPlugin::FlightInformationService {
         // Create the list in place
         RECT popupArea = {mousePos.x, mousePos.y, mousePos.x + 300, mousePos.y + 500};
 
-        this->plugin.TriggerPopupList(popupArea, "UKFIS", 1);
+        this->plugin.TriggerPopupList(popupArea, "UKFIS", 2);
 
-        std::set<std::string> itemsToAdd{"BS", "TS", "DS", "PS", noUkFisSelected};
+        std::map<std::string, std::string> itemsToAdd {
+            {"BS", "Basic"},
+            {"TS", "Traffic"},
+            {"DS", "Deconfliction"},
+            {"TS", "Procedural"},
+            {noUkFisSelected, "None"}
+        }
 
         // Use a "different" callback function for each hold, so we can easily determine which one is called
         Plugin::PopupMenuItem menuItem;
-        menuItem.secondValue = "";
         menuItem.callbackFunctionId = this->callbackId;
         menuItem.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
         menuItem.disabled = false;
         menuItem.fixedPosition = false;
 
         std::for_each(itemsToAdd.cbegin(), itemsToAdd.cend(), [this, &menuItem](auto item) {
-            menuItem.firstValue = item;
+            menuItem.firstValue = item->first;
+            menuItem.secondValue = item->second;
             this->plugin.AddItemToPopupList(menuItem);
         });
     }
