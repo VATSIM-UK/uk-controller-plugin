@@ -9,12 +9,6 @@
 #include "radarscreen/RadarRenderableCollection.h"
 
 namespace UKControllerPlugin::Mapping {
-
-    void MappingBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
-    {
-        static_cast<void>(container.moduleFactories->Mapping().ElementManager(*container.dependencyLoader));
-    }
-
     void MappingBootstrapProvider::BootstrapRadarScreen(
         const Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& radarRenderables,

@@ -8,7 +8,6 @@ namespace UKControllerPlugin::Mapping {
     class MappingBootstrapProvider : public Bootstrap::BootstrapProviderInterface
     {
         public:
-        void BootstrapPlugin(Bootstrap::PersistenceContainer& container) override;
         void BootstrapRadarScreen(
             const Bootstrap::PersistenceContainer& container,
             RadarScreen::RadarRenderableCollection& radarRenderables,

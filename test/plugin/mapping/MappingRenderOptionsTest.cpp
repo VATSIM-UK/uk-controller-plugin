@@ -34,4 +34,16 @@ namespace UKControllerPluginTest::Mapping {
         renderOptions.ShowVisualReferencePoints(false);
         EXPECT_FALSE(renderOptions.ShowVisualReferencePoints());
     }
+
+    TEST_F(MappingRenderOptionsTest, ItDoesntHaveAnyVisualReferencePointAirfields)
+    {
+        EXPECT_TRUE(renderOptions.VisualReferencePointAirfields().empty());
+    }
+
+    TEST_F(MappingRenderOptionsTest, ItHasVisualReferencePointAirfields)
+    {
+        std::set<int> expected{1, 2, 3};
+        renderOptions.VisualReferencePointAirfields({1, 2, 3});
+        EXPECT_EQ(expected, renderOptions.VisualReferencePointAirfields());
+    }
 } // namespace UKControllerPluginTest::Mapping

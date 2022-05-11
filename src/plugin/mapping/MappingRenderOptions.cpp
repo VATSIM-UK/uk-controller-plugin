@@ -11,14 +11,24 @@ namespace UKControllerPlugin::Mapping {
     {
         return this->showVisualReferencePoints;
     }
-    
+
     void MappingRenderOptions::ShowOptions(bool show)
     {
         this->showOptions = show;
     }
-    
+
     auto MappingRenderOptions::ShowOptions() const -> bool
     {
         return this->showOptions;
+    }
+
+    auto MappingRenderOptions::VisualReferencePointAirfields() const -> const std::set<int>&
+    {
+        return this->visualReferencePointAirfields;
+    }
+
+    void MappingRenderOptions::VisualReferencePointAirfields(const std::set<int> airfields)
+    {
+        this->visualReferencePointAirfields = airfields;
     }
 } // namespace UKControllerPlugin::Mapping
