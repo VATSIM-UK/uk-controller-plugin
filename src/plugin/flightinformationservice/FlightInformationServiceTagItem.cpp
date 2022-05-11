@@ -57,7 +57,7 @@ namespace UKControllerPlugin::FlightInformationService {
 
         this->plugin.TriggerPopupList(popupArea, "UKFIS", 1);
 
-        std::set<std::string> itemsToAdd{"BASIC", "TFC", "DECON", "PROC", noUkFisSelected};
+        std::set<std::string> itemsToAdd{"BS", "TS", "DS", "PS", noUkFisSelected};
 
         // Use a "different" callback function for each hold, so we can easily determine which one is called
         Plugin::PopupMenuItem menuItem;
