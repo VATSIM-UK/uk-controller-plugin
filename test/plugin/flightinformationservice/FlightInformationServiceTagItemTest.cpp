@@ -141,7 +141,7 @@ namespace UKControllerPluginTest {
 
             PopupMenuItem menuItemRemove;
             menuItemRemove.firstValue = "--";
-            menuItemRemove.secondValue = "";
+            menuItemRemove.secondValue = "None";
             menuItemRemove.callbackFunctionId = 55;
             menuItemRemove.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
             menuItemRemove.disabled = false;
