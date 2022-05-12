@@ -61,7 +61,7 @@ namespace UKControllerPlugin::FlightInformationService {
             {"BS", "Basic"},
             {"TS", "Traffic"},
             {"DS", "Deconfliction"},
-            {"TS", "Procedural"},
+            {"PS", "Procedural"},
             {noUkFisSelected, "None"}};
 
         // Use a "different" callback function for each hold, so we can easily determine which one is called
