@@ -103,7 +103,7 @@ namespace UKControllerPlugin::Euroscope {
     {
         std::string squawk = this->originalData.GetControllerAssignedData().GetSquawk();
         return SquawkValidator::ValidSquawk(squawk) && squawk != "0200" && squawk != "2200" && squawk != "1200" &&
-               squawk != "2000" && squawk != "0000";
+               squawk != "2000" && squawk != "0000" && squawk != "1234";
     }
 
     auto EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude() const -> bool
