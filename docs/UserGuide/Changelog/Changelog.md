@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.2.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.1...5.2.2) (2022-05-12)
+
+
+### Bug Fixes
+
+* **squawk:** treat msfs 1234 default squawk as unassigned ([93182c6](https://github.com/VATSIM-UK/uk-controller-plugin/commit/93182c6098c14583f3abf84251037801ef5cb420))
+
 ## [5.2.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.0...5.2.1) (2022-04-17)
 
 
