@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.2.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.2...5.2.3) (2022-05-13)
+
+
+### Bug Fixes
+
+* **ukfis:** Update UKFIS abbreviations ([f70d498](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f70d4985648d325696a41f39ea4acc01cf90ed28))
+
 ## [5.2.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.1...5.2.2) (2022-05-12)
 
 
