@@ -488,7 +488,39 @@ set(src__login
 source_group("src\\login" FILES ${src__login})
 
 set(src__mapping
-        mapping/MappingElement.cpp mapping/MappingElement.h mapping/MappingElementInterface.h mapping/MappingElementDrawer.h mapping/DisplayRule.h mapping/VisualReferencePoint.cpp mapping/VisualReferencePoint.h mapping/MappingElementManager.cpp mapping/MappingElementManager.h mapping/MappingElementManagerFactory.cpp mapping/MappingElementManagerFactory.h mapping/MappingModuleFactory.cpp mapping/MappingModuleFactory.h mapping/MappingBootstrapProvider.cpp mapping/MappingBootstrapProvider.h mapping/MappingRenderer.cpp mapping/MappingRenderer.h mapping/MappingOptionsRenderer.cpp mapping/MappingOptionsRenderer.h mapping/MappingRenderOptions.cpp mapping/MappingRenderOptions.h mapping/ToggleMappingOptionsRender.cpp mapping/ToggleMappingOptionsRender.h mapping/VisualReferencePointShouldRender.cpp mapping/VisualReferencePointShouldRender.h mapping/RelatedAirfieldProvider.h mapping/RelatedAirfield.cpp mapping/RelatedAirfield.h mapping/VisualReferencePointRelatedAirfieldProvider.cpp mapping/VisualReferencePointRelatedAirfieldProvider.h mapping/MappingElementDrawerFactoryDelegator.cpp mapping/MappingElementDrawerFactoryDelegator.h mapping/MappingElementFactory.h mapping/MappingElementDrawerFactory.h mapping/VisualReferencePointDrawerFactory.cpp mapping/VisualReferencePointDrawerFactory.h mapping/TypeSpecificDisplayRuleFactory.h mapping/ShowsVisualReferencePoints.cpp mapping/ShowsVisualReferencePoints.h mapping/RelatedAirfieldProviderFactory.cpp mapping/RelatedAirfieldProviderFactory.h mapping/MappingElementFactory.cpp)
+        mapping/MappingElement.cpp mapping/MappingElement.h
+        mapping/MappingElementInterface.h
+        mapping/MappingElementDrawer.h
+        mapping/DisplayRule.h
+        mapping/VisualReferencePoint.cpp mapping/VisualReferencePoint.h
+        mapping/MappingElementManager.cpp mapping/MappingElementManager.h
+        mapping/MappingElementManagerFactory.cpp mapping/MappingElementManagerFactory.h
+        mapping/MappingModuleFactory.cpp mapping/MappingModuleFactory.h
+        mapping/MappingBootstrapProvider.cpp mapping/MappingBootstrapProvider.h
+        mapping/MappingRenderer.cpp mapping/MappingRenderer.h
+        mapping/MappingOptionsRenderer.cpp mapping/MappingOptionsRenderer.h
+        mapping/MappingRenderOptions.cpp mapping/MappingRenderOptions.h
+        mapping/ToggleMappingOptionsRender.cpp mapping/ToggleMappingOptionsRender.h
+        mapping/VisualReferencePointShouldRender.cpp mapping/VisualReferencePointShouldRender.h
+        mapping/RelatedAirfieldProvider.h
+        mapping/RelatedAirfield.cpp mapping/RelatedAirfield.h
+        mapping/VisualReferencePointRelatedAirfieldProvider.cpp mapping/VisualReferencePointRelatedAirfieldProvider.h
+        mapping/MappingElementDrawerFactoryDelegator.cpp mapping/MappingElementDrawerFactoryDelegator.h
+        mapping/MappingElementFactory.h
+        mapping/MappingElementDrawerFactory.h
+        mapping/VisualReferencePointDrawerFactory.cpp mapping/VisualReferencePointDrawerFactory.h
+        mapping/ShowsVisualReferencePoints.cpp mapping/ShowsVisualReferencePoints.h
+        mapping/RelatedAirfieldProviderFactory.cpp mapping/RelatedAirfieldProviderFactory.h
+        mapping/MappingElementFactory.cpp
+        mapping/DisplayRuleFactoryInterface.h
+        mapping/DisplayRuleTypeDelegatorFactory.cpp mapping/DisplayRuleTypeDelegatorFactory.h
+        mapping/DisplayRuleElementTypeDelegatorFactory.cpp mapping/DisplayRuleElementTypeDelegatorFactory.h
+        mapping/DisplayRuleFactoryFactory.cpp mapping/DisplayRuleFactoryFactory.h
+        mapping/VisualReferencePointRelatedAirfieldFactory.cpp mapping/VisualReferencePointRelatedAirfieldFactory.h
+        mapping/DisplayRulesetFactory.cpp mapping/DisplayRulesetFactory.h
+        mapping/DisplayRulesetFactoryInterface.h
+        mapping/DisplayRulesetAggregatorFactory.cpp mapping/DisplayRulesetAggregatorFactory.h
+        mapping/VisualReferencePointDefaultDisplayRulesetFactory.cpp mapping/VisualReferencePointDefaultDisplayRulesetFactory.h mapping/DefaultDisplayRulesetDelegatorFactory.cpp mapping/DefaultDisplayRulesetDelegatorFactory.h mapping/DisplayRulesetFactoryFactory.cpp mapping/DisplayRulesetFactoryFactory.h)
 source_group("src\\mapping" FILES ${src__mapping})
 
 set(src__message
@@ -998,6 +1030,11 @@ set(ALL_FILES
     ${src__timedevent}
     ${src__timer}
     ${src__wake})
+
+################################################################################
+# Source Files
+################################################################################
+set_source_files_properties(ALL_FILES PROPERTIES COMPILE_FLAGS "-include pch/pch.h")
 
 ################################################################################
 # Target
