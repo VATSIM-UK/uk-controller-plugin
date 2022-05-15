@@ -10,15 +10,15 @@ namespace UKControllerPlugin::Mapping {
     {
         public:
         DisplayRulesetAggregatorFactory(
-            const DisplayRulesetFactoryInterface& dataDrivenFactories,
-            const DisplayRulesetFactoryInterface& defaultFactories);
-        auto Make(const std::string& elementType, const nlohmann::json& data) const
+            std::shared_ptr<DisplayRulesetFactoryInterface> dataDrivenFactories,
+            std::shared_ptr<DisplayRulesetFactoryInterface> defaultFactories);
+        [[nodiscard]] auto Make(const std::string& elementType, const nlohmann::json& data) const
             -> std::set<std::shared_ptr<DisplayRule>> override;
 
         // Factories that are driven specifically by the data
-        const DisplayRulesetFactoryInterface& dataDrivenFactories;
+        std::shared_ptr<DisplayRulesetFactoryInterface> dataDrivenFactories;
 
         // Factories for default rules
-        const DisplayRulesetFactoryInterface& defaultFactories;
+        std::shared_ptr<DisplayRulesetFactoryInterface> defaultFactories;
     };
 } // namespace UKControllerPlugin::Mapping

@@ -1,11 +1,13 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Mapping {
+namespace UKControllerPlugin::Mapping {
+    class DisplayRulesetFactoryInterface;
+    class MappingRenderOptions;
 
-        class DisplayRulesetFactoryFactory
-        {
-        };
-
-    } // namespace Mapping
-} // namespace UKControllerPlugin
+    class DisplayRulesetFactoryFactory
+    {
+        public:
+        [[nodiscard]] auto Make(std::shared_ptr<MappingRenderOptions> renderOptions) const
+            -> std::shared_ptr<DisplayRulesetFactoryInterface>;
+    };
+} // namespace UKControllerPlugin::Mapping
