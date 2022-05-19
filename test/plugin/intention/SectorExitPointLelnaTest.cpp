@@ -1,108 +1,56 @@
 #include "intention/SectorExitPointLelna.h"
-#include "intention/IntentionCodeGenerator.h"
 
+using ::testing::NiceMock;
 using ::testing::Return;
-using ::testing::StrictMock;
-using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
 using UKControllerPlugin::IntentionCode::SectorExitPointLelna;
 using UKControllerPluginTest::Euroscope::MockEuroscopeExtractedRouteInterface;
 
-namespace UKControllerPluginTest {
-    namespace IntentionCode {
+namespace UKControllerPluginTest::IntentionCode {
 
-        TEST(SectorExitPointLelna, ItAppliesToAllControllers)
+    class SectorExitPointLelnaTest : public testing::Test
+    {
+        public:
+        SectorExitPointLelnaTest() : exitPoint("LELNA", "H8", SectorExitPointLelna::outSouth)
         {
-            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
-
-            EXPECT_TRUE(exitPoint.AppliesToController("BLA"));
         }
 
-        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectDefaultCodeLelna)
-        {
-            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
+        NiceMock<MockEuroscopeExtractedRouteInterface> routeMock;
+        SectorExitPointLelna exitPoint;
+    };
 
-            EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(2));
+    TEST_F(SectorExitPointLelnaTest, ItAppliesToAllControllers)
+    {
+        EXPECT_TRUE(exitPoint.AppliesToController("BLA"));
+    }
 
-            EXPECT_CALL(routeMock, GetPointName(0)).Times(3).WillRepeatedly(Return("LELNA"));
+    TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectDefaultCodeLelna)
+    {
+        ON_CALL(routeMock, GetPointsNumber()).WillByDefault(Return(2));
+        ON_CALL(routeMock, GetPointName(0)).WillByDefault(Return("LELNA"));
+        ON_CALL(routeMock, GetPointName(1)).WillByDefault(Return("LFMN"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H8"));
+    }
 
-            EXPECT_CALL(routeMock, GetPointName(1)).Times(4).WillRepeatedly(Return("LFMN"));
+    TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectSecondaryCodeDomok)
+    {
+        ON_CALL(routeMock, GetPointsNumber()).WillByDefault(Return(3));
+        ON_CALL(routeMock, GetPointName(0)).WillByDefault(Return("LELNA"));
+        ON_CALL(routeMock, GetPointName(1)).WillByDefault(Return("DOMOK"));
+        ON_CALL(routeMock, GetPointName(2)).WillByDefault(Return("LEMD"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H6"));
+    }
 
-            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
-        }
+    TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectIntentionCodeForBrestFirArrivals)
+    {
+        ON_CALL(routeMock, GetPointsNumber()).WillByDefault(Return(3));
+        ON_CALL(routeMock, GetPointName(2)).WillByDefault(Return("LFRO"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H7"));
+    }
 
-        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectSecondaryCodeDinard)
-        {
-            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
-
-            EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(3));
-
-            EXPECT_CALL(routeMock, GetPointName(0)).Times(3).WillRepeatedly(Return("LELNA"));
-
-            EXPECT_CALL(routeMock, GetPointName(1)).Times(1).WillRepeatedly(Return("DIN"));
-
-            EXPECT_CALL(routeMock, GetPointName(2)).Times(1).WillRepeatedly(Return("LEMD"));
-
-            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H2"));
-        }
-
-        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectSecondaryCodeArree)
-        {
-            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
-
-            EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(3));
-
-            EXPECT_CALL(routeMock, GetPointName(0)).Times(3).WillRepeatedly(Return("LELNA"));
-
-            EXPECT_CALL(routeMock, GetPointName(1)).Times(3).WillRepeatedly(Return("ARE"));
-
-            EXPECT_CALL(routeMock, GetPointName(2)).Times(1).WillRepeatedly(Return("LEMD"));
-
-            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H3"));
-        }
-
-        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectSecondaryCodeDomok)
-        {
-            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
-
-            EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(3));
-
-            EXPECT_CALL(routeMock, GetPointName(0)).Times(3).WillRepeatedly(Return("LELNA"));
-
-            EXPECT_CALL(routeMock, GetPointName(1)).Times(2).WillRepeatedly(Return("DOMOK"));
-
-            EXPECT_CALL(routeMock, GetPointName(2)).Times(1).WillRepeatedly(Return("LEMD"));
-
-            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H3"));
-        }
-
-        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectIntentionCodeForBrestFirArrivals)
-        {
-            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H2", SectorExitPointLelna::outSouth);
-
-            EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(3));
-
-            EXPECT_CALL(routeMock, GetPointName(2)).Times(1).WillRepeatedly(Return("LFRO"));
-
-            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 37000).compare("H5"));
-        }
-
-        TEST(SectorExitPointLelna, GetIntentionCodeReturnsCorrectIntentionCodeForCherbourgArrivals)
-        {
-            StrictMock<MockEuroscopeExtractedRouteInterface> routeMock;
-            SectorExitPointLelna exitPoint("LELNA", "H5", SectorExitPointLelna::outSouth);
-
-            EXPECT_CALL(routeMock, GetPointsNumber()).Times(1).WillRepeatedly(Return(3));
-
-            EXPECT_CALL(routeMock, GetPointName(2)).Times(1).WillRepeatedly(Return("LFRC"));
-
-            EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 25000).compare("JC"));
-        }
-
-    } // namespace IntentionCode
-} // namespace UKControllerPluginTest
+    TEST_F(SectorExitPointLelnaTest, GetIntentionCodeReturnsCorrectIntentionCodeForCherbourgArrivals)
+    {
+        ON_CALL(routeMock, GetPointsNumber()).WillByDefault(Return(3));
+        ON_CALL(routeMock, GetPointName(2)).WillByDefault(Return("LFRC"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 25000).compare("JC"));
+    }
+} // namespace UKControllerPluginTest::IntentionCode

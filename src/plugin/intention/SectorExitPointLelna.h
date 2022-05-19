@@ -1,28 +1,25 @@
 #pragma once
-#include "intention/SectorExitPoint.h"
+#include "SectorExitPoint.h"
 
-namespace UKControllerPlugin {
-    namespace Euroscope {
-        class EuroscopeExtractedRouteInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+namespace UKControllerPlugin::Euroscope {
+    class EuroscopeExtractedRouteInterface;
+} // namespace UKControllerPlugin::Euroscope
 
-namespace UKControllerPlugin {
-    namespace IntentionCode {
+namespace UKControllerPlugin::IntentionCode {
 
-        /*
-            Special class to handle the LELNA SectorExitPoint.
-        */
-        class SectorExitPointLelna : public SectorExitPoint
+    /*
+        Special class to handle the LELNA SectorExitPoint.
+    */
+    class SectorExitPointLelna : public SectorExitPoint
+    {
+        public:
+        SectorExitPointLelna(std::string name, std::string intentionCode, unsigned int outDirection)
+            : SectorExitPoint(name, intentionCode, outDirection)
         {
-            public:
-                SectorExitPointLelna(std::string name, std::string intentionCode, unsigned int outDirection)
-                    : SectorExitPoint(name, intentionCode, outDirection) {}  // namespace IntentionCode
-                std::string GetIntentionCode(
-                    UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface & route,
-                    int foundPointIndex,
-                    int cruiseLevel
-                ) const override;
-        };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+        } // namespace IntentionCode
+        std::string GetIntentionCode(
+            UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& route,
+            int foundPointIndex,
+            int cruiseLevel) const override;
+    };
+} // namespace UKControllerPlugin::IntentionCode

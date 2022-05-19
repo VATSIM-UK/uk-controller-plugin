@@ -139,8 +139,8 @@ namespace UKControllerPlugin {
 
             // Hern
             points["ORTAC"] = std::make_unique<SectorExitPoint>("ORTAC", "H", SectorExitPoint::outSouth);
-            points["LORKU"] = std::make_unique<SectorExitPoint>("LORKU", "H4", SectorExitPoint::outSouth);
-            points["LELNA"] = std::make_unique<SectorExitPointLelna>("LELNA", "H2", SectorExitPoint::outSouth);
+            points["LORKU"] = std::make_unique<SectorExitPoint>("LORKU", "H9", SectorExitPoint::outSouth);
+            points["LELNA"] = std::make_unique<SectorExitPointLelna>("LELNA", "H8", SectorExitPoint::outSouth);
 
             // Paris
             points["NEVIL"] = std::make_unique<SectorExitPoint>("NEVIL", "W", SectorExitPoint::outSouth);
