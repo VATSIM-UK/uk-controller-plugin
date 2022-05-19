@@ -16,7 +16,7 @@ namespace UKControllerPlugin::IntentionCode {
         }
 
         // Special low level rule for ETRAT
-        if (cruiseLevel <= 27000) {
+        if (cruiseLevel <= 29000) {
             return "E2";
         }
 

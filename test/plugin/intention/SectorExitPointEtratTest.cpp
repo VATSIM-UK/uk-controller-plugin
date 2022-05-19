@@ -30,12 +30,12 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(SectorExitPointEtratTest, GetIntentionCodeReturnsCorrectSecondaryBoundary)
     {
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 27000).compare("E2"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 29000).compare("E2"));
     }
 
     TEST_F(SectorExitPointEtratTest, GetIntentionCodeReturnsCorrectPrimaryCodeBoundary)
     {
-        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 27001).compare("E"));
+        EXPECT_EQ(0, exitPoint.GetIntentionCode(routeMock, 0, 29001).compare("E"));
     }
 
     TEST_F(SectorExitPointEtratTest, GetIntentionCodeReturnsCorrectPrimaryCode)
