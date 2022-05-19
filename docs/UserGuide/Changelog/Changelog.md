@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [5.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.3...5.3.0) (2022-05-19)
+
+
+### Features
+
+* **intention:** E2 Max Level Change ([50be2d4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/50be2d459cba0ddde7514e1cc0687bbea66d024b))
+* **intention:** Hern intention codes ([966a445](https://github.com/VATSIM-UK/uk-controller-plugin/commit/966a4457fd73e85dc3beee7cddeeb62c2ee21466))
+
 ## [5.2.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.2...5.2.3) (2022-05-13)
 
 
