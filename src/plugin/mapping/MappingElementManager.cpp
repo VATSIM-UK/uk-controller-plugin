@@ -6,7 +6,6 @@ namespace UKControllerPlugin::Mapping {
     void MappingElementManager::Add(std::shared_ptr<MappingElement> element)
     {
         allElements.insert(element);
-        activeElements.insert(element);
     }
 
     auto MappingElementManager::Count() const -> size_t

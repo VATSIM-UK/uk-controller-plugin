@@ -94,7 +94,7 @@ set(src__components
     "components/StandardButtons.h"
     "components/TitleBar.cpp"
     "components/TitleBar.h"
-        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h)
+        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h components/Title.cpp components/Title.h components/Checkbox.cpp components/Checkbox.h)
 source_group("src\\components" FILES ${src__components})
 
 set(src__controller

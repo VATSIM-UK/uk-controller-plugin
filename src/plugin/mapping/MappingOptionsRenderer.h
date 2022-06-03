@@ -30,5 +30,8 @@ namespace UKControllerPlugin::Mapping {
 
         // Brushes
         std::shared_ptr<Gdiplus::Brush> backgroundBrush;
+
+        // Screen objects
+        const std::string DISPLAY_VRP_CHECKBOX = "displayVrps";
     };
 } // namespace UKControllerPlugin::Mapping

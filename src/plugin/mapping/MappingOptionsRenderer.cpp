@@ -1,5 +1,7 @@
 #include "MappingOptionsRenderer.h"
 #include "MappingRenderOptions.h"
+#include "components/Checkbox.h"
+#include "components/Title.h"
 #include "components/TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
@@ -28,7 +30,10 @@ namespace UKControllerPlugin::Mapping {
         POINT mousePos,
         RECT itemArea)
     {
-        RadarRenderableInterface::LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
+        if (objectDescription == DISPLAY_VRP_CHECKBOX) {
+            mappingOptions->ShowVisualReferencePoints(!mappingOptions->ShowVisualReferencePoints());
+            return;
+        }
     }
 
     void MappingOptionsRenderer::Render(
@@ -44,6 +49,12 @@ namespace UKControllerPlugin::Mapping {
             Components::TitleBar::Create(L"Mapping Options", Gdiplus::Rect{0, 0, width, 25})
                 ->WithDefaultBackgroundBrush()
                 ->WithDefaultTextBrush()
+                ->Draw(graphics, radarScreen);
+
+            // VRPs
+            Components::Title::Create(L"Visual Reference Points", Gdiplus::Rect{10, 35, 300, 25})->Draw(graphics);
+            Components::Checkbox::Create(L"Display VRPs", {10, 70}, screenObjectId, DISPLAY_VRP_CHECKBOX)
+                ->Checked(mappingOptions->ShowVisualReferencePoints())
                 ->Draw(graphics, radarScreen);
         });
     }
