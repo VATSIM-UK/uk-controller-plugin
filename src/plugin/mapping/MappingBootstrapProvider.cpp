@@ -1,11 +1,18 @@
+#include "DisplayRulesetFactoryFactory.h"
 #include "MappingBootstrapProvider.h"
+#include "MappingElementDrawerFactoryFactory.h"
+#include "MappingElementFactory.h"
+#include "MappingElementManager.h"
+#include "MappingElementManagerFactory.h"
 #include "MappingModuleFactory.h"
 #include "MappingOptionsRenderer.h"
 #include "MappingRenderer.h"
 #include "MappingRenderOptions.h"
+#include "MappingRenderOptionsAsrLoader.h"
 #include "ToggleMappingOptionsRender.h"
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
 namespace UKControllerPlugin::Mapping {
@@ -16,15 +23,23 @@ namespace UKControllerPlugin::Mapping {
         Euroscope::AsrEventHandlerCollection& asrHandlers,
         const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory)
     {
+        // The rendering options
+        auto renderOptions = std::make_shared<MappingRenderOptions>();
+
+        // Create the element manager for this radar screen
+        auto elementFactory = std::make_shared<MappingElementFactory>(
+            MakeDrawerFactory(), DisplayRulesetFactoryFactory().Make(renderOptions));
+        auto elementManager = MakeMappingElementManager(*elementFactory, *container.dependencyLoader);
+
+        // ASR loader
+        asrHandlers.RegisterHandler(
+            std::make_shared<MappingRenderOptionsAsrLoader>(*elementManager, renderOptions, *container.airfields));
+
         // Renders the mapping elements
         radarRenderables.RegisterRenderer(
             radarRenderables.ReserveRendererIdentifier(),
-            std::make_shared<MappingRenderer>(
-                container.moduleFactories->Mapping().ElementManager(*container.dependencyLoader)),
+            std::make_shared<MappingRenderer>(elementManager),
             RadarScreen::RadarRenderableCollection::beforeTags);
-
-        // The rendering options
-        auto renderOptions = std::make_shared<MappingRenderOptions>();
 
         // Renders the options
         auto optionsRendererId = radarRenderables.ReserveRendererIdentifier();

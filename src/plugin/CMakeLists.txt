@@ -520,7 +520,7 @@ set(src__mapping
         mapping/DisplayRulesetFactory.cpp mapping/DisplayRulesetFactory.h
         mapping/DisplayRulesetFactoryInterface.h
         mapping/DisplayRulesetAggregatorFactory.cpp mapping/DisplayRulesetAggregatorFactory.h
-        mapping/VisualReferencePointDefaultDisplayRulesetFactory.cpp mapping/VisualReferencePointDefaultDisplayRulesetFactory.h mapping/DefaultDisplayRulesetDelegatorFactory.cpp mapping/DefaultDisplayRulesetDelegatorFactory.h mapping/DisplayRulesetFactoryFactory.cpp mapping/DisplayRulesetFactoryFactory.h)
+        mapping/VisualReferencePointDefaultDisplayRulesetFactory.cpp mapping/VisualReferencePointDefaultDisplayRulesetFactory.h mapping/DefaultDisplayRulesetDelegatorFactory.cpp mapping/DefaultDisplayRulesetDelegatorFactory.h mapping/DisplayRulesetFactoryFactory.cpp mapping/DisplayRulesetFactoryFactory.h mapping/MappingElementDrawerFactoryFactory.cpp mapping/MappingElementDrawerFactoryFactory.h mapping/MappingElementTypes.cpp mapping/MappingElementTypes.h mapping/MappingRenderOptionsAsrLoader.cpp mapping/MappingRenderOptionsAsrLoader.h)
 source_group("src\\mapping" FILES ${src__mapping})
 
 set(src__message

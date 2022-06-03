@@ -24,10 +24,21 @@ namespace UKControllerPlugin::Mapping {
         return element == allElements.cend() ? nullptr : *element;
     }
 
-    void MappingElementManager::ForEachActiveElement(const std::function<void(MappingElementInterface&)>& function) const
+    void
+    MappingElementManager::ForEachActiveElement(const std::function<void(MappingElementInterface&)>& function) const
     {
         for (const auto& element : activeElements) {
             function(*element);
+        }
+    }
+
+    void MappingElementManager::RefreshActiveElements()
+    {
+        activeElements.clear();
+        for (const auto& element : allElements) {
+            if (element->ShouldDisplay()) {
+                activeElements.insert(element);
+            }
         }
     }
 } // namespace UKControllerPlugin::Mapping

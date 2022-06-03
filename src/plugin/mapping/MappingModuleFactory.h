@@ -16,13 +16,5 @@ namespace UKControllerPlugin::Mapping {
         public:
         MappingModuleFactory();
         ~MappingModuleFactory();
-        [[nodiscard]] auto VrpDrawer(std::string label, EuroScopePlugIn::CPosition position) ->
-            std::shared_ptr<VisualReferencePoint>;
-        [[nodiscard]] auto ElementManager(Dependency::DependencyLoaderInterface& dependencyLoader) ->
-            MappingElementManager&;
-
-        private:
-        // Manages mapping elements
-        std::unique_ptr<MappingElementManager> elementManager;
     };
 } // namespace UKControllerPlugin::Mapping

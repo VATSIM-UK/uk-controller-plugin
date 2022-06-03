@@ -5,7 +5,8 @@
 #include "graphics/GdiGraphicsInterface.h"
 
 namespace UKControllerPlugin::Mapping {
-    MappingRenderer::MappingRenderer(const MappingElementManager& elementManager) : elementManager(elementManager)
+    MappingRenderer::MappingRenderer(std::shared_ptr<MappingElementManager> elementManager)
+        : elementManager(elementManager)
     {
     }
 
@@ -17,7 +18,7 @@ namespace UKControllerPlugin::Mapping {
     void MappingRenderer::Render(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        elementManager.ForEachActiveElement(
+        elementManager->ForEachActiveElement(
             [&graphics, &radarScreen](MappingElementInterface& element) { element.Draw(graphics, radarScreen); });
     }
 } // namespace UKControllerPlugin::Mapping

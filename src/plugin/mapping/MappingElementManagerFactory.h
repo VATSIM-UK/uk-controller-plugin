@@ -6,10 +6,9 @@ namespace UKControllerPlugin::Dependency {
 
 namespace UKControllerPlugin::Mapping {
     class MappingElementManager;
-    class MappingModuleFactory;
+    class MappingElementFactory;
 
-    [[nodiscard]] auto MakeMappingElementManager(MappingModuleFactory& module, Dependency::DependencyLoaderInterface&
-                                                     dependencyLoader) ->
-        std::unique_ptr<MappingElementManager>;
-    [[nodiscard]] auto ElementValid(const nlohmann::json& data) -> bool;
+    [[nodiscard]] auto MakeMappingElementManager(
+        MappingElementFactory& elementFactory, Dependency::DependencyLoaderInterface& dependencyLoader)
+        -> std::shared_ptr<MappingElementManager>;
 } // namespace UKControllerPlugin::Mapping

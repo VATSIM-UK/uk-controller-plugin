@@ -1,12 +1,18 @@
+#include "DisplayRulesetFactoryInterface.h"
 #include "MappingElement.h"
 #include "MappingElementDrawerFactory.h"
 #include "MappingElementFactory.h"
+#include "MappingElementTypes.h"
 
 namespace UKControllerPlugin::Mapping {
 
-    MappingElementFactory::MappingElementFactory(const MappingElementDrawerFactory& drawerFactory)
-        : drawerFactory(drawerFactory)
+    MappingElementFactory::MappingElementFactory(
+        std::shared_ptr<MappingElementDrawerFactory> drawerFactory,
+        std::shared_ptr<DisplayRulesetFactoryInterface> displayRuleFactory)
+        : drawerFactory(drawerFactory), displayRuleFactory(displayRuleFactory)
     {
+        assert(drawerFactory && "drawerFactory not set in MappingElementFactory");
+        assert(displayRuleFactory && "displayRuleFactory not set in MappingElementFactory");
     }
 
     auto MappingElementFactory::Make(const nlohmann::json& data) -> std::shared_ptr<MappingElement>
@@ -16,17 +22,17 @@ namespace UKControllerPlugin::Mapping {
         }
 
         const auto type = data.at("type").get<std::string>();
-        if (!IsKnownType(type)) {
+        if (!MappingElementTypes::TypeKnown(type)) {
             LogWarning("Detected mapping element of unknown type, ignoring");
             return nullptr;
         }
 
         return std::make_shared<MappingElement>(
             data.at("id").get<int>(),
-            data.at("type").get<std::string>(),
+            type,
             data.at("name").get<std::string>(),
-            std::set<std::shared_ptr<DisplayRule>>{},
-            drawerFactory.Make(data));
+            displayRuleFactory->Make(type, data.at("display_rules")),
+            drawerFactory->Make(data));
     }
 
     /**
@@ -35,11 +41,7 @@ namespace UKControllerPlugin::Mapping {
     auto MappingElementFactory::DataIsValid(const nlohmann::json& data) -> bool
     {
         return data.is_object() && data.contains("id") && data.at("id").is_number_integer() && data.contains("type") &&
-               data.at("type").is_string() && data.contains("name") && data.at("name").is_string();
-    }
-
-    auto MappingElementFactory::IsKnownType(const std::string& type) -> bool
-    {
-        return type == "visual_reference_point";
+               data.at("type").is_string() && data.contains("name") && data.at("name").is_string() &&
+               data.contains("display_rules") && data.at("display_rules").is_array();
     }
 } // namespace UKControllerPlugin::Mapping

@@ -14,6 +14,7 @@ namespace UKControllerPlugin::Mapping {
         [[nodiscard]] auto Count() const -> size_t;
         [[nodiscard]] auto GetByTypeAndId(const std::string& type, int id) const -> std::shared_ptr<MappingElement>;
         void ForEachActiveElement(const std::function<void(MappingElementInterface&)>& function) const;
+        void RefreshActiveElements();
 
         private:
         // Active elements - those being drawn
