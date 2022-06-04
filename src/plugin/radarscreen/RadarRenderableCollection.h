@@ -9,6 +9,7 @@ namespace UKControllerPlugin {
     } // namespace Euroscope
     namespace RadarScreen {
         class RadarRenderableInterface;
+        class ScreenObjectInterface;
     } // namespace RadarScreen
 } // namespace UKControllerPlugin
 
@@ -38,6 +39,7 @@ namespace UKControllerPlugin::RadarScreen {
             int renderPhase);
         auto ReserveRendererIdentifier() -> int;
         auto ReserveScreenObjectIdentifier(int rendererId) -> int;
+        void RegisterScreenObject(const std::function<std::shared_ptr<ScreenObjectInterface>(int)>& objectGenerator);
         void Render(
             int phase,
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
@@ -83,6 +85,7 @@ namespace UKControllerPlugin::RadarScreen {
 
         // Maps a given screen object ID to a given renderer.
         std::map<int, int> screenObjectMap;
+        std::map<int, std::shared_ptr<ScreenObjectInterface>> screenObjects;
 
         // The next renderer ID available for use - used to link screen objects to classes
         int nextRendererId;

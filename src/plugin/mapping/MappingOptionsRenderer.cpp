@@ -1,6 +1,8 @@
 #include "MappingOptionsRenderer.h"
 #include "MappingRenderOptions.h"
 #include "components/Checkbox.h"
+#include "components/Scrollbar.h"
+#include "components/ScrollbarFactory.h"
 #include "components/Title.h"
 #include "components/TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
@@ -9,13 +11,15 @@
 namespace UKControllerPlugin::Mapping {
 
     MappingOptionsRenderer::MappingOptionsRenderer(
-        std::shared_ptr<MappingRenderOptions> mappingOptions, int screenObjectId)
-        : mappingOptions(mappingOptions), screenObjectId(screenObjectId),
+        std::shared_ptr<MappingRenderOptions> mappingOptions,
+        const Components::ScrollbarFactory& scrollbarFactory,
+        int screenObjectId)
+        : mappingOptions(mappingOptions), vrpScrollbar(scrollbarFactory.MakeHorizontal({10, 110, 25, 300}, 10)),
+          screenObjectId(screenObjectId),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(170, 64, 64, 64)))
     {
-        int i = this->screenObjectId == 1 ? 1 : 2;
-        i++;
         assert(mappingOptions && "Mapping render options not set");
+        assert(vrpScrollbar && "VRP Scrollbar Not Set");
     }
 
     auto MappingOptionsRenderer::IsVisible() const -> bool
@@ -56,6 +60,8 @@ namespace UKControllerPlugin::Mapping {
             Components::Checkbox::Create(L"Display VRPs", {10, 70}, screenObjectId, DISPLAY_VRP_CHECKBOX)
                 ->Checked(mappingOptions->ShowVisualReferencePoints())
                 ->Draw(graphics, radarScreen);
+
+            vrpScrollbar->Draw(graphics, radarScreen);
         });
     }
 } // namespace UKControllerPlugin::Mapping

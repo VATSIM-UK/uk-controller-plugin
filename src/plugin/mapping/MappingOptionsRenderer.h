@@ -1,6 +1,11 @@
 #pragma once
 #include "radarscreen/RadarRenderableInterface.h"
 
+namespace UKControllerPlugin::Components {
+    class Scrollbar;
+    class ScrollbarFactory;
+} // namespace UKControllerPlugin::Components
+
 namespace UKControllerPlugin::Mapping {
     class MappingRenderOptions;
 
@@ -10,7 +15,10 @@ namespace UKControllerPlugin::Mapping {
     class MappingOptionsRenderer : public RadarScreen::RadarRenderableInterface
     {
         public:
-        MappingOptionsRenderer(std::shared_ptr<MappingRenderOptions> mappingOptions, int screenObjectId);
+        MappingOptionsRenderer(
+            std::shared_ptr<MappingRenderOptions> mappingOptions,
+            const Components::ScrollbarFactory& scrollbarFactory,
+            int screenObjectId);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -24,6 +32,9 @@ namespace UKControllerPlugin::Mapping {
         private:
         // The options
         std::shared_ptr<MappingRenderOptions> mappingOptions;
+
+        // Scrollbar for VRPs
+        std::shared_ptr<Components::Scrollbar> vrpScrollbar;
 
         // For clickspots
         const int screenObjectId;

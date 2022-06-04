@@ -94,7 +94,7 @@ set(src__components
     "components/StandardButtons.h"
     "components/TitleBar.cpp"
     "components/TitleBar.h"
-        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h components/Title.cpp components/Title.h components/Checkbox.cpp components/Checkbox.h)
+        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h components/Title.cpp components/Title.h components/Checkbox.cpp components/Checkbox.h components/Scrollbar.cpp components/Scrollbar.h components/ScrollbarFactory.cpp components/ScrollbarFactory.h components/ScrollbarClickspot.cpp components/ScrollbarClickspot.h components/ScrollbarOptions.cpp components/ScrollbarOptions.h)
 source_group("src\\components" FILES ${src__components})
 
 set(src__controller
@@ -776,7 +776,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h radarscreen/ScreenObjectInterface.cpp radarscreen/ScreenObjectInterface.h)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional

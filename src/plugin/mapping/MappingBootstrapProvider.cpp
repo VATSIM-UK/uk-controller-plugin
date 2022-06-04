@@ -12,6 +12,7 @@
 #include "ToggleMappingOptionsRender.h"
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "components/ScrollbarFactory.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 
@@ -46,7 +47,9 @@ namespace UKControllerPlugin::Mapping {
         radarRenderables.RegisterRenderer(
             optionsRendererId,
             std::make_shared<MappingOptionsRenderer>(
-                renderOptions, radarRenderables.ReserveScreenObjectIdentifier(optionsRendererId)),
+                renderOptions,
+                Components::ScrollbarFactory(radarRenderables),
+                radarRenderables.ReserveScreenObjectIdentifier(optionsRendererId)),
             RadarScreen::RadarRenderableCollection::afterLists);
 
         // Toggles the options
