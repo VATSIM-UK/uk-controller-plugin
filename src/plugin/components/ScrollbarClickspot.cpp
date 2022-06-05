@@ -17,11 +17,11 @@ namespace UKControllerPlugin::Components {
         Windows::GdiGraphicsInterface& graphics,
         Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        if (horizontal) {
-        }
         graphics.Translated(
-            Graphics::TriangleDrawDimensions(), Graphics::TriangleDrawDimensions(), [this, &graphics, &area] {
-                graphics.Rotated(Gdiplus::REAL((increments ? 180 : 0)), [this, &graphics, &area] {
+            Graphics::TriangleDrawDimensions() * (Graphics::TriangleXScale(area) / 2),
+            Graphics::TriangleDrawDimensions() * (Graphics::TriangleYScale(area) / 2),
+            [this, &graphics, &area] {
+                graphics.Rotated(Gdiplus::REAL(increments ? 180 : 0), [this, &graphics, &area] {
                     Graphics::FillTriangle(graphics, *brush, area);
                 });
             });

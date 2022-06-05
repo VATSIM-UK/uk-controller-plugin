@@ -11,14 +11,23 @@ namespace UKControllerPlugin::Graphics {
 
     void FillTriangle(Windows::GdiGraphicsInterface& graphics, Gdiplus::Brush& brush, const Gdiplus::Rect& drawArea)
     {
-        Gdiplus::REAL scaleX = drawArea.Width / triangleSize;
-        Gdiplus::REAL scaleY = drawArea.Height / triangleSize;
-
-        graphics.Scaled(scaleX, scaleY, [&graphics, &brush]() { graphics.FillPolygon(trianglePoints, brush, 3); });
+        graphics.Scaled(TriangleXScale(drawArea), TriangleYScale(drawArea), [&graphics, &brush]() {
+            graphics.FillPolygon(trianglePoints, brush, 3);
+        });
     }
 
     auto TriangleDrawDimensions() -> Gdiplus::REAL
     {
         return triangleSize;
+    }
+
+    auto TriangleXScale(const Gdiplus::Rect& drawArea) -> Gdiplus::REAL
+    {
+        return drawArea.Width / TriangleDrawDimensions();
+    }
+
+    auto TriangleYScale(const Gdiplus::Rect& drawArea) -> Gdiplus::REAL
+    {
+        return drawArea.Height / TriangleDrawDimensions();
     }
 } // namespace UKControllerPlugin::Graphics
