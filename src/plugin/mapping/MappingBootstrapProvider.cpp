@@ -10,8 +10,10 @@
 #include "MappingRenderOptions.h"
 #include "MappingRenderOptionsAsrLoader.h"
 #include "ToggleMappingOptionsRender.h"
+#include "VisualReferencePointCheckboxProvider.h"
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "components/Checkbox.h"
 #include "components/ScrollbarFactory.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -43,13 +45,16 @@ namespace UKControllerPlugin::Mapping {
             RadarScreen::RadarRenderableCollection::beforeTags);
 
         // Renders the options
+        std::shared_ptr<Components::Checkbox> vrpCheckbox = Components::Checkbox::Create(
+            std::make_shared<VisualReferencePointCheckboxProvider>(renderOptions),
+            radarRenderables.ReserveScreenObjectIdentifier());
+        radarRenderables.RegisterScreenObject(vrpCheckbox);
+
         auto optionsRendererId = radarRenderables.ReserveRendererIdentifier();
         radarRenderables.RegisterRenderer(
             optionsRendererId,
             std::make_shared<MappingOptionsRenderer>(
-                renderOptions,
-                Components::ScrollbarFactory(radarRenderables),
-                radarRenderables.ReserveScreenObjectIdentifier(optionsRendererId)),
+                renderOptions, vrpCheckbox, Components::ScrollbarFactory(radarRenderables)),
             RadarScreen::RadarRenderableCollection::afterLists);
 
         // Toggles the options

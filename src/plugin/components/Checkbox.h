@@ -1,4 +1,7 @@
 #pragma once
+#include <string>
+#include <windef.h>
+#include "radarscreen/ScreenObjectInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -10,26 +13,36 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Components {
+    class CheckboxProviderInterface;
     class ClickableArea;
 
     /**
      * A checkbox
      */
-    class Checkbox : public std::enable_shared_from_this<Checkbox>
+    class Checkbox : public std::enable_shared_from_this<Checkbox>, public RadarScreen::ScreenObjectInterface
     {
         public:
-        static auto Create(std::wstring label, POINT position, int screenObjectId, std::string name)
+        static auto Create(std::shared_ptr<CheckboxProviderInterface> provider, int screenObjectId)
             -> std::shared_ptr<Checkbox>;
         auto Checked(bool checked) -> std::shared_ptr<Checkbox>;
         void
         Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const;
+        void LeftClick(
+            Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            const std::string& description,
+            POINT mousePosition) override;
+        auto ScreenObjectId() const -> int override;
+        auto WithPosition(POINT position) -> std::shared_ptr<Checkbox>;
 
         protected:
-        Checkbox(std::wstring label, POINT position, int screenObjectId, std::string name);
+        Checkbox(std::shared_ptr<CheckboxProviderInterface> provider, int screenObjectId);
 
         private:
-        // The label for the checkbox
-        std::wstring label;
+        // The provider
+        std::shared_ptr<CheckboxProviderInterface> provider;
+
+        // The id of the screen object
+        int screenObjectId;
 
         // Clickspot area
         Gdiplus::Rect area;

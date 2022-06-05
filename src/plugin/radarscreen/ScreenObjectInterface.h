@@ -13,6 +13,9 @@ namespace UKControllerPlugin::RadarScreen {
     {
         public:
         virtual ~ScreenObjectInterface();
+
+        [[nodiscard]] virtual auto ScreenObjectId() const -> int = 0;
+
         /*
             Called when a screen object is left clicked on.
         */

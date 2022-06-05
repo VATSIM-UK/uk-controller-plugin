@@ -61,7 +61,7 @@ set(test__components
     "components/ButtonTest.cpp"
     "components/ClickableAreaTest.cpp"
     "components/TitleBarTest.cpp"
-)
+        ../../src/plugin/mapping/VisualReferencePointCheckboxProvider.cpp ../../src/plugin/mapping/VisualReferencePointCheckboxProvider.h)
 source_group("test\\components" FILES ${test__components})
 
 set(test__controller

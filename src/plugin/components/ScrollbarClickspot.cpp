@@ -6,7 +6,7 @@
 namespace UKControllerPlugin::Components {
 
     ScrollbarClickspot::ScrollbarClickspot(int screenObjectId, std::function<void()> clicked, bool increments)
-        : clicked(std::move(std::move(clicked))), increments(increments),
+        : screenObjectId(screenObjectId), clicked(std::move(std::move(clicked))), increments(increments),
           clickableArea(ClickableArea::Create({}, screenObjectId, "scrollbarClickspot", false)),
           brush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255)))
     {
@@ -33,5 +33,10 @@ namespace UKControllerPlugin::Components {
         Euroscope::EuroscopeRadarLoopbackInterface& radarScreen, const std::string& description, POINT mousePosition)
     {
         clicked();
+    }
+
+    auto ScrollbarClickspot::ScreenObjectId() const -> int
+    {
+        return screenObjectId;
     }
 } // namespace UKControllerPlugin::Components

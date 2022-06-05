@@ -94,7 +94,7 @@ set(src__components
     "components/StandardButtons.h"
     "components/TitleBar.cpp"
     "components/TitleBar.h"
-        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h components/Title.cpp components/Title.h components/Checkbox.cpp components/Checkbox.h components/Scrollbar.cpp components/Scrollbar.h components/ScrollbarFactory.cpp components/ScrollbarFactory.h components/ScrollbarClickspot.cpp components/ScrollbarClickspot.h components/ScrollbarOptions.cpp components/ScrollbarOptions.h)
+        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h components/Title.cpp components/Title.h components/Checkbox.cpp components/Checkbox.h components/Scrollbar.cpp components/Scrollbar.h components/ScrollbarFactory.cpp components/ScrollbarFactory.h components/ScrollbarClickspot.cpp components/ScrollbarClickspot.h components/ScrollbarOptions.cpp components/ScrollbarOptions.h components/ScrollableCheckboxes.cpp components/ScrollableCheckboxes.h components/CheckboxProviderInterface.cpp components/CheckboxProviderInterface.h)
 source_group("src\\components" FILES ${src__components})
 
 set(src__controller
@@ -520,7 +520,7 @@ set(src__mapping
         mapping/DisplayRulesetFactory.cpp mapping/DisplayRulesetFactory.h
         mapping/DisplayRulesetFactoryInterface.h
         mapping/DisplayRulesetAggregatorFactory.cpp mapping/DisplayRulesetAggregatorFactory.h
-        mapping/VisualReferencePointDefaultDisplayRulesetFactory.cpp mapping/VisualReferencePointDefaultDisplayRulesetFactory.h mapping/DefaultDisplayRulesetDelegatorFactory.cpp mapping/DefaultDisplayRulesetDelegatorFactory.h mapping/DisplayRulesetFactoryFactory.cpp mapping/DisplayRulesetFactoryFactory.h mapping/MappingElementDrawerFactoryFactory.cpp mapping/MappingElementDrawerFactoryFactory.h mapping/MappingElementTypes.cpp mapping/MappingElementTypes.h mapping/MappingRenderOptionsAsrLoader.cpp mapping/MappingRenderOptionsAsrLoader.h)
+        mapping/VisualReferencePointDefaultDisplayRulesetFactory.cpp mapping/VisualReferencePointDefaultDisplayRulesetFactory.h mapping/DefaultDisplayRulesetDelegatorFactory.cpp mapping/DefaultDisplayRulesetDelegatorFactory.h mapping/DisplayRulesetFactoryFactory.cpp mapping/DisplayRulesetFactoryFactory.h mapping/MappingElementDrawerFactoryFactory.cpp mapping/MappingElementDrawerFactoryFactory.h mapping/MappingElementTypes.cpp mapping/MappingElementTypes.h mapping/MappingRenderOptionsAsrLoader.cpp mapping/MappingRenderOptionsAsrLoader.h mapping/VisualReferencePointCheckboxProvider.cpp mapping/VisualReferencePointCheckboxProvider.h)
 source_group("src\\mapping" FILES ${src__mapping})
 
 set(src__message

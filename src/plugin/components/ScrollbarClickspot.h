@@ -30,8 +30,12 @@ namespace UKControllerPlugin::Components {
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
             const std::string& description,
             POINT mousePosition) override;
+        auto ScreenObjectId() const -> int override;
 
         private:
+        // The id of the screen object
+        const int screenObjectId;
+
         // What to do when its clicked
         const std::function<void()> clicked;
 

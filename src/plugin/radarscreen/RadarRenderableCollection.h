@@ -39,7 +39,8 @@ namespace UKControllerPlugin::RadarScreen {
             int renderPhase);
         auto ReserveRendererIdentifier() -> int;
         auto ReserveScreenObjectIdentifier(int rendererId) -> int;
-        void RegisterScreenObject(const std::function<std::shared_ptr<ScreenObjectInterface>(int)>& objectGenerator);
+        auto ReserveScreenObjectIdentifier() -> int;
+        void RegisterScreenObject(std::shared_ptr<ScreenObjectInterface> screenObject);
         void Render(
             int phase,
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,

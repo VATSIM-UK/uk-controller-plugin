@@ -13,10 +13,10 @@ namespace UKControllerPlugin::Mapping {
 
     MappingOptionsRenderer::MappingOptionsRenderer(
         std::shared_ptr<MappingRenderOptions> mappingOptions,
-        const Components::ScrollbarFactory& scrollbarFactory,
-        int screenObjectId)
-        : mappingOptions(mappingOptions), vrpScrollbar(scrollbarFactory.MakeHorizontal({10, 110, 25, 300}, 10)),
-          screenObjectId(screenObjectId),
+        std::shared_ptr<Components::Checkbox> vrpCheckbox,
+        const Components::ScrollbarFactory& scrollbarFactory)
+        : mappingOptions(mappingOptions), vrpCheckbox(vrpCheckbox),
+          vrpScrollbar(scrollbarFactory.MakeHorizontal({10, 400, 25, 300}, 10)),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(170, 64, 64, 64)))
     {
         assert(mappingOptions && "Mapping render options not set");
@@ -61,9 +61,7 @@ namespace UKControllerPlugin::Mapping {
 
             // VRPs
             Components::Title::Create(L"Visual Reference Points", Gdiplus::Rect{10, 35, 300, 25})->Draw(graphics);
-            Components::Checkbox::Create(L"Display VRPs", {10, 70}, screenObjectId, DISPLAY_VRP_CHECKBOX)
-                ->Checked(mappingOptions->ShowVisualReferencePoints())
-                ->Draw(graphics, radarScreen);
+            vrpCheckbox->WithPosition({10, 85})->Draw(graphics, radarScreen);
 
             vrpScrollbar->Draw(graphics, radarScreen);
         });

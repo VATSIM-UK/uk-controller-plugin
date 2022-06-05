@@ -213,11 +213,14 @@ namespace UKControllerPlugin {
                 it->second->ResetPosition();
             }
         }
-        void RadarRenderableCollection::RegisterScreenObject(
-            const std::function<std::shared_ptr<ScreenObjectInterface>(int)>& objectGenerator)
+        void RadarRenderableCollection::RegisterScreenObject(std::shared_ptr<ScreenObjectInterface> screenObject)
         {
-            int screenObjectId = nextScreenObjectId++;
-            screenObjects[screenObjectId] = objectGenerator(screenObjectId);
+            screenObjects[screenObject->ScreenObjectId()] = screenObject;
+        }
+
+        auto RadarRenderableCollection::ReserveScreenObjectIdentifier() -> int
+        {
+            return nextScreenObjectId++;
         }
     } // namespace RadarScreen
 } // namespace UKControllerPlugin

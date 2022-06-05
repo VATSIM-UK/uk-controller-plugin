@@ -2,6 +2,7 @@
 #include "radarscreen/RadarRenderableInterface.h"
 
 namespace UKControllerPlugin::Components {
+    class Checkbox;
     class Scrollbar;
     class ScrollbarFactory;
 } // namespace UKControllerPlugin::Components
@@ -17,8 +18,8 @@ namespace UKControllerPlugin::Mapping {
         public:
         MappingOptionsRenderer(
             std::shared_ptr<MappingRenderOptions> mappingOptions,
-            const Components::ScrollbarFactory& scrollbarFactory,
-            int screenObjectId);
+            std::shared_ptr<Components::Checkbox> vrpCheckbox,
+            const Components::ScrollbarFactory& scrollbarFactory);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -33,11 +34,11 @@ namespace UKControllerPlugin::Mapping {
         // The options
         std::shared_ptr<MappingRenderOptions> mappingOptions;
 
+        // Checkbox for whether to display VRPs
+        std::shared_ptr<Components::Checkbox> vrpCheckbox;
+
         // Scrollbar for VRPs
         std::shared_ptr<Components::Scrollbar> vrpScrollbar;
-
-        // For clickspots
-        const int screenObjectId;
 
         // Brushes
         std::shared_ptr<Gdiplus::Brush> backgroundBrush;
