@@ -23,21 +23,20 @@ namespace UKControllerPlugin::Components {
     void ClickableArea::Apply(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const
     {
-        std::shared_ptr<Gdiplus::Matrix> transform = graphics.GetTransform();
-        auto xTransform = transform->OffsetX();
-        auto yTransform = transform->OffsetY();
-        xTransform = yTransform;
-        yTransform = xTransform;
+        std::shared_ptr<Gdiplus::Matrix> transform = graphics.GetTotalTransform();
+        Gdiplus::Point points[2]{{area.GetLeft(), area.GetTop()}, {area.GetRight(), area.GetBottom()}};
+        transform->TransformPoints(points, 2);
+
         auto pen = std::make_shared<Gdiplus::Pen>(Gdiplus::Color(255, 0, 0));
         graphics.DrawRect(area, *pen);
         radarScreen.RegisterScreenObject(
             this->screenObjectId,
             this->screenObjectDescription,
             RECT{
-                static_cast<LONG>(this->area.GetLeft() + transform->OffsetX()),
-                static_cast<LONG>(this->area.GetTop() + transform->OffsetY()),
-                static_cast<LONG>(this->area.GetRight() + transform->OffsetX()),
-                static_cast<LONG>(this->area.GetBottom() + transform->OffsetY()),
+                static_cast<LONG>(points[0].X < points[1].X ? points[0].X : points[1].X),
+                static_cast<LONG>(points[0].Y < points[1].Y ? points[0].Y : points[1].Y),
+                static_cast<LONG>(points[0].X < points[1].X ? points[1].X : points[0].X),
+                static_cast<LONG>(points[0].Y < points[1].Y ? points[1].Y : points[0].Y),
             },
             this->draggable);
     }

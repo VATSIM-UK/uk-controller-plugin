@@ -15,7 +15,7 @@ namespace UKControllerPlugin::Mapping {
         std::shared_ptr<MappingRenderOptions> mappingOptions,
         const Components::ScrollbarFactory& scrollbarFactory,
         int screenObjectId)
-        : mappingOptions(mappingOptions), vrpScrollbar(scrollbarFactory.MakeVertical({10, 110, 25, 300}, 10)),
+        : mappingOptions(mappingOptions), vrpScrollbar(scrollbarFactory.MakeHorizontal({10, 110, 25, 300}, 10)),
           screenObjectId(screenObjectId),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(170, 64, 64, 64)))
     {
