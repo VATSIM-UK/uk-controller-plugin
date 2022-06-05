@@ -40,5 +40,8 @@ namespace UKControllerPlugin::Components {
 
         // The actual clickspot
         std::shared_ptr<ClickableArea> clickableArea;
+
+        // Brush
+        std::shared_ptr<Gdiplus::Brush> brush;
     };
 } // namespace UKControllerPlugin::Components

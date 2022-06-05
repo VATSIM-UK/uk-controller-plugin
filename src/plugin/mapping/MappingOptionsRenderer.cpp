@@ -1,6 +1,7 @@
 #include "MappingOptionsRenderer.h"
 #include "MappingRenderOptions.h"
 #include "components/Checkbox.h"
+#include "components/ClickableArea.h"
 #include "components/Scrollbar.h"
 #include "components/ScrollbarFactory.h"
 #include "components/Title.h"
@@ -14,7 +15,7 @@ namespace UKControllerPlugin::Mapping {
         std::shared_ptr<MappingRenderOptions> mappingOptions,
         const Components::ScrollbarFactory& scrollbarFactory,
         int screenObjectId)
-        : mappingOptions(mappingOptions), vrpScrollbar(scrollbarFactory.MakeHorizontal({10, 110, 25, 300}, 10)),
+        : mappingOptions(mappingOptions), vrpScrollbar(scrollbarFactory.MakeVertical({10, 110, 25, 300}, 10)),
           screenObjectId(screenObjectId),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(170, 64, 64, 64)))
     {
@@ -45,9 +46,12 @@ namespace UKControllerPlugin::Mapping {
     {
         graphics.Translated(50, 50, [&graphics, &radarScreen, this]() {
             const auto viewport = radarScreen.GetRadarViewport();
+
             // Background
             const auto width = viewport.right - viewport.left - 100;
-            graphics.FillRect(Gdiplus::Rect{0, 0, width, viewport.bottom - viewport.top - 100}, *backgroundBrush);
+            Gdiplus::Rect backgroundRect{0, 0, width, viewport.bottom - viewport.top - 100};
+            graphics.FillRect(backgroundRect, *backgroundBrush);
+            Components::ClickableArea::Create(backgroundRect, -9999, "", false)->Apply(graphics, radarScreen);
 
             // Titlebar
             Components::TitleBar::Create(L"Mapping Options", Gdiplus::Rect{0, 0, width, 25})

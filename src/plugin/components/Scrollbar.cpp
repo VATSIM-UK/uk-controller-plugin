@@ -26,41 +26,44 @@ namespace UKControllerPlugin::Components {
     void
     Scrollbar::Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        if (isHorizontal || !isHorizontal) {
-            graphics.FillRect(area, *backgroundBrush);
-        }
+        auto yTranslate = isHorizontal ? area.GetTop() + area.Width : area.GetTop();
+        graphics.Translated(area.GetLeft(), yTranslate, [&graphics, this, &radarScreen] {
+            graphics.Rotated(Gdiplus::REAL(isHorizontal ? -90 : 0), [&graphics, this, &radarScreen] {
+                graphics.FillRect(Gdiplus::Rect{0, 0, area.Width, area.Height}, *backgroundBrush);
+                graphics.Translated(0, area.Width * options->Notch(), [&graphics, this]() {
+                    graphics.FillRect(
+                        Gdiplus::Rect{
+                            0,
+                            0,
+                            area.Width,
+                            area.Width,
+                        },
+                        *progressBarBrush);
+                });
 
-        // Translated clickspots
-        decrementClickspot->Draw(
-            {
-                area.GetLeft(),
-                area.GetTop(),
-                area.Width,
-                area.Width,
-            },
-            graphics,
-            radarScreen);
+                // Translated clickspots
+                decrementClickspot->Draw(
+                    {
+                        0,
+                        0,
+                        area.Width,
+                        area.Width,
+                    },
+                    graphics,
+                    radarScreen);
 
-        incrementClickspot->Draw(
-            {
-                area.GetLeft(),
-                area.GetBottom() - area.Width,
-                area.Width,
-                area.Width,
-            },
-            graphics,
-            radarScreen);
-
-        // Progress bar
-        graphics.Translated(area.GetLeft(), area.GetTop() + (area.Width * options->Notch()), [&graphics, this]() {
-            graphics.FillRect(
-                Gdiplus::Rect{
-                    0,
-                    0,
-                    area.Width,
-                    area.Width,
-                },
-                *progressBarBrush);
+                graphics.Translated(0, area.Height - area.Width, [this, &graphics, &radarScreen] {
+                    incrementClickspot->Draw(
+                        {
+                            0,
+                            0,
+                            area.Width,
+                            area.Width,
+                        },
+                        graphics,
+                        radarScreen);
+                });
+            });
         });
     }
 

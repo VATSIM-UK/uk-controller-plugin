@@ -264,7 +264,7 @@ set(src__graphics
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
     "graphics/GdiplusBrushes.h"
-        graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h)
+        graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h graphics/DrawTriangle.cpp graphics/DrawTriangle.h)
 source_group("src\\graphics" FILES ${src__graphics})
 
 set(src__handoff

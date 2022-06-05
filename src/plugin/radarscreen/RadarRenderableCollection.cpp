@@ -77,7 +77,7 @@ namespace UKControllerPlugin {
             if (this->screenObjectMap.contains(objectId)) {
                 this->allRenderers.at(this->screenObjectMap.at(objectId))
                     ->LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
-            } else {
+            } else if (this->screenObjects.contains(objectId)) {
                 this->screenObjects.at(objectId)->LeftClick(radarScreen, objectDescription, mousePos);
             }
         }
@@ -89,7 +89,7 @@ namespace UKControllerPlugin {
         {
             if (this->screenObjectMap.contains(objectId)) {
                 this->allRenderers.at(this->screenObjectMap.at(objectId))->Move(position, objectDes);
-            } else {
+            } else if (this->screenObjects.contains(objectId)) {
                 this->screenObjects.at(objectId)->Drag(objectDes, position);
             }
         }
@@ -181,7 +181,7 @@ namespace UKControllerPlugin {
             if (this->screenObjectMap.contains(objectId)) {
                 this->allRenderers.at(this->screenObjectMap.at(objectId))
                     ->RightClick(objectId, objectDescription, radarScreen);
-            } else {
+            } else if (this->screenObjects.contains(objectId)) {
                 this->screenObjects.at(objectId)->RightClick(radarScreen, objectDescription);
             }
         }

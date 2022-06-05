@@ -26,7 +26,7 @@ namespace UKControllerPlugin::Components {
     {
         auto options = std::make_shared<ScrollbarOptions>(notches);
         std::shared_ptr<ScrollbarClickspot> incrementClickspot;
-        radarRenderables.RegisterScreenObject([&incrementClickspot, options](int screenObjectId) {
+        radarRenderables.RegisterScreenObject([&incrementClickspot, options, horizontal](int screenObjectId) {
             incrementClickspot = std::make_shared<ScrollbarClickspot>(
                 screenObjectId, [options]() { options->Increment(); }, true);
 
@@ -34,7 +34,7 @@ namespace UKControllerPlugin::Components {
         });
 
         std::shared_ptr<ScrollbarClickspot> decrementClickspot;
-        radarRenderables.RegisterScreenObject([&decrementClickspot, options](int screenObjectId) {
+        radarRenderables.RegisterScreenObject([&decrementClickspot, options, horizontal](int screenObjectId) {
             decrementClickspot = std::make_shared<ScrollbarClickspot>(
                 screenObjectId, [options]() { options->Decrement(); }, false);
 

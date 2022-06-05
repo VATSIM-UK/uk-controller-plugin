@@ -24,6 +24,12 @@ namespace UKControllerPlugin::Components {
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const
     {
         std::shared_ptr<Gdiplus::Matrix> transform = graphics.GetTransform();
+        auto xTransform = transform->OffsetX();
+        auto yTransform = transform->OffsetY();
+        xTransform = yTransform;
+        yTransform = xTransform;
+        auto pen = std::make_shared<Gdiplus::Pen>(Gdiplus::Color(255, 0, 0));
+        graphics.DrawRect(area, *pen);
         radarScreen.RegisterScreenObject(
             this->screenObjectId,
             this->screenObjectDescription,

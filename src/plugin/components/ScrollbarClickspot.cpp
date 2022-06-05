@@ -1,13 +1,14 @@
 #include "ClickableArea.h"
 #include "ScrollbarClickspot.h"
-#include "StandardButtons.h"
+#include "graphics/DrawTriangle.h"
 #include "graphics/GdiGraphicsInterface.h"
 
 namespace UKControllerPlugin::Components {
 
     ScrollbarClickspot::ScrollbarClickspot(int screenObjectId, std::function<void()> clicked, bool increments)
         : clicked(std::move(std::move(clicked))), increments(increments),
-          clickableArea(ClickableArea::Create({}, screenObjectId, "scrollbarClickspot", false))
+          clickableArea(ClickableArea::Create({}, screenObjectId, "scrollbarClickspot", false)),
+          brush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(255, 255, 255)))
     {
     }
 
@@ -16,9 +17,14 @@ namespace UKControllerPlugin::Components {
         Windows::GdiGraphicsInterface& graphics,
         Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        graphics.Translated(area.GetLeft(), area.GetTop(), [this, &graphics, &area] {
-            CollapseButton([this]() { return increments; })(graphics, {0, 0, area.Width, area.Height});
-        });
+        if (horizontal) {
+        }
+        graphics.Translated(
+            Graphics::TriangleDrawDimensions(), Graphics::TriangleDrawDimensions(), [this, &graphics, &area] {
+                graphics.Rotated(Gdiplus::REAL((increments ? 180 : 0)), [this, &graphics, &area] {
+                    Graphics::FillTriangle(graphics, *brush, area);
+                });
+            });
         clickableArea->WithPosition(area);
         clickableArea->Apply(graphics, radarScreen);
     }
