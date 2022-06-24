@@ -15,7 +15,7 @@
     "@semantic-release/github": "^7.2.3",
     "@semantic-release/release-notes-generator": "^9.0.3",
     "cz-conventional-changelog": "^3.3.0",
-    "semantic-release": "17"
+    "semantic-release": "19"
   },
   "repository": {
     "type": "git",
