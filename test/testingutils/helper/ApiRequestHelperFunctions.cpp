@@ -5,7 +5,7 @@ using UKControllerPlugin::Api::ApiRequestBuilder;
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPluginUtils::Api::ApiSettings;
 
-const std::string mockApiUrl = "http://ukcp.test.com";
+const std::string mockApiUrl = "http://ukcp.test.com/api";
 const std::string mockApiKey = "areallyniceapikey";
 std::shared_ptr<ApiSettings> settings;
 
