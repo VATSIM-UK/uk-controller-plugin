@@ -417,7 +417,8 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsRejectDepartureReleaseRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/api/departure/release/request/1/reject", CurlRequest::METHOD_PATCH);
+        CurlRequest expectedRequest(
+            "http://testurl.com/api/departure/release/request/1/reject", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -507,7 +508,8 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsAcknowledgePrenoteMessage)
     {
-        CurlRequest expectedRequest("http://testurl.com/api/prenotes/messages/55/acknowledge", CurlRequest::METHOD_PATCH);
+        CurlRequest expectedRequest(
+            "http://testurl.com/api/prenotes/messages/55/acknowledge", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
