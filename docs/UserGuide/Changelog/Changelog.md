@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [5.4.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.3.0...5.4.0) (2022-07-11)
+
+
+### Features
+
+* **api:** use api prefix for all routes ([e9f7338](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e9f7338975717f8e7e791b81ee97e87f92ae2ea5))
+
 # [5.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.3...5.3.0) (2022-05-19)
 
 
