@@ -423,7 +423,7 @@ namespace UKControllerPluginUtilsTest::Api {
         params.requestedLevel = 10000;
 
         CurlRequest expectedRequest(GetApiGetUriCurlRequest(
-            "http://ukcp.test.com/srd/route/search?origin=EGLL&destination=EGGD&requestedLevel=10000",
+            "http://ukcp.test.com/api/srd/route/search?origin=EGLL&destination=EGGD&requestedLevel=10000",
             CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
@@ -438,7 +438,7 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/hold/assigned", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/api/hold/assigned", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
@@ -523,7 +523,7 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/stand/assignment", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/api/stand/assignment", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
@@ -632,7 +632,7 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/version/latest?channel=beta", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/api/version/latest?channel=beta", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 

@@ -33,7 +33,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         [[nodiscard]] static auto GetRequest() -> CurlRequest
         {
-            CurlRequest expectedRequest("https://ukcp.vatsim.uk/test", CurlRequest::METHOD_GET);
+            CurlRequest expectedRequest("https://ukcp.vatsim.uk/api/test", CurlRequest::METHOD_GET);
             expectedRequest.AddHeader("Authorization", "Bearer key");
             expectedRequest.AddHeader("Accept", "application/json");
             expectedRequest.AddHeader("Content-Type", "application/json");

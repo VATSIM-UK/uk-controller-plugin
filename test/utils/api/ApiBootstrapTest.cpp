@@ -41,7 +41,7 @@ namespace UKControllerPluginUtilsTest::Api {
         auto legacyInterface = BootstrapLegacy(*factory, curl);
         EXPECT_NE(nullptr, legacyInterface);
 
-        CurlRequest expectedRequest("https://ukcp.vatsim.uk/authorise", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("https://ukcp.vatsim.uk/api/authorise", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer ");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");

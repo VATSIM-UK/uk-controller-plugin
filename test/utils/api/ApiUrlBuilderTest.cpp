@@ -18,7 +18,7 @@ namespace UKControllerPluginUtilsTest::Api {
         auto requestData = ApiRequestData("test", HttpMethod::Get());
         auto builder = ApiUrlBuilder(settings);
 
-        EXPECT_EQ("https://ukcp.vatsim.uk/test", builder.BuildUrl(requestData));
+        EXPECT_EQ("https://ukcp.vatsim.uk/api/test", builder.BuildUrl(requestData));
     }
 
     TEST_F(ApiUrlBuilderTest, ItBuildsUrlRightTrimmingTheBaseUrl)
@@ -27,7 +27,7 @@ namespace UKControllerPluginUtilsTest::Api {
         auto requestData = ApiRequestData("test", HttpMethod::Get());
         auto builder = ApiUrlBuilder(settings);
 
-        EXPECT_EQ("https://ukcp.vatsim.uk/test", builder.BuildUrl(requestData));
+        EXPECT_EQ("https://ukcp.vatsim.uk/api/test", builder.BuildUrl(requestData));
     }
 
     TEST_F(ApiUrlBuilderTest, ItBuildsUrlLeftTrimmingTheUri)
@@ -36,7 +36,7 @@ namespace UKControllerPluginUtilsTest::Api {
         auto requestData = ApiRequestData("/test", HttpMethod::Get());
         auto builder = ApiUrlBuilder(settings);
 
-        EXPECT_EQ("https://ukcp.vatsim.uk/test", builder.BuildUrl(requestData));
+        EXPECT_EQ("https://ukcp.vatsim.uk/api/test", builder.BuildUrl(requestData));
     }
 
     TEST_F(ApiUrlBuilderTest, ItBuildsUrlRightTrimmingTheUri)
@@ -45,6 +45,6 @@ namespace UKControllerPluginUtilsTest::Api {
         auto requestData = ApiRequestData("test/", HttpMethod::Get());
         auto builder = ApiUrlBuilder(settings);
 
-        EXPECT_EQ("https://ukcp.vatsim.uk/test", builder.BuildUrl(requestData));
+        EXPECT_EQ("https://ukcp.vatsim.uk/api/test", builder.BuildUrl(requestData));
     }
 } // namespace UKControllerPluginUtilsTest::Api

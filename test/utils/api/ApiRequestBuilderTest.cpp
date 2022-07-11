@@ -24,7 +24,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsAuthCheckRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/authorise", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/authorise", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -33,7 +33,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsDependencyListRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/dependency", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/dependency", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -42,13 +42,13 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsRemoteFileDownloadRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/files/test1.json", CurlRequest::METHOD_GET);
-        EXPECT_TRUE(expectedRequest == this->builder.BuildRemoteFileRequest("http://testurl.com/files/test1.json"));
+        CurlRequest expectedRequest("http://testurl.com/api/files/test1.json", CurlRequest::METHOD_GET);
+        EXPECT_TRUE(expectedRequest == this->builder.BuildRemoteFileRequest("http://testurl.com/api/files/test1.json"));
     }
 
     TEST_F(ApiRequestBuilderTest, ItBuildsSquawkAssignmentDeletionRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/squawk-assignment/BAW123", CurlRequest::METHOD_DELETE);
+        CurlRequest expectedRequest("http://testurl.com/api/squawk-assignment/BAW123", CurlRequest::METHOD_DELETE);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -57,7 +57,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsSquawkAssignmentCheckRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/squawk-assignment/BAW123", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/squawk-assignment/BAW123", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -66,7 +66,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsGeneralSquawkAssignmentRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/squawk-assignment/BAW123", CurlRequest::METHOD_PUT);
+        CurlRequest expectedRequest("http://testurl.com/api/squawk-assignment/BAW123", CurlRequest::METHOD_PUT);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -82,7 +82,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsLocalSquawkAssignmentRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/squawk-assignment/BAW123", CurlRequest::METHOD_PUT);
+        CurlRequest expectedRequest("http://testurl.com/api/squawk-assignment/BAW123", CurlRequest::METHOD_PUT);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -98,7 +98,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsHoldDependencyDataRequests)
     {
-        CurlRequest expectedRequest("http://testurl.com/hold", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/hold", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -107,7 +107,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsAMinStackRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/msl", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/msl", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -117,7 +117,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsARegionalPressureRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/regional-pressure", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/regional-pressure", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -143,7 +143,7 @@ namespace UKControllerPluginUtilsTest::Api {
         params.destination = "EGLL";
 
         CurlRequest expectedRequest(
-            "http://testurl.com/srd/route/search?origin=EGKK&destination=EGLL", CurlRequest::METHOD_GET);
+            "http://testurl.com/api/srd/route/search?origin=EGKK&destination=EGLL", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -159,7 +159,7 @@ namespace UKControllerPluginUtilsTest::Api {
         params.requestedLevel = 15000;
 
         CurlRequest expectedRequest(
-            "http://testurl.com/srd/route/search?origin=EGKK&destination=EGLL&requestedLevel=15000",
+            "http://testurl.com/api/srd/route/search?origin=EGKK&destination=EGLL&requestedLevel=15000",
             CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -170,7 +170,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsGetAssignedHoldsRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/hold/assigned", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/hold/assigned", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -180,7 +180,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsSetAssignedHoldRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/hold/assigned", CurlRequest::METHOD_PUT);
+        CurlRequest expectedRequest("http://testurl.com/api/hold/assigned", CurlRequest::METHOD_PUT);
 
         nlohmann::json expectedData;
         expectedData["callsign"] = "BAW123";
@@ -196,7 +196,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsDeleteAssignedHoldRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/hold/assigned/BAW123", CurlRequest::METHOD_DELETE);
+        CurlRequest expectedRequest("http://testurl.com/api/hold/assigned/BAW123", CurlRequest::METHOD_DELETE);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -207,7 +207,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsBuildEnrouteReleaseRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/release/enroute", CurlRequest::METHOD_POST);
+        CurlRequest expectedRequest("http://testurl.com/api/release/enroute", CurlRequest::METHOD_POST);
 
         nlohmann::json expectedData{
             {"callsign", "BAW123"},
@@ -226,7 +226,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsBuildEnrouteReleaseRequestWithReleasePoint)
     {
-        CurlRequest expectedRequest("http://testurl.com/release/enroute", CurlRequest::METHOD_POST);
+        CurlRequest expectedRequest("http://testurl.com/api/release/enroute", CurlRequest::METHOD_POST);
 
         nlohmann::json expectedData{
             {"callsign", "BAW123"},
@@ -248,7 +248,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsGetAssignedStandsRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/stand/assignment", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/stand/assignment", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -258,7 +258,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsSetAssignedStandForAircraftRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/stand/assignment", CurlRequest::METHOD_PUT);
+        CurlRequest expectedRequest("http://testurl.com/api/stand/assignment", CurlRequest::METHOD_PUT);
 
         nlohmann::json expectedData;
         expectedData["callsign"] = "BAW123";
@@ -274,7 +274,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsDeleteAssignedStandForAircraftRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/stand/assignment/BAW123", CurlRequest::METHOD_DELETE);
+        CurlRequest expectedRequest("http://testurl.com/api/stand/assignment/BAW123", CurlRequest::METHOD_DELETE);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -285,7 +285,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsGetAllNotificationsRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/notifications", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/notifications", CurlRequest::METHOD_GET);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -296,7 +296,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsGetUnreadNotificationsRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/notifications/unread", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/notifications/unread", CurlRequest::METHOD_GET);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -307,7 +307,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsReadNotificationRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/notifications/read/1", CurlRequest::METHOD_PUT);
+        CurlRequest expectedRequest("http://testurl.com/api/notifications/read/1", CurlRequest::METHOD_PUT);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -318,7 +318,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsLatestVersionDetailsRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/version/latest?channel=beta", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/version/latest?channel=beta", CurlRequest::METHOD_GET);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -329,7 +329,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsPluginEventsSyncRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/plugin-events/sync", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/plugin-events/sync", CurlRequest::METHOD_GET);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -340,7 +340,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsGetLastestPluginEventsTest)
     {
-        CurlRequest expectedRequest("http://testurl.com/plugin-events/recent?previous=5", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/plugin-events/recent?previous=5", CurlRequest::METHOD_GET);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -351,7 +351,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsDepartureReleaseRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/departure/release/request", CurlRequest::METHOD_POST);
+        CurlRequest expectedRequest("http://testurl.com/api/departure/release/request", CurlRequest::METHOD_POST);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -370,7 +370,7 @@ namespace UKControllerPluginUtilsTest::Api {
     TEST_F(ApiRequestBuilderTest, ItBuildsApproveDepartureReleaseRequest)
     {
         CurlRequest expectedRequest(
-            "http://testurl.com/departure/release/request/1/approve", CurlRequest::METHOD_PATCH);
+            "http://testurl.com/api/departure/release/request/1/approve", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -394,7 +394,7 @@ namespace UKControllerPluginUtilsTest::Api {
     TEST_F(ApiRequestBuilderTest, ItBuildsApproveDepartureReleaseRequestWithNoExpiry)
     {
         CurlRequest expectedRequest(
-            "http://testurl.com/departure/release/request/1/approve", CurlRequest::METHOD_PATCH);
+            "http://testurl.com/api/departure/release/request/1/approve", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -417,7 +417,8 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsRejectDepartureReleaseRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/departure/release/request/1/reject", CurlRequest::METHOD_PATCH);
+        CurlRequest expectedRequest(
+            "http://testurl.com/api/departure/release/request/1/reject", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -434,7 +435,7 @@ namespace UKControllerPluginUtilsTest::Api {
     TEST_F(ApiRequestBuilderTest, ItBuildsAcknowledgeDepartureReleaseRequest)
     {
         CurlRequest expectedRequest(
-            "http://testurl.com/departure/release/request/1/acknowledge", CurlRequest::METHOD_PATCH);
+            "http://testurl.com/api/departure/release/request/1/acknowledge", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -449,7 +450,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsCancelDepartureReleaseRequest)
     {
-        CurlRequest expectedRequest("http://testurl.com/departure/release/request/1", CurlRequest::METHOD_DELETE);
+        CurlRequest expectedRequest("http://testurl.com/api/departure/release/request/1", CurlRequest::METHOD_DELETE);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -460,7 +461,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsCreatePrenoteMessageWithAllValues)
     {
-        CurlRequest expectedRequest("http://testurl.com/prenotes/messages", CurlRequest::METHOD_POST);
+        CurlRequest expectedRequest("http://testurl.com/api/prenotes/messages", CurlRequest::METHOD_POST);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -484,7 +485,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsCreatePrenoteMessageWithMissingValues)
     {
-        CurlRequest expectedRequest("http://testurl.com/prenotes/messages", CurlRequest::METHOD_POST);
+        CurlRequest expectedRequest("http://testurl.com/api/prenotes/messages", CurlRequest::METHOD_POST);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -507,7 +508,8 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsAcknowledgePrenoteMessage)
     {
-        CurlRequest expectedRequest("http://testurl.com/prenotes/messages/55/acknowledge", CurlRequest::METHOD_PATCH);
+        CurlRequest expectedRequest(
+            "http://testurl.com/api/prenotes/messages/55/acknowledge", CurlRequest::METHOD_PATCH);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -523,7 +525,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsDeletePrenoteMessage)
     {
-        CurlRequest expectedRequest("http://testurl.com/prenotes/messages/55", CurlRequest::METHOD_DELETE);
+        CurlRequest expectedRequest("http://testurl.com/api/prenotes/messages/55", CurlRequest::METHOD_DELETE);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -534,7 +536,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsMissedApproachMessage)
     {
-        CurlRequest expectedRequest("http://testurl.com/missed-approaches", CurlRequest::METHOD_POST);
+        CurlRequest expectedRequest("http://testurl.com/api/missed-approaches", CurlRequest::METHOD_POST);
 
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
@@ -548,7 +550,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsGetAllMetarsMessage)
     {
-        CurlRequest expectedRequest("http://testurl.com/metar", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("http://testurl.com/api/metar", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
@@ -558,7 +560,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiRequestBuilderTest, ItBuildsMissedApproachAcknowledge)
     {
-        CurlRequest expectedRequest("http://testurl.com/missed-approaches/1", CurlRequest::METHOD_PATCH);
+        CurlRequest expectedRequest("http://testurl.com/api/missed-approaches/1", CurlRequest::METHOD_PATCH);
         expectedRequest.AddHeader("Authorization", "Bearer apikey");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");
