@@ -8,16 +8,17 @@ namespace UKControllerPlugin {
     namespace IntentionCode {
 
         std::string SectorExitPointKonan::GetIntentionCode(
-            EuroscopeExtractedRouteInterface & route,
-            int foundPointIndex,
-            int cruiseLevel
-        ) const
+            EuroscopeExtractedRouteInterface& route, int foundPointIndex, int cruiseLevel) const
         {
             int numberOfPoints = route.GetPointsNumber();
             while (foundPointIndex < numberOfPoints) {
 
                 // If going via KOK, the intention code is D1
                 if (strcmp(route.GetPointName(foundPointIndex), "KOK") == 0) {
+                    if (cruiseLevel >= 24500) {
+                        break;
+                    }
+
                     return "D1";
                 }
 
@@ -27,5 +28,5 @@ namespace UKControllerPlugin {
             // If not via KOK, we fall back to the default code
             return SectorExitPoint::GetIntentionCode(route, foundPointIndex, cruiseLevel);
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin
