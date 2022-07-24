@@ -137,6 +137,11 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("GOLUM").GetIntentionCode(mockRoute, 0, 37000).compare("K3") == 0);
             ASSERT_EQ(repo->outEast | repo->outNorthEast, repo->GetSectorExitPoint("GOLUM").GetOutDirection());
 
+            // LARGA
+            ASSERT_TRUE(repo->GetSectorExitPoint("LARGA").GetName().compare("LARGA") == 0);
+            ASSERT_TRUE(repo->GetSectorExitPoint("LARGA").GetIntentionCode(mockRoute, 0, 37000).compare("K3") == 0);
+            ASSERT_EQ(repo->outEast | repo->outNorthEast, repo->GetSectorExitPoint("LARGA").GetOutDirection());
+
             // Stavanger
 
             // PEPIN
