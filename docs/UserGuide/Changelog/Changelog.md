@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [5.4.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.0...5.4.1) (2022-07-24)
+
+
+### Bug Fixes
+
+* **intention:** k3 intention code via larga ([f7150e4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f7150e401d82561dce9421b845ac7128b4087180))
+* **intention:** konan d1 code ([1a864a3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/1a864a37e8b4ba44770c6c351420603cbd36f4a7))
+
 # [5.4.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.3.0...5.4.0) (2022-07-11)
 
 
