@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.4.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.2...5.4.3) (2022-07-31)
+
+
+### Bug Fixes
+
+* remove key from prenote dependency ([b6d2c70](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b6d2c701ef713c973661483db467b646431c7887))
+
 ## [5.4.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.1...5.4.2) (2022-07-31)
 
 
