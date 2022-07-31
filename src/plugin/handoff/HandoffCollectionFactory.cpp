@@ -42,8 +42,8 @@ namespace UKControllerPlugin::Handoff {
         -> bool
     {
         return order.is_object() && order.contains("id") && order.at("id").is_number_integer() &&
-               order.contains("key") && order.at("key").is_string() && order.contains("controller_positions") &&
-               order.at("controller_positions").is_array() && !order.at("controller_positions").empty() &&
+               order.contains("controller_positions") && order.at("controller_positions").is_array() &&
+               !order.at("controller_positions").empty() &&
                controllerFactory.CreateSharedFromJsonById(order.at("controller_positions")) != nullptr;
     }
 } // namespace UKControllerPlugin::Handoff
