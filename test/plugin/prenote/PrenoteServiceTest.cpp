@@ -70,7 +70,7 @@ namespace UKControllerPluginTest::Prenote {
             this->service = std::make_unique<PrenoteService>(
                 this->mapper, this->airfieldOwnership, this->activeCallsigns, *this->messager);
 
-            this->prenotes.Add(std::make_shared<PublishedPrenote>(1, "test", std::move(this->hierarchyPointer)));
+            this->prenotes.Add(std::make_shared<PublishedPrenote>(1, std::move(this->hierarchyPointer)));
 
             ON_CALL(this->mockFlightplan, GetOrigin).WillByDefault(Return("EGKK"));
             ON_CALL(this->mockFlightplan, GetCallsign).WillByDefault(Return("BAW123"));
@@ -211,7 +211,7 @@ namespace UKControllerPluginTest::Prenote {
 
         auto hierarchyTwo = std::make_unique<ControllerPositionHierarchy>();
         hierarchyTwo->AddPosition(this->controllerNoLondon);
-        this->prenotes.Add(std::make_shared<PublishedPrenote>(2, "test", std::move(hierarchyTwo)));
+        this->prenotes.Add(std::make_shared<PublishedPrenote>(2, std::move(hierarchyTwo)));
 
         EXPECT_CALL(
             mockPlugin,
@@ -250,7 +250,7 @@ namespace UKControllerPluginTest::Prenote {
         auto hierarchyTwo = std::make_unique<ControllerPositionHierarchy>();
         hierarchyTwo->AddPosition(this->controllerOther);
         hierarchyTwo->AddPosition(this->controllerNoLondon);
-        this->prenotes.Add(std::make_shared<PublishedPrenote>(2, "test", std::move(hierarchyTwo)));
+        this->prenotes.Add(std::make_shared<PublishedPrenote>(2, std::move(hierarchyTwo)));
 
         ON_CALL(this->mockFlightplan, GetSidName).WillByDefault(Return("LAM4M"));
         ON_CALL(sidMapper, MapFlightplanToSid(testing::Ref(mockFlightplan)))

@@ -11,8 +11,8 @@ namespace UKControllerPluginTest::Prenote {
         public:
         PublishedPrenoteCollectionTest()
         {
-            this->prenote1 = std::make_shared<PublishedPrenote>(1, "One", nullptr);
-            this->prenote2 = std::make_shared<PublishedPrenote>(2, "Two", nullptr);
+            this->prenote1 = std::make_shared<PublishedPrenote>(1, nullptr);
+            this->prenote2 = std::make_shared<PublishedPrenote>(2, nullptr);
         }
 
         std::shared_ptr<PublishedPrenote> prenote1;

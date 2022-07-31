@@ -104,7 +104,7 @@ namespace UKControllerPluginTest::Prenote {
     TEST_F(PublishedPrenoteCollectionFactoryTest, ItIgnoresInvalidPrenotes)
     {
         auto data = nlohmann::json::array();
-        data.push_back({{"id", 1}, {"controller_positions", nlohmann::json::array()}});
+        data.push_back({{"id", 1}, {"controller_positions", nlohmann::json::array({1, 2})}});
         data.push_back({{"id", "invalid"}, {"controller_positions", nlohmann::json::array({1})}});
 
         auto collection = CreatePublishedPrenoteCollection(data, factory);

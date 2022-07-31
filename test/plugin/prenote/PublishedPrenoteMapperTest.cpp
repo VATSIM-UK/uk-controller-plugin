@@ -32,9 +32,9 @@ namespace UKControllerPluginTest::Prenote {
 
             this->flightRules.Add(std::make_shared<FlightRule>(1, "I", "IFR"));
             this->flightRules.Add(std::make_shared<FlightRule>(2, "V", "VFR"));
-            this->prenotes.Add(std::make_shared<PublishedPrenote>(1, "TEST1", nullptr));
-            this->prenotes.Add(std::make_shared<PublishedPrenote>(2, "TEST2", nullptr));
-            this->prenotes.Add(std::make_shared<PublishedPrenote>(3, "TEST3", nullptr));
+            this->prenotes.Add(std::make_shared<PublishedPrenote>(1, nullptr));
+            this->prenotes.Add(std::make_shared<PublishedPrenote>(2, nullptr));
+            this->prenotes.Add(std::make_shared<PublishedPrenote>(3, nullptr));
         }
 
         testing::NiceMock<Sid::MockSidMapperInterface> sidMapper;
