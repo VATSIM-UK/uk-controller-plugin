@@ -2,9 +2,8 @@
 #include "controller/ControllerPositionHierarchy.h"
 
 namespace UKControllerPlugin::Prenote {
-    PublishedPrenote::PublishedPrenote(
-        int id, std::string key, std::unique_ptr<Controller::ControllerPositionHierarchy> controllers)
-        : id(id), key(std::move(key)), controllers(std::move(controllers))
+    PublishedPrenote::PublishedPrenote(int id, std::unique_ptr<Controller::ControllerPositionHierarchy> controllers)
+        : id(id), controllers(std::move(controllers))
     {
     }
 
