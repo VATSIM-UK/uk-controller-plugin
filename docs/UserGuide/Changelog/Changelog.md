@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.4.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.1...5.4.2) (2022-07-31)
+
+
+### Bug Fixes
+
+* remove key from handoffs ([e0e28a0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e0e28a0dcec3600d4022206ebe9ed7c86cc712a6))
+
 ## [5.4.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.0...5.4.1) (2022-07-24)
 
 
