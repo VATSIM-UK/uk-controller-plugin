@@ -9,6 +9,7 @@ namespace UKControllerPlugin::Euroscope {
     class RunwayDialogAwareInterface
     {
         public:
+        virtual ~RunwayDialogAwareInterface() = default;
         virtual void RunwayDialogSaved() = 0;
     };
 } // namespace UKControllerPlugin::Euroscope
