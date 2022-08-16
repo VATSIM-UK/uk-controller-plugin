@@ -59,7 +59,7 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
 
             auto lastError = GetLastError();
             if (lastError == 126 || lastError == 127 || lastError == 128) {
-                message += L"Please ensure you have the latest version of the C++ Redistributables (2022) installed.";
+                message += L"Please ensure that you have the latest C++ Redistributables (2022) installed.";
                 message += L"\r\n\r\n";
             }
 
