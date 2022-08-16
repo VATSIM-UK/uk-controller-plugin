@@ -56,8 +56,15 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
             UnloadPluginLibrary(pluginDllInstance, *windows);
             std::wstring message = L"Unable to load the UKControllerPluginCore DLL.\r\n";
             message += L"Please contact the VATSIM UK Web Services Department.\r\n\r\n";
+
+            auto lastError = GetLastError();
+            if (lastError == 126 || lastError == 127 || lastError == 128) {
+                message += L"Please ensure you have the latest version of the C++ Redistributables (2022) installed.";
+                message += L"\r\n\r\n";
+            }
+
             message += L"Errno: " + std::to_wstring(errno) + L"\r\n";
-            message += L"LastError: " + std::to_wstring(GetLastError()) + L"\r\n";
+            message += L"LastError: " + std::to_wstring(lastError) + L"\r\n";
 
             MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Bootstrap Failed", MB_OK | MB_ICONSTOP);
             throw std::exception("UKCP broke");
