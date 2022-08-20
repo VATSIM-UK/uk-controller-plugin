@@ -13,6 +13,7 @@ namespace UKControllerPlugin::Integration {
 
     void OutboundIntegrationMessageHandler::SendEvent(std::shared_ptr<MessageInterface> message) const
     {
+        LogDebug("Sending integration message: " + message->ToJson().dump());
         std::for_each(
             this->clientManager->cbegin(),
             this->clientManager->cend(),
