@@ -1,5 +1,14 @@
 # UK Controller Plugin Changelog
 
+## [5.4.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.3...5.4.4) (2022-08-20)
+
+
+### Bug Fixes
+
+* display redistributables warning on load error ([a37d810](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a37d8106b1ac3bc95aa9b1eb595ffd01b1232f94))
+* **handoff:** departure frequencies not updating after runway dialog change ([ad9b87b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ad9b87b0d01723604a3d68491fb9ab339f848cac)), closes [#480](https://github.com/VATSIM-UK/uk-controller-plugin/issues/480)
+* LoadPlugin error message ([5b74322](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5b74322cb19e716cc9052712e0d37c142ccdbd49))
+
 ## [5.4.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.2...5.4.3) (2022-07-31)
 
 
