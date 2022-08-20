@@ -281,7 +281,7 @@ set(src__handoff
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
     controller/HandoffEventHandler.cpp
-    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/ClearCacheOnActiveCallsignChanges.cpp handoff/ClearCacheOnActiveCallsignChanges.h)
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/ClearCacheOnActiveCallsignChanges.cpp handoff/ClearCacheOnActiveCallsignChanges.h handoff/ClearCacheOnRunwayDialogSave.cpp handoff/ClearCacheOnRunwayDialogSave.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__headings headings/Heading.h headings/Heading.cpp)
