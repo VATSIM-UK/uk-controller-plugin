@@ -41,24 +41,26 @@ Every pull request for this repository is checked using `clang-format`. Clang fo
 
 To contribute to the project, please have a look at the [Contributing Guide](CONTRIBUTING.md).
 
-### Design Rationale
+## Design Rationale
 
-## Event Driven
+There are a number of technical decisions that have been made during the development of the plugin to improve the development experience and also to make the code clean with separation of concerns.
+
+### Event Driven
 
 EuroScope is a highly event-driven program, with events being sent to the plugin for everything from flights being updated, to controllers logging on, to radar blips moving across the screen.
 
 The plugin is therefore built around the idea of "event handlers" - classes that follow a particular interface and process events that are passed to them. Each type of event will have a collection of handlers that is called, which allows us to avoid having all the event handling logic directly in the methods that EuroScope calls when an event occurs!
 
-## Asynchronous for long running operations
+### Asynchronous for long running operations
 
 EuroScope plugins run on a single thread, the same thread that most of EuroScope uses, therefore it is necessary to ensure that long-running operations do not block this thread.
 
 Calls to the web API are handled on a separate thread, as well as other HTTP requests to external resources and integrations with other plugins and programs.
 
-## Interfaces around External Classes
+### Interfaces around External Classes
 
 EuroScope provides a number of classes that represent data within the program, such as Flightplans and Controller Positions. Most of these classes are not directly instantiable and thus are difficult to write tests with. Therefore, the plugin provides interfaces and wrappers for these external classes, allowing them to be mocked for the purposes of testing.
 
-## Everything gets a test
+### Everything gets a test
 
 Unlike a web application, a program that runs on a VATSIM members machine is much harder to debug when something goes wrong, and everyone's setup is slightly different. Therefore, every class in the plugin, as far as practicable, has an automated test to ensure that nothing gets broken when we change something.
