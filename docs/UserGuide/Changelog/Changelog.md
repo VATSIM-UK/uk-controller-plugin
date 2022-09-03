@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.4.5](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.4...5.4.5) (2022-09-03)
+
+
+### Bug Fixes
+
+* treat additional squawks as invalid ([6f2a202](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6f2a202c3ca003e321021c8aa496ff4d9c6002dc))
+
 ## [5.4.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.3...5.4.4) (2022-08-20)
 
 
