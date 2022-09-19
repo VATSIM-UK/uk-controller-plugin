@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.4.6](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.5...5.4.6) (2022-09-19)
+
+
+### Bug Fixes
+
+* allow handoffs with no controllers ([3ef062a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3ef062a0c2c02d49f13794360eb4d808a5161ce7))
+
 ## [5.4.5](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.4...5.4.5) (2022-09-03)
 
 
