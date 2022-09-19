@@ -39,6 +39,13 @@ namespace UKControllerPluginTest::Handoff {
         EXPECT_TRUE(HandoffOrderValid(data, this->factory));
     }
 
+    TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsValidIfControllersEmpty)
+    {
+        const nlohmann::json data = {{"id", 1}, {"controller_positions", nlohmann::json::array()}};
+
+        EXPECT_TRUE(HandoffOrderValid(data, this->factory));
+    }
+
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfNoId)
     {
         const nlohmann::json data = {{"controller_positions", nlohmann::json::array({1, 2})}};
@@ -67,13 +74,6 @@ namespace UKControllerPluginTest::Handoff {
         EXPECT_FALSE(HandoffOrderValid(data, this->factory));
     }
 
-    TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionsEmpty)
-    {
-        const nlohmann::json data = {{"id", 1}, {"controller_positions", nlohmann::json::array()}};
-
-        EXPECT_FALSE(HandoffOrderValid(data, this->factory));
-    }
-
     TEST_F(HandoffCollectionFactoryTest, HandoffOrderIsInvalidIfControllerPositionNotInteger)
     {
         const nlohmann::json data = {{"id", 1}, {"controller_positions", nlohmann::json::array({"abc"})}};
@@ -97,7 +97,7 @@ namespace UKControllerPluginTest::Handoff {
     {
         nlohmann::json handoffs = nlohmann::json::array();
         handoffs.push_back(nlohmann::json{{"id", 1}, {"controller_positions", nlohmann::json::array({1, 2})}});
-        handoffs.push_back(nlohmann::json{{"id", 2}, {"controller_positions", nlohmann::json::array({1})}});
+        handoffs.push_back(nlohmann::json{{"id", 2}, {"controller_positions", nlohmann::json::array()}});
 
         auto collection = Create(this->factory, handoffs);
         EXPECT_EQ(2, collection->Count());
@@ -109,9 +109,7 @@ namespace UKControllerPluginTest::Handoff {
 
         auto handoff2 = collection->Get(2);
         EXPECT_EQ(2, handoff2->id);
-        EXPECT_EQ(1, handoff2->order->CountPositions());
-        EXPECT_TRUE(handoff2->order->PositionInHierarchy(*controllers.FetchPositionById(1)));
-        EXPECT_FALSE(handoff2->order->PositionInHierarchy(*controllers.FetchPositionById(2)));
+        EXPECT_EQ(0, handoff2->order->CountPositions());
     }
 
     TEST_F(HandoffCollectionFactoryTest, ItReturnsAnEmptyCollectionIfHandoffsNotValid)
