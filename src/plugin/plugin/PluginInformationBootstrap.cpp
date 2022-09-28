@@ -25,14 +25,9 @@ namespace UKControllerPlugin::Plugin {
         int helpCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         std::shared_ptr<PluginHelpPage> helpPage = std::make_shared<PluginHelpPage>(*container.windows, helpCallbackId);
 
-        // Create callback
-        CallbackFunction helpCallback(
-            helpCallbackId, "Plugin Help Page", [helpPage](int functionId, std::string subject, RECT screenObjectArea) {
-                helpPage->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-
         // Register with handlers
-        container.pluginFunctionHandlers->RegisterFunctionCall(helpCallback);
+        container.pluginFunctionHandlers->RegisterFunctionCall(
+            RadarScreen::CreateConfigurableDisplayCallback(helpCallbackId, "Plugin Help Page", helpPage));
         container.commandHandlers->RegisterHandler(helpPage);
         displays.RegisterDisplay(helpPage);
 
@@ -61,16 +56,9 @@ namespace UKControllerPlugin::Plugin {
         std::shared_ptr<ForceUpdate> forceUpdate =
             std::make_shared<ForceUpdate>(*container.windows, forceUpdateCallbackId);
 
-        // Create callback
-        CallbackFunction forceUpdateCallback(
-            forceUpdateCallbackId,
-            "Plugin Force Update",
-            [forceUpdate](int functionId, std::string subject, RECT screenObjectArea) {
-                forceUpdate->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-
         // Register with handlers
-        container.pluginFunctionHandlers->RegisterFunctionCall(forceUpdateCallback);
+        container.pluginFunctionHandlers->RegisterFunctionCall(
+            RadarScreen::CreateConfigurableDisplayCallback(forceUpdateCallbackId, "Plugin Force Update", forceUpdate));
         container.commandHandlers->RegisterHandler(forceUpdate);
         displays.RegisterDisplay(forceUpdate);
 
@@ -79,16 +67,9 @@ namespace UKControllerPlugin::Plugin {
         std::shared_ptr<PluginChangelog> changeLog =
             std::make_shared<PluginChangelog>(*container.windows, changelogCallbackId);
 
-        // Create callback
-        CallbackFunction changelogCallback(
-            changelogCallbackId,
-            "Plugin Changelog",
-            [changeLog](int functionId, std::string subject, RECT screenObjectArea) {
-                changeLog->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-
         // Register with handlers
-        container.pluginFunctionHandlers->RegisterFunctionCall(changelogCallback);
+        container.pluginFunctionHandlers->RegisterFunctionCall(
+            RadarScreen::CreateConfigurableDisplayCallback(changelogCallbackId, "Plugin Changelog", changeLog));
         container.commandHandlers->RegisterHandler(changeLog);
         displays.RegisterDisplay(changeLog);
 
@@ -97,16 +78,9 @@ namespace UKControllerPlugin::Plugin {
         std::shared_ptr<PluginInformationMessage> infoMessage =
             std::make_shared<PluginInformationMessage>(*container.windows, informationCallback);
 
-        // Create callback
-        CallbackFunction configureCallback(
-            informationCallback,
-            "Plugin Information Message",
-            [infoMessage](int functionId, std::string subject, RECT screenObjectArea) {
-                infoMessage->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-
         // Register with handlers
-        container.pluginFunctionHandlers->RegisterFunctionCall(configureCallback);
+        container.pluginFunctionHandlers->RegisterFunctionCall(RadarScreen::CreateConfigurableDisplayCallback(
+            informationCallback, "Plugin Information Message", infoMessage));
         container.commandHandlers->RegisterHandler(infoMessage);
         displays.RegisterDisplay(infoMessage);
     }
