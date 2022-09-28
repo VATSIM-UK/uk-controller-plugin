@@ -35,6 +35,7 @@ namespace UKControllerPlugin::Windows {
         virtual auto ReadFromFile(std::wstring filename, bool relativePath = true) -> std::string = 0;
         virtual auto SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions) -> bool = 0;
         virtual void WriteToFile(std::wstring filename, std::string data, bool truncate, bool binary) = 0;
+        virtual void OpenExplorer(const std::wstring& location) const = 0;
 
         private:
         // DLL Instance for the plugin
