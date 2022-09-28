@@ -31,7 +31,7 @@ namespace UKControllerPluginTest::Plugin {
     TEST_F(PluginInformationBootstrapTest, ItRegistersConfigurableDisplays)
     {
         BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
-        EXPECT_EQ(5, this->configurableDisplays.CountDisplays());
+        EXPECT_EQ(6, this->configurableDisplays.CountDisplays());
     }
 
     TEST_F(PluginInformationBootstrapTest, ItRegistersCommandHandlers)
@@ -50,6 +50,12 @@ namespace UKControllerPluginTest::Plugin {
     {
         BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
         EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Open Data Folder"));
+    }
+
+    TEST_F(PluginInformationBootstrapTest, ItRegistersOpenLogsFolderCallback)
+    {
+        BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
+        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Open Logs Folder"));
     }
 
     TEST_F(PluginInformationBootstrapTest, ItRegistersForceUpdateCallback)

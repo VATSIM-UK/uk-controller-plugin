@@ -418,7 +418,7 @@ set(test__plugin
     "plugin/PluginInformationMessageTest.cpp"
     "plugin/PopupMenuItemTest.cpp"
     "plugin/UkPluginBootstrapTest.cpp"
-        plugin/OpenDataFolderTest.cpp)
+        plugin/OpenDataFolderTest.cpp plugin/OpenLogsFolderTest.cpp)
 source_group("test\\plugin" FILES ${test__plugin})
 
 set(test__prenote

@@ -1,6 +1,7 @@
 #include "ForceUpdate.h"
 #include "FunctionCallEventHandler.h"
 #include "OpenDataFolder.h"
+#include "OpenLogsFolder.h"
 #include "PluginChangelog.h"
 #include "PluginHelpPage.h"
 #include "PluginInformationBootstrap.h"
@@ -40,17 +41,20 @@ namespace UKControllerPlugin::Plugin {
         std::shared_ptr<OpenDataFolder> openDataFolder =
             std::make_shared<OpenDataFolder>(*container.windows, openDataFolderCallbackId);
 
-        CallbackFunction openDataFolderCallback(
-            openDataFolderCallbackId,
-            "Open Data Folder",
-            [openDataFolder](int functionId, std::string subject, RECT screenObjectArea) {
-                openDataFolder->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-
         // Register with handlers
         container.pluginFunctionHandlers->RegisterFunctionCall(RadarScreen::CreateConfigurableDisplayCallback(
             openDataFolderCallbackId, "Open Data Folder", openDataFolder));
         displays.RegisterDisplay(openDataFolder);
+
+        // Create the open logs folder link
+        int openLogsFolderCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        std::shared_ptr<OpenLogsFolder> openLogsFolder =
+            std::make_shared<OpenLogsFolder>(*container.windows, openLogsFolderCallbackId);
+
+        // Register with handlers
+        container.pluginFunctionHandlers->RegisterFunctionCall(RadarScreen::CreateConfigurableDisplayCallback(
+            openLogsFolderCallbackId, "Open Logs Folder", openLogsFolder));
+        displays.RegisterDisplay(openLogsFolder);
 
         // Create the force update toggle
         int forceUpdateCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();

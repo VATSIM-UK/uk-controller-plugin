@@ -664,7 +664,7 @@ set(src__plugin
     "plugin/UKPlugin.h"
     "plugin/UkPluginBootstrap.cpp"
     "plugin/UkPluginBootstrap.h"
-        euroscope/UserSettingAwareInterface.cpp plugin/OpenDataFolder.cpp plugin/OpenDataFolder.h)
+        euroscope/UserSettingAwareInterface.cpp plugin/OpenDataFolder.cpp plugin/OpenDataFolder.h plugin/OpenLogsFolder.cpp plugin/OpenLogsFolder.h)
 source_group("src\\plugin" FILES ${src__plugin})
 
 set(src__prenote
