@@ -1,32 +1,28 @@
-#include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "prenote/NewPrenotePushEventHandler.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
+#include "prenote/PrenoteMessageEventHandlerCollection.h"
 #include "time/ParseTimeStrings.h"
 
 using testing::NiceMock;
-using UKControllerPlugin::Controller::ActiveCallsign;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionCollection;
 using UKControllerPlugin::Prenote::NewPrenotePushEventHandler;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
+using UKControllerPlugin::Prenote::PrenoteMessageEventHandlerCollection;
 using UKControllerPlugin::Push::PushEvent;
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Time::ParseTimeString;
-using UKControllerPluginTest::Windows::MockWinApi;
 
 namespace UKControllerPluginTest::Prenote {
     class NewPrenotePushEventHandlerTest : public testing::Test
     {
         public:
         NewPrenotePushEventHandlerTest()
-            : messages(std::make_shared<PrenoteMessageCollection>()),
-              handler(messages, controllers, callsigns, mockWindows)
+            : messages(std::make_shared<PrenoteMessageCollection>()), handler(messages, controllers, eventHandlers)
         {
             controllers.AddPosition(std::make_shared<ControllerPosition>(
                 1, "EGFF_APP", 125.850, std::vector<std::string>{"EGGD", "EGFF"}, true, true));
@@ -34,7 +30,8 @@ namespace UKControllerPluginTest::Prenote {
             controllers.AddPosition(std::make_shared<ControllerPosition>(
                 2, "LON_W_CTR", 126.020, std::vector<std::string>{"EGGD", "EGFF"}, true, true));
 
-            callsigns.AddUserCallsign(ActiveCallsign("LON_W_CTR", "Foo", *controllers.FetchPositionById(2), true));
+            mockHandler = std::make_shared<testing::NiceMock<MockPrenoteMessageEventHandlerInterface>>();
+            eventHandlers.AddHandler(mockHandler);
         };
 
         /*
@@ -62,10 +59,10 @@ namespace UKControllerPluginTest::Prenote {
             return {"prenote-message.received", "test", eventData, eventData.dump()};
         };
 
-        NiceMock<MockWinApi> mockWindows;
-        ActiveCallsignCollection callsigns;
+        std::shared_ptr<testing::NiceMock<MockPrenoteMessageEventHandlerInterface>> mockHandler;
         ControllerPositionCollection controllers;
         std::shared_ptr<PrenoteMessageCollection> messages;
+        PrenoteMessageEventHandlerCollection eventHandlers;
         NewPrenotePushEventHandler handler;
     };
 
@@ -79,7 +76,7 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(NewPrenotePushEventHandlerTest, ItAddsPrenoteFromMessage)
     {
-        EXPECT_CALL(mockWindows, PlayWave(MAKEINTRESOURCE(WAVE_NEW_PRENOTE))).Times(1); // NOLINT
+        EXPECT_CALL(*mockHandler, NewMessage(testing::_)).Times(1);
 
         this->handler.ProcessPushEvent(MakePushEvent());
 
@@ -123,27 +120,6 @@ namespace UKControllerPluginTest::Prenote {
         this->handler.ProcessPushEvent(MakePushEvent());
         EXPECT_EQ(1, this->messages->Count());
         EXPECT_TRUE(this->messages->GetById(1)->IsAcknowledged());
-    }
-
-    TEST_F(NewPrenotePushEventHandlerTest, ItDoesntPlaySoundIfUserNotActive)
-    {
-        callsigns.Flush();
-        EXPECT_CALL(mockWindows, PlayWave(testing::_)).Times(0);
-
-        this->handler.ProcessPushEvent(MakePushEvent());
-
-        EXPECT_EQ(1, this->messages->Count());
-    }
-
-    TEST_F(NewPrenotePushEventHandlerTest, ItDoesntPlaySoundIfUserIsADifferentController)
-    {
-        callsigns.Flush();
-        callsigns.AddUserCallsign(ActiveCallsign("LON_W_CTR", "Foo", *controllers.FetchPositionById(1), true));
-        EXPECT_CALL(mockWindows, PlayWave(testing::_)).Times(0);
-
-        this->handler.ProcessPushEvent(MakePushEvent());
-
-        EXPECT_EQ(1, this->messages->Count());
     }
 
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfIdMissing)

@@ -358,7 +358,7 @@ set(test__mock
     mock/MockCallsignSelectionProvider.h
     mock/MockAircraftTypeMapper.h
     mock/MockWakeCategoryMapper.h
-    mock/MockListItemProvider.h mock/MockPopupList.h mock/MockBootstrapProvider.h mock/MockPluginSettingsProvider.h)
+    mock/MockListItemProvider.h mock/MockPopupList.h mock/MockBootstrapProvider.h mock/MockPluginSettingsProvider.h mock/MockPrenoteMessageEventHandlerInterface.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -440,7 +440,9 @@ set(test__prenote
         "prenote/AcknowledgePrenoteMessageTest.cpp"
         prenote/PublishedPrenoteCollectionTest.cpp
         prenote/PublishedPrenoteCollectionFactoryTest.cpp
-        prenote/PublishedPrenoteMapperTest.cpp)
+        prenote/PublishedPrenoteMapperTest.cpp
+        prenote/PrenoteMessageEventHandlerCollectionTest.cpp
+        prenote/PlayNewPrenoteMessageSoundTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push

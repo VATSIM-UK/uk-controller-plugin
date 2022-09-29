@@ -1,10 +1,12 @@
 #include "AcknowledgePrenoteMessage.h"
 #include "CancelPrenoteMessageMenu.h"
 #include "NewPrenotePushEventHandler.h"
+#include "PlayNewPrenoteMessageSound.h"
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
 #include "PrenoteMessageCollection.h"
+#include "PrenoteMessageEventHandlerCollection.h"
 #include "PrenoteMessageStatusView.h"
 #include "PrenoteMessageTimeout.h"
 #include "PrenoteModule.h"
@@ -77,13 +79,13 @@ namespace UKControllerPlugin::Prenote {
 
         // Electronic prenote messages
         persistence.prenotes = std::make_shared<PrenoteMessageCollection>();
+        persistence.prenoteMessageHandlers = std::make_unique<PrenoteMessageEventHandlerCollection>();
+        persistence.prenoteMessageHandlers->AddHandler(
+            std::make_shared<PlayNewPrenoteMessageSound>(*persistence.activeCallsigns, *persistence.windows));
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(
-            persistence.prenotes,
-            *persistence.controllerPositions,
-            *persistence.activeCallsigns,
-            *persistence.windows));
+            persistence.prenotes, *persistence.controllerPositions, *persistence.prenoteMessageHandlers));
         persistence.pushEventProcessors->AddProcessor(
             std::make_shared<PrenoteAcknowledgedPushEventHandler>(persistence.prenotes));
         persistence.pushEventProcessors->AddProcessor(
