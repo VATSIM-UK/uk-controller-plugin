@@ -42,8 +42,8 @@ namespace UKControllerPlugin::Prenote {
             messageData.at("destination_airfield").is_null()
                 ? ""
                 : messageData.at("destination_airfield").get<std::string>(),
-            messageData.at("sending_controller").get<int>(),
-            messageData.at("target_controller").get<int>(),
+            this->controllers.FetchPositionById(messageData.at("sending_controller").get<int>()),
+            this->controllers.FetchPositionById(messageData.at("target_controller").get<int>()),
             ParseTimeString(messageData.at("expires_at").get<std::string>()));
         prenotes->Add(prenoteMessage);
 

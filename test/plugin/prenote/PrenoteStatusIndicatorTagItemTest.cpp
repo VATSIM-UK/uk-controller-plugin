@@ -1,3 +1,4 @@
+#include "controller/ControllerPosition.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteStatusIndicatorTagItem.h"
@@ -5,6 +6,7 @@
 #include "tag/TagData.h"
 
 using ::testing::NiceMock;
+using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 using UKControllerPlugin::Prenote::PrenoteStatusIndicatorTagItem;
@@ -20,8 +22,14 @@ namespace UKControllerPluginTest::Prenote {
         {
             ON_CALL(this->mockFlightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
 
-            message1 = std::make_shared<PrenoteMessage>(1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow());
-            message2 = std::make_shared<PrenoteMessage>(5, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow());
+            sendingPosition = std::make_shared<ControllerPosition>(
+                1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            receivingPosition = std::make_shared<ControllerPosition>(
+                2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            message1 = std::make_shared<PrenoteMessage>(
+                1, "BAW123", "EGGD", "BADIM1X", "EGLL", sendingPosition, receivingPosition, TimeNow());
+            message2 = std::make_shared<PrenoteMessage>(
+                5, "BAW123", "EGGD", "BADIM1X", "EGLL", sendingPosition, receivingPosition, TimeNow());
         }
 
         UKControllerPlugin::Tag::TagData GetTagData()
@@ -43,6 +51,8 @@ namespace UKControllerPluginTest::Prenote {
         char itemString[16] = "";
         NiceMock<MockEuroScopeCFlightPlanInterface> mockFlightplan;
         NiceMock<MockEuroScopeCRadarTargetInterface> mockRadarTarget;
+        std::shared_ptr<ControllerPosition> sendingPosition;
+        std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<PrenoteMessageCollection> messages;
         std::shared_ptr<PrenoteMessage> message1;
         std::shared_ptr<PrenoteMessage> message2;

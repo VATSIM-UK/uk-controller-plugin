@@ -5,6 +5,7 @@
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
+#include "PrenoteIsRelevantToUser.h"
 #include "PrenoteMessageCollection.h"
 #include "PrenoteMessageEventHandlerCollection.h"
 #include "PrenoteMessageStatusView.h"
@@ -15,6 +16,7 @@
 #include "PublishedPrenoteCollection.h"
 #include "PublishedPrenoteCollectionFactory.h"
 #include "PublishedPrenoteMapper.h"
+#include "SendNewPrenoteChatAreaMessage.h"
 #include "SendPrenoteMenu.h"
 #include "TriggerPrenoteMessageStatusView.h"
 #include "bootstrap/BootstrapWarningMessage.h"
@@ -78,10 +80,13 @@ namespace UKControllerPlugin::Prenote {
             *persistence.pluginUserSettingHandler));
 
         // Electronic prenote messages
+        const auto prenoteUserRelevance = std::make_shared<PrenoteIsRelevantToUser>(*persistence.activeCallsigns);
         persistence.prenotes = std::make_shared<PrenoteMessageCollection>();
         persistence.prenoteMessageHandlers = std::make_unique<PrenoteMessageEventHandlerCollection>();
         persistence.prenoteMessageHandlers->AddHandler(
-            std::make_shared<PlayNewPrenoteMessageSound>(*persistence.activeCallsigns, *persistence.windows));
+            std::make_shared<PlayNewPrenoteMessageSound>(prenoteUserRelevance, *persistence.windows));
+        persistence.prenoteMessageHandlers->AddHandler(
+            std::make_shared<SendNewPrenoteChatAreaMessage>(prenoteUserRelevance, *persistence.plugin));
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(

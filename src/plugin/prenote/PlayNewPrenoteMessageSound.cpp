@@ -1,27 +1,18 @@
 #include "PlayNewPrenoteMessageSound.h"
-#include "PrenoteMessage.h"
-#include "controller/ActiveCallsignCollection.h"
-#include "controller/ControllerPosition.h"
+#include "PrenoteUserRelevanceChecker.h"
 #include "windows/WinApiInterface.h"
 
 namespace UKControllerPlugin::Prenote {
     PlayNewPrenoteMessageSound::PlayNewPrenoteMessageSound(
-        const Controller::ActiveCallsignCollection& activeCallsigns, Windows::WinApiInterface& winApi)
-        : activeCallsigns(activeCallsigns), winApi(winApi)
+        std::shared_ptr<PrenoteUserRelevanceChecker> prenoteRelevance, Windows::WinApiInterface& winApi)
+        : prenoteRelevance(prenoteRelevance), winApi(winApi)
     {
+        assert(prenoteRelevance && "Prenote relevance is nullptr");
     }
 
     void PlayNewPrenoteMessageSound::NewMessage(const PrenoteMessage& message)
     {
-        if (!activeCallsigns.UserHasCallsign() ||
-            activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() != message.GetTargetControllerId()) {
-            return;
-        }
-
-        // Don't play sound if not for us, or we've somehow sent a prenote to ourselves.
-        const auto userPositionId = activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId();
-        if (userPositionId != message.GetTargetControllerId() ||
-            message.GetTargetControllerId() == message.GetSendingControllerId()) {
+        if (!prenoteRelevance->IsRelevant(message)) {
             return;
         }
 

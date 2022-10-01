@@ -1,18 +1,18 @@
 #include "controller/ControllerPosition.h"
-#include "prenote/PlayNewPrenoteMessageSound.h"
 #include "prenote/PrenoteMessage.h"
+#include "prenote/SendNewPrenoteChatAreaMessage.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
-using UKControllerPlugin::Prenote::PlayNewPrenoteMessageSound;
 using UKControllerPlugin::Prenote::PrenoteMessage;
+using UKControllerPlugin::Prenote::SendNewPrenoteChatAreaMessage;
 
 namespace UKControllerPluginTest::Prenote {
-    class PlayNewPrenoteMessageSoundTest : public testing::Test
+    class SendNewPrenoteChatAreaMessageTest : public testing::Test
     {
         public:
-        PlayNewPrenoteMessageSoundTest()
+        SendNewPrenoteChatAreaMessageTest()
             : mockPrenoteRelevance(std::make_shared<testing::NiceMock<MockPrenoteUserRelevanceChecker>>()),
-              playSound(mockPrenoteRelevance, windows)
+              sendMessage(mockPrenoteRelevance, plugin)
         {
             sendingPosition = std::make_shared<ControllerPosition>(
                 1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
@@ -23,11 +23,11 @@ namespace UKControllerPluginTest::Prenote {
         std::shared_ptr<ControllerPosition> sendingPosition;
         std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<testing::NiceMock<MockPrenoteUserRelevanceChecker>> mockPrenoteRelevance;
-        testing::NiceMock<Windows::MockWinApi> windows;
-        PlayNewPrenoteMessageSound playSound;
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
+        SendNewPrenoteChatAreaMessage sendMessage;
     };
 
-    TEST_F(PlayNewPrenoteMessageSoundTest, ItPlaysSoundOnNewPrenoteMessage)
+    TEST_F(SendNewPrenoteChatAreaMessageTest, ItSendsChatAreaMessageOnNewPrenoteMessage)
     {
         const PrenoteMessage message(
             1,
@@ -38,12 +38,23 @@ namespace UKControllerPluginTest::Prenote {
             sendingPosition,
             receivingPosition,
             std::chrono::system_clock::now());
-        EXPECT_CALL(windows, PlayWave(MAKEINTRESOURCE(WAVE_NEW_PRENOTE))).Times(1); // NOLINT
+        EXPECT_CALL(
+            plugin,
+            ChatAreaMessage(
+                "UKCP_COORDINATION",
+                "UKCP",
+                "Prenote message for BAW123 is pending from EGKK_TWR.",
+                true,
+                true,
+                true,
+                true,
+                true))
+            .Times(1);
         EXPECT_CALL(*mockPrenoteRelevance, IsRelevant(testing::Ref(message))).Times(1).WillOnce(testing::Return(true));
-        playSound.NewMessage(message);
+        sendMessage.NewMessage(message);
     }
 
-    TEST_F(PlayNewPrenoteMessageSoundTest, ItDoesntPlaySoundIfNotRelevantToController)
+    TEST_F(SendNewPrenoteChatAreaMessageTest, ItDoesntPlaySoundIfNotRelevantToController)
     {
         const PrenoteMessage message(
             1,
@@ -54,8 +65,8 @@ namespace UKControllerPluginTest::Prenote {
             sendingPosition,
             receivingPosition,
             std::chrono::system_clock::now());
-        EXPECT_CALL(windows, PlayWave(MAKEINTRESOURCE(WAVE_NEW_PRENOTE))).Times(0); // NOLINT
+        EXPECT_CALL(plugin, ChatAreaMessage).Times(0);
         EXPECT_CALL(*mockPrenoteRelevance, IsRelevant(testing::Ref(message))).Times(1).WillOnce(testing::Return(false));
-        playSound.NewMessage(message);
+        sendMessage.NewMessage(message);
     }
 } // namespace UKControllerPluginTest::Prenote

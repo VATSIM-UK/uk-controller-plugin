@@ -32,7 +32,8 @@ namespace UKControllerPluginTest::Prenote {
         collection.AddHandler(handler1);
         collection.AddHandler(handler2);
 
-        const PrenoteMessage message(1, "BAW123", "EGKK", "TEST1A", "EGLL", 1, 2, std::chrono::system_clock::now());
+        const PrenoteMessage message(
+            1, "BAW123", "EGKK", "TEST1A", "EGLL", nullptr, nullptr, std::chrono::system_clock::now());
 
         EXPECT_CALL(*handler1, NewMessage(testing::Ref(message))).Times(1);
 
@@ -48,7 +49,8 @@ namespace UKControllerPluginTest::Prenote {
         collection.AddHandler(handler1);
         collection.AddHandler(handler2);
 
-        const PrenoteMessage message(1, "BAW123", "EGKK", "TEST1A", "EGLL", 1, 2, std::chrono::system_clock::now());
+        const PrenoteMessage message(
+            1, "BAW123", "EGKK", "TEST1A", "EGLL", nullptr, nullptr, std::chrono::system_clock::now());
 
         EXPECT_CALL(*handler1, MessageCancelled(testing::Ref(message))).Times(1);
 
@@ -64,7 +66,8 @@ namespace UKControllerPluginTest::Prenote {
         collection.AddHandler(handler1);
         collection.AddHandler(handler2);
 
-        const PrenoteMessage message(1, "BAW123", "EGKK", "TEST1A", "EGLL", 1, 2, std::chrono::system_clock::now());
+        const PrenoteMessage message(
+            1, "BAW123", "EGKK", "TEST1A", "EGLL", nullptr, nullptr, std::chrono::system_clock::now());
 
         EXPECT_CALL(*handler1, MessageAcknowledged(testing::Ref(message))).Times(1);
 

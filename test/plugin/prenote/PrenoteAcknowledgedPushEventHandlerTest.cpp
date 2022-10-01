@@ -1,9 +1,11 @@
+#include "controller/ControllerPosition.h"
 #include "prenote/PrenoteAcknowledgedPushEventHandler.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "push/PushEvent.h"
 #include "push/PushEventSubscription.h"
 
+using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::PrenoteAcknowledgedPushEventHandler;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
@@ -17,8 +19,19 @@ namespace UKControllerPluginTest::Prenote {
         PrenoteAcknowledgedPushEventHandlerTest()
             : messages(std::make_shared<PrenoteMessageCollection>()), handler(messages)
         {
+            sendingPosition = std::make_shared<ControllerPosition>(
+                1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            receivingPosition = std::make_shared<ControllerPosition>(
+                2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
             this->messages->Add(std::make_shared<PrenoteMessage>(
-                1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, std::chrono::system_clock::now()));
+                1,
+                "BAW123",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                sendingPosition,
+                receivingPosition,
+                std::chrono::system_clock::now()));
         }
 
         /*
@@ -38,6 +51,8 @@ namespace UKControllerPluginTest::Prenote {
             return {"prenote-message.received", "test", eventData, eventData.dump()};
         };
 
+        std::shared_ptr<ControllerPosition> sendingPosition;
+        std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<PrenoteMessageCollection> messages;
         PrenoteAcknowledgedPushEventHandler handler;
     };

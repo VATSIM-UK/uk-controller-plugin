@@ -1,26 +1,23 @@
 #pragma once
 #include "PrenoteMessageEventHandlerInterface.h"
 
-namespace UKControllerPlugin {
-    namespace Controller {
-        class ActiveCallsignCollection;
-    } // namespace Controller
-    namespace Windows {
-        class WinApiInterface;
-    } // namespace Windows
-} // namespace UKControllerPlugin
+namespace UKControllerPlugin::Windows {
+    class WinApiInterface;
+} // namespace UKControllerPlugin::Windows
 
 namespace UKControllerPlugin::Prenote {
+    class PrenoteUserRelevanceChecker;
+
     class PlayNewPrenoteMessageSound : public PrenoteMessageEventHandlerInterface
     {
         public:
         PlayNewPrenoteMessageSound(
-            const Controller::ActiveCallsignCollection& activeCallsigns, Windows::WinApiInterface& winApi);
+            std::shared_ptr<PrenoteUserRelevanceChecker> prenoteRelevance, Windows::WinApiInterface& winApi);
         void NewMessage(const PrenoteMessage& message) override;
 
         private:
         // All the active controllers
-        const Controller::ActiveCallsignCollection& activeCallsigns;
+        const std::shared_ptr<PrenoteUserRelevanceChecker> prenoteRelevance;
 
         // Windows API
         Windows::WinApiInterface& winApi;

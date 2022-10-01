@@ -1,8 +1,10 @@
+#include "controller/ControllerPosition.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteMessageTimeout.h"
 #include "time/SystemClock.h"
 
+using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 using UKControllerPlugin::Prenote::PrenoteMessageTimeout;
@@ -16,14 +18,46 @@ namespace UKControllerPluginTest::Prenote {
         PrenoteMessageTimeoutTest() : messages(std::make_shared<PrenoteMessageCollection>()), timeout(messages)
         {
             SetTestNow(TimeNow());
+            sendingPosition = std::make_shared<ControllerPosition>(
+                1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            receivingPosition = std::make_shared<ControllerPosition>(
+                2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
             message1 = std::make_shared<PrenoteMessage>(
-                1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow() + std::chrono::minutes(1));
+                1,
+                "BAW123",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                sendingPosition,
+                receivingPosition,
+                TimeNow() + std::chrono::minutes(1));
             message2 = std::make_shared<PrenoteMessage>(
-                2, "BAW456", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow() - std::chrono::seconds(5));
+                2,
+                "BAW456",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                sendingPosition,
+                receivingPosition,
+                TimeNow() - std::chrono::seconds(5));
             message3 = std::make_shared<PrenoteMessage>(
-                3, "BAW456", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow() - std::chrono::seconds(5));
+                3,
+                "BAW456",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                sendingPosition,
+                receivingPosition,
+                TimeNow() - std::chrono::seconds(5));
             message4 = std::make_shared<PrenoteMessage>(
-                4, "BAW456", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow() - std::chrono::seconds(5));
+                4,
+                "BAW456",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                sendingPosition,
+                receivingPosition,
+                TimeNow() - std::chrono::seconds(5));
 
             messages->Add(message1);
             messages->Add(message2);
@@ -31,6 +65,8 @@ namespace UKControllerPluginTest::Prenote {
             messages->Add(message4);
         }
 
+        std::shared_ptr<ControllerPosition> sendingPosition;
+        std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<PrenoteMessageCollection> messages;
         std::shared_ptr<PrenoteMessage> message1;
         std::shared_ptr<PrenoteMessage> message2;

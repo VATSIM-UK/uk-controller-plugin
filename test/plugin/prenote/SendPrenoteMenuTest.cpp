@@ -45,8 +45,6 @@ namespace UKControllerPluginTest::Prenote {
             ON_CALL(*mockPluginReturnedFlightplan, GetSidName).WillByDefault(testing::Return("BADIM1X"));
             ON_CALL(*mockPluginReturnedFlightplan, GetDestination).WillByDefault(testing::Return("EGLL"));
 
-            collection->Add(std::make_shared<PrenoteMessage>(1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 5, TimeNow()));
-
             controllers.AddPosition(std::make_shared<ControllerPosition>(
                 1, "EGKK_APP", 126.820, std::vector<std::string>{"EGKK"}, true, false, true, true));
 
@@ -61,6 +59,16 @@ namespace UKControllerPluginTest::Prenote {
 
             controllers.AddPosition(std::make_shared<ControllerPosition>(
                 5, "LON_CTR", 123.9, std::vector<std::string>{"EGGD"}, true, false, true, true));
+
+            collection->Add(std::make_shared<PrenoteMessage>(
+                1,
+                "BAW123",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                controllers.FetchPositionById(1),
+                controllers.FetchPositionById(5),
+                TimeNow()));
 
             // Default the user to active
             std::array<int, 5> positionsToAdd{1, 2, 3, 4, 5};

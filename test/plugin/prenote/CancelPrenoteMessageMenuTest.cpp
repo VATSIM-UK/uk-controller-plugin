@@ -38,11 +38,6 @@ namespace UKControllerPluginTest::Prenote {
 
             ON_CALL(*mockPluginReturnedFlightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
 
-            collection->Add(std::make_shared<PrenoteMessage>(1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow()));
-            collection->Add(std::make_shared<PrenoteMessage>(2, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 3, TimeNow()));
-            collection->Add(std::make_shared<PrenoteMessage>(5, "BAW123", "EGGD", "BADIM1X", "EGLL", 2, 2, TimeNow()));
-            collection->Add(std::make_shared<PrenoteMessage>(4, "BAW456", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow()));
-
             controllers.AddPosition(std::make_shared<ControllerPosition>(
                 1, "EGKK_APP", 126.820, std::vector<std::string>{"EGKK"}, true, false, true));
 
@@ -51,6 +46,43 @@ namespace UKControllerPluginTest::Prenote {
 
             controllers.AddPosition(std::make_shared<ControllerPosition>(
                 3, "LON_SC_CTR", 132.600, std::vector<std::string>{"EGKK"}, true, false));
+
+            collection->Add(std::make_shared<PrenoteMessage>(
+                1,
+                "BAW123",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                controllers.FetchPositionById(1),
+                controllers.FetchPositionById(2),
+                TimeNow()));
+            collection->Add(std::make_shared<PrenoteMessage>(
+                2,
+                "BAW123",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                controllers.FetchPositionById(1),
+                controllers.FetchPositionById(3),
+                TimeNow()));
+            collection->Add(std::make_shared<PrenoteMessage>(
+                5,
+                "BAW123",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                controllers.FetchPositionById(2),
+                controllers.FetchPositionById(2),
+                TimeNow()));
+            collection->Add(std::make_shared<PrenoteMessage>(
+                4,
+                "BAW456",
+                "EGGD",
+                "BADIM1X",
+                "EGLL",
+                controllers.FetchPositionById(1),
+                controllers.FetchPositionById(2),
+                TimeNow()));
 
             // Default the user to active
             callsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Test", *controllers.FetchPositionById(1), true));

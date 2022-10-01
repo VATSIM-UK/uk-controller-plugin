@@ -442,7 +442,7 @@ set(test__prenote
         prenote/PublishedPrenoteCollectionFactoryTest.cpp
         prenote/PublishedPrenoteMapperTest.cpp
         prenote/PrenoteMessageEventHandlerCollectionTest.cpp
-        prenote/PlayNewPrenoteMessageSoundTest.cpp)
+        prenote/PlayNewPrenoteMessageSoundTest.cpp prenote/PrenoteIsRelevantToUserTest.cpp mock/MockPrenoteUserRelevanceChecker.h prenote/SendNewPrenoteChatAreaMessageTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push

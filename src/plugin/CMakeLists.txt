@@ -693,7 +693,7 @@ set(src__prenote
     prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
     prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
     prenote/PairedAirfieldPrenote.h
-    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h prenote/PrenoteMessageEventHandlerInterface.h prenote/PlayNewPrenoteMessageSound.cpp prenote/PlayNewPrenoteMessageSound.h)
+    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h prenote/PrenoteMessageEventHandlerInterface.h prenote/PlayNewPrenoteMessageSound.cpp prenote/PlayNewPrenoteMessageSound.h prenote/SendNewPrenoteChatAreaMessage.cpp prenote/SendNewPrenoteChatAreaMessage.h prenote/PrenoteIsRelevantToUser.cpp prenote/PrenoteIsRelevantToUser.h prenote/PrenoteUserRelevanceChecker.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
