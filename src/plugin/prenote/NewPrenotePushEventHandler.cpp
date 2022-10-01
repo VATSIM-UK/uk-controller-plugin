@@ -1,6 +1,7 @@
 #include "NewPrenotePushEventHandler.h"
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
+#include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"

@@ -1,9 +1,18 @@
 #pragma once
-#include "api/ApiInterface.h"
-#include "controller/ActiveCallsignCollection.h"
-#include "notifications/NotificationsRepository.h"
+
+namespace UKControllerPlugin {
+    namespace Api {
+        class ApiInterface;
+    } // namespace Api
+    namespace Controller {
+        class ActiveCallsignCollection;
+    } // namespace Controller
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Notifications {
+    class Notification;
+    class NotificationsRepository;
+    
     /*
      *     Dialog for viewing all the notifications
      */
