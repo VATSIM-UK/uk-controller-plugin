@@ -12,7 +12,7 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin::Notifications {
     class Notification;
     class NotificationsRepository;
-    
+
     /*
      *     Dialog for viewing all the notifications
      */
