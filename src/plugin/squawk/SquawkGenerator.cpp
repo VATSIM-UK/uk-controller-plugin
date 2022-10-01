@@ -4,6 +4,7 @@
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "api/ApiNotFoundException.h"
+#include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"

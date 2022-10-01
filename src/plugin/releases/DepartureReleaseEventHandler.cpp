@@ -7,6 +7,7 @@
 #include "ReleaseRejectionRemarksUserMessage.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
+#include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
