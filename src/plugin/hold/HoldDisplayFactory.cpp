@@ -5,7 +5,6 @@
 #include "HoldDisplayFactory.h"
 #include "HoldManager.h"
 #include "PublishedHoldCollection.h"
-#include "aircraft/CallsignSelectionList.h"
 #include "aircraft/CallsignSelectionListFactory.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"

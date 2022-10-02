@@ -1,6 +1,5 @@
 #include "SidCollection.h"
 #include "StandardInstrumentDeparture.h"
-#include "euroscope/EuroScopeCFlightPlanInterface.h"
 
 namespace UKControllerPlugin::Sid {
     void SidCollection::AddSid(const std::shared_ptr<StandardInstrumentDeparture>& sid)
