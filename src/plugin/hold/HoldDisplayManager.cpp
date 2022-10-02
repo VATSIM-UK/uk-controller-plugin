@@ -13,6 +13,8 @@ namespace UKControllerPlugin::Hold {
     {
     }
 
+    HoldDisplayManager::~HoldDisplayManager() = default;
+
     /*
         Return the number of displays
     */

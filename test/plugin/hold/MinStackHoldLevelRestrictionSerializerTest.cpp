@@ -1,3 +1,4 @@
+#include "hold/MinStackHoldLevelRestriction.h"
 #include "hold/MinStackHoldLevelRestrictionSerializer.h"
 #include "bootstrap/PersistenceContainer.h"
 
