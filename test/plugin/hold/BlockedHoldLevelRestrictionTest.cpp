@@ -1,8 +1,7 @@
-#include "pch/pch.h"
 #include "hold/BlockedHoldLevelRestriction.h"
 
-using UKControllerPlugin::Hold::BlockedHoldLevelRestriction;
 using ::testing::Test;
+using UKControllerPlugin::Hold::BlockedHoldLevelRestriction;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -10,20 +9,17 @@ namespace UKControllerPluginTest {
         class BlockedHoldLevelRestrictionTest : public Test
         {
             public:
-                BlockedHoldLevelRestrictionTest()
-                    : restriction({7000, 13000})
-                {
+            BlockedHoldLevelRestrictionTest() : restriction({7000, 13000})
+            {
+            }
 
-                }
-
-                BlockedHoldLevelRestriction restriction;
+            BlockedHoldLevelRestriction restriction;
         };
 
         TEST_F(BlockedHoldLevelRestrictionTest, IsLevelRestrictedReturnsTrueIfLevelInSet)
         {
             EXPECT_TRUE(this->restriction.LevelRestricted(13000));
         }
-
 
         TEST_F(BlockedHoldLevelRestrictionTest, IsLevelRestrictedReturnsFalseLevelNotInSet)
         {
@@ -32,8 +28,8 @@ namespace UKControllerPluginTest {
 
         TEST_F(BlockedHoldLevelRestrictionTest, ItCanReturnBlockedLevels)
         {
-            std::set<unsigned int> expected = { 7000, 13000 };
+            std::set<unsigned int> expected = {7000, 13000};
             EXPECT_EQ(expected, this->restriction.GetLevels());
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

@@ -4,8 +4,8 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
         class EventHandlerCollectionBootstrap
         {
             public:
-                static void BoostrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer & persistence);
+            static void BoostrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& persistence);
         };
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin

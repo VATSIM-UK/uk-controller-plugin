@@ -54,7 +54,6 @@
 #include "prenote/PrenoteMessageEventHandlerCollection.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
-#include "radarscreen/RadarScreenFactory.h"
 #include "radarscreen/ScreenControls.h"
 #include "regional/RegionalPressureManager.h"
 #include "releases/DepartureReleaseEventHandler.h"

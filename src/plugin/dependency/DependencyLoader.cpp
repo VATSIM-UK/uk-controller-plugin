@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "dependency/DependencyLoader.h"
 #include "helper/HelperFunctions.h"
 
@@ -28,11 +27,8 @@ namespace UKControllerPlugin {
                 return defaultValue;
             }
 
-            try
-            {
-                return nlohmann::json::parse(
-                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + L"/" + wideKey)
-                );
+            try {
+                return nlohmann::json::parse(this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + L"/" + wideKey));
             } catch (nlohmann::json::exception) {
                 LogWarning("Unable to load dependency " + key + ", it is not valid JSON");
             }
@@ -51,18 +47,15 @@ namespace UKControllerPlugin {
             }
 
             nlohmann::json dependencies;
-            try
-            {
+            try {
                 dependencies = nlohmann::json::parse(
-                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + L"/" + L"dependency-list.json")
-                );
+                    this->filesystem.ReadFromFile(this->DEPENDENCY_FOLDER + L"/" + L"dependency-list.json"));
             } catch (nlohmann::json::exception) {
                 LogWarning("Unable to parse JSON in dependency list, dependencies not loaded");
                 return;
             }
 
-            for (nlohmann::json::const_iterator it = dependencies.cbegin(); it != dependencies.cend(); ++it)
-            {
+            for (nlohmann::json::const_iterator it = dependencies.cbegin(); it != dependencies.cend(); ++it) {
                 if (!this->ValidDependency(*it)) {
                     LogWarning("Invalid dependency data, skipping load: " + it->dump());
                     continue;
@@ -76,11 +69,8 @@ namespace UKControllerPlugin {
 
         bool DependencyLoader::ValidDependency(const nlohmann::json& dependency) const
         {
-            return dependency.is_object() &&
-                dependency.contains("key") &&
-                dependency.at("key").is_string() &&
-                dependency.contains("local_file") &&
-                dependency.at("local_file").is_string();
+            return dependency.is_object() && dependency.contains("key") && dependency.at("key").is_string() &&
+                   dependency.contains("local_file") && dependency.at("local_file").is_string();
         }
-    }  // namespace Dependency
-}  // namespace UKControllerPlugin
+    } // namespace Dependency
+} // namespace UKControllerPlugin

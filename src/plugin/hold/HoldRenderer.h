@@ -1,11 +1,10 @@
 #pragma once
-#include "HoldDisplay.h"
-#include "HoldDisplayManager.h"
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
 
 namespace UKControllerPlugin::Hold {
+    class HoldDisplayManager;
 
     /*
         Handles the rendering of hold displays on a given ASR

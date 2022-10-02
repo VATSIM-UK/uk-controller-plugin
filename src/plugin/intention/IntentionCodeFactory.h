@@ -5,8 +5,8 @@ namespace UKControllerPlugin {
     namespace IntentionCode {
         class IntentionCodeGenerator;
         class SectorExitRepository;
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -18,9 +18,8 @@ namespace UKControllerPlugin {
         class IntentionCodeFactory
         {
             public:
-                static std::unique_ptr<IntentionCodeGenerator> Create(
-                    UKControllerPlugin::IntentionCode::SectorExitRepository & exitPoints
-                );
+            static std::unique_ptr<IntentionCodeGenerator>
+            Create(UKControllerPlugin::IntentionCode::SectorExitRepository& exitPoints);
         };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin

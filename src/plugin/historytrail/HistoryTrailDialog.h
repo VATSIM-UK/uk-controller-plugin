@@ -3,8 +3,8 @@
 namespace UKControllerPlugin {
     namespace HistoryTrail {
         struct HistoryTrailData;
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace HistoryTrail {
@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
         */
         class HistoryTrailDialog
         {
-        public:
+            public:
             static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             // Maximum renderable trail length
@@ -54,7 +54,7 @@ namespace UKControllerPlugin {
             // Line trail type
             const int trailTypeLine = 3;
 
-        private:
+            private:
             LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             void InitDialog(HWND hwnd, LPARAM lParam);
@@ -65,7 +65,7 @@ namespace UKControllerPlugin {
             void TidyUpDialog(void);
 
             // Data to set up the dialog and return on close
-            HistoryTrailData * data;
+            HistoryTrailData* data;
 
             // Stores colour data
             CHOOSECOLOR colourStruct{
@@ -77,8 +77,7 @@ namespace UKControllerPlugin {
                 CC_RGBINIT | CC_FULLOPEN,
                 NULL,
                 NULL,
-                NULL
-            };
+                NULL};
 
             // Stores any custom trail colours
             COLORREF customTrailColours[16];
@@ -86,5 +85,5 @@ namespace UKControllerPlugin {
             // Brush for drawing the colour selector
             HBRUSH colourSelectorBrush;
         };
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

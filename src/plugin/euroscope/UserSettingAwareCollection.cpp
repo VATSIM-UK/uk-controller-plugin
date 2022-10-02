@@ -1,10 +1,9 @@
-#include "pch/pch.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "euroscope/UserSettingAwareInterface.h"
 #include "euroscope/UserSetting.h"
 
-using UKControllerPlugin::Euroscope::UserSettingAwareInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::Euroscope::UserSettingAwareInterface;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -13,13 +12,11 @@ namespace UKControllerPlugin {
             Should be called whenever the user settings dialog is saved or the plugin
             loads up.
         */
-        void UserSettingAwareCollection::UserSettingsUpdateEvent(UserSetting & userSetting) const
+        void UserSettingAwareCollection::UserSettingsUpdateEvent(UserSetting& userSetting) const
         {
-            for (
-                std::set<std::shared_ptr<UserSettingAwareInterface>>::const_iterator it = this->allHandlers.cbegin();
-                it != this->allHandlers.cend();
-                ++it
-            ) {
+            for (std::set<std::shared_ptr<UserSettingAwareInterface>>::const_iterator it = this->allHandlers.cbegin();
+                 it != this->allHandlers.cend();
+                 ++it) {
                 (*it)->UserSettingsUpdated(userSetting);
             }
         }
@@ -36,5 +33,5 @@ namespace UKControllerPlugin {
         {
             this->allHandlers.insert(handler);
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

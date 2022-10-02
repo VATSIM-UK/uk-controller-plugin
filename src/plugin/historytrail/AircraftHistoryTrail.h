@@ -9,7 +9,7 @@ namespace UKControllerPlugin {
         */
         class AircraftHistoryTrail
         {
-        public:
+            public:
             explicit AircraftHistoryTrail(std::string callsign);
             void AddItem(HistoryTrailPoint point);
             std::string GetCallsign(void) const;
@@ -17,12 +17,13 @@ namespace UKControllerPlugin {
 
             // The maximum number of items we can have in the history trail.
             const unsigned int maxSize = 50;
-        private:
+
+            private:
             // A queue of aircraft positions.
             std::deque<HistoryTrailPoint> trail;
 
             // Aircraft callsign corresponding to the history trail
             std::string callsign;
         };
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

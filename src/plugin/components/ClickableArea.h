@@ -18,30 +18,19 @@ namespace UKControllerPlugin::Components {
     class ClickableArea
     {
         public:
-            static std::shared_ptr<ClickableArea> Create(
-                Gdiplus::Rect area,
-                int screenObjectId,
-                std::string screenObjectDescription,
-                bool draggable
-            );
-            void WithPosition(Gdiplus::Rect area);
-            void Apply(
-                Windows::GdiGraphicsInterface& graphics,
-                Euroscope::EuroscopeRadarLoopbackInterface& radarScreen
-            ) const;
+        static std::shared_ptr<ClickableArea>
+        Create(Gdiplus::Rect area, int screenObjectId, std::string screenObjectDescription, bool draggable);
+        void WithPosition(Gdiplus::Rect area);
+        void
+        Apply(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const;
 
         protected:
-            ClickableArea(
-                Gdiplus::Rect area,
-                int screenObjectId,
-                std::string screenObjectDescription,
-                bool draggable
-            );
+        ClickableArea(Gdiplus::Rect area, int screenObjectId, std::string screenObjectDescription, bool draggable);
 
         private:
-            std::string screenObjectDescription;
-            Gdiplus::Rect area;
-            int screenObjectId;
-            bool draggable;
+        std::string screenObjectDescription;
+        Gdiplus::Rect area;
+        int screenObjectId;
+        bool draggable;
     };
 } // namespace UKControllerPlugin::Components

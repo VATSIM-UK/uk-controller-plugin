@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "intention/SectorExitPoint.h"
 
 using UKControllerPlugin::IntentionCode::SectorExitPoint;
@@ -79,7 +78,6 @@ namespace UKControllerPluginTest {
             SectorExitPoint exit("Test", "T", SectorExitPoint::outEast);
             EXPECT_FALSE(exit.IsCorrectOutDirection(150.0));
         }
-
 
         // South
         TEST(SectorExitPoint, IsCorrectOutDirectionReturnsTrueSouth)
@@ -271,5 +269,5 @@ namespace UKControllerPluginTest {
             SectorExitPoint exit("Test", "T", SectorExitPoint::outNorthEast);
             EXPECT_FALSE(exit.IsCorrectOutDirection(126.0));
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPluginTest
+    } // namespace IntentionCode
+} // namespace UKControllerPluginTest

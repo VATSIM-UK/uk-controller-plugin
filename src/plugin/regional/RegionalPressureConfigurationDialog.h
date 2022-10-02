@@ -11,39 +11,37 @@ namespace UKControllerPlugin {
         class RegionalPressureConfigurationDialog
         {
             public:
-                explicit RegionalPressureConfigurationDialog(
-                    const UKControllerPlugin::Regional::RegionalPressureManager & manager
-                );
-                static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+            explicit RegionalPressureConfigurationDialog(
+                const UKControllerPlugin::Regional::RegionalPressureManager& manager);
+            static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
             private:
-                LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-                void AddEntryToActiveList(HWND hwnd, LPARAM lParam);
-                void DoElementSwap(
-                    HWND hwnd,
-                    unsigned int firstItemIndex,
-                    LPARAM firstItemString,
-                    LPARAM firstItemData,
-                    unsigned int secondItemIndex,
-                    LPARAM secondItemString,
-                    LPARAM secondItemData
-                );
+            LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+            void AddEntryToActiveList(HWND hwnd, LPARAM lParam);
+            void DoElementSwap(
+                HWND hwnd,
+                unsigned int firstItemIndex,
+                LPARAM firstItemString,
+                LPARAM firstItemData,
+                unsigned int secondItemIndex,
+                LPARAM secondItemString,
+                LPARAM secondItemData);
 
-                void InitDialog(HWND hwnd, LPARAM lParam);
-                void SwapElements(HWND hwnd, LPARAM lParam, bool swapUp);
-                void RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam);
-                void SaveDialog(HWND hwnd);
-                std::wstring GetListEntryForKey(std::string mslKey);
-                bool IsLastElement(unsigned int selectedIndex, unsigned int itemCount, bool swapUp);
+            void InitDialog(HWND hwnd, LPARAM lParam);
+            void SwapElements(HWND hwnd, LPARAM lParam, bool swapUp);
+            void RemoveEntryFromActiveList(HWND hwnd, LPARAM lParam);
+            void SaveDialog(HWND hwnd);
+            std::wstring GetListEntryForKey(std::string mslKey);
+            bool IsLastElement(unsigned int selectedIndex, unsigned int itemCount, bool swapUp);
 
-                // The renderer configuration this relates to
-                UKControllerPlugin::Regional::RegionalPressureRendererConfiguration* config = nullptr;
+            // The renderer configuration this relates to
+            UKControllerPlugin::Regional::RegionalPressureRendererConfiguration* config = nullptr;
 
-                // Manages MSLs
-                const UKControllerPlugin::Regional::RegionalPressureManager& manager;
+            // Manages MSLs
+            const UKControllerPlugin::Regional::RegionalPressureManager& manager;
 
-                // The keys currently active for RPS whilst the dialog is open
-                std::set<std::string> activePressureKeys;
+            // The keys currently active for RPS whilst the dialog is open
+            std::set<std::string> activePressureKeys;
         };
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+    } // namespace Regional
+} // namespace UKControllerPlugin

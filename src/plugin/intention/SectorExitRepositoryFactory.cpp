@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "intention/SectorExitRepositoryFactory.h"
 #include "intention/SectorExitRepository.h"
 #include "intention/SectorExitPoint.h"

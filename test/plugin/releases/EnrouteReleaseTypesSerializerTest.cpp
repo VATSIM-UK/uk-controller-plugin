@@ -1,18 +1,16 @@
-#include "pch/pch.h"
 #include "releases/EnrouteReleaseTypesSerializer.h"
 #include "releases/EnrouteReleaseType.h"
 #include "releases/CompareEnrouteReleaseTypes.h"
 
 using ::testing::Test;
-using UKControllerPlugin::Releases::EnrouteReleaseType;
 using UKControllerPlugin::Releases::CompareEnrouteReleaseTypes;
+using UKControllerPlugin::Releases::EnrouteReleaseType;
 
 namespace UKControllerPluginTest {
     namespace Releases {
 
         class EnrouteReleaseTypesSerializerTest : public Test
         {
-
         };
 
         TEST_F(EnrouteReleaseTypesSerializerTest, DependencyValidReturnsTrueIfValid)
@@ -27,53 +25,35 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseTypesSerializerTest, JsonValidReturnsTrueIfValid)
         {
-            nlohmann::json data{
-                {"id", 1},
-                {"tag_string", "RFC"},
-                {"description", "Released For Climb"}
-            };
+            nlohmann::json data{{"id", 1}, {"tag_string", "RFC"}, {"description", "Released For Climb"}};
 
             EXPECT_TRUE(UKControllerPlugin::Releases::JsonValid(data));
         }
 
         TEST_F(EnrouteReleaseTypesSerializerTest, JsonValidReturnsFalseIfIdMissing)
         {
-            nlohmann::json data{
-                {"tag_string", "RFC"},
-                {"description", "Released For Climb"}
-            };
+            nlohmann::json data{{"tag_string", "RFC"}, {"description", "Released For Climb"}};
 
             EXPECT_FALSE(UKControllerPlugin::Releases::JsonValid(data));
         }
 
         TEST_F(EnrouteReleaseTypesSerializerTest, JsonValidReturnsFalseIfIdNotInteger)
         {
-            nlohmann::json data{
-                {"id", "abc"},
-                {"tag_string", "RFC"},
-                {"description", "Released For Climb"}
-            };
+            nlohmann::json data{{"id", "abc"}, {"tag_string", "RFC"}, {"description", "Released For Climb"}};
 
             EXPECT_FALSE(UKControllerPlugin::Releases::JsonValid(data));
         }
 
         TEST_F(EnrouteReleaseTypesSerializerTest, JsonValidReturnsFalseIfTagStringMissing)
         {
-            nlohmann::json data{
-                {"id", 1},
-                {"description", "Released For Climb"}
-            };
+            nlohmann::json data{{"id", 1}, {"description", "Released For Climb"}};
 
             EXPECT_FALSE(UKControllerPlugin::Releases::JsonValid(data));
         }
 
         TEST_F(EnrouteReleaseTypesSerializerTest, JsonValidReturnsFalseIfTagStringNotString)
         {
-            nlohmann::json data{
-                {"id", 1},
-                {"tag_string", 123},
-                {"description", "Released For Climb"}
-            };
+            nlohmann::json data{{"id", 1}, {"tag_string", 123}, {"description", "Released For Climb"}};
 
             EXPECT_FALSE(UKControllerPlugin::Releases::JsonValid(data));
         }
@@ -90,11 +70,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseTypesSerializerTest, JsonValidReturnsFalseIfDescriptionNotString)
         {
-            nlohmann::json data{
-                {"id", 1},
-                {"tag_string", "RFC"},
-                {"description", 123}
-            };
+            nlohmann::json data{{"id", 1}, {"tag_string", "RFC"}, {"description", 123}};
 
             EXPECT_FALSE(UKControllerPlugin::Releases::JsonValid(data));
         }
@@ -102,21 +78,8 @@ namespace UKControllerPluginTest {
         TEST_F(EnrouteReleaseTypesSerializerTest, ItReturnsCollectionOfReleaseTypes)
         {
             nlohmann::json dependency = nlohmann::json::array();
-            dependency.push_back(
-                {
-                    {"id", 1},
-                    {"tag_string", "RFC"},
-                    {"description", "Released For Climb"}
-                }
-            );
-            dependency.push_back(
-                {
-                    {"id", 2},
-                    {"tag_string", "RFD"},
-                    {"description", "Released For Descent"}
-                }
-            );
-
+            dependency.push_back({{"id", 1}, {"tag_string", "RFC"}, {"description", "Released For Climb"}});
+            dependency.push_back({{"id", 2}, {"tag_string", "RFD"}, {"description", "Released For Descent"}});
 
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
             UKControllerPlugin::Releases::from_json(dependency, releases);
@@ -134,12 +97,7 @@ namespace UKControllerPluginTest {
 
         TEST_F(EnrouteReleaseTypesSerializerTest, ItHandlesInvalidDependency)
         {
-            nlohmann::json dependency = {
-                {"id", 1},
-                {"tag_string", "RFC"},
-                {"description", "Released For Climb"}
-            };
-
+            nlohmann::json dependency = {{"id", 1}, {"tag_string", "RFC"}, {"description", "Released For Climb"}};
 
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
             UKControllerPlugin::Releases::from_json(dependency, releases);
@@ -151,24 +109,17 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json dependency = nlohmann::json::array();
             dependency.push_back(
-                {
-                    {"id", 1},
-                    {"tag_string", 123},  // Invalid
-                    {"description", "Released For Climb"}
-                }
-            );
-            dependency.push_back(
-                {
-                    {"id", 2},
-                    {"tag_string", "RFD"},  // Missing description
-                }
-            );
-
+                {{"id", 1},
+                 {"tag_string", 123}, // Invalid
+                 {"description", "Released For Climb"}});
+            dependency.push_back({
+                {"id", 2}, {"tag_string", "RFD"}, // Missing description
+            });
 
             std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes> releases;
             UKControllerPlugin::Releases::from_json(dependency, releases);
 
             EXPECT_EQ(0, releases.size());
         }
-    }  // namespace Releases
-}  // namespace UKControllerPluginTest
+    } // namespace Releases
+} // namespace UKControllerPluginTest

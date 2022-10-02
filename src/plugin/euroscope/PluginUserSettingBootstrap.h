@@ -3,8 +3,8 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -15,9 +15,7 @@ namespace UKControllerPlugin {
         class PluginUserSettingBootstrap
         {
             public:
-                static void BootstrapPlugin(
-                    UKControllerPlugin::Bootstrap::PersistenceContainer & container
-                );
+            static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
         };
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

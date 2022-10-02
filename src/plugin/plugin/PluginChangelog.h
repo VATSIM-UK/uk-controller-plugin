@@ -14,33 +14,29 @@ namespace UKControllerPlugin {
                                 public Command::CommandHandlerInterface
         {
             public:
-                PluginChangelog(
-                    Windows::WinApiInterface& winApi,
-                    int menuCallbackId
-                );
+            PluginChangelog(Windows::WinApiInterface& winApi, int menuCallbackId);
 
-                // Inherited via ConfigurableDisplayInterface
-                void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
-                PopupMenuItem GetConfigurationMenuItem(void) const override;
+            // Inherited via ConfigurableDisplayInterface
+            void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
+            PopupMenuItem GetConfigurationMenuItem(void) const override;
 
-                // Inherited via CommandHandlerInterface
-                bool ProcessCommand(std::string command) override;
+            // Inherited via CommandHandlerInterface
+            bool ProcessCommand(std::string command) override;
 
-                // The command to accept
-                const std::string command = ".ukcp changelog";
+            // The command to accept
+            const std::string command = ".ukcp changelog";
 
-                // The description of the menu item
-                const std::string menuItemDescription = "UKCP Changelog (Opens In Web Browser)";
+            // The description of the menu item
+            const std::string menuItemDescription = "UKCP Changelog (Opens In Web Browser)";
 
             private:
+            void ShowChangelog() const;
 
-                void ShowChangelog() const;
+            // The ID of the callback
+            const int menuCallbackId;
 
-                // The ID of the callback
-                const int menuCallbackId;
-
-                // To windows so we can do the message
-                Windows::WinApiInterface& winApi;
+            // To windows so we can do the message
+            Windows::WinApiInterface& winApi;
         };
-    }  // namespace Plugin
-}  // namespace UKControllerPlugin
+    } // namespace Plugin
+} // namespace UKControllerPlugin

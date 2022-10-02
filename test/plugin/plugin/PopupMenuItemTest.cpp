@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -60,5 +59,5 @@ namespace UKControllerPluginTest {
             PopupMenuItem item2;
             EXPECT_FALSE(item1 == item2);
         }
-    }  // namespace Plugin
-}  // namespace UKControllerPluginTest
+    } // namespace Plugin
+} // namespace UKControllerPluginTest

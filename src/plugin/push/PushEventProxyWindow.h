@@ -6,4 +6,4 @@ namespace UKControllerPlugin {
         ULONG_PTR GetPushEventProxyMessageIdentifier();
         std::wstring GetProxyWindowName();
     } // namespace Push
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

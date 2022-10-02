@@ -22,62 +22,61 @@ namespace UKControllerPlugin {
         class PollingPushEventConnection : public PushEventConnectionInterface, public TimedEvent::AbstractTimedEvent
         {
             public:
-                PollingPushEventConnection(
-                    const Api::ApiInterface& api,
-                    TaskManager::TaskRunnerInterface& taskRunner,
-                    const PushEventProcessorCollection& pushEventHandlers
-                );
+            PollingPushEventConnection(
+                const Api::ApiInterface& api,
+                TaskManager::TaskRunnerInterface& taskRunner,
+                const PushEventProcessorCollection& pushEventHandlers);
 
-                // Inherited from WebsocketConnectionInterface
-                void WriteMessage(std::string message) override;
-                std::string GetNextMessage() override;
-                void TimedEventTrigger() override;
+            // Inherited from WebsocketConnectionInterface
+            void WriteMessage(std::string message) override;
+            std::string GetNextMessage() override;
+            void TimedEventTrigger() override;
 
-                static bool SyncResponseValid(const nlohmann::json& response);
-                static bool LatestPluginEventsResponseValid(const nlohmann::json& response);
-                static bool PluginEventValid(const nlohmann::json& pluginEvent);
+            static bool SyncResponseValid(const nlohmann::json& response);
+            static bool LatestPluginEventsResponseValid(const nlohmann::json& response);
+            static bool PluginEventValid(const nlohmann::json& pluginEvent);
 
-                std::chrono::system_clock::time_point LastPollTime() const;
-                void SetLastPollTime(std::chrono::system_clock::time_point lastPollTime);
-                void SetSyncInProgress();
-                void SetUpdateInProgress();
-                void SetSynced();
-                int LastEventId() const;
+            std::chrono::system_clock::time_point LastPollTime() const;
+            void SetLastPollTime(std::chrono::system_clock::time_point lastPollTime);
+            void SetSyncInProgress();
+            void SetUpdateInProgress();
+            void SetSynced();
+            int LastEventId() const;
 
-                // How often we should poll for new updates
-                const std::chrono::duration<int64_t> pollInterval = std::chrono::seconds(10);
+            // How often we should poll for new updates
+            const std::chrono::duration<int64_t> pollInterval = std::chrono::seconds(10);
 
             private:
-                void SyncEvents();
-                void GetLatestEvents();
+            void SyncEvents();
+            void GetLatestEvents();
 
-                // Whether or not we're currently syncing events
-                bool syncInProgress = false;
+            // Whether or not we're currently syncing events
+            bool syncInProgress = false;
 
-                // Whether or not we're currently in the process of retrieving the latest events
-                bool updateInProgress = false;
+            // Whether or not we're currently in the process of retrieving the latest events
+            bool updateInProgress = false;
 
-                // The last event that we processed
-                int lastEventId = -1;
+            // The last event that we processed
+            int lastEventId = -1;
 
-                // The time that we last made an attempt to poll - default it to one second after the poll interval.
-                std::chrono::system_clock::time_point lastPollTime = std::chrono::system_clock::now() -
-                    pollInterval - std::chrono::seconds(1);
+            // The time that we last made an attempt to poll - default it to one second after the poll interval.
+            std::chrono::system_clock::time_point lastPollTime =
+                std::chrono::system_clock::now() - pollInterval - std::chrono::seconds(1);
 
-                // The api for polling for updates
-                const Api::ApiInterface& api;
+            // The api for polling for updates
+            const Api::ApiInterface& api;
 
-                // Allows polls to be run asynchronously
-                TaskManager::TaskRunnerInterface& taskRunner;
+            // Allows polls to be run asynchronously
+            TaskManager::TaskRunnerInterface& taskRunner;
 
-                // Messages that are yet to be processed by the rest of the plugin
-                std::queue<std::string> inboundMessages;
+            // Messages that are yet to be processed by the rest of the plugin
+            std::queue<std::string> inboundMessages;
 
-                // Protects the inbound messages queue
-                std::mutex inboundMessageQueueGuard;
+            // Protects the inbound messages queue
+            std::mutex inboundMessageQueueGuard;
 
-                // Push event handlers
-                const PushEventProcessorCollection& pushEventHandlers;
+            // Push event handlers
+            const PushEventProcessorCollection& pushEventHandlers;
         };
     } // namespace Push
 } // namespace UKControllerPlugin

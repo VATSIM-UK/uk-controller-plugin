@@ -1,6 +1,4 @@
-#include "pch/pch.h"
 #include "api/ApiResponse.h"
-
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -42,8 +40,7 @@ namespace UKControllerPlugin {
         */
         bool ApiResponse::IsUnauthorised(void) const
         {
-            return this->statusCode == this->STATUS_FORBIDDEN ||
-                this->statusCode == this->STATUS_UNAUTHORISED;
+            return this->statusCode == this->STATUS_FORBIDDEN || this->statusCode == this->STATUS_UNAUTHORISED;
         }
 
         bool ApiResponse::IsBadRequest(void) const
@@ -66,8 +63,7 @@ namespace UKControllerPlugin {
 
         bool ApiResponse::IsServerError(void) const
         {
-            return this->statusCode == this->STATUS_SERVER_ERROR ||
-                this->statusCode == this->STATUS_SERVICE_UNAVAILBLE;
+            return this->statusCode == this->STATUS_SERVER_ERROR || this->statusCode == this->STATUS_SERVICE_UNAVAILBLE;
         }
 
         /*
@@ -75,14 +71,13 @@ namespace UKControllerPlugin {
         */
         bool ApiResponse::IsSuccess(void) const
         {
-            return this->statusCode == this->STATUS_OK ||
-                this->statusCode == this->STATUS_CREATED ||
-                this->statusCode == this->STATUS_NO_CONTENT;
+            return this->statusCode == this->STATUS_OK || this->statusCode == this->STATUS_CREATED ||
+                   this->statusCode == this->STATUS_NO_CONTENT;
         }
 
         bool ApiResponse::IsTeapot(void) const
         {
             return this->statusCode == this->STATUS_TEAPOT;
         }
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+    } // namespace Api
+} // namespace UKControllerPlugin

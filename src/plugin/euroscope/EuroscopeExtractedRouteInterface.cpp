@@ -1,12 +1,11 @@
-#include "pch/pch.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
 
         EuroscopeExtractedRouteInterface::EuroscopeExtractedRouteInterface(
-            EuroScopePlugIn::CFlightPlanExtractedRoute route
-        ) {
+            EuroScopePlugIn::CFlightPlanExtractedRoute route)
+        {
             this->route = route;
         }
 
@@ -30,7 +29,7 @@ namespace UKControllerPlugin {
             return this->route.GetPointsNumber();
         }
 
-        const char * EuroscopeExtractedRouteInterface::GetPointName(int index)
+        const char* EuroscopeExtractedRouteInterface::GetPointName(int index)
         {
             return this->route.GetPointName(index);
         }
@@ -39,5 +38,5 @@ namespace UKControllerPlugin {
         {
             return this->route.GetPointPosition(index);
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

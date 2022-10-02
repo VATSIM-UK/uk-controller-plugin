@@ -3,8 +3,8 @@
 namespace UKControllerPlugin {
     namespace Hold {
         class HoldingAircraft;
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -17,19 +17,14 @@ namespace UKControllerPlugin {
         {
             using is_transparent = std::string;
 
-            bool operator()(
-                const std::shared_ptr<UKControllerPlugin::Hold::HoldingAircraft> & hold,
-                std::string id
-            ) const;
-            bool operator()(
-                std::string id,
-                const std::shared_ptr<UKControllerPlugin::Hold::HoldingAircraft>& hold
-            ) const;
+            bool
+            operator()(const std::shared_ptr<UKControllerPlugin::Hold::HoldingAircraft>& hold, std::string id) const;
+            bool
+            operator()(std::string id, const std::shared_ptr<UKControllerPlugin::Hold::HoldingAircraft>& hold) const;
             bool operator()(
                 const std::shared_ptr<UKControllerPlugin::Hold::HoldingAircraft>& a,
-                const std::shared_ptr<UKControllerPlugin::Hold::HoldingAircraft>& b
-            ) const;
+                const std::shared_ptr<UKControllerPlugin::Hold::HoldingAircraft>& b) const;
 
         } CompareHoldingAircraft;
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

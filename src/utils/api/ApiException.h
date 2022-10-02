@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace UKControllerPlugin {
     namespace Api {
         /*
@@ -10,7 +9,9 @@ namespace UKControllerPlugin {
         class ApiException : public std::runtime_error
         {
             public:
-                explicit ApiException(std::string message) : runtime_error(message) {}
+            explicit ApiException(std::string message) : runtime_error(message)
+            {
+            }
         };
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+    } // namespace Api
+} // namespace UKControllerPlugin

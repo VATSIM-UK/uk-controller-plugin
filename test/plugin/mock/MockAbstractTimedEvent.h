@@ -7,7 +7,7 @@ namespace UKControllerPluginTest {
         class MockAbstractTimedEvent : public UKControllerPlugin::TimedEvent::AbstractTimedEvent
         {
             public:
-                MOCK_METHOD0(TimedEventTrigger, void(void));
+            MOCK_METHOD0(TimedEventTrigger, void(void));
         };
-    }  // namespace EventHandler
-}  // namespace UKControllerPluginTest
+    } // namespace EventHandler
+} // namespace UKControllerPluginTest

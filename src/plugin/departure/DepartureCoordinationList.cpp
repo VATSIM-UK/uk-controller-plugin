@@ -4,6 +4,7 @@
 #include "components/ClickableArea.h"
 #include "components/StandardButtons.h"
 #include "components/TitleBar.h"
+#include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"

@@ -1,21 +1,20 @@
-#include "pch/pch.h"
 #include "time/SystemClock.h"
 
 using ::testing::Test;
-using UKControllerPlugin::Time::TimeNow;
 using UKControllerPlugin::Time::SetTestNow;
+using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPluginTest {
     namespace Time {
 
         class SystemClockTest : public Test
-        { };
+        {
+        };
 
         TEST_F(SystemClockTest, ItReturnsChronoNowIfNoTestTimeSet)
         {
-            int64_t seconds = std::chrono::duration_cast<std::chrono::seconds>(
-                std::chrono::system_clock::now() - TimeNow()
-            ).count();
+            int64_t seconds =
+                std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() - TimeNow()).count();
 
             EXPECT_TRUE(seconds < 3);
         }
@@ -27,4 +26,4 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(testNow, TimeNow());
         }
     } // namespace Time
-}  // namespace UKControllerPluginTest
+} // namespace UKControllerPluginTest

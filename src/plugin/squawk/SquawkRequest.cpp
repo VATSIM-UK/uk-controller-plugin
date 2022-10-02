@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "squawk/SquawkRequest.h"
 
 namespace UKControllerPlugin {
@@ -22,5 +21,5 @@ namespace UKControllerPlugin {
             std::lock_guard<std::mutex> lock(this->requestlock);
             this->requests.erase(callsign);
         }
-    }  // namespace Squawk
-}  // namespace UKControllerPlugin
+    } // namespace Squawk
+} // namespace UKControllerPlugin

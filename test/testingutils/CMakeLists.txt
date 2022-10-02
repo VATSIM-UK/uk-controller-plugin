@@ -28,12 +28,6 @@ set(mock
     mock/MockSettingRepository.h)
 source_group("mock" FILES ${mock})
 
-set(pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("pch" FILES ${pch})
-
 set(test
         test/ApiTestCase.cpp test/ApiTestCase.h
         test/ApiExpectation.cpp test/ApiExpectation.h
@@ -46,7 +40,6 @@ source_group("test" FILES ${test})
 set(ALL_FILES
     ${helper}
     ${mock}
-    ${pch}
     ${test}
 )
 

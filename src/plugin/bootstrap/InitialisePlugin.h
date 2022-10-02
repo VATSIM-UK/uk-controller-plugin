@@ -5,10 +5,10 @@
 // Forward Declarations
 namespace EuroScopePlugIn {
     class CPlugIn;
-}  // namespace EuroScopePlugIn
+} // namespace EuroScopePlugIn
 namespace UKControllerPlugin {
     class UKPlugin;
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -21,24 +21,23 @@ namespace UKControllerPlugin {
     class InitialisePlugin
     {
         public:
-            EuroScopePlugIn::CPlugIn * GetPlugin(void);
-            void PostInit(HINSTANCE dllInstance);
-            void EuroScopeCleanup(void);
+        EuroScopePlugIn::CPlugIn* GetPlugin(void);
+        void PostInit(HINSTANCE dllInstance);
+        void EuroScopeCleanup(void);
 
         private:
+        // In the event of an invalid version, this is the "dummy" fallback plugin.
+        std::unique_ptr<EuroScopePlugIn::CPlugIn> fallbackPlugin;
 
-            // In the event of an invalid version, this is the "dummy" fallback plugin.
-            std::unique_ptr<EuroScopePlugIn::CPlugIn> fallbackPlugin;
+        std::unique_ptr<UKControllerPlugin::Bootstrap::PersistenceContainer> container;
 
-            std::unique_ptr<UKControllerPlugin::Bootstrap::PersistenceContainer> container;
+        // Whether or not the plugin has already been loaded - indicating this is a second ES window
+        std::unique_ptr<Duplicate::DuplicatePlugin> duplicatePlugin;
 
-            // Whether or not the plugin has already been loaded - indicating this is a second ES window
-            std::unique_ptr<Duplicate::DuplicatePlugin> duplicatePlugin;
+        // Gdiplus initialisation token.
+        ULONG_PTR gdiPlusToken;
 
-            // Gdiplus initialisation token.
-            ULONG_PTR gdiPlusToken;
-
-            // Is winsocks initialised
-            bool winsockInitialised;
-    };  // namespace UKControllerPlugin
-}  // namespace UKControllerPlugin
+        // Is winsocks initialised
+        bool winsockInitialised;
+    }; // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

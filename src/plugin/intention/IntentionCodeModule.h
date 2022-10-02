@@ -4,8 +4,8 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -18,11 +18,9 @@ namespace UKControllerPlugin {
         class IntentionCodeModule
         {
             public:
-                static void BootstrapPlugin(
-                    UKControllerPlugin::Bootstrap::PersistenceContainer & container
-                );
+            static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
-                static const int tagItemId = 101;
+            static const int tagItemId = 101;
         };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin

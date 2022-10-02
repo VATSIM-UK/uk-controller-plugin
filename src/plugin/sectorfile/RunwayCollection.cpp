@@ -1,21 +1,16 @@
-#include "pch/pch.h"
 #include "sectorfile/RunwayCollection.h"
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
 
-using UKControllerPlugin::SectorFile::Runway;
-using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface;
+using UKControllerPlugin::Euroscope::UserSetting;
+using UKControllerPlugin::SectorFile::Runway;
 using UKControllerPlugin::SectorFile::SectorFileProviderInterface;
 
 namespace UKControllerPlugin {
     namespace SectorFile {
 
-
-
-        RunwayCollection::RunwayCollection(SectorFileProviderInterface & sectorFile)
-            : sectorFile(sectorFile)
+        RunwayCollection::RunwayCollection(SectorFileProviderInterface& sectorFile) : sectorFile(sectorFile)
         {
-
         }
 
         size_t RunwayCollection::Count(void) const
@@ -26,10 +21,8 @@ namespace UKControllerPlugin {
         /*
             Find a runway by identifier and airfield
         */
-        const Runway & RunwayCollection::FetchByIdentifierAndAirfield(
-            std::string identifier,
-            std::string airfield
-        ) const {
+        const Runway& RunwayCollection::FetchByIdentifierAndAirfield(std::string identifier, std::string airfield) const
+        {
             std::shared_ptr<Runway> runway = this->GetRunway(this->MakeRunwayKey(airfield, identifier));
             return runway == nullptr ? this->invalidRunway : *runway;
         }
@@ -37,17 +30,15 @@ namespace UKControllerPlugin {
         /*
             When the ASR is loaded, the SectorFile is available. Load the runway data.
         */
-        void UKControllerPlugin::SectorFile::RunwayCollection::AsrLoadedEvent(UserSetting & userSetting)
+        void UKControllerPlugin::SectorFile::RunwayCollection::AsrLoadedEvent(UserSetting& userSetting)
         {
             std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> runwayElements =
                 this->sectorFile.GetAllElementsByType(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);
 
-            for (
-                std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>>::const_iterator
-                it = runwayElements.cbegin();
-                it != runwayElements.cend();
-                ++it
-            ) {
+            for (std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>>::const_iterator it =
+                     runwayElements.cbegin();
+                 it != runwayElements.cend();
+                 ++it) {
 
                 std::string airfieldIcao = this->ParseIcaoFromAirfield((*it)->Airport());
 
@@ -65,8 +56,7 @@ namespace UKControllerPlugin {
                         (*it)->Runway1Identifier(),
                         (*it)->Runway1Heading(),
                         (*it)->Runway1ActiveForDepartures(),
-                        (*it)->Runway1ActiveForArrivals()
-                    );
+                        (*it)->Runway1ActiveForArrivals());
                     this->runways[runway1Key] = runway1;
                 } else {
                     runway1->SetActiveForDepartures((*it)->Runway1ActiveForDepartures());
@@ -82,8 +72,7 @@ namespace UKControllerPlugin {
                         (*it)->Runway2Identifier(),
                         (*it)->Runway2Heading(),
                         (*it)->Runway2ActiveForDepartures(),
-                        (*it)->Runway2ActiveForArrivals()
-                        );
+                        (*it)->Runway2ActiveForArrivals());
                     this->runways[runway2Key] = runway2;
                 } else {
                     runway2->SetActiveForDepartures((*it)->Runway2ActiveForDepartures());
@@ -95,9 +84,8 @@ namespace UKControllerPlugin {
         /*
             Nothing to do when the ASR closes
         */
-        void UKControllerPlugin::SectorFile::RunwayCollection::AsrClosingEvent(UserSetting & userSetting)
+        void UKControllerPlugin::SectorFile::RunwayCollection::AsrClosingEvent(UserSetting& userSetting)
         {
-
         }
 
         /*
@@ -108,12 +96,10 @@ namespace UKControllerPlugin {
             std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>> runwayElements =
                 this->sectorFile.GetAllElementsByType(EuroScopePlugIn::SECTOR_ELEMENT_RUNWAY);
 
-            for (
-                std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>>::const_iterator
-                it = runwayElements.begin();
-                it != runwayElements.end();
-                ++it
-            ) {
+            for (std::set<std::shared_ptr<EuroscopeSectorFileElementInterface>>::const_iterator it =
+                     runwayElements.begin();
+                 it != runwayElements.end();
+                 ++it) {
 
                 std::string airfieldIcao = this->ParseIcaoFromAirfield((*it)->Airport());
 
@@ -122,12 +108,10 @@ namespace UKControllerPlugin {
                     continue;
                 }
 
-                std::shared_ptr<Runway> runway1 = this->GetRunway(
-                    this->MakeRunwayKey(airfieldIcao, (*it)->Runway1Identifier())
-                );
-                std::shared_ptr<Runway> runway2 = this->GetRunway(
-                    this->MakeRunwayKey(airfieldIcao, (*it)->Runway2Identifier())
-                );
+                std::shared_ptr<Runway> runway1 =
+                    this->GetRunway(this->MakeRunwayKey(airfieldIcao, (*it)->Runway1Identifier()));
+                std::shared_ptr<Runway> runway2 =
+                    this->GetRunway(this->MakeRunwayKey(airfieldIcao, (*it)->Runway2Identifier()));
 
                 if (runway1 != nullptr) {
                     runway1->SetActiveForArrivals((*it)->Runway1ActiveForArrivals());
@@ -167,6 +151,5 @@ namespace UKControllerPlugin {
         {
             return this->runways.count(identifier) ? this->runways.at(identifier) : nullptr;
         }
-    }  // namespace SectorFile
-}  // namespace UKControllerPlugin
-
+    } // namespace SectorFile
+} // namespace UKControllerPlugin

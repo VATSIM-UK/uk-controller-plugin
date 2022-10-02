@@ -2,10 +2,11 @@
 
 namespace UKControllerPlugin {
     namespace Setting {
-        typedef struct SettingValue {
+        typedef struct SettingValue
+        {
             std::string setting;
             std::string value;
             std::string storagePath;
         } SettingValue;
-    }  // namespace Setting
-}  // namespace UKControllerPlugin
+    } // namespace Setting
+} // namespace UKControllerPlugin

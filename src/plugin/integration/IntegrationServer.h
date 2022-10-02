@@ -9,24 +9,24 @@ namespace UKControllerPlugin::Integration {
     class IntegrationServer
     {
         public:
-            explicit IntegrationServer(std::shared_ptr<ClientInitialisationManager> initialisationManager);
-            ~IntegrationServer();
-            void AcceptLoop() const;
+        explicit IntegrationServer(std::shared_ptr<ClientInitialisationManager> initialisationManager);
+        ~IntegrationServer();
+        void AcceptLoop() const;
 
         private:
-            // The server socket for listening for new connections
-            SOCKET serverSocket = INVALID_SOCKET;
+        // The server socket for listening for new connections
+        SOCKET serverSocket = INVALID_SOCKET;
 
-            // Whether we fully initialised ourselves
-            bool initialised = false;
+        // Whether we fully initialised ourselves
+        bool initialised = false;
 
-            // Thread to do all the things
-            std::shared_ptr<std::thread> acceptThread;
+        // Thread to do all the things
+        std::shared_ptr<std::thread> acceptThread;
 
-            // Are we acceptingConnections
-            bool acceptingConnections;
+        // Are we acceptingConnections
+        bool acceptingConnections;
 
-            // The connection manager
-            std::shared_ptr<ClientInitialisationManager> initialisationManager;
+        // The connection manager
+        std::shared_ptr<ClientInitialisationManager> initialisationManager;
     };
 } // namespace UKControllerPlugin::Integration

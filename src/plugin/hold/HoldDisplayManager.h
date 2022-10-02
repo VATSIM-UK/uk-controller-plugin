@@ -12,6 +12,7 @@ namespace UKControllerPlugin::Hold {
     {
         public:
         HoldDisplayManager(const UKControllerPlugin::Hold::HoldDisplayFactory& displayFactory);
+        ~HoldDisplayManager();
         [[nodiscard]] auto CountDisplays() const -> size_t;
         [[nodiscard]] auto GetDisplay(const std::string& fix) const -> const UKControllerPlugin::Hold::HoldDisplay&;
         [[nodiscard]] auto GetSelectedHolds() const -> std::vector<std::string>;

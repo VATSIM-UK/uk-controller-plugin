@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "integration/ExternalMessageHandlerInterface.h"
 
 namespace UKControllerPluginTest {
@@ -7,29 +6,26 @@ namespace UKControllerPluginTest {
         /*
             Interfaces for classes that want to process messages from external sources.
         */
-        class MockExternalMessageHandlerInterface:
-            public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
+        class MockExternalMessageHandlerInterface
+            : public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
         {
             public:
+            explicit MockExternalMessageHandlerInterface(bool processMessage) : processMessage(processMessage)
+            {
+            }
 
-                explicit MockExternalMessageHandlerInterface(bool processMessage)
-                    : processMessage(processMessage)
-                {
+            bool ProcessMessage(std::string message)
+            {
+                this->hasBeenCalled = true;
+                this->receivedMessage = message;
+                return processMessage;
+            };
 
-                }
+            bool hasBeenCalled = false;
 
-                bool ProcessMessage(std::string message)
-                {
-                    this->hasBeenCalled = true;
-                    this->receivedMessage = message;
-                    return processMessage;
-                };
+            const bool processMessage;
 
-                bool hasBeenCalled = false;
-
-                const bool processMessage;
-
-                std::string receivedMessage;
+            std::string receivedMessage;
         };
-    }  // namespace Integration
-}  // namespace UKControllerPluginTest
+    } // namespace Integration
+} // namespace UKControllerPluginTest

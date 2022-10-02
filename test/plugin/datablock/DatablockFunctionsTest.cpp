@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "datablock/DatablockFunctions.h"
 
 using UKControllerPlugin::Datablock::ConvertAltitudeToFlightLevel;
@@ -62,5 +61,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(350, NormaliseFlightLevelFromString("35000"));
         }
-    }  // namespace Datablock
-}  // namespace UKControllerPluginTest
+    } // namespace Datablock
+} // namespace UKControllerPluginTest

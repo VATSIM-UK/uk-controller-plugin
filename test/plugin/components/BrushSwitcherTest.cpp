@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "components/BrushSwitcher.h"
 #include "time/SystemClock.h"
 
@@ -8,21 +7,21 @@ namespace UKControllerPluginTest::Components {
     class BrushSwitcherTest : public testing::Test
     {
         public:
-            BrushSwitcherTest()
-            {
-                UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now());
-                baseBrush = std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(0, 0, 0));
-                extraBrush1 = std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(1, 1, 1));
-                extraBrush2 = std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(2, 2, 2));
-                switcher = BrushSwitcher::Create(baseBrush, std::chrono::seconds(2));
-                switcher->AdditionalBrush(extraBrush1);
-                switcher->AdditionalBrush(extraBrush2);
-            }
+        BrushSwitcherTest()
+        {
+            UKControllerPlugin::Time::SetTestNow(std::chrono::system_clock::now());
+            baseBrush = std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(0, 0, 0));
+            extraBrush1 = std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(1, 1, 1));
+            extraBrush2 = std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(2, 2, 2));
+            switcher = BrushSwitcher::Create(baseBrush, std::chrono::seconds(2));
+            switcher->AdditionalBrush(extraBrush1);
+            switcher->AdditionalBrush(extraBrush2);
+        }
 
-            std::shared_ptr<Gdiplus::Brush> baseBrush;
-            std::shared_ptr<Gdiplus::Brush> extraBrush1;
-            std::shared_ptr<Gdiplus::Brush> extraBrush2;
-            std::shared_ptr<BrushSwitcher> switcher;
+        std::shared_ptr<Gdiplus::Brush> baseBrush;
+        std::shared_ptr<Gdiplus::Brush> extraBrush1;
+        std::shared_ptr<Gdiplus::Brush> extraBrush2;
+        std::shared_ptr<BrushSwitcher> switcher;
     };
 
     TEST_F(BrushSwitcherTest, BaseReturnsBaseBrush)

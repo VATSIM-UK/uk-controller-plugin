@@ -8,15 +8,8 @@ set(loader
 )
 source_group("loader" FILES ${loader})
 
-set(pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("pch" FILES ${pch})
-
 set(ALL_FILES
     ${loader}
-    ${pch}
     $<TARGET_OBJECTS:UKControllerPluginLoader>
 )
 

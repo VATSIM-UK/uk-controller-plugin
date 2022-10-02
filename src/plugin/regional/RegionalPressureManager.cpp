@@ -1,10 +1,9 @@
-#include "pch/pch.h"
 #include "regional/RegionalPressureManager.h"
 
-using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 using UKControllerPlugin::HelperFunctions;
-using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Push::PushEvent;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::TaskManager::TaskRunnerInterface;
 
 namespace UKControllerPlugin {
     namespace Regional {
@@ -13,8 +12,7 @@ namespace UKControllerPlugin {
         {
         }
 
-        RegionalPressureManager::RegionalPressureManager(std::map<std::string, std::string> keyMap)
-            : keyMap(keyMap)
+        RegionalPressureManager::RegionalPressureManager(std::map<std::string, std::string> keyMap) : keyMap(keyMap)
         {
         }
 
@@ -36,11 +34,7 @@ namespace UKControllerPlugin {
                 return;
             }
 
-            this->pressureMap[key] = {
-                key,
-                name,
-                pressure
-            };
+            this->pressureMap[key] = {key, name, pressure};
         }
 
         size_t RegionalPressureManager::CountAltimeterSettingRegions(void) const
@@ -54,11 +48,9 @@ namespace UKControllerPlugin {
         std::set<std::string> RegionalPressureManager::GetAllRegionalPressureKeys(void) const
         {
             std::set<std::string> keys;
-            for (
-                std::map<std::string, RegionalPressure>::const_iterator it = this->pressureMap.cbegin();
-                it != this->pressureMap.cend();
-                ++it
-            ) {
+            for (std::map<std::string, RegionalPressure>::const_iterator it = this->pressureMap.cbegin();
+                 it != this->pressureMap.cend();
+                 ++it) {
                 keys.insert(it->first);
             }
 
@@ -68,11 +60,9 @@ namespace UKControllerPlugin {
         /*
             Get the selected minstack level
         */
-        const RegionalPressure & RegionalPressureManager::GetRegionalPressure(std::string key) const
+        const RegionalPressure& RegionalPressureManager::GetRegionalPressure(std::string key) const
         {
-            return this->pressureMap.count(key)
-                ? this->pressureMap.at(key)
-                : this->invalidPressure;
+            return this->pressureMap.count(key) ? this->pressureMap.at(key) : this->invalidPressure;
         }
 
         /*
@@ -101,12 +91,7 @@ namespace UKControllerPlugin {
 
         std::set<PushEventSubscription> RegionalPressureManager::GetPushEventSubscriptions(void) const
         {
-            return {
-                {
-                    PushEventSubscription::SUB_TYPE_CHANNEL,
-                    "private-rps-updates"
-                }
-            };
+            return {{PushEventSubscription::SUB_TYPE_CHANNEL, "private-rps-updates"}};
         }
 
         void RegionalPressureManager::PluginEventsSynced()
@@ -134,11 +119,7 @@ namespace UKControllerPlugin {
                 LogWarning("Invalid regional pressure data");
             }
 
-            for (
-                nlohmann::json::const_iterator it = pressureData.cbegin();
-                it != pressureData.cend();
-                ++it
-            ) {
+            for (nlohmann::json::const_iterator it = pressureData.cbegin(); it != pressureData.cend(); ++it) {
                 if (it.value().is_null()) {
                     continue;
                 }
@@ -149,10 +130,9 @@ namespace UKControllerPlugin {
                     this->pressureMap[it.key()] = {
                         it.key(),
                         this->keyMap.count(it.key()) ? this->keyMap.at(it.key()) : it.key(),
-                        it.value().get<unsigned int>()
-                    };
+                        it.value().get<unsigned int>()};
                 }
             }
         }
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+    } // namespace Regional
+} // namespace UKControllerPlugin

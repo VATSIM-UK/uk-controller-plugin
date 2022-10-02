@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "notifications/NotificationsRepository.h"
 
 using ::testing::Test;
@@ -10,8 +9,7 @@ namespace UKControllerPluginTest {
         class NotificationsRepositoryTest : public Test
         {
             public:
-
-                NotificationsRepository repository;
+            NotificationsRepository repository;
         };
 
         TEST_F(NotificationsRepositoryTest, ItStartsEmpty)
@@ -28,8 +26,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now(),
                 std::chrono::system_clock::now(),
                 std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
-                "link"
-            ));
+                "link"));
             repository.Add(std::make_unique<UKControllerPlugin::Notifications::Notification>(
                 1,
                 "abc",
@@ -37,8 +34,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now(),
                 std::chrono::system_clock::now(),
                 std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
-                "link"
-            ));
+                "link"));
             EXPECT_EQ(2, repository.Count());
         }
 
@@ -51,8 +47,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now(),
                 std::chrono::system_clock::now(),
                 std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
-                "link"
-            );
+                "link");
             auto rawPtr = notification.get();
             repository.Add(std::move(notification));
             EXPECT_EQ(rawPtr, repository.Get(1));
@@ -67,8 +62,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now(),
                 std::chrono::system_clock::now(),
                 std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
-                "link"
-            ));
+                "link"));
             EXPECT_EQ(nullptr, repository.Get(2));
         }
 
@@ -81,8 +75,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now(),
                 std::chrono::system_clock::now(),
                 std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
-                "link"
-            ));
+                "link"));
             repository.Add(std::make_unique<UKControllerPlugin::Notifications::Notification>(
                 2,
                 "abc",
@@ -90,8 +83,7 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now(),
                 std::chrono::system_clock::now(),
                 std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
-                "link"
-            ));
+                "link"));
             repository.Add(std::make_unique<UKControllerPlugin::Notifications::Notification>(
                 3,
                 "abc",
@@ -99,11 +91,10 @@ namespace UKControllerPluginTest {
                 std::chrono::system_clock::now(),
                 std::chrono::system_clock::now(),
                 std::make_unique<UKControllerPlugin::Controller::ControllerPositionHierarchy>(),
-                "link"
-            ));
+                "link"));
             repository.Get(1)->Read();
             repository.Get(3)->Read();
             EXPECT_EQ(1, repository.CountUnread());
         }
-    }  // namespace Notifications
-}  // namespace UKControllerPluginTest
+    } // namespace Notifications
+} // namespace UKControllerPluginTest

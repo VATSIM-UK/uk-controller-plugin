@@ -1,10 +1,9 @@
-#include "pch/pch.h"
 #include "intention/SectorExitPointVeule.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 #include "intention/IntentionCodeGenerator.h"
 
-using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
+using UKControllerPlugin::IntentionCode::IntentionCodeGenerator;
 
 namespace UKControllerPlugin {
     namespace IntentionCode {
@@ -13,10 +12,8 @@ namespace UKControllerPlugin {
             Returns the intention code dependent on onward routing and flight level.
         */
         std::string SectorExitPointVeule::GetIntentionCode(
-            EuroscopeExtractedRouteInterface & route,
-            int foundPointIndex,
-            int cruiseLevel
-        ) const {
+            EuroscopeExtractedRouteInterface& route, int foundPointIndex, int cruiseLevel) const
+        {
 
             while (foundPointIndex < route.GetPointsNumber()) {
 
@@ -55,5 +52,5 @@ namespace UKControllerPlugin {
         {
             return cruiseLevel > 29000 ? "V" + routeNumber : "X" + routeNumber;
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/InterpretPushEvent.h"
 
 using UKControllerPlugin::Push::PushEvent;
@@ -26,7 +25,6 @@ namespace UKControllerPlugin::Push {
             messageJson.at("event"),
             messageJson.count("channel") && messageJson.at("channel").is_string() ? messageJson.at("channel") : "none",
             messageJson.at("data"),
-            message
-        };
+            message};
     }
-} // namespace namespace UKControllerPlugin::Push
+} // namespace UKControllerPlugin::Push

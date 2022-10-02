@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/PollingPushEventConnection.h"
 
 #include "PushEventProcessorCollection.h"
@@ -12,8 +11,10 @@ namespace UKControllerPlugin {
         PollingPushEventConnection::PollingPushEventConnection(
             const Api::ApiInterface& api,
             TaskManager::TaskRunnerInterface& taskRunner,
-            const PushEventProcessorCollection& pushEventHandlers
-        ): api(api), taskRunner(taskRunner), pushEventHandlers(pushEventHandlers) { }
+            const PushEventProcessorCollection& pushEventHandlers)
+            : api(api), taskRunner(taskRunner), pushEventHandlers(pushEventHandlers)
+        {
+        }
 
         void PollingPushEventConnection::WriteMessage(std::string message)
         {
@@ -59,34 +60,31 @@ namespace UKControllerPlugin {
             }
 
             this->syncInProgress = true;
-            this->taskRunner.QueueAsynchronousTask(
-                [this]()
-                {
-                    try {
-                        nlohmann::json syncResponse = this->api.SyncPluginEvents();
+            this->taskRunner.QueueAsynchronousTask([this]() {
+                try {
+                    nlohmann::json syncResponse = this->api.SyncPluginEvents();
 
-                        if (!this->SyncResponseValid(syncResponse)) {
-                            this->lastPollTime = std::chrono::system_clock::now();
-                            LogWarning("Invalid plugin event sync response from API");
-                            this->updateInProgress = false;
-                            return;
-                        }
-                        this->lastEventId = syncResponse.at("event_id").get<int>();
-                        LogInfo("Plugin events synced at id " + std::to_string(this->lastEventId));
-
-                        // Let everyone know that events are synced
-                        this->pushEventHandlers.PluginEventsSynced();
-                    } catch (Api::ApiException apiException) {
-                        LogError("ApiException when syncing plugin events: -" + std::string(apiException.what()));
+                    if (!this->SyncResponseValid(syncResponse)) {
                         this->lastPollTime = std::chrono::system_clock::now();
+                        LogWarning("Invalid plugin event sync response from API");
+                        this->updateInProgress = false;
+                        return;
                     }
-                    this->syncInProgress = false;
+                    this->lastEventId = syncResponse.at("event_id").get<int>();
+                    LogInfo("Plugin events synced at id " + std::to_string(this->lastEventId));
+
+                    // Let everyone know that events are synced
+                    this->pushEventHandlers.PluginEventsSynced();
+                } catch (Api::ApiException apiException) {
+                    LogError("ApiException when syncing plugin events: -" + std::string(apiException.what()));
+                    this->lastPollTime = std::chrono::system_clock::now();
                 }
-            );
+                this->syncInProgress = false;
+            });
         }
 
         /*
-         * Given our current 
+         * Given our current
          */
         void PollingPushEventConnection::GetLatestEvents()
         {
@@ -95,57 +93,49 @@ namespace UKControllerPlugin {
             }
 
             this->updateInProgress = true;
-            this->taskRunner.QueueAsynchronousTask(
-                [this]()
-                {
-                    try {
-                        nlohmann::json latestEventsResponse = this->api.GetLatestPluginEvents(this->lastEventId);
+            this->taskRunner.QueueAsynchronousTask([this]() {
+                try {
+                    nlohmann::json latestEventsResponse = this->api.GetLatestPluginEvents(this->lastEventId);
 
-                        if (!LatestPluginEventsResponseValid(latestEventsResponse)) {
-                            LogWarning("Invalid plugin events response from API");
-                            this->lastPollTime = std::chrono::system_clock::now();
-                            this->updateInProgress = false;
-                            return;
-                        }
-
-                        // Push the event to the inbound message queue
-                        std::lock_guard lock(this->inboundMessageQueueGuard);
-                        for (
-                            auto eventIterator = latestEventsResponse.cbegin();
-                            eventIterator != latestEventsResponse.cend();
-                            ++eventIterator
-                        ) {
-                            if (!PluginEventValid(*eventIterator)) {
-                                LogError("Received invalid plugin event from API");
-                                continue;
-                            }
-
-                            this->inboundMessages.push(eventIterator->at("event").dump());
-
-                            if (eventIterator->at("id").get<int>() > this->lastEventId) {
-                                this->lastEventId = eventIterator->at("id").get<int>();
-                            }
-
-                            LogDebug("Received websocket message: " + eventIterator->dump());
-                        }
-
-
-                        LogDebug("Plugin events updated, last event id is now " + std::to_string(this->lastEventId));
-
-                    } catch (Api::ApiException apiException) {
-                        LogError("ApiException when getting latest plugin events: " + std::string(apiException.what()));
+                    if (!LatestPluginEventsResponseValid(latestEventsResponse)) {
+                        LogWarning("Invalid plugin events response from API");
+                        this->lastPollTime = std::chrono::system_clock::now();
+                        this->updateInProgress = false;
+                        return;
                     }
-                    this->lastPollTime = std::chrono::system_clock::now();
-                    this->updateInProgress = false;
+
+                    // Push the event to the inbound message queue
+                    std::lock_guard lock(this->inboundMessageQueueGuard);
+                    for (auto eventIterator = latestEventsResponse.cbegin();
+                         eventIterator != latestEventsResponse.cend();
+                         ++eventIterator) {
+                        if (!PluginEventValid(*eventIterator)) {
+                            LogError("Received invalid plugin event from API");
+                            continue;
+                        }
+
+                        this->inboundMessages.push(eventIterator->at("event").dump());
+
+                        if (eventIterator->at("id").get<int>() > this->lastEventId) {
+                            this->lastEventId = eventIterator->at("id").get<int>();
+                        }
+
+                        LogDebug("Received websocket message: " + eventIterator->dump());
+                    }
+
+                    LogDebug("Plugin events updated, last event id is now " + std::to_string(this->lastEventId));
+
+                } catch (Api::ApiException apiException) {
+                    LogError("ApiException when getting latest plugin events: " + std::string(apiException.what()));
                 }
-            );
+                this->lastPollTime = std::chrono::system_clock::now();
+                this->updateInProgress = false;
+            });
         }
 
         bool PollingPushEventConnection::SyncResponseValid(const nlohmann::json& response)
         {
-            return response.is_object() &&
-                response.contains("event_id") &&
-                response.at("event_id").is_number_integer();
+            return response.is_object() && response.contains("event_id") && response.at("event_id").is_number_integer();
         }
 
         bool PollingPushEventConnection::LatestPluginEventsResponseValid(const nlohmann::json& response)
@@ -155,13 +145,9 @@ namespace UKControllerPlugin {
 
         bool PollingPushEventConnection::PluginEventValid(const nlohmann::json& pluginEvent)
         {
-            return pluginEvent.is_object() &&
-                pluginEvent.contains("id") &&
-                pluginEvent.at("id").is_number_integer() &&
-                pluginEvent.contains("event") &&
-                pluginEvent.at("event").is_object() &&
-                pluginEvent.at("event").contains("data") &&
-                pluginEvent.at("event").at("data").is_object();
+            return pluginEvent.is_object() && pluginEvent.contains("id") && pluginEvent.at("id").is_number_integer() &&
+                   pluginEvent.contains("event") && pluginEvent.at("event").is_object() &&
+                   pluginEvent.at("event").contains("data") && pluginEvent.at("event").at("data").is_object();
         }
 
         std::chrono::system_clock::time_point PollingPushEventConnection::LastPollTime() const

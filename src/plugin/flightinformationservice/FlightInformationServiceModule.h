@@ -2,12 +2,11 @@
 
 namespace UKControllerPlugin {
     // Forward declarations
-    namespace Bootstrap
-    {
+    namespace Bootstrap {
         struct PersistenceContainer;
     }
 
     namespace FlightInformationService {
         void BootstrapPlugin(Bootstrap::PersistenceContainer& container);
-    }  // namespace FlightInformationService
-}  // namespace UKControllerPlugin
+    } // namespace FlightInformationService
+} // namespace UKControllerPlugin

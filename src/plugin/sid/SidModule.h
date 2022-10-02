@@ -11,8 +11,6 @@ namespace UKControllerPlugin {
 
     namespace Sid {
         void BootstrapPlugin(
-            Bootstrap::PersistenceContainer& container,
-            Dependency::DependencyLoaderInterface& dependencyProvider
-        );
-    }  // namespace Sid
-}  // namespace UKControllerPlugin
+            Bootstrap::PersistenceContainer& container, Dependency::DependencyLoaderInterface& dependencyProvider);
+    } // namespace Sid
+} // namespace UKControllerPlugin

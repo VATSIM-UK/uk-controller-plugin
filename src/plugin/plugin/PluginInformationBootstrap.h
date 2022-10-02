@@ -7,8 +7,7 @@ namespace UKControllerPlugin {
 
         void BootstrapPluginInformationMessage(
             const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
-            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurables
-        );
+            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurables);
 
-    }  // namespace Plugin
-}  // namespace UKControllerPlugin
+    } // namespace Plugin
+} // namespace UKControllerPlugin

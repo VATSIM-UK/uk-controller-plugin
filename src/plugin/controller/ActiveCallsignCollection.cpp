@@ -9,10 +9,6 @@ using UKControllerPlugin::Euroscope::EuroScopeCControllerInterface;
 
 namespace UKControllerPlugin::Controller {
 
-    ActiveCallsignCollection::ActiveCallsignCollection()
-    {
-    }
-
     /*
         Inserts the callsign into the position set and also stores the iterator
         pointing to it in the callsign list for easy access.
@@ -23,8 +19,9 @@ namespace UKControllerPlugin::Controller {
             throw std::invalid_argument("Controller " + controller.GetCallsign() + " already active.");
         }
 
+        const auto controllerPtr = std::make_shared<ActiveCallsign>(controller);
         this->activeCallsigns[controller.GetCallsign()] =
-            this->activePositions[controller.GetNormalisedPosition().GetCallsign()].insert(controller).first;
+            this->activePositions[controller.GetNormalisedPosition().GetCallsign()].insert(controllerPtr).first;
 
         for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
             (*it)->ActiveCallsignAdded(controller);
@@ -41,11 +38,12 @@ namespace UKControllerPlugin::Controller {
         }
 
         if (this->userActive) {
-            this->RemoveCallsign(*this->userCallsign);
+            this->RemoveCallsign(**this->userCallsign);
         }
 
+        const auto controllerPtr = std::make_shared<ActiveCallsign>(controller);
         this->userCallsign =
-            this->activePositions[controller.GetNormalisedPosition().GetCallsign()].insert(controller).first;
+            this->activePositions[controller.GetNormalisedPosition().GetCallsign()].insert(controllerPtr).first;
         this->activeCallsigns[controller.GetCallsign()] = this->userCallsign;
         this->userActive = true;
 
@@ -59,7 +57,7 @@ namespace UKControllerPlugin::Controller {
     */
     auto ActiveCallsignCollection::CallsignActive(const std::string& callsign) const -> bool
     {
-        return this->activeCallsigns.count(callsign) != 0;
+        return this->activeCallsigns.contains(callsign);
     }
 
     /*
@@ -94,32 +92,32 @@ namespace UKControllerPlugin::Controller {
             throw std::out_of_range("Callsign not found");
         }
 #
-        return *this->activeCallsigns.find(callsign)->second;
+        return **this->activeCallsigns.find(callsign)->second;
     }
 
     /*
         Returns the "lead" callsign for a given position.
     */
     auto ActiveCallsignCollection::GetLeadCallsignForPosition(const std::string& normalisedCallsign) const
-        -> ActiveCallsign
+        -> const ActiveCallsign&
     {
         if (!this->PositionActive(normalisedCallsign)) {
             throw std::out_of_range("Position not found");
         }
 
-        return *this->activePositions.find(normalisedCallsign)->second.begin();
+        return **this->activePositions.find(normalisedCallsign)->second.begin();
     }
 
     /*
         Returns the users active callsign. Throws exception if not found.
     */
-    auto ActiveCallsignCollection::GetUserCallsign() const -> ActiveCallsign
+    auto ActiveCallsignCollection::GetUserCallsign() const -> const ActiveCallsign&
     {
         if (!this->userActive) {
             throw std::out_of_range("User has no callsign.");
         }
 
-        return *this->userCallsign;
+        return **this->userCallsign;
     }
 
     /*

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "controller/ControllerPositionParser.h"
 #include "helper/HelperFunctions.h"
 
@@ -58,5 +57,5 @@ namespace UKControllerPlugin {
 
             return this->positionNotMentoring;
         }
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    } // namespace Controller
+} // namespace UKControllerPlugin

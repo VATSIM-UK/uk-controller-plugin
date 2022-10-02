@@ -3,6 +3,7 @@
 #include "hold/AbstractHoldLevelRestriction.h"
 #include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldRenderer.h"
+#include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/HoldDisplayFactory.h"
