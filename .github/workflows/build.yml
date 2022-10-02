@@ -113,7 +113,7 @@ jobs:
       # Run the build and tests
       - name: Run Ninja Build
         working-directory: build
-        run: ninja
+        run: ninja -j 2
 
       - name: Run Tests
         working-directory: build
