@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "hold/BlockedHoldLevelRestriction.h"
 
 namespace UKControllerPlugin {

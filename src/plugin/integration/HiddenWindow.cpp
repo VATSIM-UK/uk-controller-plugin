@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/HiddenWindow.h"
 #include "integration/ExternalMessageEventHandler.h"
 

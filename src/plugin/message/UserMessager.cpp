@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "message/UserMessager.h"
 #include "message/MessageSerializableInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"

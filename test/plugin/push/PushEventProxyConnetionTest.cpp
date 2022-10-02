@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/PushEventProxyConnection.h"
 
 using ::testing::Test;

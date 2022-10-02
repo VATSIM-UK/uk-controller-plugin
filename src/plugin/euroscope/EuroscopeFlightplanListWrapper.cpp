@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/EuroscopeFlightplanListWrapper.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 

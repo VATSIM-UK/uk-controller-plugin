@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "api/ApiResponse.h"
 
 using UKControllerPlugin::Api::ApiResponse;

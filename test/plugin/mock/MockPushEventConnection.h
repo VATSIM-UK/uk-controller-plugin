@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "push/PushEventConnectionInterface.h"
 
 namespace UKControllerPluginTest {

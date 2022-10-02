@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/ExternalMessageEventHandler.h"
 #include "integration/ExternalMessageHandlerInterface.h"
 

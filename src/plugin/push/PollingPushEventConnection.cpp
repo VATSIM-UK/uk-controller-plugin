@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/PollingPushEventConnection.h"
 
 #include "PushEventProcessorCollection.h"
@@ -86,7 +85,7 @@ namespace UKControllerPlugin {
         }
 
         /*
-         * Given our current 
+         * Given our current
          */
         void PollingPushEventConnection::GetLatestEvents()
         {

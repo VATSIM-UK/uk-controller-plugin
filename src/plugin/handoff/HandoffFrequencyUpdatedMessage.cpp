@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "handoff/HandoffFrequencyUpdatedMessage.h"
 
 namespace UKControllerPlugin::Handoff {

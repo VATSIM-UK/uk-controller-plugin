@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "squawk/SquawkRequest.h"
 
 namespace UKControllerPlugin {

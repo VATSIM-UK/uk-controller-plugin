@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "metar/PressureMonitorBootstrap.h"
 #include "metar/MetarEventHandlerCollection.h"

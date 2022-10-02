@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "plugin/PopupMenuItem.h"
 
 using UKControllerPlugin::Plugin::PopupMenuItem;

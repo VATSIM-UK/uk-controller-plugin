@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "navaids/CompareNavaids.h"
 #include "navaids/Navaid.h"
 

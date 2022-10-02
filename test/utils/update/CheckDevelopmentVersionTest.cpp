@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "update/CheckDevelopmentVersion.h"
 
 using testing::Test;

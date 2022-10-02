@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/IntegrationConnection.h"
 #include "integration/Connection.h"
 #include "integration/MessageInterface.h"

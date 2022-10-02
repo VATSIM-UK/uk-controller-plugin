@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "integration/SocketInterface.h"
 
 namespace UKControllerPluginTest::Integration {

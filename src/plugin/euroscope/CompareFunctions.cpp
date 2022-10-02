@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/CompareFunctions.h"
 #include "euroscope/CallbackFunction.h"
 #include "tag/TagFunction.h"

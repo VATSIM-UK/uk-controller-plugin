@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 
 namespace UKControllerPlugin {

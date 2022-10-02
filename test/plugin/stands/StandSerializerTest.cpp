@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "stands/StandSerializer.h"
 #include "stands/Stand.h"
 

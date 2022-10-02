@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "intention/SectorExitPoint.h"
 
 using UKControllerPlugin::IntentionCode::SectorExitPoint;

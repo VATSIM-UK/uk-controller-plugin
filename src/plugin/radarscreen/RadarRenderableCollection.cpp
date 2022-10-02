@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "radarscreen/RadarRenderableInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"

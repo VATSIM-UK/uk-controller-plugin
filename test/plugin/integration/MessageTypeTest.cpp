@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/MessageType.h"
 
 using testing::Test;

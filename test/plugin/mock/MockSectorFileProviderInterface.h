@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "sectorfile/SectorFileProviderInterface.h"
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
 

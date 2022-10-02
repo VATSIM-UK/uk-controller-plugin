@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "duplicate/DuplicatePlugin.h"
 
 using UKControllerPlugin::Duplicate::DuplicatePlugin;

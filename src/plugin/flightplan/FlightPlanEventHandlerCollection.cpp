@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"

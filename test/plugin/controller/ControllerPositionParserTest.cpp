@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "controller/ControllerPositionParser.h"
 
 using UKControllerPlugin::Controller::ControllerPositionParser;

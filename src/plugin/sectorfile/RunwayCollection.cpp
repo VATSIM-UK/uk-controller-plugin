@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "sectorfile/RunwayCollection.h"
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
 
@@ -169,4 +168,3 @@ namespace UKControllerPlugin {
         }
     }  // namespace SectorFile
 }  // namespace UKControllerPlugin
-

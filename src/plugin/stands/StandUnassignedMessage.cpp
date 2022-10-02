@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "stands/StandUnassignedMessage.h"
 
 namespace UKControllerPlugin::Stands {

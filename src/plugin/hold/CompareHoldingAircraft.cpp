@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "hold/CompareHoldingAircraft.h"
 #include "hold/HoldingAircraft.h"
 

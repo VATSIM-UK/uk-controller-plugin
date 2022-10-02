@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "countdown/TimerConfiguration.h"
 
 using UKControllerPlugin::Countdown::TimerConfiguration;

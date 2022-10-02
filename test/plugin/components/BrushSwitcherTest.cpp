@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "components/BrushSwitcher.h"
 #include "time/SystemClock.h"
 

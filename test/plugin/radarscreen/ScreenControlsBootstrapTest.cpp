@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "radarscreen/ScreenControlsBootstrap.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"

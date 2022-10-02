@@ -1,6 +1,5 @@
-#include "pch/pch.h"
-#include "dependency/UpdateDependencies.h"
 #include "api/ApiException.h"
+#include "dependency/UpdateDependencies.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::Api::ApiInterface;

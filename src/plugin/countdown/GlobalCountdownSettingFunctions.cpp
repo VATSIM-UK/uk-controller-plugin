@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "countdown/GlobalCountdownSettingFunctions.h"
 
 namespace UKControllerPlugin {

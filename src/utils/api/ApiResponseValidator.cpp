@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "api/ApiResponseValidator.h"
 
 namespace UKControllerPlugin {

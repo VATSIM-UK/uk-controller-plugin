@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "sectorfile/SectorFileCoordinates.h"
 
 namespace UKControllerPlugin {

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/InitialisationSuccessMessage.h"
 #include "integration/MessageType.h"
 #include "update/PluginVersion.h"

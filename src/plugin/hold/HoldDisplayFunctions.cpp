@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "hold/HoldDisplayFunctions.h"
 
 namespace UKControllerPlugin {

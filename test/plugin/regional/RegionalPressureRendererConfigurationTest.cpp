@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "regional/RegionalPressureRendererConfiguration.h"
 #include "regional/RegionalPressureRenderedItem.h"
 

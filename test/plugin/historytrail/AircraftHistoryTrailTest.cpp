@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/AircraftHistoryTrail.h"
 #include "euroscope/EuroScopePlugIn.h"
 

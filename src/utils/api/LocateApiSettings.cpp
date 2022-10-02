@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "api/LocateApiSettings.h"
 #include "windows/WinApiInterface.h"
 #include "setting/SettingRepository.h"

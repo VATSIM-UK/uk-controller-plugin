@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 
 #include "minstack/MinStackRenderedItem.h"
 #include "minstack/MinStackRendererConfiguration.h"

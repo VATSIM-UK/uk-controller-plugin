@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "historytrail/HistoryTrailRepository.h"

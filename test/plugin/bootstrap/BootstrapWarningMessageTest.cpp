@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;

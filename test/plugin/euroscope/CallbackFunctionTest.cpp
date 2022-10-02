@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/CallbackFunction.h"
 
 using UKControllerPlugin::Euroscope::CallbackFunction;

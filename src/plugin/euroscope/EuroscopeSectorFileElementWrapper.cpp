@@ -1,5 +1,3 @@
-#include "pch/pch.h"
-
 #include "euroscope/EuroscopeSectorFileElementWrapper.h"
 
 namespace UKControllerPlugin::Euroscope {

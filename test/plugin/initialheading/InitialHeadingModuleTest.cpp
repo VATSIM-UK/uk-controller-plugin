@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "initialheading/InitialHeadingModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"

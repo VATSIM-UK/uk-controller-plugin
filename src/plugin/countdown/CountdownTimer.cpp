@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "countdown/CountdownTimer.h"
 #include "helper/HelperFunctions.h"
 #include "windows/WinApiInterface.h"

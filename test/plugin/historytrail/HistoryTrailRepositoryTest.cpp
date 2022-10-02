@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "historytrail/AircraftHistoryTrail.h"
 

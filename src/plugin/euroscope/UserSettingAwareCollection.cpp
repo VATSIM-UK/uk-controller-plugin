@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "euroscope/UserSettingAwareInterface.h"
 #include "euroscope/UserSetting.h"

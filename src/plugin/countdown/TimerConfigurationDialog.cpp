@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "countdown/TimerConfigurationDialog.h"
 #include "dialog/DialogCallArgument.h"
 #include "countdown/GlobalCountdownSettingFunctions.h"

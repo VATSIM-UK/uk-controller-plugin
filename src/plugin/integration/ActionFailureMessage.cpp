@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/ActionFailureMessage.h"
 
 namespace UKControllerPlugin::Integration {

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 

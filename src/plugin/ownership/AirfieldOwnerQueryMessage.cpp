@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "ownership/AirfieldOwnerQueryMessage.h"
 
 namespace UKControllerPlugin {

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/InterpretPushEvent.h"
 
 using UKControllerPlugin::Push::PushEvent;

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "regional/RegionalPressureManagerFactory.h"
 
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;

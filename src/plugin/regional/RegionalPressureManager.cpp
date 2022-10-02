@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "regional/RegionalPressureManager.h"
 
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;

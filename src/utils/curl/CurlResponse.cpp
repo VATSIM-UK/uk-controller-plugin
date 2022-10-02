@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "curl/CurlResponse.h"
 
 namespace UKControllerPlugin {

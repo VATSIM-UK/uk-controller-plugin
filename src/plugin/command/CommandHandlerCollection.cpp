@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "command/CommandHandlerCollection.h"
 #include "command/CommandHandlerInterface.h"
 

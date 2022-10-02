@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
 namespace UKControllerPlugin {

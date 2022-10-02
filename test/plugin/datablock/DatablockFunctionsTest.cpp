@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "datablock/DatablockFunctions.h"
 
 using UKControllerPlugin::Datablock::ConvertAltitudeToFlightLevel;

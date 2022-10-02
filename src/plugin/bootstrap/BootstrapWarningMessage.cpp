@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 
 namespace UKControllerPlugin {
@@ -8,8 +7,7 @@ namespace UKControllerPlugin {
         const std::string BootstrapWarningMessage::handler = "UKCP_Startup";
         const std::string BootstrapWarningMessage::sender = "UKCP";
 
-        BootstrapWarningMessage::BootstrapWarningMessage(const std::string message)
-            : message(message)
+        BootstrapWarningMessage::BootstrapWarningMessage(const std::string message) : message(message)
         {
         }
 
@@ -52,5 +50,5 @@ namespace UKControllerPlugin {
         {
             return true;
         }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin

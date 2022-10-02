@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "intention/IntentionCodeUpdatedMessage.h"
 
 using testing::Test;

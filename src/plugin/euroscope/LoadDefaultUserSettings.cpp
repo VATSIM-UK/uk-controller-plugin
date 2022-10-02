@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/LoadDefaultUserSettings.h"
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"

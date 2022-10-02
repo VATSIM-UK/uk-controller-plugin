@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "dialog/CompareDialogs.h"
 #include "dialog/DialogData.h"
 

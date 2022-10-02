@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "plugin/PluginInformationBootstrap.h"
 #include "plugin/FunctionCallEventHandler.h"

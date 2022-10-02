@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "intention/SectorExitPointScottish.h"
 
 namespace UKControllerPlugin {

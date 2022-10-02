@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "euroscope/UserSettingAwareInterface.h"
 #include "euroscope/UserSetting.h"
 
