@@ -6,7 +6,8 @@ namespace UKControllerPlugin {
         /*
             Represents an item in a popup menu.
         */
-        typedef struct PopupMenuItem {
+        typedef struct PopupMenuItem
+        {
             std::string firstValue = "";
             std::string secondValue = "";
             int callbackFunctionId = -1;
@@ -17,16 +18,13 @@ namespace UKControllerPlugin {
             /*
                 Compares two PopupMenuItems for equality
             */
-            bool operator==(const PopupMenuItem & compare) const
+            bool operator==(const PopupMenuItem& compare) const
             {
-                return this->firstValue == compare.firstValue &&
-                    this->secondValue == compare.secondValue &&
-                    this->callbackFunctionId == compare.callbackFunctionId &&
-                    this->checked == compare.checked &&
-                    this->disabled == compare.disabled &&
-                    this->fixedPosition == compare.fixedPosition;
+                return this->firstValue == compare.firstValue && this->secondValue == compare.secondValue &&
+                       this->callbackFunctionId == compare.callbackFunctionId && this->checked == compare.checked &&
+                       this->disabled == compare.disabled && this->fixedPosition == compare.fixedPosition;
             }
 
         } PopupMenuItem;
-    }  // namespace Plugin
-}  // namespace UKControllerPlugin
+    } // namespace Plugin
+} // namespace UKControllerPlugin

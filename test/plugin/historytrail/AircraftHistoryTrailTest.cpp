@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/AircraftHistoryTrail.h"
 #include "euroscope/EuroScopePlugIn.h"
 
@@ -67,7 +66,6 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(123, trail.front().heading);
         }
 
-
         TEST(HistoryTrail, AddItemTrailItemsMaintainOrder)
         {
             AircraftHistoryTrail history("test");
@@ -131,5 +129,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(4, trail.front().position.m_Longitude);
             EXPECT_EQ(456, trail.front().heading);
         }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPluginTest
+    } // namespace HistoryTrail
+} // namespace UKControllerPluginTest

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "stands/CompareStands.h"
 
 namespace UKControllerPlugin {
@@ -14,11 +13,9 @@ namespace UKControllerPlugin {
             return id < stand.id;
         }
 
-        bool CompareStands::operator()(
-            const Stand& standA,
-            const Stand& standB
-            ) const {
+        bool CompareStands::operator()(const Stand& standA, const Stand& standB) const
+        {
             return standA.id < standB.id;
         }
-    }  // namespace Stands
-}  // namespace UKControllerPlugin
+    } // namespace Stands
+} // namespace UKControllerPlugin

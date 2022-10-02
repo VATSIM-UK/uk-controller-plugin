@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "tag/TagItemInterface.h"
 

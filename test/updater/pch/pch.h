@@ -5,12 +5,20 @@
 #define NOMINMAX 1
 
 // Ignore warnings about uninitialised variables in the Gmock headers
-#pragma warning( push )
-#pragma warning( disable : 26495 26451 28251)
+#pragma warning(push)
+#pragma warning(disable : 26495 26451 28251)
 #include "gmock/gmock.h"
-#include "../../src/updater/pch/pch.h"
-#pragma warning( pop )
+#include "json/json.hpp"
+#pragma warning(pop)
 
+// Standard and Windows
+#include "Windows.h"
+#include "shtypes.h"
+
+#include <chrono>
+#include <filesystem>
+
+// Mocks
 #include "../../testingutils/mock/MockApiInterface.h"
 #include "../../testingutils/mock/MockCurlApi.h"
 #include "../../testingutils/mock/MockWinApi.h"

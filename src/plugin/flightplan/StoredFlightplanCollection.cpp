@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/StoredFlightplan.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -11,7 +10,7 @@ using UKControllerPlugin::Flightplan::StoredFlightplan;
 namespace UKControllerPlugin {
     namespace Flightplan {
 
-        StoredFlightplan & StoredFlightplanCollection::GetFlightplanForCallsign(std::string callsign) const
+        StoredFlightplan& StoredFlightplanCollection::GetFlightplanForCallsign(std::string callsign) const
         {
             if (!this->HasFlightplanForCallsign(callsign)) {
                 LogError("Attempted to reference flightplan for " + callsign + ", which is not stored");
@@ -46,10 +45,8 @@ namespace UKControllerPlugin {
         */
         void StoredFlightplanCollection::RemoveTimedOutPlans()
         {
-            for (
-                std::map<std::string, std::unique_ptr<StoredFlightplan>>::iterator it = this->flightplans.begin();
-                it != this->flightplans.end();
-            ) {
+            for (std::map<std::string, std::unique_ptr<StoredFlightplan>>::iterator it = this->flightplans.begin();
+                 it != this->flightplans.end();) {
                 if (it->second->HasTimedOut()) {
                     LogDebug("Stored flightplan for " + it->second->GetCallsign() + " has timed out");
                     this->flightplans.erase(it++);
@@ -72,5 +69,5 @@ namespace UKControllerPlugin {
 
             *this->flightplans[flightplan.GetCallsign()] = flightplan;
         }
-    }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+    } // namespace Flightplan
+} // namespace UKControllerPlugin

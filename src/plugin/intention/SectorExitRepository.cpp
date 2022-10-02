@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "intention/SectorExitRepository.h"
 #include "intention/SectorExitPointEtrat.h"
 #include "intention/SectorExitPointLelna.h"
@@ -13,7 +12,6 @@ namespace UKControllerPlugin {
         SectorExitRepository::SectorExitRepository(std::map<std::string, std::unique_ptr<SectorExitPoint>> exitMap)
             : exitMap(std::move(exitMap))
         {
-
         }
 
         /*
@@ -27,7 +25,7 @@ namespace UKControllerPlugin {
         /*
             Returns a shared autopointer to a given SectorExitPoint, or to NULL if not found.
         */
-        const SectorExitPoint & SectorExitRepository::GetSectorExitPoint(std::string point) const
+        const SectorExitPoint& SectorExitRepository::GetSectorExitPoint(std::string point) const
         {
             if (!this->HasSectorExitPoint(point)) {
                 throw new std::invalid_argument("Exit point not found");
@@ -35,5 +33,5 @@ namespace UKControllerPlugin {
 
             return *this->exitMap.at(point);
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin

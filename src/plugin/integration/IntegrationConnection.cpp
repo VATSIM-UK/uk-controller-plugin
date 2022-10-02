@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/IntegrationConnection.h"
 #include "integration/Connection.h"
 #include "integration/MessageInterface.h"
@@ -6,8 +5,8 @@
 
 namespace UKControllerPlugin::Integration {
 
-    IntegrationConnection::IntegrationConnection(std::shared_ptr<Connection> connection): connection(
-        std::move(connection))
+    IntegrationConnection::IntegrationConnection(std::shared_ptr<Connection> connection)
+        : connection(std::move(connection))
     {
         LogInfo("Initialising new integration connection");
     }

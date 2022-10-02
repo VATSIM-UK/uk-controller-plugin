@@ -5,8 +5,10 @@ namespace UKControllerPluginTest {
     namespace HistoryTrail {
         class MockHistoryTrailDialog : public UKControllerPlugin::HistoryTrail::HistoryTrailDialog
         {
-        public:
-            MockHistoryTrailDialog(void) : HistoryTrailDialog() {}
+            public:
+            MockHistoryTrailDialog(void) : HistoryTrailDialog()
+            {
+            }
         };
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPluginTest
+    } // namespace HistoryTrail
+} // namespace UKControllerPluginTest

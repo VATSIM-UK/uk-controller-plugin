@@ -3,19 +3,12 @@ set(PROJECT_NAME UKControllerPluginUpdaterTest)
 ################################################################################
 # Source groups
 ################################################################################
-set(pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("pch" FILES ${pch})
-
 set(updater
     "updater/PerformUpdatesTest.cpp"
 )
 source_group("updater" FILES ${updater})
 
 set(ALL_FILES
-    ${pch}
     ${updater}
     $<TARGET_OBJECTS:UKControllerPluginUpdater>
 )

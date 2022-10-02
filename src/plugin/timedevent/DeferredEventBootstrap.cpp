@@ -9,13 +9,10 @@ using UKControllerPlugin::TimedEvent::TimedEventCollection;
 namespace UKControllerPlugin {
     namespace TimedEvent {
 
-        void DeferredEventBootstrap(TimedEventCollection & timedEvents)
+        void DeferredEventBootstrap(TimedEventCollection& timedEvents)
         {
-            timedEvents.RegisterEvent(
-                std::make_shared<DeferredEventHandler>(),
-                5
-            );
+            timedEvents.RegisterEvent(std::make_shared<DeferredEventHandler>(), 5);
         }
 
-    }  // namespace TimedEvent
-}  // namespace  UKControllerPlugin
+    } // namespace TimedEvent
+} // namespace  UKControllerPlugin

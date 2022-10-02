@@ -13,25 +13,21 @@ namespace UKControllerPlugin {
         class DependencyLoader : public DependencyLoaderInterface
         {
             public:
-                DependencyLoader(
-                    UKControllerPlugin::Windows::WinApiInterface& filesystem
-                );
+            DependencyLoader(UKControllerPlugin::Windows::WinApiInterface& filesystem);
 
-                nlohmann::json LoadDependency(std::string key , nlohmann::json defaultValue) noexcept override;
+            nlohmann::json LoadDependency(std::string key, nlohmann::json defaultValue) noexcept override;
 
-                const std::wstring DEPENDENCY_FOLDER = L"dependencies";
+            const std::wstring DEPENDENCY_FOLDER = L"dependencies";
 
             private:
+            void LoadDependencyMap(void);
+            bool ValidDependency(const nlohmann::json& dependency) const;
 
-                void LoadDependencyMap(void);
-                bool ValidDependency(const nlohmann::json& dependency) const;
+            // The filesystem.
+            UKControllerPlugin::Windows::WinApiInterface& filesystem;
 
-                // The filesystem.
-                UKControllerPlugin::Windows::WinApiInterface& filesystem;
-
-
-                // A map of dependency to files.
-                std::map<std::string, std::string> fileMap;
+            // A map of dependency to files.
+            std::map<std::string, std::string> fileMap;
         };
-    }  // namespace Dependency
-}  // namespace UKControllerPlugin
+    } // namespace Dependency
+} // namespace UKControllerPlugin

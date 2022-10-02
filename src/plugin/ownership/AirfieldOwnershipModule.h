@@ -4,11 +4,11 @@
 namespace UKControllerPlugin {
     namespace Dependency {
         class DependencyLoaderInterface;
-    }  // namespace Dependency
+    } // namespace Dependency
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -20,10 +20,9 @@ namespace UKControllerPlugin {
         class AirfieldOwnershipModule
         {
             public:
-                static void BootstrapPlugin(
-                    UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
-                    UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency
-                );
+            static void BootstrapPlugin(
+                UKControllerPlugin::Bootstrap::PersistenceContainer& persistence,
+                UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency);
         };
-    }  // namespace Ownership
-}  // namespace UKControllerPlugin
+    } // namespace Ownership
+} // namespace UKControllerPlugin

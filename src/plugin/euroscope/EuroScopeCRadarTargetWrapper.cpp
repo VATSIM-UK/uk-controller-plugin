@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/EuroScopeCRadarTargetWrapper.h"
 
 using EuroScopePlugIn::CRadarTarget;

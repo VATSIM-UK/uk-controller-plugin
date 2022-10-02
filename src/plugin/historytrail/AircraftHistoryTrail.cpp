@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/AircraftHistoryTrail.h"
 
 namespace UKControllerPlugin {
@@ -39,5 +38,5 @@ namespace UKControllerPlugin {
         {
             return this->trail;
         }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

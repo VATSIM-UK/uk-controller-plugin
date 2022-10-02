@@ -9,23 +9,19 @@ namespace UKControllerPlugin::IntentionCode {
     class IntentionCodeUpdatedMessage : public Integration::MessageInterface
     {
         public:
-            IntentionCodeUpdatedMessage(
-                std::string callsign,
-                std::string exitPoint,
-                std::string code
-            );
-            ~IntentionCodeUpdatedMessage() override = default;
-            nlohmann::json GetMessageData() const override;
-            Integration::MessageType GetMessageType() const override;
+        IntentionCodeUpdatedMessage(std::string callsign, std::string exitPoint, std::string code);
+        ~IntentionCodeUpdatedMessage() override = default;
+        nlohmann::json GetMessageData() const override;
+        Integration::MessageType GetMessageType() const override;
 
         private:
-            // Who the codes for
-            std::string callsign;
+        // Who the codes for
+        std::string callsign;
 
-            // The exit point
-            nlohmann::json exitPoint = nlohmann::json::value_t::null;
+        // The exit point
+        nlohmann::json exitPoint = nlohmann::json::value_t::null;
 
-            // The code
-            std::string code;
+        // The code
+        std::string code;
     };
 } // namespace UKControllerPlugin::IntentionCode

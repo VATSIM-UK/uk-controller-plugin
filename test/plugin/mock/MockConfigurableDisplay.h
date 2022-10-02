@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 
@@ -12,17 +11,13 @@ namespace UKControllerPluginTest {
         class MockConfigurableDisplay : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
         {
             public:
-
             MockConfigurableDisplay(std::string firstValue, std::string secondValue)
                 : firstValue(firstValue), secondValue(secondValue)
             {
-
             }
 
-            MockConfigurableDisplay(void)
-                : firstValue("noValue1"), secondValue("noValue2")
+            MockConfigurableDisplay(void) : firstValue("noValue1"), secondValue("noValue2")
             {
-
             }
 
             void Configure(int, std::string, RECT) override
@@ -47,5 +42,5 @@ namespace UKControllerPluginTest {
             const std::string firstValue;
             const std::string secondValue;
         };
-    }  // namespace RadarScreen
-}  // namespace UKControllerPluginTest
+    } // namespace RadarScreen
+} // namespace UKControllerPluginTest

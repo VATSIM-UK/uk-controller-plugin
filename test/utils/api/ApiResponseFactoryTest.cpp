@@ -1,10 +1,9 @@
-#include "pch/pch.h"
 #include "api/ApiResponseFactory.h"
 #include "api/ApiResponse.h"
 #include "curl/CurlResponse.h"
 
-using UKControllerPlugin::Api::ApiResponseFactory;
 using UKControllerPlugin::Api::ApiResponse;
+using UKControllerPlugin::Api::ApiResponseFactory;
 using UKControllerPlugin::Curl::CurlResponse;
 
 namespace UKControllerPluginUtilsTest {
@@ -57,5 +56,5 @@ namespace UKControllerPluginUtilsTest {
             CurlResponse curl("{\"bla\": true}", false, 200);
             EXPECT_EQ(200L, ApiResponseFactory::Create(curl).GetStatusCode());
         }
-    }  // namespace Api
-}  // namespace UKControllerPluginUtilsTest
+    } // namespace Api
+} // namespace UKControllerPluginUtilsTest

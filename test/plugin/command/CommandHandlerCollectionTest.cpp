@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "command/CommandHandlerCollection.h"
 #include "command/CommandHandlerInterface.h"
 
@@ -10,18 +9,20 @@ namespace UKControllerPluginTest {
         class TestCommandHandler : public UKControllerPlugin::Command::CommandHandlerInterface
         {
             public:
-                TestCommandHandler(int id, bool returnVal) {
-                    this->id = id;
-                    this->returnVal = returnVal;
-                }
+            TestCommandHandler(int id, bool returnVal)
+            {
+                this->id = id;
+                this->returnVal = returnVal;
+            }
 
-                bool ProcessCommand(std::string command) {
-                    this->id = -1;
-                    return this->returnVal;
-                }
+            bool ProcessCommand(std::string command)
+            {
+                this->id = -1;
+                return this->returnVal;
+            }
 
-                int id;
-                bool returnVal;
+            int id;
+            bool returnVal;
         };
 
         TEST(CommandHandlerCollection, ProcessCommandReturnsTrueIfCommandRecognised)
@@ -54,5 +55,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(-1, handler1->id);
             EXPECT_EQ(2, handler2->id);
         }
-    }  // namespace Command
-}  // namespace UKControllerPluginTest
+    } // namespace Command
+} // namespace UKControllerPluginTest

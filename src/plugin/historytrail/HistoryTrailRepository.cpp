@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/HistoryTrailRepository.h"
 #include "historytrail/AircraftHistoryTrail.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
@@ -8,12 +7,10 @@ namespace UKControllerPlugin {
 
         HistoryTrailRepository::HistoryTrailRepository(void)
         {
-
         }
 
         HistoryTrailRepository::~HistoryTrailRepository(void)
         {
-
         }
 
         /*
@@ -61,5 +58,5 @@ namespace UKControllerPlugin {
             // Remove from the map and destroy the object.
             this->trailData.erase(callsign);
         }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

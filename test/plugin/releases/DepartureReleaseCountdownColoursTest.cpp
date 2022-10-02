@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseCountdownColours.h"
 #include "time/SystemClock.h"
@@ -12,89 +11,79 @@ namespace UKControllerPluginTest::Releases {
     class DepartureReleaseCountdownColoursTest : public Test
     {
         public:
-            void SetUp() override
-            {
-                SetTestNow(std::chrono::system_clock::now());
-            }
+        void SetUp() override
+        {
+            SetTestNow(std::chrono::system_clock::now());
+        }
     };
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsPlentyOfTimeForLargeTimeLeft)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerPlentyOfTime,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(100))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(100)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsPlentyOfTimeJustAboveBoundary)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerPlentyOfTime,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(31))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(31)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsCloseOnBoundary)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerClose,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(30))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(30)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsCloseBelowBoundary)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerClose,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(29))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(29)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsClose)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerClose,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(15))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(15)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsCloseAboveLowerBoundary)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerClose,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(11))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(11)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsCriticalAtLowerBoundary)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerExpired,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(10))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(10)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsCriticalBelowLowerBoundary)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerExpired,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(3))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() + std::chrono::seconds(3)));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsCriticalAtZero)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerExpired,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow())
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow()));
     }
 
     TEST_F(DepartureReleaseCountdownColoursTest, ItReturnsCriticalWhenExpired)
     {
         EXPECT_EQ(
             UKControllerPlugin::Releases::releaseTimerExpired,
-            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() - + std::chrono::seconds(3))
-        );
+            UKControllerPlugin::Releases::TimeUntilExpiryColour(TimeNow() - +std::chrono::seconds(3)));
     }
 } // namespace UKControllerPluginTest::Releases

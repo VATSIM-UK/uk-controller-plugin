@@ -69,4 +69,10 @@ namespace UKControllerPluginTest::Plugin {
         BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
         EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Open Data Folder"));
     }
+    
+    TEST_F(PluginInformationBootstrapTest, ItRegistersFunctionCallHandlers)
+    {
+        BootstrapPluginInformationMessage(this->container, this->configurableDisplays);
+        EXPECT_EQ(4, this->container.pluginFunctionHandlers->CountCallbacks());
+    }
 } // namespace UKControllerPluginTest::Plugin

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "windows/WinApi.h"
 #include "helper/HelperFunctions.h"
 

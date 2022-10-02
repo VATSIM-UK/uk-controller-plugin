@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
 namespace UKControllerPlugin {
@@ -31,5 +30,5 @@ namespace UKControllerPlugin {
         const std::string GeneralSettingsEntries::initialHeadingToggleSettingsKey = "autoAssignInitialHeadings";
         const std::string GeneralSettingsEntries::initialHeadingToggleSettingsDescription =
             "Automatically assign initial headings";
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

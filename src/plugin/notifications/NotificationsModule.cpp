@@ -5,6 +5,7 @@
 #include "NotificationsRepositoryFactory.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"

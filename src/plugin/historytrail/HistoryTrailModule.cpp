@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "historytrail/HistoryTrailRepository.h"
@@ -16,18 +15,18 @@
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 
-using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::HistoryTrail::HistoryTrailEventHandler;
-using UKControllerPlugin::HistoryTrail::HistoryTrailRenderer;
-using UKControllerPlugin::Plugin::FunctionCallEventHandler;
-using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
-using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Command::CommandHandlerCollection;
+using UKControllerPlugin::Dialog::DialogManager;
+using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::HistoryTrail::HistoryTrailEventHandler;
+using UKControllerPlugin::HistoryTrail::HistoryTrailRenderer;
+using UKControllerPlugin::HistoryTrail::HistoryTrailRepository;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
+using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 
 namespace UKControllerPlugin {
     namespace HistoryTrail {
@@ -35,47 +34,42 @@ namespace UKControllerPlugin {
         /*
             Bootstrap the History Trail module at the plugin level.
         */
-        void HistoryTrailModule::BootstrapPlugin(PersistenceContainer & persistence)
+        void HistoryTrailModule::BootstrapPlugin(PersistenceContainer& persistence)
         {
             persistence.historyTrails.reset(new HistoryTrailRepository);
 
             // Handler
             std::shared_ptr<HistoryTrailEventHandler> trailHandler(
-                new HistoryTrailEventHandler(*persistence.historyTrails)
-            );
+                new HistoryTrailEventHandler(*persistence.historyTrails));
             persistence.radarTargetHandler->RegisterHandler(trailHandler);
             persistence.flightplanHandler->RegisterHandler(trailHandler);
 
             // Dialog
             std::shared_ptr<HistoryTrailDialog> dialog = std::make_shared<HistoryTrailDialog>();
             persistence.dialogManager->AddDialog(
-                {
-                    IDD_HISTORY_TRAIL,
-                    "History Trails",
-                    reinterpret_cast<DLGPROC>(dialog->WndProc),
-                    reinterpret_cast<LPARAM>(dialog.get()),
-                    dialog
-                }
-            );
+                {IDD_HISTORY_TRAIL,
+                 "History Trails",
+                 reinterpret_cast<DLGPROC>(dialog->WndProc),
+                 reinterpret_cast<LPARAM>(dialog.get()),
+                 dialog});
         }
 
         /*
             Bootstrap the History Trail module at a Radar Screen level.
         */
         void HistoryTrailModule::BootstrapRadarScreen(
-            FunctionCallEventHandler & eventHandler,
-            const HistoryTrailRepository & trailRepo,
-            RadarRenderableCollection & radarRender,
-            const DialogManager & dialogManager,
-            ConfigurableDisplayCollection & configurableDisplays,
-            AsrEventHandlerCollection & userSettingHandlers,
-            CommandHandlerCollection & commandHandlers,
-            EuroscopePluginLoopbackInterface & plugin
-        ) {
+            FunctionCallEventHandler& eventHandler,
+            const HistoryTrailRepository& trailRepo,
+            RadarRenderableCollection& radarRender,
+            const DialogManager& dialogManager,
+            ConfigurableDisplayCollection& configurableDisplays,
+            AsrEventHandlerCollection& userSettingHandlers,
+            CommandHandlerCollection& commandHandlers,
+            EuroscopePluginLoopbackInterface& plugin)
+        {
             int toggleCallbackFunction = eventHandler.ReserveNextDynamicFunctionId();
             std::shared_ptr<HistoryTrailRenderer> renderer(
-                new HistoryTrailRenderer(trailRepo, plugin, dialogManager, toggleCallbackFunction)
-            );
+                new HistoryTrailRenderer(trailRepo, plugin, dialogManager, toggleCallbackFunction));
 
             radarRender.RegisterRenderer(radarRender.ReserveRendererIdentifier(), renderer, radarRender.beforeTags);
             CallbackFunction configureCallback(
@@ -86,13 +80,11 @@ namespace UKControllerPlugin {
                     renderer,
                     std::placeholders::_1,
                     std::placeholders::_2,
-                    std::placeholders::_3
-                )
-            );
+                    std::placeholders::_3));
             eventHandler.RegisterFunctionCall(configureCallback);
             configurableDisplays.RegisterDisplay(renderer);
             userSettingHandlers.RegisterHandler(renderer);
             commandHandlers.RegisterHandler(renderer);
         }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

@@ -1,28 +1,27 @@
-#include "pch/pch.h"
 #include "stands/StandUnassignedMessage.h"
 
 using UKControllerPlugin::Stands::StandUnassignedMessage;
 
 namespace UKControllerPluginTests::Stands {
-    class StandUnassignedMessageTest: public testing::Test
+    class StandUnassignedMessageTest : public testing::Test
     {
         public:
-            StandUnassignedMessageTest()
-                : message("BAW123")
-            {}
+        StandUnassignedMessageTest() : message("BAW123")
+        {
+        }
 
-            StandUnassignedMessage message;
+        StandUnassignedMessage message;
     };
 
     TEST_F(StandUnassignedMessageTest, ItSerializesToJson)
     {
-        nlohmann::json expected {
+        nlohmann::json expected{
             {"type", "stand_unassigned"},
             {"version", 1},
-            {"data", {
-                {"callsign", "BAW123"},
-            }}
-        };
+            {"data",
+             {
+                 {"callsign", "BAW123"},
+             }}};
         EXPECT_EQ(expected, message.ToJson());
     }
 } // namespace UKControllerPluginTests::Stands

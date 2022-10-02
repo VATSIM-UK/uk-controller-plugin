@@ -1,14 +1,13 @@
-#include "pch/pch.h"
 #include "offblock/EstimatedDepartureTimeBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "tag/TagItemCollection.h"
 
-using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
+using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Datablock::EstimatedDepartureTimeBootstrap;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
-using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Datablock {
@@ -16,14 +15,13 @@ namespace UKControllerPluginTest {
         class EstimatedDepartureTimeBootstrapTest : public Test
         {
             public:
+            void SetUp()
+            {
+                container.tagHandler.reset(new TagItemCollection);
+                container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+            };
 
-                void SetUp()
-                {
-                    container.tagHandler.reset(new TagItemCollection);
-                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                };
-
-                PersistenceContainer container;
+            PersistenceContainer container;
         };
 
         TEST_F(EstimatedDepartureTimeBootstrapTest, AddsHandlerToTagItemHandlers)
@@ -43,5 +41,5 @@ namespace UKControllerPluginTest {
             EstimatedDepartureTimeBootstrap::BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
         }
-    }  // namespace Datablock
+    } // namespace Datablock
 } // namespace UKControllerPluginTest

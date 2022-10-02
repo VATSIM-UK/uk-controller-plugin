@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/InitialisationSuccessMessage.h"
 #include "integration/MessageType.h"
 #include "update/PluginVersion.h"
@@ -13,13 +12,11 @@ namespace UKControllerPluginTest::Integration {
     class InitialisationSuccessMessageTest : public Test
     {
         public:
-            InitialisationSuccessMessageTest()
-                : message("foo")
-            {
-            
-            }
-            
-            InitialisationSuccessMessage message;
+        InitialisationSuccessMessageTest() : message("foo")
+        {
+        }
+
+        InitialisationSuccessMessage message;
     };
 
     TEST_F(InitialisationSuccessMessageTest, ItConvertsToJson)
@@ -28,8 +25,7 @@ namespace UKControllerPluginTest::Integration {
             {"type", "initialisation_success"},
             {"id", "foo"},
             {"version", 1},
-            {"data", {{"ukcp_version", PluginVersion::version}}}
-        };
+            {"data", {{"ukcp_version", PluginVersion::version}}}};
         EXPECT_EQ(expected, message.ToJson());
     }
 } // namespace UKControllerPluginTest::Integration

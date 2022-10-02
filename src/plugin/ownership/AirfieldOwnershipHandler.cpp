@@ -4,6 +4,7 @@
 #include "AirfieldServiceProviderCollection.h"
 #include "AirfieldsOwnedQueryMessage.h"
 #include "airfield/AirfieldCollection.h"
+#include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPositionParser.h"

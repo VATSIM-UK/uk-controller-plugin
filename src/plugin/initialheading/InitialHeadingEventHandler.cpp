@@ -1,4 +1,5 @@
 #include "InitialHeadingEventHandler.h"
+#include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"

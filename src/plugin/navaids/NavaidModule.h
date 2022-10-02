@@ -7,8 +7,7 @@ namespace UKControllerPlugin {
 
         void BootstrapPlugin(
             UKControllerPlugin::Bootstrap::PersistenceContainer& container,
-            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies
-        );
+            UKControllerPlugin::Dependency::DependencyLoaderInterface& dependencies);
         bool NavaidValid(const nlohmann::json& navaid);
-    }  // namespace Navaids
-}  // namespace UKControllerPlugin
+    } // namespace Navaids
+} // namespace UKControllerPlugin

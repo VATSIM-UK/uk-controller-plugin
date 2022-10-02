@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/InboundIntegrationMessageHandler.h"
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationConnection.h"
@@ -10,7 +9,10 @@
 
 namespace UKControllerPlugin::Integration {
     InboundIntegrationMessageHandler::InboundIntegrationMessageHandler(
-        std::shared_ptr<IntegrationClientManager> clientManager): clientManager(std::move(clientManager)) {}
+        std::shared_ptr<IntegrationClientManager> clientManager)
+        : clientManager(std::move(clientManager))
+    {
+    }
 
     void InboundIntegrationMessageHandler::AddProcessor(std::shared_ptr<IntegrationActionProcessor> processor)
     {
@@ -19,7 +21,7 @@ namespace UKControllerPlugin::Integration {
                 LogError("An action processor already exists for type " + actionType.ToJson().dump());
                 return;
             }
-            
+
             this->actionProcessors[actionType] = processor;
         }
     }
@@ -29,11 +31,7 @@ namespace UKControllerPlugin::Integration {
      */
     void InboundIntegrationMessageHandler::TimedEventTrigger()
     {
-        for (
-            auto client = this->clientManager->cbegin();
-            client != this->clientManager->cend();
-            ++client
-        ) {
+        for (auto client = this->clientManager->cbegin(); client != this->clientManager->cend(); ++client) {
             this->ProcessInboundMessagesForClient(*client);
         }
     }
@@ -46,9 +44,8 @@ namespace UKControllerPlugin::Integration {
     /*
      * For a given client, process all their inbound messages
      */
-    void InboundIntegrationMessageHandler::ProcessInboundMessagesForClient(
-        const std::shared_ptr<IntegrationClient>& client
-    )
+    void
+    InboundIntegrationMessageHandler::ProcessInboundMessagesForClient(const std::shared_ptr<IntegrationClient>& client)
     {
         auto messages = client->Connection()->Receive();
         while (!messages.empty()) {
@@ -61,31 +58,23 @@ namespace UKControllerPlugin::Integration {
 
             this->actionProcessors[message->GetMessageType()]->ProcessAction(
                 message,
-                [client, message]()
-                {
-                    client->Connection()->Send(
-                        std::make_shared<ActionSuccessMessage>(message->GetMessageId())
-                    );
+                [client, message]() {
+                    client->Connection()->Send(std::make_shared<ActionSuccessMessage>(message->GetMessageId()));
                 },
                 [client, message](std::vector<std::string> errors) {
                     client->Connection()->Send(
-                        std::make_shared<ActionFailureMessage>(message->GetMessageId(), std::move(errors))
-                    );
-                }
-            );
+                        std::make_shared<ActionFailureMessage>(message->GetMessageId(), std::move(errors)));
+                });
             messages.pop();
         }
     }
 
     void InboundIntegrationMessageHandler::LogNoProcessorExists(
-        const std::shared_ptr<IntegrationClient>& client,
-        const MessageType& messageType
-    )
+        const std::shared_ptr<IntegrationClient>& client, const MessageType& messageType)
     {
         LogError(
-            "No message processor exists for type " + messageType.ToJson().dump() +
-            " from integration " + client->GetIntegrationString()
-        );
+            "No message processor exists for type " + messageType.ToJson().dump() + " from integration " +
+            client->GetIntegrationString());
     }
 
 } // namespace UKControllerPlugin::Integration

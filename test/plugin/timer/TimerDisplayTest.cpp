@@ -1,11 +1,10 @@
-#include "pch/pch.h"
 #include "timer/TimerDisplay.h"
 #include "time/SystemClock.h"
 
 using testing::Test;
-using UKControllerPlugin::Timer::GetTimerDisplay;
-using UKControllerPlugin::Time::TimeNow;
 using UKControllerPlugin::Time::SetTestNow;
+using UKControllerPlugin::Time::TimeNow;
+using UKControllerPlugin::Timer::GetTimerDisplay;
 
 namespace UKControllerPluginTest {
     namespace Timer {

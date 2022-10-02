@@ -1,5 +1,3 @@
-#include "pch/pch.h"
-
 #include "euroscope/UserSetting.h"
 #include "euroscope/UserSettingProviderInterface.h"
 #include "helper/HelperFunctions.h"

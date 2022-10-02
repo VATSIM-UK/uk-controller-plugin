@@ -1,8 +1,7 @@
-#include "pch/pch.h"
 #include "ownership/AirfieldOwnerQueryMessage.h"
 
-using UKControllerPlugin::Ownership::AirfieldOwnerQueryMessage;
 using ::testing::Test;
+using UKControllerPlugin::Ownership::AirfieldOwnerQueryMessage;
 
 namespace UKControllerPluginTest {
     namespace Ownership {
@@ -10,13 +9,12 @@ namespace UKControllerPluginTest {
         class AirfieldOwnerQueryMessageTest : public Test
         {
             public:
-                AirfieldOwnerQueryMessageTest(void)
-                    : message("EGKK", "EGKK_TWR", "Testy McTestFace")
-                {
+            AirfieldOwnerQueryMessageTest(void)
+                : message("EGKK", "EGKK_TWR", "Testy McTestFace"){
 
-                };
+                  };
 
-                AirfieldOwnerQueryMessage message;
+            AirfieldOwnerQueryMessage message;
         };
 
         TEST_F(AirfieldOwnerQueryMessageTest, ItUsesAHandler)
@@ -64,5 +62,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_FALSE(this->message.MessageRequiresConfirm());
         }
-    }  // namespace Ownership
-}  // namespace UKControllerPluginTest
+    } // namespace Ownership
+} // namespace UKControllerPluginTest

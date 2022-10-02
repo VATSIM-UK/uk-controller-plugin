@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 
 #include "dialog/DialogCallArgument.h"
 #include "helper/HelperFunctions.h"

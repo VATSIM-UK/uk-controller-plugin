@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "helper/TestingFunctions.h"
 
 /*
@@ -6,8 +5,5 @@
 */
 bool RectsEqual(RECT left, RECT right)
 {
-    return left.left == right.left &&
-        left.top == right.top &&
-        left.right == right.right &&
-        left.bottom == right.bottom;
+    return left.left == right.left && left.top == right.top && left.right == right.right && left.bottom == right.bottom;
 }

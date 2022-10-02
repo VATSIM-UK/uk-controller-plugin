@@ -1,9 +1,12 @@
 #pragma once
-#include "controller/ActiveCallsignCollection.h"
 #include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "command/CommandHandlerInterface.h"
 
 namespace UKControllerPlugin {
+    namespace Controller {
+        class ActiveCallsign;
+        class ControllerPosition;
+    } // namespace Controller
     namespace Ownership {
         class AirfieldOwnershipManager;
     } // namespace Ownership

@@ -8,11 +8,8 @@ namespace UKControllerPlugin {
         */
         typedef struct DeemedSeparatedHold
         {
-            DeemedSeparatedHold(
-                unsigned int identifier,
-                unsigned int vslInsertDistance
-            ) : identifier(identifier), vslInsertDistance(vslInsertDistance)
-            {};
+            DeemedSeparatedHold(unsigned int identifier, unsigned int vslInsertDistance)
+                : identifier(identifier), vslInsertDistance(vslInsertDistance){};
 
             // The id for the hold
             unsigned int identifier;
@@ -23,10 +20,10 @@ namespace UKControllerPlugin {
             /*
                 Compare two holds
             */
-            bool operator== (const DeemedSeparatedHold & compare) const
+            bool operator==(const DeemedSeparatedHold& compare) const
             {
                 return this->identifier == compare.identifier;
             }
         } DeemedSeparatedHold;
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

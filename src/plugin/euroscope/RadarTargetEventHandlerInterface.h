@@ -10,10 +10,11 @@ namespace UKControllerPlugin {
         class RadarTargetEventHandlerInterface
         {
             public:
-                virtual ~RadarTargetEventHandlerInterface(void) {}
-                virtual void RadarTargetPositionUpdateEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                ) = 0;
+            virtual ~RadarTargetEventHandlerInterface(void)
+            {
+            }
+            virtual void RadarTargetPositionUpdateEvent(
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) = 0;
         };
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

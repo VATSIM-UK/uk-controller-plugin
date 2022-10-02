@@ -13,13 +13,13 @@ namespace UKControllerPlugin::Integration {
     class IntegrationConnection
     {
         public:
-            explicit IntegrationConnection(std::shared_ptr<Connection> connection);
-            void Send(std::shared_ptr<MessageInterface> message) const;
-            std::queue<std::shared_ptr<MessageInterface>> Receive() const;
-            bool Active() const;
+        explicit IntegrationConnection(std::shared_ptr<Connection> connection);
+        void Send(std::shared_ptr<MessageInterface> message) const;
+        std::queue<std::shared_ptr<MessageInterface>> Receive() const;
+        bool Active() const;
 
         private:
-            // The raw connection
-            std::shared_ptr<Connection> connection;
+        // The raw connection
+        std::shared_ptr<Connection> connection;
     };
 } // namespace UKControllerPlugin::Integration

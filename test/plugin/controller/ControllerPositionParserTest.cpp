@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "controller/ControllerPositionParser.h"
 
 using UKControllerPlugin::Controller::ControllerPositionParser;
@@ -193,5 +192,5 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(parser.positionMentor, parser.IsMentoringPosition(callsign));
         }
-    }  // namespace Controller
-}  // namespace UKControllerPluginTest
+    } // namespace Controller
+} // namespace UKControllerPluginTest

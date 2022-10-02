@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "controller/TranslateFrequencyAbbreviation.h"
 
 using UKControllerPlugin::Controller::TranslateFrequencyAbbreviation;
@@ -30,5 +29,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ("EGKK", TranslateFrequencyAbbreviation("EGKK"));
         }
-    }  // namespace Controller
-}  // namespace UKControllerPluginTest
+    } // namespace Controller
+} // namespace UKControllerPluginTest

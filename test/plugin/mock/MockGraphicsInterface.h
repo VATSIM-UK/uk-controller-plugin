@@ -1,6 +1,5 @@
 #pragma once
 #include "graphics/GdiGraphicsInterface.h"
-#include <gdiplustypes.h>
 
 namespace UKControllerPluginTest {
     namespace Windows {

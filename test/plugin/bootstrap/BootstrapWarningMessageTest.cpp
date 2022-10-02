@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapWarningMessage;
@@ -53,5 +52,5 @@ namespace UKControllerPluginTest {
             BootstrapWarningMessage message("This is a test");
             ASSERT_TRUE(message.MessageRequiresConfirm());
         }
-    }  // namespace Bootstrap
-}  // namespace UKControllerPluginTest
+    } // namespace Bootstrap
+} // namespace UKControllerPluginTest
