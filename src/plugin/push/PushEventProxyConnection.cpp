@@ -18,8 +18,7 @@ namespace UKControllerPlugin {
                 NULL,
                 NULL,
                 GetModuleHandle(NULL),
-                this
-            );
+                this);
 
             if (this->hiddenWindow == nullptr) {
                 LogError("Unable to create push event proxy");

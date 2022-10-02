@@ -18,15 +18,15 @@ namespace UKControllerPlugin {
             // How long the timer should last for
             const unsigned int timerDuration;
 
-            bool operator==(const TimerConfiguration & compare) const
+            bool operator==(const TimerConfiguration& compare) const
             {
                 return this->timerId == compare.timerId;
             }
 
-            bool operator<(const TimerConfiguration & compare) const
+            bool operator<(const TimerConfiguration& compare) const
             {
                 return this->timerId < compare.timerId;
             }
         } TimerConfiguration;
-    }  // namespace Countdown
-}  // namespace UKControllerPlugin
+    } // namespace Countdown
+} // namespace UKControllerPlugin

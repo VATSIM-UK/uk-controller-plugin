@@ -4,11 +4,11 @@
 namespace UKControllerPlugin {
     namespace EventHandler {
         class FlightPlanEventHandlerCollection;
-    }  // namespace EventHandler
+    } // namespace EventHandler
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -21,12 +21,10 @@ namespace UKControllerPlugin {
         class InitialAltitudeModule
         {
             public:
-                static void BootstrapPlugin(
-                    Bootstrap::PersistenceContainer& persistence
-                );
+            static void BootstrapPlugin(Bootstrap::PersistenceContainer& persistence);
 
-                // The function id for the recycle initial altitude function
-                static const int recycleFunctionId = 9002;
+            // The function id for the recycle initial altitude function
+            static const int recycleFunctionId = 9002;
         };
-    }  // namespace InitialAltitude
-}  // namespace UKControllerPlugin
+    } // namespace InitialAltitude
+} // namespace UKControllerPlugin

@@ -3,9 +3,9 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "graphics/GdiplusBrushes.h"
 
-using UKControllerPlugin::RadarScreen::ScreenControlsBootstrap;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
+using UKControllerPlugin::RadarScreen::ScreenControlsBootstrap;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest {
@@ -29,5 +29,5 @@ namespace UKControllerPluginTest {
             ScreenControlsBootstrap::BootstrapRadarScreen(displays, radarRenderable, brushes);
             EXPECT_EQ(1, radarRenderable.CountScreenObjects());
         }
-    }  // namespace RadarScreen
-}  // namespace UKControllerPluginTest
+    } // namespace RadarScreen
+} // namespace UKControllerPluginTest

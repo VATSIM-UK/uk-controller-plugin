@@ -27,11 +27,9 @@ namespace UKControllerPlugin {
         */
         bool CommandHandlerCollection::ProcessCommand(std::string command) const
         {
-            for (
-                std::vector<std::shared_ptr<CommandHandlerInterface>>::const_iterator it = this->handlers.cbegin();
-                it != this->handlers.cend();
-                ++it
-            ) {
+            for (std::vector<std::shared_ptr<CommandHandlerInterface>>::const_iterator it = this->handlers.cbegin();
+                 it != this->handlers.cend();
+                 ++it) {
                 if ((*it)->ProcessCommand(command)) {
                     return true;
                 }
@@ -39,5 +37,5 @@ namespace UKControllerPlugin {
 
             return false;
         }
-    }  // namespace Command
-}  // namespace UKControllerPlugin
+    } // namespace Command
+} // namespace UKControllerPlugin

@@ -2,8 +2,7 @@
 
 using UKControllerPlugin::Curl::CurlResponse;
 
-namespace UKControllerPluginUtilsTest
-{
+namespace UKControllerPluginUtilsTest {
     namespace Curl {
 
         TEST(CurlResponse, GetResponseReturnsResponse)
@@ -38,5 +37,5 @@ namespace UKControllerPluginUtilsTest
             EXPECT_FALSE(response1.IsCurlError());
             EXPECT_TRUE(response2.IsCurlError());
         }
-    }  // namespace Curl
+    } // namespace Curl
 } // namespace UKControllerPluginUtilsTest

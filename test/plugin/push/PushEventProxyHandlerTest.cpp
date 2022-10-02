@@ -1,10 +1,10 @@
 #include "push/PushEventProxyHandler.h"
 #include "push/PushEventSubscription.h"
 
+using testing::NiceMock;
+using testing::Test;
 using UKControllerPlugin::Push::PushEventProxyHandler;
 using UKControllerPlugin::Push::PushEventSubscription;
-using testing::Test;
-using testing::NiceMock;
 
 namespace UKControllerPluginTest {
     namespace Push {
@@ -12,18 +12,14 @@ namespace UKControllerPluginTest {
         class PushEventProxyHandlerTest : public Test
         {
             public:
-                PushEventProxyHandler handler;
+            PushEventProxyHandler handler;
         };
 
         TEST_F(PushEventProxyHandlerTest, ItReturnsSubscriptions)
         {
-            std::set<PushEventSubscription> expected = {
-                {
-                    PushEventSubscription::SUB_TYPE_ALL
-                }
-            };
+            std::set<PushEventSubscription> expected = {{PushEventSubscription::SUB_TYPE_ALL}};
 
             EXPECT_EQ(expected, this->handler.GetPushEventSubscriptions());
         }
     } // namespace Push
-}  // namespace UKControllerPluginTest
+} // namespace UKControllerPluginTest

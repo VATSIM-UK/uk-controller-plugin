@@ -3,11 +3,11 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "tag/TagItemCollection.h"
 
-using UKControllerPlugin::Datablock::EstimatedOffBlockTimeBootstrap;
+using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Datablock::EstimatedOffBlockTimeBootstrap;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
-using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Datablock {
@@ -15,14 +15,13 @@ namespace UKControllerPluginTest {
         class EstimatedOffBlockTimeBootstrapTest : public Test
         {
             public:
+            void SetUp()
+            {
+                container.tagHandler.reset(new TagItemCollection);
+                container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+            };
 
-                void SetUp()
-                {
-                    container.tagHandler.reset(new TagItemCollection);
-                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                };
-
-                PersistenceContainer container;
+            PersistenceContainer container;
         };
 
         TEST_F(EstimatedOffBlockTimeBootstrapTest, AddsHandlerToTagItemHandlers)
@@ -36,5 +35,5 @@ namespace UKControllerPluginTest {
             EstimatedOffBlockTimeBootstrap::BootstrapPlugin(this->container);
             EXPECT_TRUE(container.tagHandler->HasHandlerForItemId(EstimatedOffBlockTimeBootstrap::tagItemId));
         }
-    }  // namespace Datablock
+    } // namespace Datablock
 } // namespace UKControllerPluginTest

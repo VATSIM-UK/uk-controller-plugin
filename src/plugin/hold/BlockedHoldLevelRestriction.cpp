@@ -3,10 +3,8 @@
 namespace UKControllerPlugin {
     namespace Hold {
 
-        BlockedHoldLevelRestriction::BlockedHoldLevelRestriction(std::set<unsigned int> levels)
-            : blockedLevels(levels)
+        BlockedHoldLevelRestriction::BlockedHoldLevelRestriction(std::set<unsigned int> levels) : blockedLevels(levels)
         {
-
         }
 
         /*
@@ -24,5 +22,5 @@ namespace UKControllerPlugin {
         {
             return this->blockedLevels.find(level) != this->blockedLevels.cend();
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

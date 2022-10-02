@@ -5,15 +5,13 @@
 namespace UKControllerPluginTest {
     namespace SectorFile {
 
-        class MockSectorFileProviderInterface :
-            public UKControllerPlugin::SectorFile::SectorFileProviderInterface
+        class MockSectorFileProviderInterface : public UKControllerPlugin::SectorFile::SectorFileProviderInterface
         {
             public:
-                MOCK_METHOD1(
-                    GetAllElementsByType,
-                    std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>(int)
-                );
-                MOCK_METHOD0(GetSectorFileName, std::string(void));
+            MOCK_METHOD1(
+                GetAllElementsByType,
+                std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>(int));
+            MOCK_METHOD0(GetSectorFileName, std::string(void));
         };
-    }  // namespace SectorFile
-}  // namespace UKControllerPluginTest
+    } // namespace SectorFile
+} // namespace UKControllerPluginTest

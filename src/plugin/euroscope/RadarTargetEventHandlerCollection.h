@@ -3,8 +3,8 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCRadarTargetInterface;
         class RadarTargetEventHandlerInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -16,15 +16,13 @@ namespace UKControllerPlugin {
         class RadarTargetEventHandlerCollection
         {
             public:
-                int CountHandlers(void) const;
-                void RadarTargetEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget
-                ) const;
-                void RegisterHandler(std::shared_ptr<RadarTargetEventHandlerInterface> handler);
+            int CountHandlers(void) const;
+            void RadarTargetEvent(UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const;
+            void RegisterHandler(std::shared_ptr<RadarTargetEventHandlerInterface> handler);
 
             private:
-                // Set of registered handlers
-                std::set<std::shared_ptr<RadarTargetEventHandlerInterface>> handlerList;
+            // Set of registered handlers
+            std::set<std::shared_ptr<RadarTargetEventHandlerInterface>> handlerList;
         };
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

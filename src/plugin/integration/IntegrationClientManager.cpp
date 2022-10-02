@@ -26,11 +26,7 @@ namespace UKControllerPlugin::Integration {
         auto client = std::find_if(
             this->clients.cbegin(),
             this->clients.cend(),
-            [id](const std::shared_ptr<IntegrationClient>& client) -> bool
-            {
-                return client->Id() == id;
-            }
-        );
+            [id](const std::shared_ptr<IntegrationClient>& client) -> bool { return client->Id() == id; });
 
         return client == this->clients.cend() ? nullptr : *client;
     }
@@ -42,10 +38,7 @@ namespace UKControllerPlugin::Integration {
 
     void IntegrationClientManager::RemoveInactiveClients()
     {
-        for (
-            auto client = this->clients.begin();
-            client != this->clients.end();
-        ) {
+        for (auto client = this->clients.begin(); client != this->clients.end();) {
             if (!(*client)->Connection()->Active()) {
                 this->clients.erase(client++);
                 continue;

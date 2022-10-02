@@ -94,5 +94,5 @@ namespace UKControllerPluginUtilsTest {
             ApiResponse response(true, 418L, "{\"test\": 1.20}"_json, "Test Message");
             EXPECT_EQ(418, response.GetStatusCode());
         }
-    }  // namespace Api
-}  // namespace UKControllerPluginUtilsTest
+    } // namespace Api
+} // namespace UKControllerPluginUtilsTest

@@ -2,8 +2,8 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Bootstrap {
@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
         class PostInit
         {
             public:
-                static void Process(const UKControllerPlugin::Bootstrap::PersistenceContainer & container);
+            static void Process(const UKControllerPlugin::Bootstrap::PersistenceContainer& container);
         };
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin

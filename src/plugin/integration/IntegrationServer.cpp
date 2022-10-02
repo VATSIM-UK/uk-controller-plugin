@@ -6,12 +6,11 @@
 
 namespace UKControllerPlugin::Integration {
 
-    IntegrationServer::IntegrationServer(
-        std::shared_ptr<ClientInitialisationManager> initialisationManager
-    ): initialisationManager(std::move(initialisationManager))
+    IntegrationServer::IntegrationServer(std::shared_ptr<ClientInitialisationManager> initialisationManager)
+        : initialisationManager(std::move(initialisationManager))
     {
         struct addrinfo *addressInfo = nullptr, hints;
-        ZeroMemory(&hints, sizeof (hints));
+        ZeroMemory(&hints, sizeof(hints));
         hints.ai_family = AF_INET;
         hints.ai_socktype = SOCK_STREAM;
         hints.ai_protocol = IPPROTO_TCP;
@@ -79,13 +78,8 @@ namespace UKControllerPlugin::Integration {
                 continue;
             }
 
-            this->initialisationManager->AddConnection(
-                std::make_shared<IntegrationConnection>(
-                    std::make_shared<SocketConnection>(
-                        std::make_shared<SocketWrapper>(integrationSocket)
-                    )
-                )
-            );
+            this->initialisationManager->AddConnection(std::make_shared<IntegrationConnection>(
+                std::make_shared<SocketConnection>(std::make_shared<SocketWrapper>(integrationSocket))));
         }
     }
 } // namespace UKControllerPlugin::Integration

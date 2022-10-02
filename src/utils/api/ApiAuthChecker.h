@@ -4,14 +4,14 @@ namespace UKControllerPlugin {
     namespace Api {
         class ApiInterface;
         class ApiRequestBuilder;
-    }  // namespace Api
+    } // namespace Api
     namespace Windows {
         class WinApiInterface;
-    }  // namespace Windows
+    } // namespace Windows
     namespace Setting {
         class SettingRepository;
-    }  // namespace Setting
-}  // namespace UKControllerPlugin
+    } // namespace Setting
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -25,11 +25,10 @@ namespace UKControllerPlugin {
         class ApiAuthChecker
         {
             public:
-                static bool IsAuthorised(
-                    UKControllerPlugin::Api::ApiInterface & api,
-                    UKControllerPlugin::Windows::WinApiInterface & windows,
-                    UKControllerPlugin::Setting::SettingRepository & settings
-                );
+            static bool IsAuthorised(
+                UKControllerPlugin::Api::ApiInterface& api,
+                UKControllerPlugin::Windows::WinApiInterface& windows,
+                UKControllerPlugin::Setting::SettingRepository& settings);
         };
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+    } // namespace Api
+} // namespace UKControllerPlugin

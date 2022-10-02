@@ -63,5 +63,5 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(collection.HasFlightplanForCallsign("BAW456"));
         }
 
-    }  // namespace Flightplan
-}  // namespace UKControllerPluginTest
+    } // namespace Flightplan
+} // namespace UKControllerPluginTest

@@ -7,12 +7,10 @@ namespace UKControllerPlugin {
 
         HistoryTrailRepository::HistoryTrailRepository(void)
         {
-
         }
 
         HistoryTrailRepository::~HistoryTrailRepository(void)
         {
-
         }
 
         /*
@@ -60,5 +58,5 @@ namespace UKControllerPlugin {
             // Remove from the map and destroy the object.
             this->trailData.erase(callsign);
         }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

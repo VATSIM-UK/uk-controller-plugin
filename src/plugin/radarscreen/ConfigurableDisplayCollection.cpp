@@ -16,8 +16,8 @@ namespace UKControllerPlugin {
             Adds a display to the collection.
         */
         void ConfigurableDisplayCollection::RegisterDisplay(
-            std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface> radarScreen
-        ) {
+            std::shared_ptr<UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface> radarScreen)
+        {
             if (std::find(this->displays.begin(), this->displays.end(), radarScreen) != this->displays.end()) {
                 LogWarning("Duplicate configurable display added");
                 return;
@@ -25,5 +25,5 @@ namespace UKControllerPlugin {
 
             this->displays.push_back(radarScreen);
         }
-    }  // namespace RadarScreen
-}  // namespace UKControllerPlugin
+    } // namespace RadarScreen
+} // namespace UKControllerPlugin

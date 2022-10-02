@@ -3,13 +3,13 @@
 #include "push/PushEventSubscription.h"
 #include "push/PushEvent.h"
 
-using UKControllerPlugin::Regional::RegionalPressureManager;
-using UKControllerPlugin::Regional::RegionalPressure;
-using UKControllerPlugin::Push::PushEventSubscription;
-using UKControllerPlugin::Push::PushEvent;
-using ::testing::StrictMock;
 using ::testing::Return;
+using ::testing::StrictMock;
 using ::testing::Test;
+using UKControllerPlugin::Push::PushEvent;
+using UKControllerPlugin::Push::PushEventSubscription;
+using UKControllerPlugin::Regional::RegionalPressure;
+using UKControllerPlugin::Regional::RegionalPressureManager;
 
 namespace UKControllerPluginTest {
     namespace MinStack {
@@ -17,22 +17,20 @@ namespace UKControllerPluginTest {
         class RegionalPressureManagerTest : public Test
         {
             public:
-                RegionalPressureManagerTest()
-                    : regional(asrKeys)
-                {
+            RegionalPressureManagerTest() : regional(asrKeys)
+            {
+            }
 
-                }
-
-                std::map<std::string, std::string> asrKeys = {
-                    {"ASR_LONDON", "London"},
-                    {"ASR_SCOTTISH", "Scottish"},
-                };
-                RegionalPressureManager regional;
+            std::map<std::string, std::string> asrKeys = {
+                {"ASR_LONDON", "London"},
+                {"ASR_SCOTTISH", "Scottish"},
+            };
+            RegionalPressureManager regional;
         };
 
         TEST_F(RegionalPressureManagerTest, ItCanStoreUserAcknowledgementsOfRegionalPressures)
         {
-            this->regional.AddRegionalPressure("ASR_LONDON", "London" , 1013);
+            this->regional.AddRegionalPressure("ASR_LONDON", "London", 1013);
             EXPECT_FALSE(this->regional.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
             this->regional.AcknowledgePressure("ASR_LONDON");
             EXPECT_TRUE(this->regional.GetRegionalPressure("ASR_LONDON").IsAcknowledged());
@@ -43,8 +41,7 @@ namespace UKControllerPluginTest {
             this->regional.AddRegionalPressure("ASR_LONDON", "London", 1013);
             this->regional.AddRegionalPressure("ASR_SCOTTISH", "Scottish", 1012);
 
-
-            std::set<std::string> expectedKeys = { "ASR_LONDON", "ASR_SCOTTISH" };
+            std::set<std::string> expectedKeys = {"ASR_LONDON", "ASR_SCOTTISH"};
             EXPECT_EQ(expectedKeys, this->regional.GetAllRegionalPressureKeys());
         }
 
@@ -72,11 +69,7 @@ namespace UKControllerPluginTest {
         TEST_F(RegionalPressureManagerTest, ItHasPushEventSubscriptions)
         {
             std::set<PushEventSubscription> expected = {
-                {
-                    PushEventSubscription::SUB_TYPE_CHANNEL,
-                    "private-rps-updates"
-                }
-            };
+                {PushEventSubscription::SUB_TYPE_CHANNEL, "private-rps-updates"}};
             EXPECT_EQ(expected, this->regional.GetPushEventSubscriptions());
         }
 
@@ -91,17 +84,9 @@ namespace UKControllerPluginTest {
         TEST_F(RegionalPressureManagerTest, ItUpdatesRegionalPressuresFromJson)
         {
             nlohmann::json pressureData;
-            pressureData["pressures"] = {
-                {"ASR_LONDON", 1013},
-                {"ASR_SCOTTISH", 1014}
-            };
+            pressureData["pressures"] = {{"ASR_LONDON", 1013}, {"ASR_SCOTTISH", 1014}};
 
-            PushEvent message{
-                "App\\Events\\RegionalPressuresUpdatedEvent",
-                "private-rps-updates",
-                pressureData,
-                ""
-            };
+            PushEvent message{"App\\Events\\RegionalPressuresUpdatedEvent", "private-rps-updates", pressureData, ""};
 
             this->regional.ProcessPushEvent(message);
             EXPECT_EQ(1013, this->regional.GetRegionalPressure("ASR_LONDON").pressure);
@@ -115,32 +100,18 @@ namespace UKControllerPluginTest {
         TEST_F(RegionalPressureManagerTest, ItHandlesNullRegionalPressures)
         {
             nlohmann::json pressureData;
-            pressureData["pressures"] = {
-                {"ASR_LONDON", nullptr},
-                {"ASR_SCOTTISH", nullptr}
-            };
+            pressureData["pressures"] = {{"ASR_LONDON", nullptr}, {"ASR_SCOTTISH", nullptr}};
 
-            PushEvent message{
-                "App\\Events\\RegionalPressuresUpdatedEvent",
-                "private-rps-updates",
-                pressureData,
-                ""
-            };
+            PushEvent message{"App\\Events\\RegionalPressuresUpdatedEvent", "private-rps-updates", pressureData, ""};
 
             this->regional.ProcessPushEvent(message);
-            EXPECT_EQ(
-                this->regional.invalidPressure,
-                this->regional.GetRegionalPressure("ASR_LONDON")
-            );
-            EXPECT_EQ(
-                this->regional.invalidPressure,
-                this->regional.GetRegionalPressure("ASR_SCOTTISH")
-            );
+            EXPECT_EQ(this->regional.invalidPressure, this->regional.GetRegionalPressure("ASR_LONDON"));
+            EXPECT_EQ(this->regional.invalidPressure, this->regional.GetRegionalPressure("ASR_SCOTTISH"));
         }
 
         TEST_F(RegionalPressureManagerTest, ItDoesntDoManualMinStackUpdatesIfItDoesntExist)
         {
             EXPECT_NO_THROW(this->regional.SetPressure("nope", 8000));
         }
-    }  // namespace MinStack
-}  // namespace UKControllerPluginTest
+    } // namespace MinStack
+} // namespace UKControllerPluginTest

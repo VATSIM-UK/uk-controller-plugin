@@ -7,12 +7,12 @@
 #include "setting/SettingRepository.h"
 
 using UKControllerPlugin::Api::ApiInterface;
-using UKControllerPlugin::Api::ApiResponse;
-using UKControllerPlugin::Api::ApiRequestBuilder;
-using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Api::ApiNotAuthorisedException;
+using UKControllerPlugin::Api::ApiRequestBuilder;
+using UKControllerPlugin::Api::ApiResponse;
 using UKControllerPlugin::Api::UserRequestedKeyUpdateNoPrompts;
 using UKControllerPlugin::Setting::SettingRepository;
+using UKControllerPlugin::Windows::WinApiInterface;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -20,11 +20,8 @@ namespace UKControllerPlugin {
         /*
             Returns true if the the plugin is authenticated with the API, that is, the API is a teapot.
         */
-        bool ApiAuthChecker::IsAuthorised(
-            ApiInterface & api,
-            WinApiInterface & windows,
-            SettingRepository & settings
-        ) {
+        bool ApiAuthChecker::IsAuthorised(ApiInterface& api, WinApiInterface& windows, SettingRepository& settings)
+        {
             try {
                 if (api.CheckApiAuthorisation()) {
                     LogInfo("Successfully authenticated with the Web API");
@@ -36,10 +33,7 @@ namespace UKControllerPlugin {
                 message += L"Please go to https://vatsim.uk/ukcp to download your personal access token. \r\n";
                 message += L"Once you have done this, please click OK and use the next dialog to install the key.";
                 int messageResponse = windows.OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP API Authentication Warning",
-                    MB_OKCANCEL | MB_ICONWARNING
-                );
+                    message.c_str(), L"UKCP API Authentication Warning", MB_OKCANCEL | MB_ICONWARNING);
                 LogCritical("API authorisation failed: " + std::string(notAuth.what()));
 
                 if (messageResponse == IDCANCEL) {
@@ -58,16 +52,10 @@ namespace UKControllerPlugin {
                 std::wstring message;
                 message += L"Unable to access the API. Core functionality will be disabled. \r\n\r\n";
                 message += L"If the problem persists, please contact the VATSIM UK Web Services Department.";
-                windows.OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP API Availability Warning",
-                    MB_OK | MB_ICONWARNING
-                );
-                LogCritical(
-                    "The API returned a non-standard response when authenticating: " + std::string(api.what())
-                );
+                windows.OpenMessageBox(message.c_str(), L"UKCP API Availability Warning", MB_OK | MB_ICONWARNING);
+                LogCritical("The API returned a non-standard response when authenticating: " + std::string(api.what()));
                 return false;
             }
         }
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+    } // namespace Api
+} // namespace UKControllerPlugin

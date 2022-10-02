@@ -19,10 +19,8 @@ namespace UKControllerPlugin {
             std::match_results<std::string::const_iterator> latitudeMatch;
             std::match_results<std::string::const_iterator> longitudeMatch;
 
-            if (
-                !std::regex_match(latitude, latitudeMatch, latitudePattern) ||
-                !std::regex_match(longitude, longitudeMatch, longitudePattern)
-            ) {
+            if (!std::regex_match(latitude, latitudeMatch, latitudePattern) ||
+                !std::regex_match(longitude, longitudeMatch, longitudePattern)) {
                 return GetInvalidPosition();
             }
 
@@ -35,16 +33,10 @@ namespace UKControllerPlugin {
             double longitudeSeconds = std::stod(longitudeMatch[4].str() + "." + longitudeMatch[5].str());
 
             // Check the validity of the values
-            if (
-                (latitudeDegrees == 90 && (latitudeMinutes != 0 || latitudeSeconds != 0)) ||
-                latitudeDegrees > 90 ||
-                latitudeMinutes >= 60 ||
-                latitudeSeconds >= 60.0 ||
+            if ((latitudeDegrees == 90 && (latitudeMinutes != 0 || latitudeSeconds != 0)) || latitudeDegrees > 90 ||
+                latitudeMinutes >= 60 || latitudeSeconds >= 60.0 ||
                 (longitudeDegrees == 180 && (longitudeMinutes != 0 || longitudeSeconds != 0)) ||
-                longitudeDegrees > 180 ||
-                longitudeMinutes >= 60 ||
-                longitudeSeconds >= 60.0
-            ) {
+                longitudeDegrees > 180 || longitudeMinutes >= 60 || longitudeSeconds >= 60.0) {
                 return GetInvalidPosition();
             }
 
@@ -66,8 +58,7 @@ namespace UKControllerPlugin {
         bool PositionIsInvalid(EuroScopePlugIn::CPosition pos)
         {
             EuroScopePlugIn::CPosition invalid = GetInvalidPosition();
-            return invalid.m_Latitude == pos.m_Latitude &&
-                invalid.m_Longitude == pos.m_Longitude;
+            return invalid.m_Latitude == pos.m_Latitude && invalid.m_Longitude == pos.m_Longitude;
         }
-    }  // namespace SectorFile
-}  // namespace UKControllerPlugin
+    } // namespace SectorFile
+} // namespace UKControllerPlugin

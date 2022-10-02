@@ -6,8 +6,8 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace TimedEvent {
@@ -20,20 +20,19 @@ namespace UKControllerPlugin {
         class DeferredEventHandler : public UKControllerPlugin::TimedEvent::AbstractTimedEvent
         {
             public:
-                inline int Count(void) const
-                {
-                    return this->events.size();
-                }
-                void DeferFor(
-                    std::unique_ptr<UKControllerPlugin::TimedEvent::DeferredEventRunnerInterface> event,
-                    const std::chrono::seconds seconds
-                );
-                std::chrono::system_clock::time_point NextEventTime(void) const;
-                void TimedEventTrigger(void);
+            inline int Count(void) const
+            {
+                return this->events.size();
+            }
+            void DeferFor(
+                std::unique_ptr<UKControllerPlugin::TimedEvent::DeferredEventRunnerInterface> event,
+                const std::chrono::seconds seconds);
+            std::chrono::system_clock::time_point NextEventTime(void) const;
+            void TimedEventTrigger(void);
 
             private:
-                // The events
-                std::multiset<DeferredEvent> events;
+            // The events
+            std::multiset<DeferredEvent> events;
         };
-    }  // namespace TimedEvent
-}  // namespace UKControllerPlugin
+    } // namespace TimedEvent
+} // namespace UKControllerPlugin

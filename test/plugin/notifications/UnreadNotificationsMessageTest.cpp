@@ -9,13 +9,11 @@ namespace UKControllerPluginTest {
         class UnreadNotificationsMessageTest : public Test
         {
             public:
-                UnreadNotificationsMessageTest()
-                    : message(2)
-                {
+            UnreadNotificationsMessageTest() : message(2)
+            {
+            }
 
-                }
-
-                UnreadNotificationsMessage message;
+            UnreadNotificationsMessage message;
         };
 
         TEST_F(UnreadNotificationsMessageTest, ItHasAMessageHandler)
@@ -57,8 +55,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(
                 "You have 2 unread notifications relevant to the position you are controlling.",
-                message.MessageString()
-            );
+                message.MessageString());
         }
 
         TEST_F(UnreadNotificationsMessageTest, ItHasAMessageForSingleNotifications)
@@ -66,8 +63,7 @@ namespace UKControllerPluginTest {
             UnreadNotificationsMessage messageSingle(1);
             EXPECT_EQ(
                 "You have 1 unread notification relevant to the position you are controlling.",
-                messageSingle.MessageString()
-            );
+                messageSingle.MessageString());
         }
-    }  // namespace Notifications
-}  // namespace UKControllerPluginTest
+    } // namespace Notifications
+} // namespace UKControllerPluginTest

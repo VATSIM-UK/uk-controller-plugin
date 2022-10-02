@@ -11,15 +11,13 @@ namespace UKControllerPlugin {
         class RunwayDialogAwareCollection
         {
             public:
-
-                void AddHandler(std::shared_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareInterface> handler);
-                size_t CountHandlers(void) const;
-                void RunwayDialogSaved(void) const;
+            void AddHandler(std::shared_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareInterface> handler);
+            size_t CountHandlers(void) const;
+            void RunwayDialogSaved(void) const;
 
             private:
-
-                std::set<std::shared_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareInterface>> handlers;
+            std::set<std::shared_ptr<UKControllerPlugin::Euroscope::RunwayDialogAwareInterface>> handlers;
         };
 
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

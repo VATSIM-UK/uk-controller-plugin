@@ -12,19 +12,11 @@ namespace UKControllerPlugin {
         {
             using is_transparent = std::string;
 
+            bool operator()(const UKControllerPlugin::Navaids::Navaid& navaid, std::string identifier) const;
+            bool operator()(std::string identifier, const UKControllerPlugin::Navaids::Navaid& navaid) const;
             bool operator()(
-                const UKControllerPlugin::Navaids::Navaid& navaid,
-                std::string identifier
-            ) const;
-            bool operator()(
-                std::string identifier,
-                const UKControllerPlugin::Navaids::Navaid & navaid
-            ) const;
-            bool operator()(
-                const UKControllerPlugin::Navaids::Navaid & a,
-                const UKControllerPlugin::Navaids::Navaid & b
-            ) const;
+                const UKControllerPlugin::Navaids::Navaid& a, const UKControllerPlugin::Navaids::Navaid& b) const;
 
         } CompareNavaids;
-    }  // namespace Navaids
-}  // namespace UKControllerPlugin
+    } // namespace Navaids
+} // namespace UKControllerPlugin

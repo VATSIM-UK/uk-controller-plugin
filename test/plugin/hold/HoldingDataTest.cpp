@@ -3,25 +3,25 @@
 #include "hold/BlockedHoldLevelRestriction.h"
 #include "hold/DeemedSeparatedHold.h"
 
-using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::AbstractHoldLevelRestriction;
 using UKControllerPlugin::Hold::BlockedHoldLevelRestriction;
 using UKControllerPlugin::Hold::DeemedSeparatedHold;
+using UKControllerPlugin::Hold::HoldingData;
 
 namespace UKControllerPluginTest {
     namespace Hold {
 
         TEST(HoldingDataTest, EqualityReturnsTrueIfIdentifierSame)
         {
-            HoldingData hold1{ 1, "TIMBA", "TIMBA", 7001, 15001, 51, "left" };
-            HoldingData hold2{ 1, "TIMBA", "TIMBA 2", 7002, 15002, 52, "right" };
+            HoldingData hold1{1, "TIMBA", "TIMBA", 7001, 15001, 51, "left"};
+            HoldingData hold2{1, "TIMBA", "TIMBA 2", 7002, 15002, 52, "right"};
             EXPECT_TRUE(hold1 == hold2);
         }
 
         TEST(HoldingDataTest, EqualityReturnsFalseIfIdentifierDifferent)
         {
-            HoldingData hold1{ 1, "TIMBA", "TIMBA", 7001, 15001, 51, "left" };
-            HoldingData hold2{ 2, "TIMBA", "TIMBA", 7002, 15002, 52, "right" };
+            HoldingData hold1{1, "TIMBA", "TIMBA", 7001, 15001, 51, "left"};
+            HoldingData hold2{2, "TIMBA", "TIMBA", 7002, 15002, 52, "right"};
             EXPECT_FALSE(hold1 == hold2);
         }
 
@@ -42,7 +42,7 @@ namespace UKControllerPluginTest {
         TEST(HoldingDataTest, ItCanBeMoveConstructed)
         {
             std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions;
-            restrictions.emplace(new BlockedHoldLevelRestriction({ 7000, 8000 }));
+            restrictions.emplace(new BlockedHoldLevelRestriction({7000, 8000}));
 
             std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
             deemedSeparatedHolds.emplace(new DeemedSeparatedHold(1, 2));
@@ -55,8 +55,7 @@ namespace UKControllerPluginTest {
                 51,
                 "left",
                 std::move(restrictions),
-                std::move(deemedSeparatedHolds)
-            };
+                std::move(deemedSeparatedHolds)};
 
             HoldingData hold2(std::move(hold));
 
@@ -69,14 +68,14 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("left", hold2.turnDirection);
             EXPECT_EQ(1, hold2.restrictions.size());
 
-            BlockedHoldLevelRestriction * actualCast =
-                dynamic_cast<BlockedHoldLevelRestriction *>(hold2.restrictions.cbegin()->get());
+            BlockedHoldLevelRestriction* actualCast =
+                dynamic_cast<BlockedHoldLevelRestriction*>(hold2.restrictions.cbegin()->get());
 
-            std::set<unsigned int> expectedLevels = { 7000, 8000 };
+            std::set<unsigned int> expectedLevels = {7000, 8000};
             EXPECT_EQ(expectedLevels, actualCast->GetLevels());
 
-            DeemedSeparatedHold * deemedSeparated =
-                dynamic_cast<DeemedSeparatedHold *>(hold2.deemedSeparatedHolds.cbegin()->get());
+            DeemedSeparatedHold* deemedSeparated =
+                dynamic_cast<DeemedSeparatedHold*>(hold2.deemedSeparatedHolds.cbegin()->get());
 
             EXPECT_EQ(1, deemedSeparated->identifier);
         }
@@ -84,7 +83,7 @@ namespace UKControllerPluginTest {
         TEST(HoldingDataTest, ItCanBeMoveAssigned)
         {
             std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions;
-            restrictions.emplace(new BlockedHoldLevelRestriction({ 7000, 8000 }));
+            restrictions.emplace(new BlockedHoldLevelRestriction({7000, 8000}));
 
             std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
             deemedSeparatedHolds.emplace(new DeemedSeparatedHold(1, 2));
@@ -97,8 +96,7 @@ namespace UKControllerPluginTest {
                 51,
                 "left",
                 std::move(restrictions),
-                std::move(deemedSeparatedHolds)
-            };
+                std::move(deemedSeparatedHolds)};
 
             HoldingData hold2 = std::move(hold);
 
@@ -111,14 +109,14 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("left", hold2.turnDirection);
             EXPECT_EQ(1, hold2.restrictions.size());
 
-            BlockedHoldLevelRestriction * actualCast =
-                dynamic_cast<BlockedHoldLevelRestriction *>(hold2.restrictions.cbegin()->get());
+            BlockedHoldLevelRestriction* actualCast =
+                dynamic_cast<BlockedHoldLevelRestriction*>(hold2.restrictions.cbegin()->get());
 
-            std::set<unsigned int> expectedLevels = { 7000, 8000 };
+            std::set<unsigned int> expectedLevels = {7000, 8000};
             EXPECT_EQ(expectedLevels, actualCast->GetLevels());
 
-            DeemedSeparatedHold * deemedSeparated =
-                dynamic_cast<DeemedSeparatedHold *>(hold2.deemedSeparatedHolds.cbegin()->get());
+            DeemedSeparatedHold* deemedSeparated =
+                dynamic_cast<DeemedSeparatedHold*>(hold2.deemedSeparatedHolds.cbegin()->get());
 
             EXPECT_EQ(1, deemedSeparated->identifier);
         }
@@ -165,4 +163,4 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(hold.LevelWithinHold(15001));
         }
     } // namespace Hold
-}  // namespace UKControllerPluginTest
+} // namespace UKControllerPluginTest

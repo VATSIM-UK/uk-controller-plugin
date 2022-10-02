@@ -10,10 +10,10 @@ namespace UKControllerPlugin {
         class FlightplanStorageBootstrap
         {
             public:
-                static void BootstrapPlugin(const UKControllerPlugin::Bootstrap::PersistenceContainer & container);
+            static void BootstrapPlugin(const UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
-                // How often the timed event for the handler should be triggered
-                static const int timedEventFrequency = 60;
+            // How often the timed event for the handler should be triggered
+            static const int timedEventFrequency = 60;
         };
-    }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+    } // namespace Flightplan
+} // namespace UKControllerPlugin

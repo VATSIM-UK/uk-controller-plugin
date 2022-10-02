@@ -4,19 +4,14 @@
 
 namespace UKControllerPluginTest {
     namespace EventHandler {
-        class MockControllerStatusEventHandlerInterface :
-            public UKControllerPlugin::Controller::ControllerStatusEventHandlerInterface
+        class MockControllerStatusEventHandlerInterface
+            : public UKControllerPlugin::Controller::ControllerStatusEventHandlerInterface
         {
             public:
-                MOCK_METHOD1(
-                    ControllerUpdateEvent,
-                    void(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface &)
-                );
-                MOCK_METHOD1(
-                    ControllerDisconnectEvent,
-                    void(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface &)
-                );
-                MOCK_METHOD0(SelfDisconnectEvent, void(void));
+            MOCK_METHOD1(ControllerUpdateEvent, void(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface&));
+            MOCK_METHOD1(
+                ControllerDisconnectEvent, void(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface&));
+            MOCK_METHOD0(SelfDisconnectEvent, void(void));
         };
-    }  // namespace EventHandler
-}  // namespace UKControllerPluginTest
+    } // namespace EventHandler
+} // namespace UKControllerPluginTest

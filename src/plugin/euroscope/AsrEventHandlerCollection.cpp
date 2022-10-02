@@ -9,16 +9,14 @@ namespace UKControllerPlugin {
     namespace Euroscope {
 
         /*
-            Called when the ASR first opens and has data ready to be processed. Used to notify implementing classes that they
-            can start to configure themselves.
+            Called when the ASR first opens and has data ready to be processed. Used to notify implementing classes that
+           they can start to configure themselves.
         */
-        void AsrEventHandlerCollection::AsrLoadedEvent(UserSetting & userSetting) const
+        void AsrEventHandlerCollection::AsrLoadedEvent(UserSetting& userSetting) const
         {
-            for (
-                std::set<std::shared_ptr<AsrEventHandlerInterface>>::const_iterator it = this->allHandlers.cbegin();
-                it != this->allHandlers.cend();
-                ++it
-            ) {
+            for (std::set<std::shared_ptr<AsrEventHandlerInterface>>::const_iterator it = this->allHandlers.cbegin();
+                 it != this->allHandlers.cend();
+                 ++it) {
                 (*it)->AsrLoadedEvent(userSetting);
             }
         }
@@ -27,13 +25,11 @@ namespace UKControllerPlugin {
             Called when the ASR is about to close and therefore the implementing
             classes need to save their data now or have it lost.
         */
-        void AsrEventHandlerCollection::AsrClosingEvent(UserSetting & userSetting) const
+        void AsrEventHandlerCollection::AsrClosingEvent(UserSetting& userSetting) const
         {
-            for (
-                std::set<std::shared_ptr<AsrEventHandlerInterface>>::const_iterator it = this->allHandlers.cbegin();
-                it != this->allHandlers.cend();
-                ++it
-            ) {
+            for (std::set<std::shared_ptr<AsrEventHandlerInterface>>::const_iterator it = this->allHandlers.cbegin();
+                 it != this->allHandlers.cend();
+                 ++it) {
                 (*it)->AsrClosingEvent(userSetting);
             }
         }
@@ -50,5 +46,5 @@ namespace UKControllerPlugin {
         {
             this->allHandlers.insert(handler);
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

@@ -26,10 +26,8 @@ namespace UKControllerPlugin {
             Get the intention code that corresponds to the sector exit FIX.
         */
         std::string SectorExitPoint::GetIntentionCode(
-            EuroscopeExtractedRouteInterface & route,
-            int foundPointIndex,
-            int cruiseLevel
-        ) const {
+            EuroscopeExtractedRouteInterface& route, int foundPointIndex, int cruiseLevel) const
+        {
             return this->intentionCode;
         }
 
@@ -40,7 +38,6 @@ namespace UKControllerPlugin {
         {
             return this->outDirection;
         }
-
 
         /*
             Checks that the direction of travel is appropriate for this sector exit point.
@@ -95,5 +92,5 @@ namespace UKControllerPlugin {
         {
             return true;
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin

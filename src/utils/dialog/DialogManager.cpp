@@ -7,10 +7,8 @@ using UKControllerPlugin::Dialog::DialogProviderInterface;
 namespace UKControllerPlugin {
     namespace Dialog {
 
-        DialogManager::DialogManager(const DialogProviderInterface & dialogProvider)
-            : dialogProvider(dialogProvider)
+        DialogManager::DialogManager(const DialogProviderInterface& dialogProvider) : dialogProvider(dialogProvider)
         {
-
         }
 
         /*
@@ -55,10 +53,10 @@ namespace UKControllerPlugin {
 
             // Set the dialog arguments internally, so they stay in scope
             LogInfo("Opened dialog " + dialog->description);
-            DialogCallArgument arg = { dialog->dialogArgument, contextArgument };
+            DialogCallArgument arg = {dialog->dialogArgument, contextArgument};
             this->dialogArgs[dialogId] = std::make_unique<DialogCallArgument>(arg);
 
             this->dialogProvider.OpenDialog(*dialog, this->dialogArgs[dialogId].get());
         }
-    }  // namespace Dialog
-}  // namespace UKControllerPlugin
+    } // namespace Dialog
+} // namespace UKControllerPlugin

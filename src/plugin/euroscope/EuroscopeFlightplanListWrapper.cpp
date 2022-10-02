@@ -3,8 +3,10 @@
 
 namespace UKControllerPlugin {
     namespace Euroscope {
-        EuroscopeFlightplanListWrapper::EuroscopeFlightplanListWrapper(
-            EuroScopePlugIn::CFlightPlanList original): original(original) {}
+        EuroscopeFlightplanListWrapper::EuroscopeFlightplanListWrapper(EuroScopePlugIn::CFlightPlanList original)
+            : original(original)
+        {
+        }
 
         int EuroscopeFlightplanListWrapper::NumberOfColumns()
         {
@@ -20,8 +22,7 @@ namespace UKControllerPlugin {
             std::string leftMouseFunctionProvider,
             int leftMouseFunctionId,
             std::string rightMouseFunctionProvider,
-            int rightMouseFunctionId
-        )
+            int rightMouseFunctionId)
         {
             this->original.AddColumnDefinition(
                 title.c_str(),
@@ -32,20 +33,15 @@ namespace UKControllerPlugin {
                 leftMouseFunctionProvider.c_str(),
                 leftMouseFunctionId,
                 rightMouseFunctionProvider.c_str(),
-                rightMouseFunctionId
-            );
+                rightMouseFunctionId);
         }
 
-        void EuroscopeFlightplanListWrapper::AddFlightplan(
-            EuroScopeCFlightPlanInterface& flightplan
-        )
+        void EuroscopeFlightplanListWrapper::AddFlightplan(EuroScopeCFlightPlanInterface& flightplan)
         {
             this->original.AddFpToTheList(flightplan.GetEuroScopeObject());
         }
 
-        void EuroscopeFlightplanListWrapper::AddFlightplan(
-            std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan
-        )
+        void EuroscopeFlightplanListWrapper::AddFlightplan(std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan)
         {
             this->AddFlightplan(*flightplan);
         }
@@ -55,9 +51,7 @@ namespace UKControllerPlugin {
             this->original.RemoveFpFromTheList(flightplan.GetEuroScopeObject());
         }
 
-        void EuroscopeFlightplanListWrapper::RemoveFlightplan(
-            std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan
-        )
+        void EuroscopeFlightplanListWrapper::RemoveFlightplan(std::shared_ptr<EuroScopeCFlightPlanInterface> flightplan)
         {
             this->RemoveFlightplan(*flightplan);
         }

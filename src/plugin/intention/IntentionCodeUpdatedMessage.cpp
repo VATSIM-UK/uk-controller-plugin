@@ -3,11 +3,8 @@
 namespace UKControllerPlugin::IntentionCode {
 
     IntentionCodeUpdatedMessage::IntentionCodeUpdatedMessage(
-        std::string callsign,
-        std::string exitPoint,
-        std::string code
-    ):
-        callsign(std::move(callsign)), code(std::move(code))
+        std::string callsign, std::string exitPoint, std::string code)
+        : callsign(std::move(callsign)), code(std::move(code))
     {
         if (!exitPoint.empty()) {
             this->exitPoint = std::move(exitPoint);
@@ -25,9 +22,6 @@ namespace UKControllerPlugin::IntentionCode {
 
     Integration::MessageType IntentionCodeUpdatedMessage::GetMessageType() const
     {
-        return {
-            "intention_code_updated",
-            1
-        };
+        return {"intention_code_updated", 1};
     }
 } // namespace UKControllerPlugin::IntentionCode

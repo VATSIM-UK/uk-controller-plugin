@@ -11,8 +11,7 @@ namespace UKControllerPlugin {
     std::string HelperFunctions::VectorToDelimetedString(std::vector<std::string> vector, std::string delimiter)
     {
         std::ostringstream imploded;
-        std::copy(vector.begin(), vector.end(),
-            std::ostream_iterator<std::string>(imploded, delimiter.c_str()));
+        std::copy(vector.begin(), vector.end(), std::ostream_iterator<std::string>(imploded, delimiter.c_str()));
 
         return imploded.str().substr(0, imploded.str().size() - 1);
     }
@@ -37,9 +36,8 @@ namespace UKControllerPlugin {
     */
     std::string HelperFunctions::GetColourString(COLORREF color)
     {
-        return std::to_string(GetRValue(color)) + ","
-            + std::to_string(GetGValue(color)) + ","
-            + std::to_string(GetBValue(color));
+        return std::to_string(GetRValue(color)) + "," + std::to_string(GetGValue(color)) + "," +
+               std::to_string(GetBValue(color));
     }
 
     /*
@@ -61,19 +59,14 @@ namespace UKControllerPlugin {
             numberString = "0" + numberString;
         }
 
-        if (numberString.size() != 4 ||
-            !HelperFunctions::IsAnInteger(numberString)
-        ) {
+        if (numberString.size() != 4 || !HelperFunctions::IsAnInteger(numberString)) {
             return (std::chrono::system_clock::time_point::max)();
         }
 
         int hours = std::stoi(numberString.substr(0, 2));
         int minutes = std::stoi(numberString.substr(2, 2));
 
-        if (
-            (hours < 0 || hours > 23) ||
-            (minutes < 0 || minutes > 59)
-        ) {
+        if ((hours < 0 || hours > 23) || (minutes < 0 || minutes > 59)) {
             return (std::chrono::system_clock::time_point::max)();
         }
 
@@ -96,8 +89,8 @@ namespace UKControllerPlugin {
     */
     bool HelperFunctions::IsAnInteger(std::string string)
     {
-        return !string.empty() && std::find_if(string.begin(),
-            string.end(), [](char c) { return !std::isdigit(c); }) == string.end();
+        return !string.empty() &&
+               std::find_if(string.begin(), string.end(), [](char c) { return !std::isdigit(c); }) == string.end();
     }
 
     /*
@@ -107,9 +100,11 @@ namespace UKControllerPlugin {
     */
     bool HelperFunctions::IsFloat(std::string string)
     {
-        return !string.empty() && std::find_if(string.begin(),
-            string.end(), [](char c) { return !std::isdigit(c) && c != '.'; }) == string.end() &&
-            (std::count(string.begin(), string.end(), '.') == 1 || std::count(string.begin(), string.end(), '.') == 0);
+        return !string.empty() &&
+               std::find_if(string.begin(), string.end(), [](char c) { return !std::isdigit(c) && c != '.'; }) ==
+                   string.end() &&
+               (std::count(string.begin(), string.end(), '.') == 1 ||
+                std::count(string.begin(), string.end(), '.') == 0);
     }
 
     /*
@@ -127,16 +122,9 @@ namespace UKControllerPlugin {
             tokens.push_back(token);
         }
 
-        return tokens.size() == 3 &&
-            IsAnInteger(tokens[0]) &&
-            IsAnInteger(tokens[1]) &&
-            IsAnInteger(tokens[2]) &&
-            stoi(tokens[0]) >= 0 &&
-            stoi(tokens[0]) <= 255 &&
-            stoi(tokens[1]) >= 0 &&
-            stoi(tokens[1]) <= 255 &&
-            stoi(tokens[2]) >= 0 &&
-            stoi(tokens[2]) <= 255;
+        return tokens.size() == 3 && IsAnInteger(tokens[0]) && IsAnInteger(tokens[1]) && IsAnInteger(tokens[2]) &&
+               stoi(tokens[0]) >= 0 && stoi(tokens[0]) <= 255 && stoi(tokens[1]) >= 0 && stoi(tokens[1]) <= 255 &&
+               stoi(tokens[2]) >= 0 && stoi(tokens[2]) <= 255;
     }
 
     /*
@@ -162,7 +150,6 @@ namespace UKControllerPlugin {
             string.erase(startChar);
         }
 
-
         // We've deleted the last character...
         if (string.begin() == string.end()) {
             return string;
@@ -177,7 +164,8 @@ namespace UKControllerPlugin {
     }
 
     /*
-        Splits a string based on a delimeter. Ignores tokens that occur twice in succession and treats them as a single token.
+        Splits a string based on a delimeter. Ignores tokens that occur twice in succession and treats them as a single
+       token.
     */
     std::vector<std::string> HelperFunctions::TokeniseString(const char delimiter, std::string original)
     {
@@ -213,4 +201,4 @@ namespace UKControllerPlugin {
         std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
         return converter.to_bytes(wstring);
     }
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

@@ -4,34 +4,30 @@ namespace UKControllerPlugin {
     namespace Ownership {
 
         AirfieldOwnerQueryMessage::AirfieldOwnerQueryMessage(
-            std::string airfield,
-            std::string callsign,
-            std::string name
-        )
+            std::string airfield, std::string callsign, std::string name)
             : airfield(airfield), callsign(callsign), name(name)
         {
-
         }
 
         /*
-        *   Put the message in a dedicated handler
-        */
+         *   Put the message in a dedicated handler
+         */
         std::string AirfieldOwnerQueryMessage::MessageHandler(void) const
         {
             return "UKCP_Query";
         }
 
         /*
-        *   The message sender should be the plugin
-        */
+         *   The message sender should be the plugin
+         */
         std::string AirfieldOwnerQueryMessage::MessageSender(void) const
         {
             return "UKCP";
         }
 
         /*
-        *   Format the message into something for the user.
-        */
+         *   Format the message into something for the user.
+         */
         std::string AirfieldOwnerQueryMessage::MessageString(void) const
         {
             if (this->callsign == "") {
@@ -42,44 +38,44 @@ namespace UKControllerPlugin {
         }
 
         /*
-        *   The handler should be shown
-        */
+         *   The handler should be shown
+         */
         bool AirfieldOwnerQueryMessage::MessageShowHandler(void) const
         {
             return true;
         }
 
         /*
-        *   The message handler should be marked as unread
-        */
+         *   The message handler should be marked as unread
+         */
         bool AirfieldOwnerQueryMessage::MessageMarkUnread(void) const
         {
             return true;
         }
 
         /*
-        *   If they've typed this command they've asked for it, so override busy
-        */
+         *   If they've typed this command they've asked for it, so override busy
+         */
         bool AirfieldOwnerQueryMessage::MessageOverrideBusy(void) const
         {
             return true;
         }
 
         /*
-        *  Make it easy to see the handler
-        */
+         *  Make it easy to see the handler
+         */
         bool AirfieldOwnerQueryMessage::MessageFlashHandler(void) const
         {
             return true;
         }
 
         /*
-        *   Don't make them click too much
-        */
+         *   Don't make them click too much
+         */
         bool AirfieldOwnerQueryMessage::MessageRequiresConfirm(void) const
         {
             return false;
         }
 
-    }  // namespace Ownership
-}  // namespace UKControllerPlugin
+    } // namespace Ownership
+} // namespace UKControllerPlugin

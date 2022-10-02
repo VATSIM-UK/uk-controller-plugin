@@ -6,15 +6,15 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
-using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
-using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
-using UKControllerPlugin::Plugin::FunctionCallEventHandler;
-using UKControllerPlugin::Controller::ActiveCallsignCollection;
-using UKControllerPlugin::TimedEvent::TimedEventCollection;
-using testing::Test;
 using testing::NiceMock;
+using testing::Test;
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
+using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
+using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 
 namespace UKControllerPluginTest {
     namespace InitialAltitude {
@@ -22,17 +22,16 @@ namespace UKControllerPluginTest {
         class InitialAltitudeModuleTest : public Test
         {
             public:
+            void SetUp()
+            {
+                container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
+                container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
+                container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
+                container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+                container.timedHandler = std::make_unique<TimedEventCollection>();
+            }
 
-                void SetUp()
-                {
-                    container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
-                    container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
-                    container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
-                    container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
-                    container.timedHandler = std::make_unique<TimedEventCollection>();
-                }
-
-                PersistenceContainer container;
+            PersistenceContainer container;
         };
 
         TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersFlightplanEvents)
@@ -66,5 +65,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, container.timedHandler->CountHandlers());
             EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(10));
         }
-    }  // namespace InitialAltitude
-}  // namespace UKControllerPluginTest
+    } // namespace InitialAltitude
+} // namespace UKControllerPluginTest

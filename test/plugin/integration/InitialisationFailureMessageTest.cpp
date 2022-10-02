@@ -12,21 +12,17 @@ namespace UKControllerPluginTest::Integration {
     class InitialisationFailureMessageTest : public Test
     {
         public:
-            InitialisationFailureMessageTest()
-                : message("foo", std::vector<std::string>{"message1", "message2"})
-            { }
+        InitialisationFailureMessageTest() : message("foo", std::vector<std::string>{"message1", "message2"})
+        {
+        }
 
-            InitialisationFailureMessage message;
+        InitialisationFailureMessage message;
     };
 
     TEST_F(InitialisationFailureMessageTest, ItConvertsToJson)
     {
         nlohmann::json expected = {
-            {"type", "initialisation_failure"},
-            {"id", "foo"},
-            {"version", 1},
-            {"errors", {"message1", "message2"}}
-        };
+            {"type", "initialisation_failure"}, {"id", "foo"}, {"version", 1}, {"errors", {"message1", "message2"}}};
         EXPECT_EQ(expected, message.ToJson());
     }
 } // namespace UKControllerPluginTest::Integration

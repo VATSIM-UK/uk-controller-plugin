@@ -38,5 +38,5 @@ namespace UKControllerPlugin {
         {
             return this->trail;
         }
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

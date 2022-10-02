@@ -5,12 +5,11 @@ namespace UKControllerPlugin::Stands {
     StandAssignedMessage::StandAssignedMessage(std::string callsign, std::string airfield, std::string stand)
         : callsign(callsign), airfield(airfield), stand(stand)
     {
-
     }
 
     nlohmann::json StandAssignedMessage::GetMessageData() const
     {
-        return nlohmann::json {
+        return nlohmann::json{
             {"callsign", this->callsign},
             {"airfield", this->airfield},
             {"stand", this->stand},
@@ -19,9 +18,6 @@ namespace UKControllerPlugin::Stands {
 
     Integration::MessageType StandAssignedMessage::GetMessageType() const
     {
-        return {
-            "stand_assigned",
-            1
-        };
+        return {"stand_assigned", 1};
     }
 } // namespace UKControllerPlugin::Stands

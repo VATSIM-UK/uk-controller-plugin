@@ -1,9 +1,9 @@
 #include "push/InterpretPushEvent.h"
 #include "push/PushEvent.h"
 
-using UKControllerPlugin::Push::PushEvent;
-using UKControllerPlugin::Push::invalidMessage;
 using UKControllerPlugin::Push::InterpretPushedEvent;
+using UKControllerPlugin::Push::invalidMessage;
+using UKControllerPlugin::Push::PushEvent;
 
 namespace UKControllerPluginTest::Push {
     TEST(InterpretPushEventTest, ItReturnsInvalidIfJsonInvalid)
@@ -36,12 +36,7 @@ namespace UKControllerPluginTest::Push {
         message["event"] = "test-event";
         message["data"] = {{"test", "lol"}};
 
-        PushEvent expectedMessage = {
-            "test-event",
-            "none",
-            {{"test", "lol"}},
-            message.dump()
-        };
+        PushEvent expectedMessage = {"test-event", "none", {{"test", "lol"}}, message.dump()};
 
         EXPECT_EQ(expectedMessage, InterpretPushedEvent(message.dump()));
     }
@@ -53,12 +48,7 @@ namespace UKControllerPluginTest::Push {
         message["channel"] = 1;
         message["data"] = {{"test", "lol"}};
 
-        PushEvent expectedMessage = {
-            "test-event",
-            "none",
-            {{"test", "lol"}},
-            message.dump()
-        };
+        PushEvent expectedMessage = {"test-event", "none", {{"test", "lol"}}, message.dump()};
 
         EXPECT_EQ(expectedMessage, InterpretPushedEvent(message.dump()));
     }

@@ -9,19 +9,16 @@ namespace UKControllerPlugin::Handoff {
     class HandoffFrequencyUpdatedMessage : public Integration::MessageInterface
     {
         public:
-            HandoffFrequencyUpdatedMessage(
-                std::string callsign,
-                std::string frequency
-            );
-            ~HandoffFrequencyUpdatedMessage() override = default;
-            nlohmann::json GetMessageData() const override;
-            Integration::MessageType GetMessageType() const override;
+        HandoffFrequencyUpdatedMessage(std::string callsign, std::string frequency);
+        ~HandoffFrequencyUpdatedMessage() override = default;
+        nlohmann::json GetMessageData() const override;
+        Integration::MessageType GetMessageType() const override;
 
         private:
-            // Who the codes for
-            std::string callsign;
+        // Who the codes for
+        std::string callsign;
 
-            // The code
-            std::string frequency;
+        // The code
+        std::string frequency;
     };
 } // namespace UKControllerPlugin::Handoff

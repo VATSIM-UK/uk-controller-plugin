@@ -3,12 +3,8 @@
 namespace UKControllerPlugin {
     namespace Controller {
 
-        std::map <std::string, std::string> translations = {
-            {"ESX", "ESSEX"},
-            {"SOL", "SOLENT"},
-            {"THA", "THAMES"},
-            {"TMS", "THAMES"}
-        };
+        std::map<std::string, std::string> translations = {
+            {"ESX", "ESSEX"}, {"SOL", "SOLENT"}, {"THA", "THAMES"}, {"TMS", "THAMES"}};
 
         /*
             Given a recognised abbreviation for a facility, translate
@@ -18,5 +14,5 @@ namespace UKControllerPlugin {
         {
             return translations.count(facility) ? translations.at(facility) : facility;
         }
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    } // namespace Controller
+} // namespace UKControllerPlugin

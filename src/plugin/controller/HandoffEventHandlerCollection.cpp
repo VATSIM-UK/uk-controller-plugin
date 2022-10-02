@@ -15,9 +15,8 @@ namespace UKControllerPlugin {
         /*
             Adds an event handler to the collection.
         */
-        void HandoffEventHandlerCollection::RegisterHandler(
-            std::shared_ptr<HandoffEventHandlerInterface> handler
-        ) {
+        void HandoffEventHandlerCollection::RegisterHandler(std::shared_ptr<HandoffEventHandlerInterface> handler)
+        {
             if (!this->eventHandlers.insert(handler).second) {
                 LogWarning("Duplicate handoff event handler added");
             }
@@ -29,16 +28,11 @@ namespace UKControllerPlugin {
         void HandoffEventHandlerCollection::HandoffInitiated(
             EuroScopeCFlightPlanInterface& flightplan,
             EuroScopeCControllerInterface& transferringController,
-            EuroScopeCControllerInterface& targetController
-        ) const {
-            for (
-                auto it =
-                this->eventHandlers.begin();
-                it != this->eventHandlers.end();
-                ++it
-            ) {
+            EuroScopeCControllerInterface& targetController) const
+        {
+            for (auto it = this->eventHandlers.begin(); it != this->eventHandlers.end(); ++it) {
                 (*it)->HandoffInitiated(flightplan, transferringController, targetController);
             }
         }
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    } // namespace Controller
+} // namespace UKControllerPlugin

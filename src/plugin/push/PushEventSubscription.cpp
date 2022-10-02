@@ -14,9 +14,8 @@ namespace UKControllerPlugin {
 
         bool PushEventSubscription::operator<(const PushEventSubscription& compare) const
         {
-            return this->subType == compare.subType
-                       ? this->subTarget < compare.subTarget
-                       : this->subType < compare.subType;
+            return this->subType == compare.subType ? this->subTarget < compare.subTarget
+                                                    : this->subType < compare.subType;
         }
 
         bool PushEventSubscription::IsEventSubscription(void) const

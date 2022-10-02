@@ -2,12 +2,12 @@
 #include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
-using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
+using UKControllerPlugin::Euroscope::UserSetting;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
-        void LoadDefaultUserSettings(UserSetting & userSetting)
+        void LoadDefaultUserSettings(UserSetting& userSetting)
         {
             // Prenotes
             if (!userSetting.HasEntry(GeneralSettingsEntries::usePrenoteSettingsKey)) {
@@ -15,8 +15,7 @@ namespace UKControllerPlugin {
                 userSetting.Save(
                     GeneralSettingsEntries::usePrenoteSettingsKey,
                     GeneralSettingsEntries::usePrenoteSettingsDescription,
-                    false
-                );
+                    false);
             }
 
             // Automatic squawk assignment
@@ -25,45 +24,36 @@ namespace UKControllerPlugin {
                 userSetting.Save(
                     GeneralSettingsEntries::squawkToggleSettingsKey,
                     GeneralSettingsEntries::squawkToggleSettingsDescription,
-                    true
-                );
+                    true);
             }
 
             // Automatic initial altitude assignment
             if (!userSetting.HasEntry(GeneralSettingsEntries::initialAltitudeToggleSettingsKey)) {
                 LogInfo(
-                    "Loading default value for setting " + GeneralSettingsEntries::initialAltitudeToggleSettingsKey
-                );
+                    "Loading default value for setting " + GeneralSettingsEntries::initialAltitudeToggleSettingsKey);
                 userSetting.Save(
                     GeneralSettingsEntries::initialAltitudeToggleSettingsKey,
                     GeneralSettingsEntries::initialAltitudeToggleSettingsDescription,
-                    true
-                );
+                    true);
             }
 
             // Pressure change notifications
             if (!userSetting.HasEntry(GeneralSettingsEntries::pressureMonitorSendMessageKey)) {
-                LogInfo(
-                    "Loading default value for setting " + GeneralSettingsEntries::pressureMonitorSendMessageKey
-                );
+                LogInfo("Loading default value for setting " + GeneralSettingsEntries::pressureMonitorSendMessageKey);
                 userSetting.Save(
                     GeneralSettingsEntries::pressureMonitorSendMessageKey,
                     GeneralSettingsEntries::pressureMonitorSendMessageDescription,
-                    true
-                );
+                    true);
             }
 
             // Time format
             if (!userSetting.HasEntry(GeneralSettingsEntries::unknownTimeFormatBlankKey)) {
-                LogInfo(
-                    "Loading default value for setting " + GeneralSettingsEntries::unknownTimeFormatBlankKey
-                );
+                LogInfo("Loading default value for setting " + GeneralSettingsEntries::unknownTimeFormatBlankKey);
                 userSetting.Save(
                     GeneralSettingsEntries::unknownTimeFormatBlankKey,
                     GeneralSettingsEntries::unknownTimeFormatBlankDescription,
-                    false
-                );
+                    false);
             }
         }
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

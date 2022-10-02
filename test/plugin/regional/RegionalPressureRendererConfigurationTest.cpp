@@ -1,9 +1,9 @@
 #include "regional/RegionalPressureRendererConfiguration.h"
 #include "regional/RegionalPressureRenderedItem.h"
 
+using testing::Test;
 using UKControllerPlugin::Regional::RegionalPressureRenderedItem;
 using UKControllerPlugin::Regional::RegionalPressureRendererConfiguration;
-using testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Regional {
@@ -11,12 +11,10 @@ namespace UKControllerPluginTest {
         class RegionalPressureRendererConfigurationTest : public Test
         {
             public:
-
-                RegionalPressureRenderedItem item1{ 1, "ASR_LONDON" };
-                RegionalPressureRenderedItem item2{ 2, "ASR_SCOTTISH" };
-                RegionalPressureRendererConfiguration configuration;
+            RegionalPressureRenderedItem item1{1, "ASR_LONDON"};
+            RegionalPressureRenderedItem item2{2, "ASR_SCOTTISH"};
+            RegionalPressureRendererConfiguration configuration;
         };
-
 
         TEST_F(RegionalPressureRendererConfigurationTest, ItStartsEmpty)
         {
@@ -80,5 +78,5 @@ namespace UKControllerPluginTest {
             this->configuration.AddItem(this->item2);
             EXPECT_EQ(this->item1, this->configuration.GetItem("ASR_LONDON"));
         }
-    }  // namespace Regional
-}  // namespace UKControllerPluginTest
+    } // namespace Regional
+} // namespace UKControllerPluginTest

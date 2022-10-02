@@ -5,8 +5,8 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
         class UserSettingAwareInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -19,14 +19,12 @@ namespace UKControllerPlugin {
         class UserSettingAwareCollection
         {
             public:
-                int Count(void) const;
-                void RegisterHandler(
-                    std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareInterface> handler
-                );
-                void UserSettingsUpdateEvent(UKControllerPlugin::Euroscope::UserSetting & userSetting) const;
+            int Count(void) const;
+            void RegisterHandler(std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareInterface> handler);
+            void UserSettingsUpdateEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) const;
 
             private:
-                std::set<std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareInterface>> allHandlers;
+            std::set<std::shared_ptr<UKControllerPlugin::Euroscope::UserSettingAwareInterface>> allHandlers;
         };
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

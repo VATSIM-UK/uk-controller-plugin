@@ -6,8 +6,7 @@ namespace UKControllerPlugin {
 
         ExternalMessageEventHandler::ExternalMessageEventHandler(bool duplicatePlugin)
         {
-            if (duplicatePlugin)
-            {
+            if (duplicatePlugin) {
                 return;
             }
 
@@ -24,8 +23,7 @@ namespace UKControllerPlugin {
                 HWND_MESSAGE,
                 NULL,
                 GetModuleHandle(NULL),
-                reinterpret_cast<LPVOID>(this)
-            );
+                reinterpret_cast<LPVOID>(this));
 
             if (this->hiddenWindow == NULL) {
                 LogError("Unable to create external message handler");
@@ -64,15 +62,11 @@ namespace UKControllerPlugin {
 
             // Process any legacy incoming messages
             while (this->messages.size() != 0) {
-                for (
-                    auto handlerIt = this->eventHandlers.cbegin();
-                    handlerIt != this->eventHandlers.cend();
-                    ++handlerIt
-                ) {
+                for (auto handlerIt = this->eventHandlers.cbegin(); handlerIt != this->eventHandlers.cend();
+                     ++handlerIt) {
                     if ((*handlerIt)->ProcessMessage(this->messages.front())) {
                         break;
                     }
-
                 }
                 LogWarning("Unable to handle legacy external message: " + this->messages.front());
                 this->messages.pop();
@@ -85,7 +79,7 @@ namespace UKControllerPlugin {
                 return false;
             }
 
-            #ifdef _DEBUG
+#ifdef _DEBUG
 
             command = command.substr(this->newMessageCommand.size());
 
@@ -102,9 +96,9 @@ namespace UKControllerPlugin {
 
             // Send the data
             SendMessage(window, WM_COPYDATA, reinterpret_cast<WPARAM>(window), reinterpret_cast<LPARAM>(&cds));
-            #endif  // _DEBUG
+#endif // _DEBUG
 
             return true;
         }
-    }  // namespace Integration
-}  // namespace UKControllerPlugin
+    } // namespace Integration
+} // namespace UKControllerPlugin

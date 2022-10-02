@@ -2,9 +2,9 @@
 #include "stands/Stand.h"
 
 using ::testing::Test;
-using UKControllerPlugin::Stands::from_json;
-using UKControllerPlugin::Stands::DependencyValid;
 using UKControllerPlugin::Stands::CompareStands;
+using UKControllerPlugin::Stands::DependencyValid;
+using UKControllerPlugin::Stands::from_json;
 using UKControllerPlugin::Stands::Stand;
 
 namespace UKControllerPluginTest {
@@ -12,35 +12,25 @@ namespace UKControllerPluginTest {
 
         class StandSerializerTest : public Test
         {
-
         };
 
         TEST_F(StandSerializerTest, DependencyValidReturnsTrueIfValid)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", "31R"},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", 2},
-                    {"identifier", "35"},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", "31R"},
+            });
+            gatwick.push_back({
+                {"id", 2},
+                {"identifier", "35"},
+            });
             nlohmann::json heathrow = nlohmann::json::array();
-            heathrow.push_back(
-                {
-                    {"id", 3},
-                    {"identifier", "76R"},
-                }
-            );
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            heathrow.push_back({
+                {"id", 3},
+                {"identifier", "76R"},
+            });
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             EXPECT_TRUE(DependencyValid(dependency));
         }
@@ -48,29 +38,20 @@ namespace UKControllerPluginTest {
         TEST_F(StandSerializerTest, DependencyValidReturnsFalseIfIdInvalid)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", "31R"},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", "abc"},
-                    {"identifier", "35"},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", "31R"},
+            });
+            gatwick.push_back({
+                {"id", "abc"},
+                {"identifier", "35"},
+            });
             nlohmann::json heathrow = nlohmann::json::array();
-            heathrow.push_back(
-                {
-                    {"id", 3},
-                    {"identifier", "76R"},
-                }
-            );
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            heathrow.push_back({
+                {"id", 3},
+                {"identifier", "76R"},
+            });
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             EXPECT_FALSE(DependencyValid(dependency));
         }
@@ -78,28 +59,19 @@ namespace UKControllerPluginTest {
         TEST_F(StandSerializerTest, DependencyValidReturnsFalseIfIdMissing)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", "31R"},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", 2},
-                    {"identifier", "35"},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", "31R"},
+            });
+            gatwick.push_back({
+                {"id", 2},
+                {"identifier", "35"},
+            });
             nlohmann::json heathrow = nlohmann::json::array();
-            heathrow.push_back(
-                {
-                    {"identifier", "76R"},
-                }
-            );
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            heathrow.push_back({
+                {"identifier", "76R"},
+            });
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             EXPECT_FALSE(DependencyValid(dependency));
         }
@@ -107,29 +79,20 @@ namespace UKControllerPluginTest {
         TEST_F(StandSerializerTest, DependencyValidReturnsFalseIfIdentifierInvalid)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", 123},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", 2},
-                    {"identifier", "35"},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", 123},
+            });
+            gatwick.push_back({
+                {"id", 2},
+                {"identifier", "35"},
+            });
             nlohmann::json heathrow = nlohmann::json::array();
-            heathrow.push_back(
-                {
-                    {"id", 3},
-                    {"identifier", "76R"},
-                }
-            );
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            heathrow.push_back({
+                {"id", 3},
+                {"identifier", "76R"},
+            });
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             EXPECT_FALSE(DependencyValid(dependency));
         }
@@ -137,28 +100,19 @@ namespace UKControllerPluginTest {
         TEST_F(StandSerializerTest, DependencyValidReturnsFalseIfIdentifyingMissing)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", "31R"},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", 2},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", "31R"},
+            });
+            gatwick.push_back({
+                {"id", 2},
+            });
             nlohmann::json heathrow = nlohmann::json::array();
-            heathrow.push_back(
-                {
-                    {"id", 3},
-                    {"identifier", "76R"},
-                }
-            );
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            heathrow.push_back({
+                {"id", 3},
+                {"identifier", "76R"},
+            });
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             EXPECT_FALSE(DependencyValid(dependency));
         }
@@ -166,23 +120,16 @@ namespace UKControllerPluginTest {
         TEST_F(StandSerializerTest, DependencyValidReturnsFalseIfAirfieldDataNotArray)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", "31R"},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", 2},
-                    {"identifier", "35"},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", "31R"},
+            });
+            gatwick.push_back({
+                {"id", 2},
+                {"identifier", "35"},
+            });
             nlohmann::json heathrow = nlohmann::json::object();
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             EXPECT_FALSE(DependencyValid(dependency));
         }
@@ -196,28 +143,17 @@ namespace UKControllerPluginTest {
         TEST_F(StandSerializerTest, FromJsonHandlesHandlesInvalidDependendency)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", "31R"},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", 2},
-                    {"identifier", "35"},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", "31R"},
+            });
+            gatwick.push_back({
+                {"id", 2},
+                {"identifier", "35"},
+            });
             nlohmann::json heathrow = nlohmann::json::array();
-            heathrow.push_back(
-                {
-                    {"id", 3}
-                }
-            );
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            heathrow.push_back({{"id", 3}});
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             std::set<Stand, CompareStands> stands;
             from_json(dependency, stands);
@@ -227,29 +163,20 @@ namespace UKControllerPluginTest {
         TEST_F(StandSerializerTest, FromJsonCreatesStandsFromDependency)
         {
             nlohmann::json gatwick = nlohmann::json::array();
-            gatwick.push_back(
-                {
-                    {"id", 1},
-                    {"identifier", "31R"},
-                }
-            );
-            gatwick.push_back(
-                {
-                    {"id", 2},
-                    {"identifier", "35"},
-                }
-            );
+            gatwick.push_back({
+                {"id", 1},
+                {"identifier", "31R"},
+            });
+            gatwick.push_back({
+                {"id", 2},
+                {"identifier", "35"},
+            });
             nlohmann::json heathrow = nlohmann::json::array();
-            heathrow.push_back(
-                {
-                    {"id", 3},
-                    {"identifier", "76R"},
-                }
-            );
-            nlohmann::json dependency = {
-                {"EGKK", gatwick},
-                {"EGLL", heathrow}
-            };
+            heathrow.push_back({
+                {"id", 3},
+                {"identifier", "76R"},
+            });
+            nlohmann::json dependency = {{"EGKK", gatwick}, {"EGLL", heathrow}};
 
             std::set<Stand, CompareStands> stands;
             from_json(dependency, stands);
@@ -265,5 +192,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("EGLL", stands.find(3)->airfieldCode);
             EXPECT_EQ("76R", stands.find(3)->identifier);
         }
-    }  // namespace Stands
-}  // namespace UKControllerPluginTest
+    } // namespace Stands
+} // namespace UKControllerPluginTest

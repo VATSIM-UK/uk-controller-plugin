@@ -16,9 +16,9 @@ namespace UKControllerPlugin {
         /*
             Adds the airfield groups to the intention code generator.
         */
-        std::unique_ptr<IntentionCodeGenerator> IntentionCodeFactory::Create(SectorExitRepository & exitPoints)
+        std::unique_ptr<IntentionCodeGenerator> IntentionCodeFactory::Create(SectorExitRepository& exitPoints)
         {
-            std::vector <std::unique_ptr<AirfieldGroup>> airfields;
+            std::vector<std::unique_ptr<AirfieldGroup>> airfields;
             airfields.push_back(std::unique_ptr<AirfieldGroup>(new HomeAirfieldGroup));
             airfields.push_back(std::unique_ptr<AirfieldGroup>(new ShannonAirfieldGroup));
             airfields.push_back(std::unique_ptr<AirfieldGroup>(new BrusselsAirfieldGroup));
@@ -26,8 +26,7 @@ namespace UKControllerPlugin {
             airfields.push_back(std::unique_ptr<AirfieldGroup>(new AmsterdamAirfieldGroup));
 
             return std::unique_ptr<IntentionCodeGenerator>(
-                new IntentionCodeGenerator(std::move(airfields), exitPoints)
-            );
+                new IntentionCodeGenerator(std::move(airfields), exitPoints));
         }
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin

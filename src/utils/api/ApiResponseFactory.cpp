@@ -1,8 +1,8 @@
 #include "api/ApiResponseFactory.h"
 #include "helper/HelperFunctions.h"
 
-using UKControllerPlugin::Curl::CurlResponse;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Curl::CurlResponse;
 
 namespace UKControllerPlugin {
     namespace Api {
@@ -31,5 +31,5 @@ namespace UKControllerPlugin {
 
             return ApiResponse(curl.IsCurlError(), curl.GetStatusCode(), responseJson, responseMessage);
         }
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+    } // namespace Api
+} // namespace UKControllerPlugin

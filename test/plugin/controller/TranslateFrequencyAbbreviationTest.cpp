@@ -29,5 +29,5 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ("EGKK", TranslateFrequencyAbbreviation("EGKK"));
         }
-    }  // namespace Controller
-}  // namespace UKControllerPluginTest
+    } // namespace Controller
+} // namespace UKControllerPluginTest

@@ -192,5 +192,5 @@ namespace UKControllerPluginTest {
 
             EXPECT_EQ(parser.positionMentor, parser.IsMentoringPosition(callsign));
         }
-    }  // namespace Controller
-}  // namespace UKControllerPluginTest
+    } // namespace Controller
+} // namespace UKControllerPluginTest

@@ -7,7 +7,7 @@ namespace UKControllerPlugin {
             Get the settings key for whether or not the timer is
             enabled.
         */
-        std::string GetTimerEnabledKey(const TimerConfiguration & configuration)
+        std::string GetTimerEnabledKey(const TimerConfiguration& configuration)
         {
             return GetTimerEnabledKey(configuration.timerId);
         }
@@ -25,7 +25,7 @@ namespace UKControllerPlugin {
             Get the settings description for whether or not the timer is
             enabled.
         */
-        std::string GetTimerEnabledDescription(const TimerConfiguration & configuration)
+        std::string GetTimerEnabledDescription(const TimerConfiguration& configuration)
         {
             return GetTimerEnabledDescription(configuration.timerId);
         }
@@ -43,7 +43,7 @@ namespace UKControllerPlugin {
             Get the settings key for whether or not the timer is
             enabled.
         */
-        std::string GetTimerDurationKey(const TimerConfiguration & configuration)
+        std::string GetTimerDurationKey(const TimerConfiguration& configuration)
         {
             return GetTimerDurationKey(configuration.timerId);
         }
@@ -61,7 +61,7 @@ namespace UKControllerPlugin {
             Get the settings description for whether or not the timer is
             enabled.
         */
-        std::string GetTimerDurationDescription(const TimerConfiguration & configuration)
+        std::string GetTimerDurationDescription(const TimerConfiguration& configuration)
         {
             return GetTimerDurationDescription(configuration.timerId);
         }
@@ -75,5 +75,5 @@ namespace UKControllerPlugin {
             return "Countdown Timer #" + std::to_string(timerId) + " Duration";
         }
 
-    }  // namespace Countdown
-}  // namespace UKControllerPlugin
+    } // namespace Countdown
+} // namespace UKControllerPlugin

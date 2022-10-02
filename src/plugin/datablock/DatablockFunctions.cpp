@@ -18,12 +18,7 @@ namespace UKControllerPlugin {
         int NormaliseFlightLevelFromString(std::string level)
         {
             // Make it upper case
-            std::transform(
-                level.begin(),
-                level.end(),
-                level.begin(),
-                [](unsigned char c) { return std::toupper(c); }
-            );
+            std::transform(level.begin(), level.end(), level.begin(), [](unsigned char c) { return std::toupper(c); });
 
             // Check for matches
             std::smatch matches;
@@ -31,15 +26,9 @@ namespace UKControllerPlugin {
                 return -1;
             }
 
-            int flightLevel = std::stoi(
-                matches[1].str() != ""
-                    ? matches[1].str()
-                    : matches[2].str()
-            );
+            int flightLevel = std::stoi(matches[1].str() != "" ? matches[1].str() : matches[2].str());
 
-            return flightLevel >= 1000
-                       ? flightLevel / 100
-                       : flightLevel;
+            return flightLevel >= 1000 ? flightLevel / 100 : flightLevel;
         }
-    }  // namespace Datablock
-}  // namespace UKControllerPlugin
+    } // namespace Datablock
+} // namespace UKControllerPlugin

@@ -2,29 +2,29 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
+    } // namespace Bootstrap
     namespace Plugin {
         class FunctionCallEventHandler;
-    }  // namespace Plugin
+    } // namespace Plugin
     namespace RadarScreen {
         class RadarRenderableCollection;
         class ConfigurableDisplayCollection;
-    }  // namespace RadarScreen
+    } // namespace RadarScreen
     namespace Command {
         class CommandHandlerCollection;
-    }  // namespace Command
+    } // namespace Command
     namespace Euroscope {
         class AsrEventHandlerCollection;
         class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
+    } // namespace Euroscope
     namespace HistoryTrail {
         class HistoryTrailRenderer;
         class HistoryTrailRepository;
-    }  // namespace HistoryTrail
+    } // namespace HistoryTrail
     namespace Dialog {
         class DialogManager;
-    }  // namespace Dialog
-}  // namespace UKControllerPlugin
+    } // namespace Dialog
+} // namespace UKControllerPlugin
 
 // END
 
@@ -38,17 +38,16 @@ namespace UKControllerPlugin {
         class HistoryTrailModule
         {
             public:
-                static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer & persistence);
-                static void BootstrapRadarScreen(
-                    UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
-                    const UKControllerPlugin::HistoryTrail::HistoryTrailRepository & trailRepo,
-                    UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRender,
-                    const UKControllerPlugin::Dialog::DialogManager & dialogManager,
-                    UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
-                    UKControllerPlugin::Euroscope::AsrEventHandlerCollection & asrHandlers,
-                    UKControllerPlugin::Command::CommandHandlerCollection & commandHandlers,
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin
-                );
+            static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& persistence);
+            static void BootstrapRadarScreen(
+                UKControllerPlugin::Plugin::FunctionCallEventHandler& eventHandler,
+                const UKControllerPlugin::HistoryTrail::HistoryTrailRepository& trailRepo,
+                UKControllerPlugin::RadarScreen::RadarRenderableCollection& radarRender,
+                const UKControllerPlugin::Dialog::DialogManager& dialogManager,
+                UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurableDisplays,
+                UKControllerPlugin::Euroscope::AsrEventHandlerCollection& asrHandlers,
+                UKControllerPlugin::Command::CommandHandlerCollection& commandHandlers,
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin);
         };
-    }  // namespace HistoryTrail
-}  // namespace UKControllerPlugin
+    } // namespace HistoryTrail
+} // namespace UKControllerPlugin

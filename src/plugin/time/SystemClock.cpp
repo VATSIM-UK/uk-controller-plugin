@@ -8,9 +8,7 @@ namespace UKControllerPlugin {
 
         std::chrono::system_clock::time_point TimeNow()
         {
-            return testNowTime != defaultTestNow
-                       ? testNowTime
-                       : std::chrono::system_clock::now();
+            return testNowTime != defaultTestNow ? testNowTime : std::chrono::system_clock::now();
         }
 
         void SetTestNow(std::chrono::system_clock::time_point now)

@@ -2,22 +2,20 @@
 #include "message/MessageSerializableInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 
-using UKControllerPlugin::Message::MessageSerializableInterface;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Message::MessageSerializableInterface;
 
 namespace UKControllerPlugin {
     namespace Message {
 
-        UserMessager::UserMessager(EuroscopePluginLoopbackInterface & plugin)
-            : plugin(plugin)
+        UserMessager::UserMessager(EuroscopePluginLoopbackInterface& plugin) : plugin(plugin)
         {
-
         }
 
         /*
             Takes something that can be converted into a message and sends it to the user.
         */
-        void UserMessager::SendMessageToUser(const MessageSerializableInterface & message)
+        void UserMessager::SendMessageToUser(const MessageSerializableInterface& message)
         {
             this->plugin.ChatAreaMessage(
                 message.MessageHandler(),
@@ -27,8 +25,7 @@ namespace UKControllerPlugin {
                 message.MessageMarkUnread(),
                 message.MessageOverrideBusy(),
                 message.MessageFlashHandler(),
-                message.MessageRequiresConfirm()
-            );
+                message.MessageRequiresConfirm());
         }
-    }  // namespace Message
-}  // namespace UKControllerPlugin
+    } // namespace Message
+} // namespace UKControllerPlugin

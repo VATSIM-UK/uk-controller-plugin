@@ -39,9 +39,8 @@ namespace UKControllerPlugin {
         */
         bool CurlResponse::StatusOk(void) const
         {
-            return this->statusCode == this->okStatus ||
-                this->statusCode == this->createdStatus ||
-                this->statusCode == this->noBodyStatus;
+            return this->statusCode == this->okStatus || this->statusCode == this->createdStatus ||
+                   this->statusCode == this->noBodyStatus;
         }
-    }  // namespace Curl
-}  // namespace UKControllerPlugin
+    } // namespace Curl
+} // namespace UKControllerPlugin

@@ -4,11 +4,11 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
+    } // namespace Euroscope
     namespace Flightplan {
         class FlightPlanEventHandlerInterface;
-    }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+    } // namespace Flightplan
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Flightplan {
@@ -16,22 +16,21 @@ namespace UKControllerPlugin {
         class DeferredFlightPlanEvent : public UKControllerPlugin::TimedEvent::DeferredEventRunnerInterface
         {
             public:
-                DeferredFlightPlanEvent(
-                    UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface & handler,
-                    UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin,
-                    std::string callsign
-                );
-                void Run(void) override;
+            DeferredFlightPlanEvent(
+                UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface& handler,
+                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
+                std::string callsign);
+            void Run(void) override;
 
             private:
-                // The callsign to do the event for
-                const std::string callsign;
+            // The callsign to do the event for
+            const std::string callsign;
 
-                // The event handler this is for
-                UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface & handler;
+            // The event handler this is for
+            UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface& handler;
 
-                // The plugin, so we can get flightplans
-                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+            // The plugin, so we can get flightplans
+            UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
         };
-    }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+    } // namespace Flightplan
+} // namespace UKControllerPlugin
