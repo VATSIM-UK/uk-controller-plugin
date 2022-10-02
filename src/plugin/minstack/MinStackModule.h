@@ -6,32 +6,31 @@
 namespace UKControllerPlugin {
     namespace Plugin {
         class FunctionCallEventHandler;
-    }  // namespace Plugin
+    } // namespace Plugin
     namespace RadarScreen {
         class RadarRenderableCollection;
         class ConfigurableDisplayCollection;
-    }  // namespace RadarScreen
+    } // namespace RadarScreen
     namespace TaskManager {
         class TaskRunnerInterface;
-    }  // namespace TaskManager
+    } // namespace TaskManager
     namespace Euroscope {
         class AsrEventHandlerCollection;
-    }  // namespace Euroscope
+    } // namespace Euroscope
     namespace MinStack {
         class MinStackManager;
-    }  // namespace MinStack
+    } // namespace MinStack
     namespace Windows {
         struct GdiplusBrushes;
-    }  // namespace Windows
+    } // namespace Windows
     namespace Curl {
         class CurlInterface;
-    }  // namespace Curl
+    } // namespace Curl
     namespace Push {
         class PushEventProcessorCollection;
     } // namespace Push
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin
 // END
-
 
 namespace UKControllerPlugin {
     namespace MinStack {
@@ -42,22 +41,20 @@ namespace UKControllerPlugin {
         class MinStackModule
         {
             public:
-                static void BootstrapPlugin(
-                    std::shared_ptr<MinStackManager> & msl,
-                    UKControllerPlugin::TaskManager::TaskRunnerInterface & taskManager,
-                    UKControllerPlugin::Api::ApiInterface & api,
-                    Push::PushEventProcessorCollection& websocketProcessors,
-                    UKControllerPlugin::Dialog::DialogManager & dialogManager
-                );
-                static void BootstrapRadarScreen(
-                    UKControllerPlugin::Plugin::FunctionCallEventHandler & eventHandler,
-                    UKControllerPlugin::MinStack::MinStackManager & minStackManager,
-                    UKControllerPlugin::RadarScreen::RadarRenderableCollection & radarRender,
-                    UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection & configurableDisplays,
-                    const UKControllerPlugin::Windows::GdiplusBrushes & brushes,
-                    UKControllerPlugin::Euroscope::AsrEventHandlerCollection & userSettingHandlers,
-                    const UKControllerPlugin::Dialog::DialogManager & dialogManager
-                );
+            static void BootstrapPlugin(
+                std::shared_ptr<MinStackManager>& msl,
+                UKControllerPlugin::TaskManager::TaskRunnerInterface& taskManager,
+                UKControllerPlugin::Api::ApiInterface& api,
+                Push::PushEventProcessorCollection& websocketProcessors,
+                UKControllerPlugin::Dialog::DialogManager& dialogManager);
+            static void BootstrapRadarScreen(
+                UKControllerPlugin::Plugin::FunctionCallEventHandler& eventHandler,
+                UKControllerPlugin::MinStack::MinStackManager& minStackManager,
+                UKControllerPlugin::RadarScreen::RadarRenderableCollection& radarRender,
+                UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurableDisplays,
+                const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
+                UKControllerPlugin::Euroscope::AsrEventHandlerCollection& userSettingHandlers,
+                const UKControllerPlugin::Dialog::DialogManager& dialogManager);
         };
-    }  // namespace MinStack
-}  // namespace UKControllerPlugin
+    } // namespace MinStack
+} // namespace UKControllerPlugin

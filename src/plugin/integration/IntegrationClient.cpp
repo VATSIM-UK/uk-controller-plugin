@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationConnection.h"
 #include "integration/MessageType.h"
@@ -8,9 +7,9 @@ namespace UKControllerPlugin::Integration {
         int id,
         std::string integrationName,
         std::string integrationVersion,
-        std::shared_ptr<IntegrationConnection> connection
-    ): id(id), integrationName(std::move(integrationName)), integrationVersion(std::move(integrationVersion)),
-       connection(std::move(connection))
+        std::shared_ptr<IntegrationConnection> connection)
+        : id(id), integrationName(std::move(integrationName)), integrationVersion(std::move(integrationVersion)),
+          connection(std::move(connection))
     {
         LogInfo("Initialised integration: " + this->GetIntegrationString());
     }
@@ -28,13 +27,11 @@ namespace UKControllerPlugin::Integration {
     bool IntegrationClient::InterestedInMessage(const MessageType& message) const
     {
         return std::find_if(
-            this->interestedMessages.cbegin(),
-            this->interestedMessages.cend(),
-            [&message](const std::shared_ptr<MessageType>& interestedMessage) -> bool
-            {
-                return message == *interestedMessage;
-            }
-        ) != this->interestedMessages.cend();
+                   this->interestedMessages.cbegin(),
+                   this->interestedMessages.cend(),
+                   [&message](const std::shared_ptr<MessageType>& interestedMessage) -> bool {
+                       return message == *interestedMessage;
+                   }) != this->interestedMessages.cend();
     }
 
     void IntegrationClient::ClearInterestedMessages()

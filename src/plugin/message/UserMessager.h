@@ -3,11 +3,11 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
-    }  // namespace Euroscope
+    } // namespace Euroscope
     namespace Message {
         class MessageSerializableInterface;
-    }  // namespace Message
-}  // namespace UKControllerPlugin
+    } // namespace Message
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Message {
@@ -18,12 +18,12 @@ namespace UKControllerPlugin {
         class UserMessager
         {
             public:
-                explicit UserMessager(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin);
-                void SendMessageToUser(const UKControllerPlugin::Message::MessageSerializableInterface & message);
+            explicit UserMessager(UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin);
+            void SendMessageToUser(const UKControllerPlugin::Message::MessageSerializableInterface& message);
 
             private:
-                // The plugin - through which messages are sent
-                UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface & plugin;
+            // The plugin - through which messages are sent
+            UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin;
         };
-    }  // namespace Message
-}  // namespace UKControllerPlugin
+    } // namespace Message
+} // namespace UKControllerPlugin

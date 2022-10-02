@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "log/LoggerFunctions.h"
 #include "mock/MockTaskRunnerInterface.h"
 #include "task/RunAsyncTask.h"

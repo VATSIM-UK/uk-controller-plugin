@@ -13,12 +13,12 @@ namespace UKControllerPlugin {
             const std::chrono::system_clock::time_point runAt;
             std::unique_ptr<DeferredEventRunnerInterface> runner;
 
-            bool operator < (const DeferredEvent & compare) const
+            bool operator<(const DeferredEvent& compare) const
             {
                 return this->runAt < compare.runAt;
             }
 
         } DeferredEvent;
 
-    }  // namespace TimedEvent
-}  // namespace UKControllerPlugin
+    } // namespace TimedEvent
+} // namespace UKControllerPlugin

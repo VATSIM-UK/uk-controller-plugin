@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "log/LoggerFunctions.h"
 
 std::shared_ptr<spdlog::logger> logger;

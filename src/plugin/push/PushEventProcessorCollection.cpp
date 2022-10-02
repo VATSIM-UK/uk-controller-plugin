@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/PushEventProcessorCollection.h"
 #include "push/PushEventSubscription.h"
 #include "push/PushEvent.h"
@@ -11,12 +10,9 @@ namespace UKControllerPlugin {
             Add a processor to the collection and register
             it for the channels it cares about.
         */
-        void PushEventProcessorCollection::AddProcessor(
-            std::shared_ptr<PushEventProcessorInterface> processor
-        )
+        void PushEventProcessorCollection::AddProcessor(std::shared_ptr<PushEventProcessorInterface> processor)
         {
             std::set<PushEventSubscription> events = processor->GetPushEventSubscriptions();
-
 
             for (auto it = events.cbegin(); it != events.cend(); ++it) {
 
@@ -70,12 +66,7 @@ namespace UKControllerPlugin {
         {
             std::set<std::string> subscriptions;
 
-            for (
-                auto it
-                    = this->channelMap.cbegin();
-                it != this->channelMap.cend();
-                ++it
-            ) {
+            for (auto it = this->channelMap.cbegin(); it != this->channelMap.cend(); ++it) {
                 subscriptions.insert(it->first);
             }
 
@@ -89,15 +80,11 @@ namespace UKControllerPlugin {
         {
             std::set<std::shared_ptr<PushEventProcessorInterface>> calledProcessors;
 
-
             // Send the event to those listening on its channel
             if (this->channelMap.count(message.channel)) {
-                for (
-                    auto it
-                        = this->channelMap.at(message.channel).cbegin();
-                    it != this->channelMap.at(message.channel).cend();
-                    ++it
-                ) {
+                for (auto it = this->channelMap.at(message.channel).cbegin();
+                     it != this->channelMap.at(message.channel).cend();
+                     ++it) {
                     if (calledProcessors.count(*it)) {
                         continue;
                     }
@@ -109,12 +96,8 @@ namespace UKControllerPlugin {
 
             // Send the event to those that are listening specifically for it
             if (this->eventMap.count(message.event)) {
-                for (
-                    auto it
-                        = this->eventMap.at(message.event).cbegin();
-                    it != this->eventMap.at(message.event).cend();
-                    ++it
-                ) {
+                for (auto it = this->eventMap.at(message.event).cbegin(); it != this->eventMap.at(message.event).cend();
+                     ++it) {
                     if (calledProcessors.count(*it)) {
                         continue;
                     }
@@ -125,12 +108,7 @@ namespace UKControllerPlugin {
             }
 
             // Send the event to processors that want to know about everything
-            for (
-                auto it
-                    = this->globalEventProcessors.cbegin();
-                it != this->globalEventProcessors.cend();
-                ++it
-            ) {
+            for (auto it = this->globalEventProcessors.cbegin(); it != this->globalEventProcessors.cend(); ++it) {
                 if (calledProcessors.count(*it)) {
                     continue;
                 }
@@ -145,11 +123,7 @@ namespace UKControllerPlugin {
          */
         void PushEventProcessorCollection::PluginEventsSynced() const
         {
-            for (
-                auto it = this->allEventProcessors.cbegin();
-                it != this->allEventProcessors.cend();
-                ++it
-            ) {
+            for (auto it = this->allEventProcessors.cbegin(); it != this->allEventProcessors.cend(); ++it) {
                 (*it)->PluginEventsSynced();
             }
         }

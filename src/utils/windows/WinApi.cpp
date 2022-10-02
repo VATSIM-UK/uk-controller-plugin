@@ -1,18 +1,14 @@
-#include "pch/pch.h"
 #include "windows/WinApi.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::HelperFunctions;
-using UKControllerPlugin::Dialog::DialogData;
 using UKControllerPlugin::Dialog::DialogCallArgument;
+using UKControllerPlugin::Dialog::DialogData;
 
 namespace UKControllerPlugin {
     namespace Windows {
 
-        WinApi::WinApi(
-            HINSTANCE dllInstance,
-            std::wstring filesDirectory
-        )
+        WinApi::WinApi(HINSTANCE dllInstance, std::wstring filesDirectory)
             : WinApiInterface(dllInstance), filesDirectory(filesDirectory)
         {
             this->dllInstance = dllInstance;
@@ -27,13 +23,8 @@ namespace UKControllerPlugin {
                 std::filesystem::create_directory(folder);
                 return true;
             } catch (std::filesystem::filesystem_error e) {
-                std::wstring message = L"Unable to create folder: "
-                    + HelperFunctions::ConvertToWideString(e.what());
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+                std::wstring message = L"Unable to create folder: " + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
                 return false;
             }
         }
@@ -47,13 +38,9 @@ namespace UKControllerPlugin {
                 std::filesystem::create_directories(folder);
                 return true;
             } catch (std::filesystem::filesystem_error e) {
-                std::wstring message = L"Unable to create folder recursively: "
-                    + HelperFunctions::ConvertToWideString(e.what());
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+                std::wstring message =
+                    L"Unable to create folder recursively: " + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
                 return false;
             }
         }
@@ -68,13 +55,9 @@ namespace UKControllerPlugin {
                 this->SetPermissions(this->filesDirectory + L"/" + folder, std::filesystem::perms::all);
                 return true;
             } catch (std::filesystem::filesystem_error e) {
-                std::wstring message = L"Unable to create local folder recursively: "
-                    + HelperFunctions::ConvertToWideString(e.what());
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+                std::wstring message =
+                    L"Unable to create local folder recursively: " + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
                 return false;
             }
         }
@@ -96,13 +79,9 @@ namespace UKControllerPlugin {
             try {
                 return std::filesystem::exists(this->GetFullPathToLocalFile(filename));
             } catch (std::filesystem::filesystem_error e) {
-                std::wstring message = L"Unable to check if file exists: "
-                    + HelperFunctions::ConvertToWideString(e.what());
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+                std::wstring message =
+                    L"Unable to check if file exists: " + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
                 return false;
             }
         }
@@ -110,42 +89,34 @@ namespace UKControllerPlugin {
         /*
             Starts the File Open Dialog
         */
-        std::wstring WinApi::FileOpenDialog(
-            std::wstring title,
-            UINT numFileTypes,
-            const COMDLG_FILTERSPEC * fileTypes
-        ) const
+        std::wstring
+        WinApi::FileOpenDialog(std::wstring title, UINT numFileTypes, const COMDLG_FILTERSPEC* fileTypes) const
         {
             std::wstringstream result;
             HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-            if (SUCCEEDED(hr))
-            {
-                IFileOpenDialog *pFileOpen;
+            if (SUCCEEDED(hr)) {
+                IFileOpenDialog* pFileOpen;
 
                 // Create the FileOpenDialog object.
-                hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-                        IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+                hr = CoCreateInstance(
+                    CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
 
-                if (SUCCEEDED(hr))
-                {
+                if (SUCCEEDED(hr)) {
                     // Show the Open dialog box.
                     pFileOpen->SetTitle(title.c_str());
                     pFileOpen->SetFileTypes(numFileTypes, fileTypes);
                     hr = pFileOpen->Show(NULL);
 
                     // Get the file name from the dialog box.
-                    if (SUCCEEDED(hr))
-                    {
-                        IShellItem *pItem;
+                    if (SUCCEEDED(hr)) {
+                        IShellItem* pItem;
                         hr = pFileOpen->GetResult(&pItem);
-                        if (SUCCEEDED(hr))
-                        {
+                        if (SUCCEEDED(hr)) {
                             PWSTR pszFilePath;
                             hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
 
                             // Display the file name to the user.
-                            if (SUCCEEDED(hr))
-                            {
+                            if (SUCCEEDED(hr)) {
                                 result << pszFilePath;
                                 CoTaskMemFree(pszFilePath);
                             }
@@ -163,9 +134,7 @@ namespace UKControllerPlugin {
         /*
          * List all filesnames in the directory
          */
-        std::set<std::wstring> WinApi::ListAllFilenamesInDirectory(
-            std::wstring relativePath
-        ) const
+        std::set<std::wstring> WinApi::ListAllFilenamesInDirectory(std::wstring relativePath) const
         {
             std::set<std::wstring> files;
             for (auto& p : std::filesystem::directory_iterator(GetFullPathToLocalFile(relativePath))) {
@@ -223,7 +192,7 @@ namespace UKControllerPlugin {
 
         void WinApi::OpenWebBrowser(std::wstring url)
         {
-            ShellExecute(NULL, L"open", url.c_str() , NULL, NULL, SW_SHOWNORMAL);
+            ShellExecute(NULL, L"open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
         }
 
         /*
@@ -264,21 +233,14 @@ namespace UKControllerPlugin {
             }
 
             // Open file and write
-            std::ofstream file(
-                newFilename,
-                mode
-            );
+            std::ofstream file(newFilename, mode);
             file.exceptions(std::ofstream::badbit);
             if (file.is_open()) {
                 file << data;
                 file.close();
             } else {
                 std::wstring message = L"File not opened for writing: " + filename;
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
             }
         }
 
@@ -290,13 +252,9 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::create_directories(endFile.substr(0, endFile.find_last_of('/')));
             } catch (std::filesystem::filesystem_error e) {
-                std::wstring message = L"Error when creating directories "
-                    + HelperFunctions::ConvertToWideString(e.what());
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+                std::wstring message =
+                    L"Error when creating directories " + HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
             }
         }
 
@@ -306,11 +264,7 @@ namespace UKControllerPlugin {
         std::string WinApi::ReadFromFile(std::wstring filename, bool relativePath)
         {
             return this->ReadFileContents(
-                std::ifstream(
-                    relativePath ? this->GetFullPathToLocalFile(filename) : filename,
-                    std::ifstream::in
-                )
-            );
+                std::ifstream(relativePath ? this->GetFullPathToLocalFile(filename) : filename, std::ifstream::in));
         }
 
         bool WinApi::SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions)
@@ -318,15 +272,10 @@ namespace UKControllerPlugin {
             try {
                 std::filesystem::permissions(fileOrFolder, permissions);
                 return true;
-            }
-            catch (std::filesystem::filesystem_error e) {
-                std::wstring message = L"Unable to set filesystem permissions on " + fileOrFolder + L" "
-                    + HelperFunctions::ConvertToWideString(e.what());
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+            } catch (std::filesystem::filesystem_error e) {
+                std::wstring message = L"Unable to set filesystem permissions on " + fileOrFolder + L" " +
+                                       HelperFunctions::ConvertToWideString(e.what());
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
                 return false;
             }
         }
@@ -340,17 +289,12 @@ namespace UKControllerPlugin {
             file.exceptions(std::ifstream::badbit);
             if (file.is_open()) {
                 std::string data;
-                data.assign((std::istreambuf_iterator<char>(file)),
-                    (std::istreambuf_iterator<char>()));
+                data.assign((std::istreambuf_iterator<char>(file)), (std::istreambuf_iterator<char>()));
                 file.close();
                 return data;
             } else {
                 std::wstring message = L"File not opened for reading";
-                this->OpenMessageBox(
-                    message.c_str(),
-                    L"UKCP Filesystem Error",
-                    MB_ICONWARNING | MB_OK
-                );
+                this->OpenMessageBox(message.c_str(), L"UKCP Filesystem Error", MB_ICONWARNING | MB_OK);
             }
 
             return "";
@@ -359,15 +303,14 @@ namespace UKControllerPlugin {
         /*
             Open a dialog
         */
-        void WinApi::OpenDialog(const DialogData & dialog, const DialogCallArgument * argument) const
+        void WinApi::OpenDialog(const DialogData& dialog, const DialogCallArgument* argument) const
         {
             DialogBoxParam(
                 this->dllInstance,
                 MAKEINTRESOURCE(dialog.dialogId),
                 GetActiveWindow(),
                 dialog.dialogProcedure,
-                reinterpret_cast<LPARAM>(argument)
-            );
+                reinterpret_cast<LPARAM>(argument));
         }
-    }  // namespace Windows
-}  // namespace UKControllerPlugin
+    } // namespace Windows
+} // namespace UKControllerPlugin

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "releases/EnrouteReleaseTypesSerializer.h"
 
 namespace UKControllerPlugin {
@@ -20,12 +19,9 @@ namespace UKControllerPlugin {
                 }
 
                 releases.insert(
-                    {
-                        it->at("id").get<int>(),
-                        it->at("tag_string").get<std::string>(),
-                        it->at("description").get<std::string>()
-                    }
-                );
+                    {it->at("id").get<int>(),
+                     it->at("tag_string").get<std::string>(),
+                     it->at("description").get<std::string>()});
             }
 
             LogInfo("Loaded " + std::to_string(releases.size()) + " enroute release types");
@@ -38,13 +34,9 @@ namespace UKControllerPlugin {
 
         bool JsonValid(const nlohmann::json& data)
         {
-            return data.is_object() &&
-                data.contains("id") &&
-                data.at("id").is_number_integer() &&
-                data.contains("tag_string") &&
-                data.at("tag_string").is_string() &&
-                data.contains("description") &&
-                data.at("description").is_string();
+            return data.is_object() && data.contains("id") && data.at("id").is_number_integer() &&
+                   data.contains("tag_string") && data.at("tag_string").is_string() && data.contains("description") &&
+                   data.at("description").is_string();
         }
-    }  // namespace Releases
-}  // namespace UKControllerPlugin
+    } // namespace Releases
+} // namespace UKControllerPlugin

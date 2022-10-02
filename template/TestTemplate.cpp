@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "##FOLDERNAME##/##CLASSNAME##.h"
 
 using ::testing::Test;

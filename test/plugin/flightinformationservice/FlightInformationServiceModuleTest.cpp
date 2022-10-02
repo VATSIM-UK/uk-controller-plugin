@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "tag/TagItemCollection.h"
 #include "bootstrap/PersistenceContainer.h"
@@ -7,10 +6,10 @@
 
 using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::FlightInformationService::BootstrapPlugin;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Tag::TagItemCollection;
 
 namespace UKControllerPluginTest {
     namespace FlightInformationService {
@@ -18,14 +17,14 @@ namespace UKControllerPluginTest {
         class FlightInformationServiceModuleTest : public Test
         {
             public:
-                FlightInformationServiceModuleTest()
-                {
-                    this->container.tagHandler.reset(new TagItemCollection);
-                    this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                    this->container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
-                }
+            FlightInformationServiceModuleTest()
+            {
+                this->container.tagHandler.reset(new TagItemCollection);
+                this->container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+                this->container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
+            }
 
-                PersistenceContainer container;
+            PersistenceContainer container;
         };
 
         TEST_F(FlightInformationServiceModuleTest, BootstrapPluginRegistersBaseTagItem)
@@ -59,5 +58,5 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
         }
-    }  // namespace FlightInformationService
-}  // namespace UKControllerPluginTest
+    } // namespace FlightInformationService
+} // namespace UKControllerPluginTest

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/PushEventProxyConnection.h"
 
 using ::testing::Test;
@@ -10,7 +9,7 @@ namespace UKControllerPluginTest {
         class PushEventProxyConnectionTest : public Test
         {
             public:
-                PushEventProxyConnection connection;
+            PushEventProxyConnection connection;
         };
 
         TEST_F(PushEventProxyConnectionTest, ItReturnsNoMessageIfNothingToProcess)
@@ -32,9 +31,7 @@ namespace UKControllerPluginTest {
         TEST_F(PushEventProxyConnectionTest, ItLoadsHiddenWindow)
         {
             EXPECT_NE(
-                nullptr,
-                FindWindowA("UKControllerPluginPushEventProxyClass", "UKControllerPluginPushEventProxy")
-            );
+                nullptr, FindWindowA("UKControllerPluginPushEventProxyClass", "UKControllerPluginPushEventProxy"));
         }
     } // namespace Push
-}  // namespace UKControllerPluginTest
+} // namespace UKControllerPluginTest

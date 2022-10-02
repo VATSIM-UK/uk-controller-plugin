@@ -4,10 +4,7 @@
 namespace UKControllerPlugin {
     namespace Push {
 
-        void BootstrapPlugin(
-            Bootstrap::PersistenceContainer& container,
-            bool duplicatePlugin
-        );
+        void BootstrapPlugin(Bootstrap::PersistenceContainer& container, bool duplicatePlugin);
 
     } // namespace Push
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

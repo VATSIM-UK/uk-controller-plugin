@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/PushEventProxyWindow.h"
 #include "push/PushEventProxyConnection.h"
 
@@ -9,21 +8,16 @@ namespace UKControllerPlugin {
         LRESULT CALLBACK PushEventProxyWindow(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         {
             if (msg == WM_CREATE) {
-                handler = static_cast<PushEventProxyConnection*>(
-                    reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams
-                );
+                handler =
+                    static_cast<PushEventProxyConnection*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
                 return TRUE;
             }
 
             if (msg == WM_COPYDATA) {
                 COPYDATASTRUCT* data = reinterpret_cast<COPYDATASTRUCT*>(lParam);
 
-                if (
-                    data != nullptr &&
-                    data->dwData == GetPushEventProxyMessageIdentifier() &&
-                    data->lpData != nullptr &&
-                    handler != nullptr
-                ) {
+                if (data != nullptr && data->dwData == GetPushEventProxyMessageIdentifier() &&
+                    data->lpData != nullptr && handler != nullptr) {
                     handler->AddMessageToQueue(reinterpret_cast<const char*>(data->lpData));
                 }
                 return TRUE;
@@ -46,4 +40,4 @@ namespace UKControllerPlugin {
             return L"UKControllerPluginPushEventProxy";
         }
     } // namespace Push
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

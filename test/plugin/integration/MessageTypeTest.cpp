@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "integration/MessageType.h"
 
 using testing::Test;
@@ -7,7 +6,8 @@ using UKControllerPlugin::Integration::MessageType;
 namespace UKControllerPluginTest::Integration {
 
     class MessageTypeTest : public Test
-    { };
+    {
+    };
 
     TEST_F(MessageTypeTest, IsEqualIfSame)
     {
@@ -32,10 +32,7 @@ namespace UKControllerPluginTest::Integration {
 
     TEST_F(MessageTypeTest, ItConvertsToJson)
     {
-        nlohmann::json expected{
-            {"type", "test1"},
-            {"version", 2}
-        };
+        nlohmann::json expected{{"type", "test1"}, {"version", 2}};
 
         MessageType message = {"test1", 2};
         EXPECT_EQ(expected, message.ToJson());

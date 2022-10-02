@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::HelperFunctions;
@@ -269,47 +268,32 @@ namespace UKControllerPluginUtilsTest {
 
     TEST(HelperFunctions, GetTimeFromNumberStringHandlesNonTimes)
     {
-        EXPECT_EQ(
-            HelperFunctions::GetTimeFromNumberString("152B"),
-            (std::chrono::system_clock::time_point::max)()
-        );
+        EXPECT_EQ(HelperFunctions::GetTimeFromNumberString("152B"), (std::chrono::system_clock::time_point::max)());
     }
 
     TEST(HelperFunctions, GetTimeFromNumberStringHandlesInvalidTimes)
     {
-        EXPECT_EQ(
-            HelperFunctions::GetTimeFromNumberString("2503"),
-            (std::chrono::system_clock::time_point::max)()
-        );
+        EXPECT_EQ(HelperFunctions::GetTimeFromNumberString("2503"), (std::chrono::system_clock::time_point::max)());
     }
 
     TEST(HelperFunctions, GetTimeFromNumberStringHandlesEmptyTimes)
     {
-        EXPECT_EQ(
-            HelperFunctions::GetTimeFromNumberString(""),
-            (std::chrono::system_clock::time_point::max)()
-        );
+        EXPECT_EQ(HelperFunctions::GetTimeFromNumberString(""), (std::chrono::system_clock::time_point::max)());
     }
 
     TEST(HelperFunctions, ItConvertsRegularStringToWide)
     {
-        EXPECT_EQ(
-            HelperFunctions::ConvertToWideString("somestring"),
-            std::wstring(L"somestring")
-        );
+        EXPECT_EQ(HelperFunctions::ConvertToWideString("somestring"), std::wstring(L"somestring"));
     }
 
     TEST(HelperFunctions, ItConvertsWideStringToRegular)
     {
-        EXPECT_EQ(
-            HelperFunctions::ConvertToRegularString(L"somestring"),
-            std::string("somestring")
-        );
+        EXPECT_EQ(HelperFunctions::ConvertToRegularString(L"somestring"), std::string("somestring"));
     }
 
     TEST(HelperFunctions, VectorToDelimitedStringCreatesString)
     {
-        std::vector<std::string> values = { "moo", "cluck", "bell" };
+        std::vector<std::string> values = {"moo", "cluck", "bell"};
         EXPECT_TRUE("moo;cluck;bell" == HelperFunctions::VectorToDelimetedString(values, ";"));
     }
-}  // namespace UKControllerPluginUtilsTest
+} // namespace UKControllerPluginUtilsTest

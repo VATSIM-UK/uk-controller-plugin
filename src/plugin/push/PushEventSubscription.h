@@ -26,4 +26,4 @@ namespace UKControllerPlugin {
             bool IsAllSubscription(void) const;
         };
     } // namespace Push
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

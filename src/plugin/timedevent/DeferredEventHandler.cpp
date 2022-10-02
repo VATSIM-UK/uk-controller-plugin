@@ -4,23 +4,19 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 
-using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
-using UKControllerPlugin::TimedEvent::DeferredEventRunnerInterface;
+using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::TimedEvent::DeferredEvent;
+using UKControllerPlugin::TimedEvent::DeferredEventRunnerInterface;
 
 namespace UKControllerPlugin {
     namespace TimedEvent {
 
         void DeferredEventHandler::DeferFor(
-            std::unique_ptr<DeferredEventRunnerInterface> event,
-            const std::chrono::seconds seconds
-        ) {
-            DeferredEvent deferred{
-                std::chrono::system_clock::now() + seconds,
-                std::move(event)
-            };
+            std::unique_ptr<DeferredEventRunnerInterface> event, const std::chrono::seconds seconds)
+        {
+            DeferredEvent deferred{std::chrono::system_clock::now() + seconds, std::move(event)};
 
             this->events.insert(std::move(deferred));
         }
@@ -43,9 +39,7 @@ namespace UKControllerPlugin {
         void DeferredEventHandler::TimedEventTrigger(void)
         {
             // Check events
-            for (
-                std::multiset<DeferredEvent>::iterator it = this->events.begin();
-                it != this->events.end();) {
+            for (std::multiset<DeferredEvent>::iterator it = this->events.begin(); it != this->events.end();) {
 
                 // Run any events that we're ready for and remove them from the list
                 if (it->runAt < std::chrono::system_clock::now()) {
@@ -58,5 +52,5 @@ namespace UKControllerPlugin {
             }
         }
 
-    }  // namespace TimedEvent
-}  // namespace UKControllerPlugin
+    } // namespace TimedEvent
+} // namespace UKControllerPlugin

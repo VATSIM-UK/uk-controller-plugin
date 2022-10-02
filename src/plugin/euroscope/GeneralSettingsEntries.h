@@ -32,5 +32,5 @@ namespace UKControllerPlugin {
             static const std::string initialHeadingToggleSettingsKey;
             static const std::string initialHeadingToggleSettingsDescription;
         } GeneralSettingsEntries;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

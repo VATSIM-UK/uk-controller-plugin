@@ -10,8 +10,7 @@ namespace UKControllerPlugin {
         */
         void from_json(
             const nlohmann::json& json,
-            std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands>& stands
-        );
+            std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands>& stands);
 
         /*
             Returns true if the dependency data is valid
@@ -28,5 +27,5 @@ namespace UKControllerPlugin {
         */
         bool StandDataValid(const nlohmann::json& data);
 
-    }  // namespace Stands
-}  // namespace UKControllerPlugin
+    } // namespace Stands
+} // namespace UKControllerPlugin

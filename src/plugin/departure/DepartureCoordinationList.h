@@ -68,13 +68,13 @@ namespace UKControllerPlugin::Departure {
 
         // Handles events for departure releases
         Releases::DepartureReleaseEventHandler& handler;
-        
+
         // Contains all the prenote messages
         Prenote::PrenoteMessageCollection& prenotes;
 
         // Provides interface with the plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
-        
+
         // Who's actively online
         const Controller::ActiveCallsignCollection& activeCallsigns;
 
@@ -128,7 +128,7 @@ namespace UKControllerPlugin::Departure {
         std::shared_ptr<Components::Button> closeButton;
         std::shared_ptr<Components::Button> collapseButton;
         std::shared_ptr<Components::BrushSwitcher> brushSwitcher;
-        
+
         // Some TAG function ids
         inline static const int DEPARTURE_RELEASE_DECISION_TAG_FUNCTION_ID = 9013;
         inline static const int ACKNOWLEDGE_PRENOTE_TAG_FUNCTION_ID = 9019;

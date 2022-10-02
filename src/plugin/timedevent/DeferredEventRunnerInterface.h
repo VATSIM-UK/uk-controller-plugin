@@ -11,8 +11,10 @@ namespace UKControllerPlugin {
         class DeferredEventRunnerInterface
         {
             public:
-                virtual ~DeferredEventRunnerInterface() {}
-                virtual void Run(void) = 0;
+            virtual ~DeferredEventRunnerInterface()
+            {
+            }
+            virtual void Run(void) = 0;
         };
-    }  // namespace TimedEvent
-}  // namespace UKControllerPlugin
+    } // namespace TimedEvent
+} // namespace UKControllerPlugin

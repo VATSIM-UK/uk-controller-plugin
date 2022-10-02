@@ -4,11 +4,11 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
+    } // namespace Bootstrap
     namespace Dependency {
         class DependencyLoaderInterface;
-    }  // namespace Dependency
-}  // namespace UKControllerPlugin
+    } // namespace Dependency
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -21,10 +21,9 @@ namespace UKControllerPlugin {
         class CollectionBootstrap
         {
             public:
-                static void BootstrapPlugin(
-                    UKControllerPlugin::Bootstrap::PersistenceContainer & persistence,
-                    UKControllerPlugin::Dependency::DependencyLoaderInterface & dependency
-                );
+            static void BootstrapPlugin(
+                UKControllerPlugin::Bootstrap::PersistenceContainer& persistence,
+                UKControllerPlugin::Dependency::DependencyLoaderInterface& dependency);
         };
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin

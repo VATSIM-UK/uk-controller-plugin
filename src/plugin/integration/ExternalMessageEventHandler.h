@@ -12,54 +12,48 @@ namespace UKControllerPlugin {
             Receives messages from external sources and passes them on.
         */
         class ExternalMessageEventHandler : public UKControllerPlugin::TimedEvent::AbstractTimedEvent,
-            public UKControllerPlugin::Command::CommandHandlerInterface
+                                            public UKControllerPlugin::Command::CommandHandlerInterface
         {
             public:
-                explicit ExternalMessageEventHandler(bool duplicatePlugin);
-                ~ExternalMessageEventHandler() override;
-                void AddHandler(
-                    std::shared_ptr<ExternalMessageHandlerInterface> handler
-                );
-                void AddMessageToQueue(std::string message);
-                size_t CountHandlers(void) const;
+            explicit ExternalMessageEventHandler(bool duplicatePlugin);
+            ~ExternalMessageEventHandler() override;
+            void AddHandler(std::shared_ptr<ExternalMessageHandlerInterface> handler);
+            void AddMessageToQueue(std::string message);
+            size_t CountHandlers(void) const;
 
-                // Inherited via AbstractTimedEvent
-                void TimedEventTrigger(void) override;
+            // Inherited via AbstractTimedEvent
+            void TimedEventTrigger(void) override;
 
-                // Inherited via CommandHandlerInterface
-                bool ProcessCommand(std::string command) override;
+            // Inherited via CommandHandlerInterface
+            bool ProcessCommand(std::string command) override;
 
             private:
+            std::set<std::shared_ptr<ExternalMessageHandlerInterface>> eventHandlers;
 
-                std::set<
-                    std::shared_ptr<ExternalMessageHandlerInterface>
-                > eventHandlers;
+            // Lock for the message queue
+            std::mutex messageLock;
 
-                // Lock for the message queue
-                std::mutex messageLock;
+            // Internal message queue
+            std::queue<std::string> messages;
 
-                // Internal message queue
-                std::queue<std::string> messages;
+            // The hidden window handle
+            HWND hiddenWindow = NULL;
 
-                // The hidden window handle
-                HWND hiddenWindow = NULL;
+            // Hidden window
+            WNDCLASS windowClass = {
+                NULL,
+                HiddenWindow,
+                NULL,
+                NULL,
+                GetModuleHandle(NULL),
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                L"UKControllerPluginHiddenWindowClass"};
 
-                // Hidden window
-                WNDCLASS windowClass = {
-                   NULL,
-                   HiddenWindow,
-                   NULL,
-                   NULL,
-                   GetModuleHandle(NULL),
-                   NULL,
-                   NULL,
-                   NULL,
-                   NULL,
-                   L"UKControllerPluginHiddenWindowClass"
-                };
-
-                // The command we should receive if a new message is sent
-                std::string newMessageCommand = ".ukcp msg ";
+            // The command we should receive if a new message is sent
+            std::string newMessageCommand = ".ukcp msg ";
         };
-    }  // namespace Integration
-}  // namespace UKControllerPlugin
+    } // namespace Integration
+} // namespace UKControllerPlugin

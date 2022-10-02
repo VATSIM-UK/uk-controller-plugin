@@ -1,6 +1,5 @@
 #include "hold/MinStackHoldLevelRestrictionSerializer.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "pch/pch.h"
 
 using testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;

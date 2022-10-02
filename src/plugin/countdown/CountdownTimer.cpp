@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "countdown/CountdownTimer.h"
 #include "helper/HelperFunctions.h"
 #include "windows/WinApiInterface.h"
@@ -6,15 +5,12 @@
 using UKControllerPlugin::Windows::WinApiInterface;
 namespace UKControllerPlugin {
     namespace Countdown {
-        CountdownTimer::CountdownTimer(UKControllerPlugin::Windows::WinApiInterface & winApi)
-            : winApi(winApi)
+        CountdownTimer::CountdownTimer(UKControllerPlugin::Windows::WinApiInterface& winApi) : winApi(winApi)
         {
-
         }
 
         CountdownTimer::~CountdownTimer(void)
         {
-
         }
 
         /*
@@ -83,5 +79,5 @@ namespace UKControllerPlugin {
         {
             this->endTime = time(0) + duration;
         }
-    }  // namespace Countdown
-}  // namespace UKControllerPlugin
+    } // namespace Countdown
+} // namespace UKControllerPlugin

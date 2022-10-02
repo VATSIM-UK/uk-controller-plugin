@@ -14,13 +14,9 @@ using UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface;
 namespace UKControllerPlugin {
     namespace Flightplan {
         DeferredFlightPlanEvent::DeferredFlightPlanEvent(
-            FlightPlanEventHandlerInterface & handler,
-            EuroscopePluginLoopbackInterface & plugin,
-            std::string callsign
-        )
+            FlightPlanEventHandlerInterface& handler, EuroscopePluginLoopbackInterface& plugin, std::string callsign)
             : handler(handler), plugin(plugin), callsign(callsign)
         {
-
         }
 
         /*
@@ -40,5 +36,5 @@ namespace UKControllerPlugin {
             this->handler.FlightPlanEvent(*currentFlightplan, *currentRadarTarget);
         }
 
-    }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+    } // namespace Flightplan
+} // namespace UKControllerPlugin

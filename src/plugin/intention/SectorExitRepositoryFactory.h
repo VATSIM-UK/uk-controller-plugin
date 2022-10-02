@@ -3,8 +3,8 @@
 namespace UKControllerPlugin {
     namespace IntentionCode {
         class SectorExitRepository;
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace IntentionCode {
@@ -15,7 +15,7 @@ namespace UKControllerPlugin {
         class SectorExitRepositoryFactory
         {
             public:
-                static std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> Create();
+            static std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> Create();
         };
-    }  // namespace IntentionCode
-}  // namespace UKControllerPlugin
+    } // namespace IntentionCode
+} // namespace UKControllerPlugin

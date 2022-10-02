@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "releases/ApproveDepartureReleaseDialog.h"
 #include "DepartureReleaseEventHandler.h"
 #include "dialog/DialogCallArgument.h"

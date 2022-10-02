@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "flightplan/StoredFlightplan.h"
 
@@ -64,5 +63,5 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(collection.HasFlightplanForCallsign("BAW456"));
         }
 
-    }  // namespace Flightplan
-}  // namespace UKControllerPluginTest
+    } // namespace Flightplan
+} // namespace UKControllerPluginTest

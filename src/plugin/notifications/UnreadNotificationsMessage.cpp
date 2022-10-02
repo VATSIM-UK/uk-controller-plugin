@@ -1,11 +1,9 @@
-#include "pch/pch.h"
 #include "notifications/UnreadNotificationsMessage.h"
 
 namespace UKControllerPlugin {
     namespace Notifications {
 
-        UnreadNotificationsMessage::UnreadNotificationsMessage(size_t numberUnread)
-            : numberUnread(numberUnread)
+        UnreadNotificationsMessage::UnreadNotificationsMessage(size_t numberUnread) : numberUnread(numberUnread)
         {
         }
 
@@ -23,7 +21,7 @@ namespace UKControllerPlugin {
         {
             std::string inflection = numberUnread == 1 ? "notification" : "notifications";
             return "You have " + std::to_string(this->numberUnread) + " unread " + inflection +
-                " relevant to the position you are controlling.";
+                   " relevant to the position you are controlling.";
         }
 
         /*
@@ -55,5 +53,5 @@ namespace UKControllerPlugin {
         {
             return true;
         }
-    }  // namespace Notifications
-}  // namespace UKControllerPlugin
+    } // namespace Notifications
+} // namespace UKControllerPlugin

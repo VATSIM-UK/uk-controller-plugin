@@ -4,8 +4,8 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCControllerInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -18,14 +18,14 @@ namespace UKControllerPlugin {
         class ControllerStatusEventHandlerInterface
         {
             public:
-                virtual ~ControllerStatusEventHandlerInterface(void) {}  // namespace Controller
-                virtual void ControllerUpdateEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface & controller
-                ) = 0;
-                virtual void ControllerDisconnectEvent(
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface & controller
-                ) = 0;
-                virtual void SelfDisconnectEvent(void) = 0;
+            virtual ~ControllerStatusEventHandlerInterface(void)
+            {
+            } // namespace Controller
+            virtual void
+            ControllerUpdateEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller) = 0;
+            virtual void
+            ControllerDisconnectEvent(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& controller) = 0;
+            virtual void SelfDisconnectEvent(void) = 0;
         };
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    } // namespace Controller
+} // namespace UKControllerPlugin

@@ -5,14 +5,13 @@
 namespace UKControllerPluginTest {
     namespace EventHandler {
 
-        class MockRadarTargetEventHandlerInterface :
-            public UKControllerPlugin::Euroscope::RadarTargetEventHandlerInterface
+        class MockRadarTargetEventHandlerInterface
+            : public UKControllerPlugin::Euroscope::RadarTargetEventHandlerInterface
         {
             public:
-                MOCK_METHOD1(
-                    RadarTargetPositionUpdateEvent,
-                    void(UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface & radarTarget)
-                );
-      };
-    }  // namespace EventHandler
-}  // namespace UKControllerPluginTest
+            MOCK_METHOD1(
+                RadarTargetPositionUpdateEvent,
+                void(UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget));
+        };
+    } // namespace EventHandler
+} // namespace UKControllerPluginTest

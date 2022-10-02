@@ -3,8 +3,8 @@
 namespace UKControllerPlugin {
     namespace Hold {
         struct HoldingData;
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -18,19 +18,11 @@ namespace UKControllerPlugin {
         {
             using is_transparent = std::string;
 
+            bool operator()(const UKControllerPlugin::Hold::HoldingData& hold, std::string description) const;
+            bool operator()(std::string description, const UKControllerPlugin::Hold::HoldingData& hold) const;
             bool operator()(
-                const UKControllerPlugin::Hold::HoldingData & hold,
-                std::string description
-            ) const;
-            bool operator()(
-                std::string description,
-                const UKControllerPlugin::Hold::HoldingData & hold
-            ) const;
-            bool operator()(
-                const UKControllerPlugin::Hold::HoldingData & a,
-                const UKControllerPlugin::Hold::HoldingData & b
-            ) const;
+                const UKControllerPlugin::Hold::HoldingData& a, const UKControllerPlugin::Hold::HoldingData& b) const;
 
         } CompareHoldsDescription;
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

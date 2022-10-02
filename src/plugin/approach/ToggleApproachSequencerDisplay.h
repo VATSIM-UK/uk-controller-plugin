@@ -1,5 +1,4 @@
 #pragma once
-#include <string>
 #include "radarscreen/MenuToggleableDisplayInterface.h"
 
 namespace UKControllerPlugin::Approach {

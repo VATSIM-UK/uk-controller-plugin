@@ -1,14 +1,45 @@
 #pragma once
+#ifndef ISOLATION_AWARE_ENABLED
+#define ISOLATION_AWARE_ENABLED 1 // NOLINT
+#endif
+#define _WIN32_WINNT 0x0603
+#define _SILENCE_CXX17_UNCAUGHT_EXCEPTION_DEPRECATION_WARNING // NOLINT
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING     // NOLINT
+#define _SILENCE_CXX17_ALLOCATOR_VOID_DEPRECATION_WARNING     // NOLINT
 
-#include "../../src/plugin/pch/pch.h"
-#include "euroscope/EuroScopePlugIn.h"
+// Resource identifiers
+#include "resource.h"
 
 // Ignore warnings about uninitialised variables in the Gmock headers
 #pragma warning(push)
 #pragma warning(disable : 26495 26451 28251)
 #include "gmock/gmock.h"
 #include "helper/Matchers.h"
+#include "json/json.hpp"
 #pragma warning(pop)
+
+// Windows and standard
+#include "fmt/include/fmt/chrono.h"
+#include "Windows.h"
+#include "ShlObj.h"
+#include "shtypes.h"
+
+#include <algorithm>
+#include <chrono>
+#include <filesystem>
+#include <gdiplus.h>
+#include <gdiplusgraphics.h>
+#include <gdiplustypes.h>
+#include <gdiplusenums.h>
+#include <mutex>
+#include <queue>
+#include <regex>
+#include <set>
+#include <string>
+#include <unordered_set>
+
+// Euroscope
+#include "euroscope/EuroScopePlugIn.h"
 
 // Testingutils mocks
 #include "../../testingutils/mock/MockApiInterface.h"
