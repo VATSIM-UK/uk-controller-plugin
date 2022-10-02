@@ -116,12 +116,6 @@ set(log
 )
 source_group("log" FILES ${log})
 
-set(pch
-    "pch/pch.cpp"
-    "pch/pch.h"
-)
-source_group("pch" FILES ${pch})
-
 set(setting
     "setting/SettingRepository.cpp"
     "setting/SettingRepository.h"
@@ -184,7 +178,6 @@ set(ALL_FILES
     ${helper}
     ${http}
     ${log}
-    ${pch}
     ${setting}
     ${squawk}
     ${srd}
