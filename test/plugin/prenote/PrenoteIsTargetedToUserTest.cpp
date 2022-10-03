@@ -11,10 +11,10 @@ using UKControllerPlugin::Prenote::PrenoteIsTargetedToUser;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 
 namespace UKControllerPluginTest::Prenote {
-    class PrenoteIsRelevantToUserTest : public testing::Test
+    class PrenoteIsTargetedToUserTest : public testing::Test
     {
         public:
-        PrenoteIsRelevantToUserTest() : relevance(activeCallsigns)
+        PrenoteIsTargetedToUserTest() : relevance(activeCallsigns)
         {
             sendingPosition = std::make_unique<ControllerPosition>(
                 1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
@@ -30,7 +30,7 @@ namespace UKControllerPluginTest::Prenote {
         std::shared_ptr<ControllerPosition> otherReceivingPosition;
     };
 
-    TEST_F(PrenoteIsRelevantToUserTest, PrenoteIsReleevantTouser)
+    TEST_F(PrenoteIsTargetedToUserTest, PrenoteIsReleevantTouser)
     {
         this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *receivingPosition, false));
         const PrenoteMessage message(
@@ -45,7 +45,7 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_TRUE(relevance.IsRelevant(message));
     }
 
-    TEST_F(PrenoteIsRelevantToUserTest, ItIsNotRelevantIfControllerIsAlsoReceiving)
+    TEST_F(PrenoteIsTargetedToUserTest, ItIsNotRelevantIfControllerIsAlsoReceiving)
     {
         this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *sendingPosition, false));
         const PrenoteMessage message(
@@ -53,7 +53,7 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_FALSE(relevance.IsRelevant(message));
     }
 
-    TEST_F(PrenoteIsRelevantToUserTest, ItIsNotRelevantIfTargetingWrongController)
+    TEST_F(PrenoteIsTargetedToUserTest, ItIsNotRelevantIfTargetingWrongController)
     {
         this->activeCallsigns.AddUserCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *receivingPosition, false));
         const PrenoteMessage message(
@@ -68,7 +68,7 @@ namespace UKControllerPluginTest::Prenote {
         EXPECT_FALSE(relevance.IsRelevant(message));
     }
 
-    TEST_F(PrenoteIsRelevantToUserTest, ItDoesntPlaySoundIfUserNotActive)
+    TEST_F(PrenoteIsTargetedToUserTest, ItDoesntPlaySoundIfUserNotActive)
     {
         this->activeCallsigns.AddCallsign(ActiveCallsign("EGKK_TWR", "Testy McTest", *receivingPosition, false));
         const PrenoteMessage message(

@@ -448,7 +448,7 @@ set(test__prenote
         prenote/PublishedPrenoteMapperTest.cpp
         prenote/PrenoteMessageEventHandlerCollectionTest.cpp
         prenote/PlayNewPrenoteMessageSoundTest.cpp
-        prenote/PrenoteIsRelevantToUserTest.cpp
+        prenote/PrenoteIsTargetedToUserTest.cpp
         prenote/SendNewPrenoteChatAreaMessageTest.cpp
         prenote/SendPrenoteCancelledChatAreaMessageTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
