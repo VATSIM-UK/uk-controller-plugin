@@ -5,6 +5,7 @@
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
+#include "PrenoteIsSentFromUsersPosition.h"
 #include "PrenoteIsTargetedToUser.h"
 #include "PrenoteMessageCollection.h"
 #include "PrenoteMessageEventHandlerCollection.h"
@@ -17,6 +18,7 @@
 #include "PublishedPrenoteCollectionFactory.h"
 #include "PublishedPrenoteMapper.h"
 #include "SendNewPrenoteChatAreaMessage.h"
+#include "SendPrenoteAcknowledgedChatAreaMessage.h"
 #include "SendPrenoteCancelledChatAreaMessage.h"
 #include "SendPrenoteMenu.h"
 #include "TriggerPrenoteMessageStatusView.h"
@@ -81,15 +83,19 @@ namespace UKControllerPlugin::Prenote {
             *persistence.pluginUserSettingHandler));
 
         // Electronic prenote messages
-        const auto prenoteUserRelevance = std::make_shared<PrenoteIsTargetedToUser>(*persistence.activeCallsigns);
+        const auto userTargetPrenoteRelevance = std::make_shared<PrenoteIsTargetedToUser>(*persistence.activeCallsigns);
+        const auto userSendingPrenoteRelevance =
+            std::make_shared<PrenoteIsSentFromUsersPosition>(*persistence.activeCallsigns);
         persistence.prenotes = std::make_shared<PrenoteMessageCollection>();
         persistence.prenoteMessageHandlers = std::make_unique<PrenoteMessageEventHandlerCollection>();
         persistence.prenoteMessageHandlers->AddHandler(
-            std::make_shared<PlayNewPrenoteMessageSound>(prenoteUserRelevance, *persistence.windows));
+            std::make_shared<PlayNewPrenoteMessageSound>(userTargetPrenoteRelevance, *persistence.windows));
         persistence.prenoteMessageHandlers->AddHandler(
-            std::make_shared<SendNewPrenoteChatAreaMessage>(prenoteUserRelevance, *persistence.plugin));
+            std::make_shared<SendNewPrenoteChatAreaMessage>(userTargetPrenoteRelevance, *persistence.plugin));
         persistence.prenoteMessageHandlers->AddHandler(
-            std::make_shared<SendPrenoteCancelledChatAreaMessage>(prenoteUserRelevance, *persistence.plugin));
+            std::make_shared<SendPrenoteCancelledChatAreaMessage>(userTargetPrenoteRelevance, *persistence.plugin));
+        persistence.prenoteMessageHandlers->AddHandler(
+            std::make_shared<SendPrenoteAcknowledgedChatAreaMessage>(userSendingPrenoteRelevance, *persistence.plugin));
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(
