@@ -17,6 +17,7 @@
 #include "PublishedPrenoteCollectionFactory.h"
 #include "PublishedPrenoteMapper.h"
 #include "SendNewPrenoteChatAreaMessage.h"
+#include "SendPrenoteCancelledChatAreaMessage.h"
 #include "SendPrenoteMenu.h"
 #include "TriggerPrenoteMessageStatusView.h"
 #include "bootstrap/BootstrapWarningMessage.h"
@@ -87,6 +88,8 @@ namespace UKControllerPlugin::Prenote {
             std::make_shared<PlayNewPrenoteMessageSound>(prenoteUserRelevance, *persistence.windows));
         persistence.prenoteMessageHandlers->AddHandler(
             std::make_shared<SendNewPrenoteChatAreaMessage>(prenoteUserRelevance, *persistence.plugin));
+        persistence.prenoteMessageHandlers->AddHandler(
+            std::make_shared<SendPrenoteCancelledChatAreaMessage>(prenoteUserRelevance, *persistence.plugin));
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(

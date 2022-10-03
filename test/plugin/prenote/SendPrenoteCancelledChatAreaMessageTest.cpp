@@ -1,16 +1,16 @@
 #include "controller/ControllerPosition.h"
 #include "prenote/PrenoteMessage.h"
-#include "prenote/SendNewPrenoteChatAreaMessage.h"
+#include "prenote/SendPrenoteCancelledChatAreaMessage.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::PrenoteMessage;
-using UKControllerPlugin::Prenote::SendNewPrenoteChatAreaMessage;
+using UKControllerPlugin::Prenote::SendPrenoteCancelledChatAreaMessage;
 
 namespace UKControllerPluginTest::Prenote {
-    class SendNewPrenoteChatAreaMessageTest : public testing::Test
+    class SendPrenoteCancelledChatAreaMessageTest : public testing::Test
     {
         public:
-        SendNewPrenoteChatAreaMessageTest()
+        SendPrenoteCancelledChatAreaMessageTest()
             : mockPrenoteRelevance(std::make_shared<testing::NiceMock<MockPrenoteUserRelevanceChecker>>()),
               sendMessage(mockPrenoteRelevance, plugin)
         {
@@ -24,10 +24,10 @@ namespace UKControllerPluginTest::Prenote {
         std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<testing::NiceMock<MockPrenoteUserRelevanceChecker>> mockPrenoteRelevance;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
-        SendNewPrenoteChatAreaMessage sendMessage;
+        SendPrenoteCancelledChatAreaMessage sendMessage;
     };
 
-    TEST_F(SendNewPrenoteChatAreaMessageTest, ItSendsChatAreaMessageOnNewPrenoteMessage)
+    TEST_F(SendPrenoteCancelledChatAreaMessageTest, ItSendsChatAreaMessageOnPrenoteMessageCancelled)
     {
         const PrenoteMessage message(
             1,
@@ -43,7 +43,7 @@ namespace UKControllerPluginTest::Prenote {
             ChatAreaMessage(
                 "UKCP_COORDINATION",
                 "UKCP",
-                "Prenote message for BAW123 is pending from EGKK_TWR.",
+                "Prenote message for BAW123 from EGKK_TWR has been cancelled.",
                 true,
                 true,
                 true,
@@ -51,10 +51,10 @@ namespace UKControllerPluginTest::Prenote {
                 true))
             .Times(1);
         EXPECT_CALL(*mockPrenoteRelevance, IsRelevant(testing::Ref(message))).Times(1).WillOnce(testing::Return(true));
-        sendMessage.NewMessage(message);
+        sendMessage.MessageCancelled(message);
     }
 
-    TEST_F(SendNewPrenoteChatAreaMessageTest, ItDoesntSendMessageIfNotRelevantToController)
+    TEST_F(SendPrenoteCancelledChatAreaMessageTest, ItDoesntSendMessageIfNotRelevantToController)
     {
         const PrenoteMessage message(
             1,
@@ -67,6 +67,6 @@ namespace UKControllerPluginTest::Prenote {
             std::chrono::system_clock::now());
         EXPECT_CALL(plugin, ChatAreaMessage).Times(0);
         EXPECT_CALL(*mockPrenoteRelevance, IsRelevant(testing::Ref(message))).Times(1).WillOnce(testing::Return(false));
-        sendMessage.NewMessage(message);
+        sendMessage.MessageCancelled(message);
     }
 } // namespace UKControllerPluginTest::Prenote
