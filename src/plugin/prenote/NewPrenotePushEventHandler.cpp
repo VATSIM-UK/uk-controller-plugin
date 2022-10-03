@@ -30,22 +30,21 @@ namespace UKControllerPlugin::Prenote {
 
         // We might have created it, so don't duplicate it
         int prenoteId = messageData.at("id").get<int>();
-        if (prenotes->GetById(prenoteId) != nullptr) {
-            return;
+        auto prenoteMessage = prenotes->GetById(prenoteId);
+        if (prenotes->GetById(prenoteId) == nullptr) {
+            prenoteMessage = std::make_shared<PrenoteMessage>(
+                prenoteId,
+                messageData.at("callsign").get<std::string>(),
+                messageData.at("departure_airfield").get<std::string>(),
+                messageData.at("departure_sid").is_null() ? "" : messageData.at("departure_sid").get<std::string>(),
+                messageData.at("destination_airfield").is_null()
+                    ? ""
+                    : messageData.at("destination_airfield").get<std::string>(),
+                this->controllers.FetchPositionById(messageData.at("sending_controller").get<int>()),
+                this->controllers.FetchPositionById(messageData.at("target_controller").get<int>()),
+                ParseTimeString(messageData.at("expires_at").get<std::string>()));
+            prenotes->Add(prenoteMessage);
         }
-
-        const auto prenoteMessage = std::make_shared<PrenoteMessage>(
-            prenoteId,
-            messageData.at("callsign").get<std::string>(),
-            messageData.at("departure_airfield").get<std::string>(),
-            messageData.at("departure_sid").is_null() ? "" : messageData.at("departure_sid").get<std::string>(),
-            messageData.at("destination_airfield").is_null()
-                ? ""
-                : messageData.at("destination_airfield").get<std::string>(),
-            this->controllers.FetchPositionById(messageData.at("sending_controller").get<int>()),
-            this->controllers.FetchPositionById(messageData.at("target_controller").get<int>()),
-            ParseTimeString(messageData.at("expires_at").get<std::string>()));
-        prenotes->Add(prenoteMessage);
 
         eventHandlers.NewMessage(*prenoteMessage);
         LogInfo("Received prenote id " + std::to_string(prenoteId));

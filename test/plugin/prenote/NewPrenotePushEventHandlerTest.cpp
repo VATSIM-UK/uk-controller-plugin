@@ -95,6 +95,8 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(NewPrenotePushEventHandlerTest, ItAddsPrenoteFromMessageWithOptionalData)
     {
+        EXPECT_CALL(*mockHandler, NewMessage(testing::_)).Times(1);
+        
         this->handler.ProcessPushEvent(MakePushEvent(nlohmann::json{
             {"departure_sid", nlohmann::json::value_t::null},
             {"destination_airfield", nlohmann::json::value_t::null},
@@ -120,6 +122,15 @@ namespace UKControllerPluginTest::Prenote {
         this->handler.ProcessPushEvent(MakePushEvent());
         EXPECT_EQ(1, this->messages->Count());
         EXPECT_TRUE(this->messages->GetById(1)->IsAcknowledged());
+    }
+    
+    TEST_F(NewPrenotePushEventHandlerTest, ItTriggersNewMessageEventIfPrenoteExists)
+    {
+        EXPECT_CALL(*mockHandler, NewMessage(testing::_)).Times(2);
+        
+        this->handler.ProcessPushEvent(MakePushEvent());
+        this->messages->GetById(1)->Acknowledge();
+        this->handler.ProcessPushEvent(MakePushEvent());
     }
 
     TEST_F(NewPrenotePushEventHandlerTest, ItDoesntAddPrenoteIfIdMissing)
