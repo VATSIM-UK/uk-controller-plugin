@@ -1,4 +1,4 @@
-#include "PrenoteIsRelevantToUser.h"
+#include "PrenoteIsTargetedToUser.h"
 #include "PrenoteMessage.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
@@ -6,12 +6,12 @@
 
 namespace UKControllerPlugin::Prenote {
 
-    PrenoteIsRelevantToUser::PrenoteIsRelevantToUser(const Controller::ActiveCallsignCollection& activeCallsigns)
+    PrenoteIsTargetedToUser::PrenoteIsTargetedToUser(const Controller::ActiveCallsignCollection& activeCallsigns)
         : activeCallsigns(activeCallsigns)
     {
     }
 
-    auto PrenoteIsRelevantToUser::IsRelevant(const PrenoteMessage& message) const -> bool
+    auto PrenoteIsTargetedToUser::IsRelevant(const PrenoteMessage& message) const -> bool
     {
         return activeCallsigns.UserHasCallsign() &&
                activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() == message.GetTargetControllerId() &&

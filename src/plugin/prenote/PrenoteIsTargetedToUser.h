@@ -8,10 +8,10 @@ namespace UKControllerPlugin::Controller {
 namespace UKControllerPlugin::Prenote {
     class PrenoteMessage;
 
-    class PrenoteIsRelevantToUser : public PrenoteUserRelevanceChecker
+    class PrenoteIsTargetedToUser : public PrenoteUserRelevanceChecker
     {
         public:
-        PrenoteIsRelevantToUser(const Controller::ActiveCallsignCollection& activeCallsigns);
+        PrenoteIsTargetedToUser(const Controller::ActiveCallsignCollection& activeCallsigns);
         [[nodiscard]] auto IsRelevant(const PrenoteMessage& message) const -> bool;
 
         private:

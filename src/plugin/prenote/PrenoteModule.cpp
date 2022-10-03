@@ -5,7 +5,7 @@
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
-#include "PrenoteIsRelevantToUser.h"
+#include "PrenoteIsTargetedToUser.h"
 #include "PrenoteMessageCollection.h"
 #include "PrenoteMessageEventHandlerCollection.h"
 #include "PrenoteMessageStatusView.h"
@@ -81,7 +81,7 @@ namespace UKControllerPlugin::Prenote {
             *persistence.pluginUserSettingHandler));
 
         // Electronic prenote messages
-        const auto prenoteUserRelevance = std::make_shared<PrenoteIsRelevantToUser>(*persistence.activeCallsigns);
+        const auto prenoteUserRelevance = std::make_shared<PrenoteIsTargetedToUser>(*persistence.activeCallsigns);
         persistence.prenotes = std::make_shared<PrenoteMessageCollection>();
         persistence.prenoteMessageHandlers = std::make_unique<PrenoteMessageEventHandlerCollection>();
         persistence.prenoteMessageHandlers->AddHandler(

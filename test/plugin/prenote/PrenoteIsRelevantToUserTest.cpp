@@ -1,13 +1,13 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
-#include "prenote/PrenoteIsRelevantToUser.h"
+#include "prenote/PrenoteIsTargetedToUser.h"
 #include "prenote/PrenoteMessage.h"
 
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
-using UKControllerPlugin::Prenote::PrenoteIsRelevantToUser;
+using UKControllerPlugin::Prenote::PrenoteIsTargetedToUser;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 
 namespace UKControllerPluginTest::Prenote {
@@ -24,7 +24,7 @@ namespace UKControllerPluginTest::Prenote {
                 3, "EGKK_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
         }
         ActiveCallsignCollection activeCallsigns;
-        PrenoteIsRelevantToUser relevance;
+        PrenoteIsTargetedToUser relevance;
         std::shared_ptr<ControllerPosition> sendingPosition;
         std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<ControllerPosition> otherReceivingPosition;
