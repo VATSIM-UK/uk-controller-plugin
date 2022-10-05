@@ -1,12 +1,14 @@
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
+#include "PrenoteMessageEventHandlerCollection.h"
 
 using UKControllerPlugin::Push::PushEventSubscription;
 
 namespace UKControllerPlugin::Prenote {
-    PrenoteDeletedPushEventHandler::PrenoteDeletedPushEventHandler(std::shared_ptr<PrenoteMessageCollection> prenotes)
-        : prenotes(std::move(prenotes))
+    PrenoteDeletedPushEventHandler::PrenoteDeletedPushEventHandler(
+        std::shared_ptr<PrenoteMessageCollection> prenotes, const PrenoteMessageEventHandlerCollection& eventHandlers)
+        : prenotes(std::move(prenotes)), eventHandlers(eventHandlers)
     {
     }
 
@@ -19,7 +21,8 @@ namespace UKControllerPlugin::Prenote {
         }
 
         int prenoteId = messageData.at("id").get<int>();
-        this->prenotes->Remove(prenoteId);
+        eventHandlers.MessageCancelled(*prenotes->GetById(prenoteId));
+        prenotes->Remove(prenoteId);
         LogInfo("Deleted prenote id " + std::to_string(prenoteId));
     }
 

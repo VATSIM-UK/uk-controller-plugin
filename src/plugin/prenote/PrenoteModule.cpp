@@ -100,10 +100,10 @@ namespace UKControllerPlugin::Prenote {
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(
             persistence.prenotes, *persistence.controllerPositions, *persistence.prenoteMessageHandlers));
-        persistence.pushEventProcessors->AddProcessor(
-            std::make_shared<PrenoteAcknowledgedPushEventHandler>(persistence.prenotes));
-        persistence.pushEventProcessors->AddProcessor(
-            std::make_shared<PrenoteDeletedPushEventHandler>(persistence.prenotes));
+        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(
+            persistence.prenotes, *persistence.prenoteMessageHandlers));
+        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(
+            persistence.prenotes, *persistence.prenoteMessageHandlers));
         persistence.timedHandler->RegisterEvent(
             std::make_shared<PrenoteMessageTimeout>(persistence.prenotes), MESSAGE_TIMEOUT_CHECK_INTERVAL);
 

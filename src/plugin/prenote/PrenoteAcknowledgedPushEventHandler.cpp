@@ -1,14 +1,15 @@
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
+#include "PrenoteMessageEventHandlerCollection.h"
 #include "push/PushEventSubscription.h"
 
 using UKControllerPlugin::Push::PushEventSubscription;
 
 namespace UKControllerPlugin::Prenote {
     PrenoteAcknowledgedPushEventHandler::PrenoteAcknowledgedPushEventHandler(
-        std::shared_ptr<PrenoteMessageCollection> prenotes)
-        : prenotes(std::move(prenotes))
+        std::shared_ptr<PrenoteMessageCollection> prenotes, const PrenoteMessageEventHandlerCollection& eventHandlers)
+        : prenotes(std::move(prenotes)), eventHandlers(eventHandlers)
     {
     }
 
@@ -21,7 +22,9 @@ namespace UKControllerPlugin::Prenote {
         }
 
         int prenoteId = messageData.at("id").get<int>();
-        this->prenotes->GetById(prenoteId)->Acknowledge();
+        const auto prenote = prenotes->GetById(prenoteId);
+        prenote->Acknowledge();
+        eventHandlers.MessageAcknowledged(*prenote);
         LogInfo("Acknowledged prenote id " + std::to_string(prenoteId));
     }
 
