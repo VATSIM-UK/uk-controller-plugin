@@ -11,6 +11,8 @@ namespace UKControllerPlugin {
             // PRENOTES
             static const std::string usePrenoteSettingsKey;
             static const std::string usePrenoteSettingsDescription;
+            static const std::string prenoteChatAreaMessagesSettingsKey;
+            static const std::string prenoteChatAreaMessagesSettingsDescription;
 
             // SQUAWKS
             static const std::string squawkToggleSettingsKey;

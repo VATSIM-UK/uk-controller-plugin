@@ -36,6 +36,11 @@ namespace UKControllerPlugin {
 
             CheckDlgButton(
                 hwnd,
+                IDC_PRENOTE_CHAT_MESSAGE,
+                this->GetCheckboxStateFromSettings(GeneralSettingsEntries::prenoteChatAreaMessagesSettingsKey));
+
+            CheckDlgButton(
+                hwnd,
                 GS_DIALOG_IA_CHECK,
                 this->GetCheckboxStateFromSettings(GeneralSettingsEntries::initialAltitudeToggleSettingsKey));
 
@@ -93,6 +98,12 @@ namespace UKControllerPlugin {
                 GeneralSettingsEntries::usePrenoteSettingsKey,
                 GeneralSettingsEntries::usePrenoteSettingsDescription,
                 this->GetSettingFromCheckboxState(hwnd, GS_DIALOG_PRENOTE_CHECK));
+
+            // Prenotes in chat area
+            this->userSettings.Save(
+                GeneralSettingsEntries::prenoteChatAreaMessagesSettingsKey,
+                GeneralSettingsEntries::prenoteChatAreaMessagesSettingsDescription,
+                this->GetSettingFromCheckboxState(hwnd, IDC_PRENOTE_CHAT_MESSAGE));
 
             // Initial Altitudes Toggle
             this->userSettings.Save(

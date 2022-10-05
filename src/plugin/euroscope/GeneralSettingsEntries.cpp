@@ -7,6 +7,9 @@ namespace UKControllerPlugin {
         const std::string GeneralSettingsEntries::usePrenoteSettingsKey = "prenoteNotify";
         const std::string GeneralSettingsEntries::usePrenoteSettingsDescription =
             "Notify the user of required controller pre-notes";
+        const std::string GeneralSettingsEntries::prenoteChatAreaMessagesSettingsKey = "sendPrenotesToChat";
+        const std::string GeneralSettingsEntries::prenoteChatAreaMessagesSettingsDescription =
+            "Show prenote activity in chat area";
 
         // SQUAWKS
         const std::string GeneralSettingsEntries::squawkToggleSettingsKey = "autoAssignSquawks";
