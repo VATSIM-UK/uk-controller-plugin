@@ -90,12 +90,12 @@ namespace UKControllerPlugin::Prenote {
         persistence.prenoteMessageHandlers = std::make_unique<PrenoteMessageEventHandlerCollection>();
         persistence.prenoteMessageHandlers->AddHandler(
             std::make_shared<PlayNewPrenoteMessageSound>(userTargetPrenoteRelevance, *persistence.windows));
-        persistence.prenoteMessageHandlers->AddHandler(
-            std::make_shared<SendNewPrenoteChatAreaMessage>(userTargetPrenoteRelevance, *persistence.plugin));
-        persistence.prenoteMessageHandlers->AddHandler(
-            std::make_shared<SendPrenoteCancelledChatAreaMessage>(userTargetPrenoteRelevance, *persistence.plugin));
-        persistence.prenoteMessageHandlers->AddHandler(
-            std::make_shared<SendPrenoteAcknowledgedChatAreaMessage>(userSendingPrenoteRelevance, *persistence.plugin));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendNewPrenoteChatAreaMessage>(
+            userTargetPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendPrenoteCancelledChatAreaMessage>(
+            userTargetPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendPrenoteAcknowledgedChatAreaMessage>(
+            userSendingPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(

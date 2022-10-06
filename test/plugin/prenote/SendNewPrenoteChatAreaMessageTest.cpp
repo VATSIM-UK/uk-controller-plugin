@@ -1,8 +1,10 @@
 #include "controller/ControllerPosition.h"
+#include "euroscope/UserSetting.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/SendNewPrenoteChatAreaMessage.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
+using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::SendNewPrenoteChatAreaMessage;
 
@@ -11,8 +13,9 @@ namespace UKControllerPluginTest::Prenote {
     {
         public:
         SendNewPrenoteChatAreaMessageTest()
-            : mockPrenoteRelevance(std::make_shared<testing::NiceMock<MockPrenoteUserRelevanceChecker>>()),
-              sendMessage(mockPrenoteRelevance, plugin)
+            : userSettings(userSettingProvider),
+              mockPrenoteRelevance(std::make_shared<testing::NiceMock<MockPrenoteUserRelevanceChecker>>()),
+              sendMessage(mockPrenoteRelevance, plugin, userSettings)
         {
             sendingPosition = std::make_shared<ControllerPosition>(
                 1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
@@ -20,6 +23,8 @@ namespace UKControllerPluginTest::Prenote {
                 2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
         }
 
+        testing::NiceMock<Euroscope::MockUserSettingProviderInterface> userSettingProvider;
+        UserSetting userSettings;
         std::shared_ptr<ControllerPosition> sendingPosition;
         std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<testing::NiceMock<MockPrenoteUserRelevanceChecker>> mockPrenoteRelevance;
@@ -29,6 +34,9 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(SendNewPrenoteChatAreaMessageTest, ItSendsChatAreaMessageOnNewPrenoteMessage)
     {
+        ON_CALL(userSettingProvider, KeyExists("sendPrenotesToChat")).WillByDefault(testing::Return(true));
+        ON_CALL(userSettingProvider, GetKey("sendPrenotesToChat")).WillByDefault(testing::Return("1"));
+
         const PrenoteMessage message(
             1,
             "BAW123",
@@ -54,8 +62,30 @@ namespace UKControllerPluginTest::Prenote {
         sendMessage.NewMessage(message);
     }
 
+    TEST_F(SendNewPrenoteChatAreaMessageTest, ItDoesntSendMessageIfNotUserDoesntWantMessages)
+    {
+        ON_CALL(userSettingProvider, KeyExists("sendPrenotesToChat")).WillByDefault(testing::Return(true));
+        ON_CALL(userSettingProvider, GetKey("sendPrenotesToChat")).WillByDefault(testing::Return("0"));
+
+        const PrenoteMessage message(
+            1,
+            "BAW123",
+            "EGKK",
+            "TEST1A",
+            "EGLL",
+            sendingPosition,
+            receivingPosition,
+            std::chrono::system_clock::now());
+        EXPECT_CALL(plugin, ChatAreaMessage).Times(0);
+        EXPECT_CALL(*mockPrenoteRelevance, IsRelevant(testing::Ref(message))).Times(0);
+        sendMessage.NewMessage(message);
+    }
+
     TEST_F(SendNewPrenoteChatAreaMessageTest, ItDoesntSendMessageIfNotRelevantToController)
     {
+        ON_CALL(userSettingProvider, KeyExists("sendPrenotesToChat")).WillByDefault(testing::Return(true));
+        ON_CALL(userSettingProvider, GetKey("sendPrenotesToChat")).WillByDefault(testing::Return("1"));
+
         const PrenoteMessage message(
             1,
             "BAW123",
