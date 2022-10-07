@@ -75,4 +75,21 @@ namespace UKControllerPluginTest::Prenote {
 
         collection.MessageAcknowledged(message);
     }
+
+    TEST_F(PrenoteMessageEventHandlerCollectionTest, ItProcessesTimeoutMessageEvent)
+    {
+        auto handler1 = std::make_shared<testing::NiceMock<MockPrenoteMessageEventHandlerInterface>>();
+        auto handler2 = std::make_shared<testing::NiceMock<MockPrenoteMessageEventHandlerInterface>>();
+        collection.AddHandler(handler1);
+        collection.AddHandler(handler2);
+
+        const PrenoteMessage message(
+            1, "BAW123", "EGKK", "TEST1A", "EGLL", nullptr, nullptr, std::chrono::system_clock::now());
+
+        EXPECT_CALL(*handler1, MessageTimeout(testing::Ref(message))).Times(1);
+
+        EXPECT_CALL(*handler2, MessageTimeout(testing::Ref(message))).Times(1);
+
+        collection.MessageTimeout(message);
+    }
 } // namespace UKControllerPluginTest::Prenote

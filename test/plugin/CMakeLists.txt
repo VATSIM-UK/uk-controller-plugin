@@ -451,7 +451,7 @@ set(test__prenote
         prenote/PrenoteIsTargetedToUserTest.cpp
         prenote/SendNewPrenoteChatAreaMessageTest.cpp
         prenote/SendPrenoteCancelledChatAreaMessageTest.cpp
-        prenote/PrenoteIsSentFromUserPositionTest.cpp prenote/SendPrenoteAcknowledgedChatAreaMessageTest.cpp)
+        prenote/PrenoteIsSentFromUserPositionTest.cpp prenote/SendPrenoteAcknowledgedChatAreaMessageTest.cpp prenote/SendPrenoteTimeoutChatAreaMessageTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push

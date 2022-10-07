@@ -15,6 +15,7 @@ namespace UKControllerPlugin::Prenote {
         void MessageAcknowledged(const PrenoteMessage& message) const;
         void MessageCancelled(const PrenoteMessage& message) const;
         void NewMessage(const PrenoteMessage& message) const;
+        void MessageTimeout(const PrenoteMessage& message) const;
 
         private:
         // All the handlers

@@ -21,5 +21,9 @@ namespace UKControllerPlugin::Prenote {
         virtual void MessageAcknowledged(const PrenoteMessage& message)
         {
         }
+
+        virtual void MessageTimeout(const PrenoteMessage& message)
+        {
+        }
     };
 } // namespace UKControllerPlugin::Prenote

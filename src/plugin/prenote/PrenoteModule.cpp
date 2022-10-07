@@ -21,6 +21,7 @@
 #include "SendPrenoteAcknowledgedChatAreaMessage.h"
 #include "SendPrenoteCancelledChatAreaMessage.h"
 #include "SendPrenoteMenu.h"
+#include "SendPrenoteTimeoutChatAreaMessage.h"
 #include "TriggerPrenoteMessageStatusView.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
@@ -96,6 +97,8 @@ namespace UKControllerPlugin::Prenote {
             userTargetPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
         persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendPrenoteAcknowledgedChatAreaMessage>(
             userSendingPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendPrenoteTimeoutChatAreaMessage>(
+            userSendingPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(
@@ -105,7 +108,8 @@ namespace UKControllerPlugin::Prenote {
         persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(
             persistence.prenotes, *persistence.prenoteMessageHandlers));
         persistence.timedHandler->RegisterEvent(
-            std::make_shared<PrenoteMessageTimeout>(persistence.prenotes), MESSAGE_TIMEOUT_CHECK_INTERVAL);
+            std::make_shared<PrenoteMessageTimeout>(persistence.prenotes, *persistence.prenoteMessageHandlers),
+            MESSAGE_TIMEOUT_CHECK_INTERVAL);
 
         // Status indicator tag item
         persistence.tagHandler->RegisterTagItem(

@@ -1,12 +1,14 @@
 #include "controller/ControllerPosition.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
+#include "prenote/PrenoteMessageEventHandlerCollection.h"
 #include "prenote/PrenoteMessageTimeout.h"
 #include "time/SystemClock.h"
 
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
+using UKControllerPlugin::Prenote::PrenoteMessageEventHandlerCollection;
 using UKControllerPlugin::Prenote::PrenoteMessageTimeout;
 using UKControllerPlugin::Time::SetTestNow;
 using UKControllerPlugin::Time::TimeNow;
@@ -15,7 +17,8 @@ namespace UKControllerPluginTest::Prenote {
     class PrenoteMessageTimeoutTest : public ::testing::Test
     {
         public:
-        PrenoteMessageTimeoutTest() : messages(std::make_shared<PrenoteMessageCollection>()), timeout(messages)
+        PrenoteMessageTimeoutTest()
+            : messages(std::make_shared<PrenoteMessageCollection>()), timeout(messages, eventHandlers)
         {
             SetTestNow(TimeNow());
             sendingPosition = std::make_shared<ControllerPosition>(
@@ -63,8 +66,14 @@ namespace UKControllerPluginTest::Prenote {
             messages->Add(message2);
             messages->Add(message3);
             messages->Add(message4);
+
+            // Prenote event handlers
+            mockHandler = std::make_shared<testing::NiceMock<MockPrenoteMessageEventHandlerInterface>>();
+            eventHandlers.AddHandler(mockHandler);
         }
 
+        std::shared_ptr<testing::NiceMock<MockPrenoteMessageEventHandlerInterface>> mockHandler;
+        PrenoteMessageEventHandlerCollection eventHandlers;
         std::shared_ptr<ControllerPosition> sendingPosition;
         std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<PrenoteMessageCollection> messages;
@@ -77,18 +86,32 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PrenoteMessageTimeoutTest, ItPreservesNonAcknowledgedNonExpiredMessages)
     {
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message1))).Times(0);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message2))).Times(1);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message3))).Times(1);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message4))).Times(1);
+
         timeout.TimedEventTrigger();
         EXPECT_EQ(message1, messages->GetById(1));
     }
 
     TEST_F(PrenoteMessageTimeoutTest, ItRemovesNonAcknowledgedExpiredMessages)
     {
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message2))).Times(1);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message3))).Times(1);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message4))).Times(1);
+
         timeout.TimedEventTrigger();
         EXPECT_EQ(nullptr, messages->GetById(2));
     }
 
     TEST_F(PrenoteMessageTimeoutTest, ItPreservesMessagesAcknowledgedInThePastTenMinutes)
     {
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message1))).Times(0);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message2))).Times(1);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message3))).Times(0);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message4))).Times(1);
+
         auto timeBefore = TimeNow();
         SetTestNow(TimeNow() - std::chrono::minutes(9));
         message3->Acknowledge();
@@ -99,6 +122,10 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PrenoteMessageTimeoutTest, ItRemovesMessagesAcknowledgedMoreThanTenMinutesAgo)
     {
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message2))).Times(1);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message3))).Times(1);
+        EXPECT_CALL(*mockHandler, MessageTimeout(testing::Ref(*message4))).Times(1);
+
         auto timeBefore = TimeNow();
         SetTestNow(TimeNow() - std::chrono::minutes(11));
         message4->Acknowledge();

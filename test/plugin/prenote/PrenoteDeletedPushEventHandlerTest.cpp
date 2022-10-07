@@ -24,8 +24,8 @@ namespace UKControllerPluginTest::Prenote {
             receivingPosition = std::make_shared<ControllerPosition>(
                 2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
             this->messages->Add(std::make_shared<PrenoteMessage>(
-                1,+
-                "BAW123",
+                1,
+                +"BAW123",
                 "EGGD",
                 "BADIM1X",
                 "EGLL",

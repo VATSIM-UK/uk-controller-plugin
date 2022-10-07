@@ -39,7 +39,7 @@ namespace UKControllerPluginTest::Prenote {
             userPosition = std::make_shared<ControllerPosition>(
                 2, "LON_S_CTR", 129.420, std::vector<std::string>{"EGKK"}, true, false, true);
             callsigns.AddUserCallsign(ActiveCallsign("LON_S_CTR", "Test", *userPosition, true));
-            
+
             // Add the prenotes
             collection->Add(std::make_shared<PrenoteMessage>(
                 1, "BAW123", "EGGD", "BADIM1X", "EGLL", sendingPosition, userPosition, TimeNow()));

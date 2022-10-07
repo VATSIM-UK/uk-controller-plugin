@@ -146,7 +146,7 @@ namespace UKControllerPluginTest::Prenote {
     TEST_F(PrenoteModuleTest, ItRegistersPrenoteMessageEventHandlerCollectionWithContainer)
     {
         PrenoteModule::BootstrapPlugin(container, dependency);
-        EXPECT_EQ(4, container.prenoteMessageHandlers->CountHandlers());
+        EXPECT_EQ(5, container.prenoteMessageHandlers->CountHandlers());
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersRenderables)

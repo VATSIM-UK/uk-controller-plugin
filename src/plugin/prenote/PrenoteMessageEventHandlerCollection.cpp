@@ -28,6 +28,14 @@ namespace UKControllerPlugin::Prenote {
             handler->MessageAcknowledged(message);
         }
     }
+
+    void PrenoteMessageEventHandlerCollection::MessageTimeout(const PrenoteMessage& message) const
+    {
+        for (const auto& handler : handlers) {
+            handler->MessageTimeout(message);
+        }
+    }
+
     auto PrenoteMessageEventHandlerCollection::CountHandlers() const -> size_t
     {
         return handlers.size();

@@ -699,7 +699,7 @@ set(src__prenote
     prenote/PlayNewPrenoteMessageSound.cpp prenote/PlayNewPrenoteMessageSound.h
     prenote/SendNewPrenoteChatAreaMessage.cpp prenote/SendNewPrenoteChatAreaMessage.h
         prenote/PrenoteIsTargetedToUser.cpp prenote/PrenoteIsTargetedToUser.h
-    prenote/PrenoteUserRelevanceChecker.h prenote/SendPrenoteCancelledChatAreaMessage.cpp prenote/SendPrenoteCancelledChatAreaMessage.h prenote/PrenoteIsSentFromUsersPosition.cpp prenote/PrenoteIsSentFromUsersPosition.h prenote/SendPrenoteAcknowledgedChatAreaMessage.cpp prenote/SendPrenoteAcknowledgedChatAreaMessage.h)
+    prenote/PrenoteUserRelevanceChecker.h prenote/SendPrenoteCancelledChatAreaMessage.cpp prenote/SendPrenoteCancelledChatAreaMessage.h prenote/PrenoteIsSentFromUsersPosition.cpp prenote/PrenoteIsSentFromUsersPosition.h prenote/SendPrenoteAcknowledgedChatAreaMessage.cpp prenote/SendPrenoteAcknowledgedChatAreaMessage.h prenote/SendPrenoteTimeoutChatAreaMessage.cpp prenote/SendPrenoteTimeoutChatAreaMessage.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push

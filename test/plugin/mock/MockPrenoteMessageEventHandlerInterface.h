@@ -12,5 +12,6 @@ namespace UKControllerPluginTest::Prenote {
         MOCK_METHOD(void, NewMessage, (const PrenoteMessage&), (override));
         MOCK_METHOD(void, MessageCancelled, (const PrenoteMessage&), (override));
         MOCK_METHOD(void, MessageAcknowledged, (const PrenoteMessage&), (override));
+        MOCK_METHOD(void, MessageTimeout, (const PrenoteMessage&), (override));
     };
 } // namespace UKControllerPluginTest::Prenote
