@@ -22,8 +22,6 @@ namespace UKControllerPlugin::Prenote {
                                                        TimeNow() - std::chrono::minutes(ACKNOWLEDGED_PRENOTE_TIMEOUT)
                                                  : message->GetExpiresAt() < TimeNow();
             },
-            [this](const PrenoteMessage& message) {
-                eventHandlers.MessageTimeout(message);
-            });
+            [this](const PrenoteMessage& message) { eventHandlers.MessageTimeout(message); });
     }
 } // namespace UKControllerPlugin::Prenote
