@@ -5,7 +5,8 @@ namespace UKControllerPlugin::Prenote {
     void PrenoteMessageEventHandlerCollection::AddHandler(
         const std::shared_ptr<PrenoteMessageEventHandlerInterface>& handler)
     {
-        assert(handlers.insert(handler).second && "Duplicate handler added to prenote message handlers");
+        const auto inserted = handlers.insert(handler).second;
+        assert(inserted && "Duplicate handler added to prenote message handlers");
     }
 
     void PrenoteMessageEventHandlerCollection::NewMessage(const PrenoteMessage& message) const
