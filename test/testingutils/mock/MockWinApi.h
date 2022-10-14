@@ -29,6 +29,7 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD2(GetFunctionPointerFromLibrary, FARPROC(HINSTANCE, std::string));
             MOCK_CONST_METHOD1(UnloadLibrary, void(HINSTANCE handle));
             MOCK_METHOD2(MoveFileToNewLocation, bool(std::wstring, std::wstring));
+            MOCK_CONST_METHOD1(OpenExplorer, void(const std::wstring&));
 
             std::string ReadFromFile(std::wstring path, bool relative) override
             {

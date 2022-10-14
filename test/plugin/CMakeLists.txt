@@ -418,7 +418,7 @@ set(test__plugin
     "plugin/PluginInformationMessageTest.cpp"
     "plugin/PopupMenuItemTest.cpp"
     "plugin/UkPluginBootstrapTest.cpp"
-)
+        plugin/OpenDataFolderTest.cpp plugin/OpenLogsFolderTest.cpp)
 source_group("test\\plugin" FILES ${test__plugin})
 
 set(test__prenote
@@ -460,7 +460,7 @@ set(test__radarscreen
     "radarscreen/RadarRenderableCollectionTest.cpp"
     "radarscreen/ScreenControlsBootstrapTest.cpp"
     "radarscreen/ScreenControlsTest.cpp"
-        radarscreen/ToggleDisplayFromMenuTest.cpp mock/MockMenuToggleableDisplay.h radarscreen/MenuToggleableDisplayFactoryTest.cpp)
+        radarscreen/ToggleDisplayFromMenuTest.cpp mock/MockMenuToggleableDisplay.h radarscreen/MenuToggleableDisplayFactoryTest.cpp radarscreen/ConfigurableDisplayCallbackFactoryTest.cpp)
 source_group("test\\radarscreen" FILES ${test__radarscreen})
 
 set(test__regional

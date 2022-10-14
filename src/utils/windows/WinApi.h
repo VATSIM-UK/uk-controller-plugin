@@ -35,6 +35,7 @@ namespace UKControllerPlugin {
             std::string ReadFromFile(std::wstring filename, bool relativePath = true) override;
             bool SetPermissions(std::wstring fileOrFolder, std::filesystem::perms permissions) override;
             void WriteToFile(std::wstring filename, std::string data, bool truncate, bool binary) override;
+            void OpenExplorer(const std::wstring& location) const override;
 
             // Inherited via DialogProviderInterface
             void OpenDialog(

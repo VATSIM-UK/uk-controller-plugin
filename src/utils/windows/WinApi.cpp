@@ -312,5 +312,10 @@ namespace UKControllerPlugin {
                 dialog.dialogProcedure,
                 reinterpret_cast<LPARAM>(argument));
         }
+
+        void WinApi::OpenExplorer(const std::wstring& location) const
+        {
+            ShellExecute(nullptr, L"open", location.c_str(), nullptr, nullptr, SW_RESTORE);
+        }
     } // namespace Windows
 } // namespace UKControllerPlugin

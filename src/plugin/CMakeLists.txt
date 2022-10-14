@@ -664,7 +664,7 @@ set(src__plugin
     "plugin/UKPlugin.h"
     "plugin/UkPluginBootstrap.cpp"
     "plugin/UkPluginBootstrap.h"
-        euroscope/UserSettingAwareInterface.cpp)
+        euroscope/UserSettingAwareInterface.cpp plugin/OpenDataFolder.cpp plugin/OpenDataFolder.h plugin/OpenLogsFolder.cpp plugin/OpenLogsFolder.h)
 source_group("src\\plugin" FILES ${src__plugin})
 
 set(src__prenote
@@ -740,7 +740,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h radarscreen/ConfigurableDisplayCallbackFactory.cpp radarscreen/ConfigurableDisplayCallbackFactory.h)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional

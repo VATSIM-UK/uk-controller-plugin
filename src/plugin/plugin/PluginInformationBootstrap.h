@@ -1,6 +1,13 @@
 #pragma once
-#include "bootstrap/PersistenceContainer.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
+
+namespace UKControllerPlugin {
+    namespace Bootstrap {
+        struct PersistenceContainer;
+    } // namespace Bootstrap
+    namespace RadarScreen {
+        class ConfigurableDisplayCollection;
+    } // namespace RadarScreen
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Plugin {
