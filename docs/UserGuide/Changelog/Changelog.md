@@ -1,5 +1,26 @@
 # UK Controller Plugin Changelog
 
+# [5.5.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.6...5.5.0) (2022-10-14)
+
+
+### Bug Fixes
+
+* prenote message event handlers registering in release mode ([4e3598a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4e3598a6f09f65abb6407ef07749b8f0b5237b06))
+* properly trigger events after push events ([25382df](https://github.com/VATSIM-UK/uk-controller-plugin/commit/25382df3526a9677728be5d0e21b7c3840019e1b))
+* unused variable ([1582ee2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/1582ee2e50d7b1a31e949a15fe975a641d6419fa))
+
+
+### Features
+
+* add OP item to open data folder ([84a49ef](https://github.com/VATSIM-UK/uk-controller-plugin/commit/84a49eff940e4b1ea62301d821efe65ec0227bbc))
+* add OP item to open logs folder ([fc4036b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fc4036b7d0346fd20d0d6eff465e49ba6499e378))
+* general settings checkbox for prenote chat area messages ([22b74b7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/22b74b75649c5f0da6bc7276f65ca4a850352cba))
+* send a chat area message when a preonte message is cancelled ([ebf2ff7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ebf2ff7e3549f2e056cae5b769abb5938ab8e95e))
+* send message to chat area when prenote received ([af97223](https://github.com/VATSIM-UK/uk-controller-plugin/commit/af97223dca869b8d1b62bec7ef93fada11868c1d))
+* send notifications to sending controller on prenote timeout ([b73eded](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b73eded2af7b7ea190ee190d546cab5ad76f2450))
+* send prenote acknowledgement message to chat area ([4b021f8](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4b021f8e0f4db9a3f9286e8292a4cdfeeb2fe628))
+* users can select whether they want prenote messages in chat area ([981e8af](https://github.com/VATSIM-UK/uk-controller-plugin/commit/981e8af204d8370c1678e37577e4f42be8de9f9b))
+
 ## [5.4.6](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.5...5.4.6) (2022-09-19)
 
 
