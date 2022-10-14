@@ -106,18 +106,20 @@ BEGIN
     CONTROL         "Enable Prenote Notifications",GS_DIALOG_PRENOTE_CHECK,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,16,96,10
     CONTROL         "Automatically Assign Initial Altitudes",GS_DIALOG_IA_CHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,28,122,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,34,122,10
     CONTROL         "Automatically Assign Squawks",GS_DIALOG_SQUAWK_CHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,49,107,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,54,107,10
     CONTROL         "Enable QNH Change Notifications",GS_DIALOG_QNH_CHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,60,117,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,65,117,10
     CONTROL         "Display Unknown Times As Blank",GS_TIME_FORMAT_CHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,71,117,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,76,117,10
     CONTROL         "Automatically Assign Initial Headings",GS_DIALOG_IH_CHECK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,39,126,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,44,126,10
     LTEXT           "Experimental settings, modify at your own risk:",IDC_GEN_SETTINGS_EXPERIMENTAL,14,90,136,8
     COMBOBOX        IDC_RELEASE_CHANNEL,14,104,66,35,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "Update Channel",IDC_STATIC,87,106,50,8
+    CONTROL         "Notify Prenote Activity In Chat Area",IDC_PRENOTE_CHAT_MESSAGE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,25,118,10
 END
 
 IDD_TIMER_CONFIGURATION DIALOGEX 0, 0, 179, 158

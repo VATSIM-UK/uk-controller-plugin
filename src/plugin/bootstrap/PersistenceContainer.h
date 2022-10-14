@@ -107,6 +107,7 @@ namespace UKControllerPlugin {
     } // namespace Plugin
     namespace Prenote {
         class PrenoteMessageCollection;
+        class PrenoteMessageEventHandlerCollection;
     } // namespace Prenote
     namespace Push {
         class PushEventProcessorCollection;
@@ -198,6 +199,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
         std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
         std::shared_ptr<UKControllerPlugin::Prenote::PrenoteMessageCollection> prenotes;
+        std::unique_ptr<UKControllerPlugin::Prenote::PrenoteMessageEventHandlerCollection> prenoteMessageHandlers;
         std::shared_ptr<UKControllerPlugin::Dependency::DependencyLoaderInterface> dependencyLoader;
 
         // Collections of event handlers

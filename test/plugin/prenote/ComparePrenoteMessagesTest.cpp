@@ -1,7 +1,9 @@
+#include "controller/ControllerPosition.h"
 #include "prenote/ComparePrenoteMessages.h"
 #include "prenote/PrenoteMessage.h"
 #include "time/SystemClock.h"
 
+using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::ComparePrenoteMessages;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Time::TimeNow;
@@ -12,11 +14,19 @@ namespace UKControllerPluginTest::Prenote {
         public:
         ComparePrenoteMessagesTest()
         {
-            message1 = std::make_shared<PrenoteMessage>(1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow());
-            message2 = std::make_shared<PrenoteMessage>(5, "BAW456", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow());
+            sendingPosition = std::make_shared<ControllerPosition>(
+                1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            receivingPosition = std::make_shared<ControllerPosition>(
+                2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            message1 = std::make_shared<PrenoteMessage>(
+                1, "BAW123", "EGGD", "BADIM1X", "EGLL", sendingPosition, receivingPosition, TimeNow());
+            message2 = std::make_shared<PrenoteMessage>(
+                5, "BAW456", "EGGD", "BADIM1X", "EGLL", sendingPosition, receivingPosition, TimeNow());
         }
 
         ComparePrenoteMessages compare;
+        std::shared_ptr<ControllerPosition> sendingPosition;
+        std::shared_ptr<ControllerPosition> receivingPosition;
         std::shared_ptr<PrenoteMessage> message1;
         std::shared_ptr<PrenoteMessage> message2;
     };

@@ -3,16 +3,13 @@
 
 namespace UKControllerPlugin {
     namespace Controller {
-        class ActiveCallsignCollection;
         class ControllerPositionCollection;
     } // namespace Controller
-    namespace Windows {
-        class WinApiInterface;
-    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Prenote {
     class PrenoteMessageCollection;
+    class PrenoteMessageEventHandlerCollection;
 
     class NewPrenotePushEventHandler : public UKControllerPlugin::Push::PushEventProcessorInterface
     {
@@ -20,8 +17,7 @@ namespace UKControllerPlugin::Prenote {
         NewPrenotePushEventHandler(
             std::shared_ptr<PrenoteMessageCollection> prenotes,
             const Controller::ControllerPositionCollection& controllers,
-            const Controller::ActiveCallsignCollection& activeCallsigns,
-            Windows::WinApiInterface& winApi);
+            const PrenoteMessageEventHandlerCollection& eventHandlers);
         void ProcessPushEvent(const Push::PushEvent& message) override;
         [[nodiscard]] auto GetPushEventSubscriptions() const
             -> std::set<UKControllerPlugin::Push::PushEventSubscription> override;
@@ -35,10 +31,7 @@ namespace UKControllerPlugin::Prenote {
         // All the controllers
         const Controller::ControllerPositionCollection& controllers;
 
-        // All the active callsigns
-        const Controller::ActiveCallsignCollection& activeCallsigns;
-
-        // Windows API
-        Windows::WinApiInterface& winApi;
+        // Handles events related to prenote messages
+        const PrenoteMessageEventHandlerCollection& eventHandlers;
     };
 } // namespace UKControllerPlugin::Prenote

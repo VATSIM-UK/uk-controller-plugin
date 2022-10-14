@@ -1,13 +1,11 @@
 #include "NewPrenotePushEventHandler.h"
 #include "PrenoteMessage.h"
 #include "PrenoteMessageCollection.h"
-#include "controller/ActiveCallsign.h"
-#include "controller/ActiveCallsignCollection.h"
+#include "PrenoteMessageEventHandlerCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "time/ParseTimeStrings.h"
 #include "time/SystemClock.h"
-#include "windows/WinApiInterface.h"
 
 using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Time::ParseTimeString;
@@ -17,9 +15,8 @@ namespace UKControllerPlugin::Prenote {
     NewPrenotePushEventHandler::NewPrenotePushEventHandler(
         std::shared_ptr<PrenoteMessageCollection> prenotes,
         const Controller::ControllerPositionCollection& controllers,
-        const Controller::ActiveCallsignCollection& activeCallsigns,
-        Windows::WinApiInterface& winApi)
-        : prenotes(std::move(prenotes)), controllers(controllers), activeCallsigns(activeCallsigns), winApi(winApi)
+        const PrenoteMessageEventHandlerCollection& eventHandlers)
+        : prenotes(std::move(prenotes)), controllers(controllers), eventHandlers(eventHandlers)
     {
     }
 
@@ -33,27 +30,23 @@ namespace UKControllerPlugin::Prenote {
 
         // We might have created it, so don't duplicate it
         int prenoteId = messageData.at("id").get<int>();
-        if (this->prenotes->GetById(prenoteId) != nullptr) {
-            return;
+        auto prenoteMessage = prenotes->GetById(prenoteId);
+        if (prenotes->GetById(prenoteId) == nullptr) {
+            prenoteMessage = std::make_shared<PrenoteMessage>(
+                prenoteId,
+                messageData.at("callsign").get<std::string>(),
+                messageData.at("departure_airfield").get<std::string>(),
+                messageData.at("departure_sid").is_null() ? "" : messageData.at("departure_sid").get<std::string>(),
+                messageData.at("destination_airfield").is_null()
+                    ? ""
+                    : messageData.at("destination_airfield").get<std::string>(),
+                this->controllers.FetchPositionById(messageData.at("sending_controller").get<int>()),
+                this->controllers.FetchPositionById(messageData.at("target_controller").get<int>()),
+                ParseTimeString(messageData.at("expires_at").get<std::string>()));
+            prenotes->Add(prenoteMessage);
         }
 
-        this->prenotes->Add(std::make_shared<PrenoteMessage>(
-            prenoteId,
-            messageData.at("callsign").get<std::string>(),
-            messageData.at("departure_airfield").get<std::string>(),
-            messageData.at("departure_sid").is_null() ? "" : messageData.at("departure_sid").get<std::string>(),
-            messageData.at("destination_airfield").is_null()
-                ? ""
-                : messageData.at("destination_airfield").get<std::string>(),
-            messageData.at("sending_controller").get<int>(),
-            messageData.at("target_controller").get<int>(),
-            ParseTimeString(messageData.at("expires_at").get<std::string>())));
-
-        if (activeCallsigns.UserHasCallsign() && activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() ==
-                                                     messageData.at("target_controller").get<int>()) {
-            winApi.PlayWave(MAKEINTRESOURCE(WAVE_NEW_PRENOTE)); // NOLINT
-        }
-
+        eventHandlers.NewMessage(*prenoteMessage);
         LogInfo("Received prenote id " + std::to_string(prenoteId));
     }
 

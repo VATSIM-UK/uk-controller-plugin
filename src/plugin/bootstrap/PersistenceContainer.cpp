@@ -51,6 +51,7 @@
 #include "notifications/NotificationsMenuItem.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "prenote/PrenoteMessageEventHandlerCollection.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "radarscreen/ScreenControls.h"

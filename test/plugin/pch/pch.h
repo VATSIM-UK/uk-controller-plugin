@@ -88,6 +88,8 @@
 #include "../mock/MockOutboundIntegrationEventHandler.h"
 #include "../mock/MockPluginSettingsProvider.h"
 #include "../mock/MockPopupList.h"
+#include "../mock/MockPrenoteMessageEventHandlerInterface.h"
+#include "../mock/MockPrenoteUserRelevanceChecker.h"
 #include "../mock/MockPushEventConnection.h"
 #include "../mock/MockPushEventProcessor.h"
 #include "../mock/MockRadarRendererableInterface.h"

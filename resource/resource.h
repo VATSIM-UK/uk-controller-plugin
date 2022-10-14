@@ -174,6 +174,7 @@
 #define IDC_CHECK2                      1119
 #define IDC_TRAIL_ROTATE                1119
 #define MISSED_APPROACH_SOUND_USER      1119
+#define IDC_PRENOTE_CHAT_MESSAGE        1119
 #define IDC_SYSLINK2                    1121
 #define IDC_SYSLINK3                    1122
 #define MISSED_APPROACH_GLOSAL_STATIc   1123

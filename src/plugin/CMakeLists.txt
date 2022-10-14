@@ -693,7 +693,13 @@ set(src__prenote
     prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
     prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
     prenote/PairedAirfieldPrenote.h
-    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h controller/CompareActiveCallsigns.cpp controller/CompareActiveCallsigns.h)
+    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h
+    controller/CompareActiveCallsigns.cpp controller/CompareActiveCallsigns.h
+    prenote/PrenoteMessageEventHandlerInterface.h
+    prenote/PlayNewPrenoteMessageSound.cpp prenote/PlayNewPrenoteMessageSound.h
+    prenote/SendNewPrenoteChatAreaMessage.cpp prenote/SendNewPrenoteChatAreaMessage.h
+        prenote/PrenoteIsTargetedToUser.cpp prenote/PrenoteIsTargetedToUser.h
+    prenote/PrenoteUserRelevanceChecker.h prenote/SendPrenoteCancelledChatAreaMessage.cpp prenote/SendPrenoteCancelledChatAreaMessage.h prenote/PrenoteIsSentFromUsersPosition.cpp prenote/PrenoteIsSentFromUsersPosition.h prenote/SendPrenoteAcknowledgedChatAreaMessage.cpp prenote/SendPrenoteAcknowledgedChatAreaMessage.h prenote/SendPrenoteTimeoutChatAreaMessage.cpp prenote/SendPrenoteTimeoutChatAreaMessage.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
@@ -992,7 +998,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
-    ${src__wake})
+    ${src__wake} prenote/PrenoteMessageEventHandlerCollection.cpp prenote/PrenoteMessageEventHandlerCollection.h)
 
 ################################################################################
 # Target
