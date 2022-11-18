@@ -79,7 +79,7 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("ROKAN").GetName().compare("ROKAN") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("ROKAN").GetIntentionCode(mockRoute, 0, 37000).compare("F4") == 0);
             ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("ROKAN").GetOutDirection());
-            
+
             // RENEQ
             ASSERT_TRUE(repo->GetSectorExitPoint("RENEQ").GetName().compare("RENEQ") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("RENEQ").GetIntentionCode(mockRoute, 0, 37000).compare("F4") == 0);
@@ -94,7 +94,7 @@ namespace UKControllerPluginTest {
             ASSERT_TRUE(repo->GetSectorExitPoint("MOLIX").GetName().compare("MOLIX") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("MOLIX").GetIntentionCode(mockRoute, 0, 37000).compare("F") == 0);
             ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("MOLIX").GetOutDirection());
-            
+
             // LAMSO
             ASSERT_TRUE(repo->GetSectorExitPoint("LAMSO").GetName().compare("LAMSO") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("LAMSO").GetIntentionCode(mockRoute, 0, 37000).compare("F") == 0);
