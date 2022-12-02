@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.5.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.0...5.5.1) (2022-12-02)
+
+
+### Bug Fixes
+
+* f intention code updates ([fd0c9f1](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fd0c9f1cb5c6fbc4fc10865e26ecfe00961251ee))
+
 # [5.5.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.6...5.5.0) (2022-10-14)
 
 
