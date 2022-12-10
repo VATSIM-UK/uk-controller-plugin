@@ -73,7 +73,7 @@ namespace UKControllerPluginTest {
             // TOPPA
             ASSERT_TRUE(repo->GetSectorExitPoint("TOPPA").GetName().compare("TOPPA") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("TOPPA").GetIntentionCode(mockRoute, 0, 37000).compare("F2") == 0);
-            ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("TOPPA").GetOutDirection());
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("TOPPA").GetOutDirection());
 
             // ROKAN
             ASSERT_TRUE(repo->GetSectorExitPoint("ROKAN").GetName().compare("ROKAN") == 0);
@@ -88,7 +88,7 @@ namespace UKControllerPluginTest {
             // GODOS
             ASSERT_TRUE(repo->GetSectorExitPoint("GODOS").GetName().compare("GODOS") == 0);
             ASSERT_TRUE(repo->GetSectorExitPoint("GODOS").GetIntentionCode(mockRoute, 0, 37000).compare("F1") == 0);
-            ASSERT_EQ(repo->outEast, repo->GetSectorExitPoint("GODOS").GetOutDirection());
+            ASSERT_EQ(repo->outEast | repo->outSouthEast, repo->GetSectorExitPoint("GODOS").GetOutDirection());
 
             // MOLIX
             ASSERT_TRUE(repo->GetSectorExitPoint("MOLIX").GetName().compare("MOLIX") == 0);
