@@ -31,10 +31,12 @@ namespace UKControllerPlugin {
             // North Sea
             points["LONAM"] = std::make_unique<SectorExitPoint>(
                 "LONAM", "F3", SectorExitPoint::outEast | SectorExitPoint::outSouthEast);
-            points["TOPPA"] = std::make_unique<SectorExitPoint>("TOPPA", "F2", SectorExitPoint::outEast);
+            points["TOPPA"] = std::make_unique<SectorExitPoint>(
+                "TOPPA", "F2", SectorExitPoint::outEast | SectorExitPoint::outSouthEast);
             points["RENEQ"] = std::make_unique<SectorExitPoint>("RENEQ", "F4", SectorExitPoint::outEast);
             points["ROKAN"] = std::make_unique<SectorExitPoint>("ROKAN", "F4", SectorExitPoint::outEast);
-            points["GODOS"] = std::make_unique<SectorExitPoint>("GODOS", "F1", SectorExitPoint::outEast);
+            points["GODOS"] = std::make_unique<SectorExitPoint>(
+                "GODOS", "F1", SectorExitPoint::outEast | SectorExitPoint::outSouthEast);
             points["LAMSO"] = std::make_unique<SectorExitPoint>("LAMSO", "F", SectorExitPoint::outEast);
             points["MOLIX"] = std::make_unique<SectorExitPoint>("MOLIX", "F", SectorExitPoint::outEast);
 
