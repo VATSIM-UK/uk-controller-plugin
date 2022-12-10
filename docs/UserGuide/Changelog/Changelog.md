@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.5.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.1...5.5.2) (2022-12-10)
+
+
+### Bug Fixes
+
+* TOPPA and GODOS intention code directions ([5401699](https://github.com/VATSIM-UK/uk-controller-plugin/commit/54016992031085e07965b00960cbbbc71a6385f2))
+
 ## [5.5.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.0...5.5.1) (2022-12-02)
 
 
