@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.5.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.2...5.5.3) (2022-12-24)
+
+
+### Bug Fixes
+
+* irish G intention code directions ([cd0534a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cd0534a114b78024cdd2ad8096c997a644041e4b))
+
 ## [5.5.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.1...5.5.2) (2022-12-10)
 
 
