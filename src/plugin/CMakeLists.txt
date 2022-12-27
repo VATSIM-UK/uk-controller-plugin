@@ -434,8 +434,12 @@ set(src__integration
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention
+    "intention/AircraftFirExit.h"
+    "intention/AircraftFirExitGenerator.h"
     "intention/AirfieldGroup.cpp"
     "intention/AirfieldGroup.h"
+    "intention/CachedAircraftFirExitGenerator.h"
+    "intention/CachedAircraftFirExitGenerator.cpp"
     "intention/AmsterdamAirfieldGroup.cpp"
     "intention/AmsterdamAirfieldGroup.h"
     "intention/BrusselsAirfieldGroup.cpp"
