@@ -12,7 +12,7 @@ namespace UKControllerPluginTest::Euroscope {
             (const, override));
 
         MOCK_METHOD(
-            EuroScopePlugIn::CPosition,
+            const EuroScopePlugIn::CPosition,
             ToEuroscopePosition,
             (),
             (const, override));
