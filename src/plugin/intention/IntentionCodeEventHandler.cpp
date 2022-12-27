@@ -44,7 +44,7 @@ namespace UKControllerPlugin::IntentionCode {
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
     {
         this->codeCache.UnregisterAircraft(flightPlan.GetCallsign());
-        EuroscopeExtractedRouteInterface extractedRoute = flightPlan.GetExtractedRoute();
+        auto extractedRoute = flightPlan.GetExtractedRoute();
         IntentionCodeData data = this->intention->GetIntentionCodeForFlightplan(
             flightPlan.GetCallsign(),
             flightPlan.GetOrigin(),
@@ -78,7 +78,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         // If we have it cached, then use the cached value
         const auto& flightplan = tagData.GetFlightplan();
-        EuroscopeExtractedRouteInterface extractedRoute = flightplan.GetExtractedRoute();
+        auto extractedRoute = flightplan.GetExtractedRoute();
         if (this->codeCache.HasIntentionCodeForAircraft(flightplan.GetCallsign())) {
             tagData.SetItemString(this->codeCache.GetIntentionCodeForAircraft(flightplan.GetCallsign()));
             return;

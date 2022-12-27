@@ -130,8 +130,10 @@ set(test__flightinformationservice
 source_group("test\\flightinformationservice" FILES ${test__flightinformationservice})
 
 set(test__flightplan
+    "flightplan/FlightplanPointTest.cpp"
     "flightplan/FlightPlanEventHandlerCollectionTest.cpp"
     "flightplan/FlightplanStorageBootstrapTest.cpp"
+    "flightplan/ParsedFlightplanFactoryTest.cpp"
     "flightplan/StoredFlightplanCollectionTest.cpp"
     "flightplan/StoredFlightplanEventHandlerTest.cpp"
     "flightplan/StoredFlightplanTest.cpp"
@@ -235,6 +237,8 @@ set(test__intention
     "intention/AmsterdamAirfieldGroupTest.cpp"
     "intention/BrusselsAirfieldGroupTest.cpp"
     "intention/DublinAirfieldGroupTest.cpp"
+    "intention/ExitConeTest.cpp"
+    "intention/FirExitPointTest.cpp"
     "intention/HomeAirfieldGroupTest.cpp"
     "intention/IntentionCodeCacheTest.cpp"
     "intention/IntentionCodeEventHandlerTest.cpp"
@@ -335,9 +339,11 @@ set(test__mock
     "mock/MockEuroScopeCRadarTargetInterface.h"
     "mock/MockEuroscopeExtractedRouteInterface.h"
     "mock/MockEuroscopeFlightplanList.h"
+    "mock/MockEuroscopeCoordinateInterface.h"
     "mock/MockEuroscopePluginLoopbackInterface.h"
     "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
     "mock/MockEuroscopeSectorFileElementInterface.h"
+    "mock/MockExitDetermination.h"
     "mock/MockExternalMessageHandlerInterface.h"
     "mock/MockFlightPlanEventHandlerInterface.h"
     "mock/MockFlightplanRadarTargetPair.h"
