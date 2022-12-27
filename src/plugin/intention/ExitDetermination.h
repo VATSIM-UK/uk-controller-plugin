@@ -2,20 +2,24 @@
 
 namespace UKControllerPlugin {
     namespace Euroscope {
-        class EuroScopeCFlightPlanInterface;   
+        class EuroScopeCFlightPlanInterface;
     } // namespace Euroscope
     namespace Flightplan {
         class FlightplanPoint;
     } // namespace Flightplan
-}
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::IntentionCode {
+
+    /*
+     * An interface for determining whether or not an aircraft is exiting an FIR here.
+     */
     class ExitDetermination
     {
         public:
-            virtual [[nodiscard]] auto AircraftIsExiting(
-                const Flightplan::FlightplanPoint& flightplanPoint,
-                Euroscope::EuroScopeCFlightPlanInterface& flightplan
-            ) = 0;
-    }
+        virtual ~ExitDetermination() = default;
+        [[nodiscard]] virtual auto AircraftIsExiting(
+            const Flightplan::FlightplanPoint& flightplanPoint, Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> bool = 0;
+    };
 } // namespace UKControllerPlugin::IntentionCode

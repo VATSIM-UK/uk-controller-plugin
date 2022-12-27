@@ -3,17 +3,19 @@
 namespace UKControllerPlugin::IntentionCode {
     class ExitDetermination;
 
-    class FirExitPoint {
+    class FirExitPoint
+    {
         public:
-            FirExitPoint(int id, std::string identifier, bool internal, std::shared_ptr<ExitDetermination> exitDetermination);
-            ~FirExitPoint() = default;
+        FirExitPoint(
+            int id, std::string identifier, bool internal, std::shared_ptr<ExitDetermination> exitDetermination);
+        ~FirExitPoint() = default;
 
-        private:
         [[nodiscard]] auto Id() const -> int;
         [[nodiscard]] auto Identifier() const -> const std::string&;
         [[nodiscard]] auto IsInternal() const -> bool;
-        [[nodiscard]] auto ExitDetermination() const -> const ExitDetermination&;
+        [[nodiscard]] auto FirExitDetermination() const -> const ExitDetermination&;
 
+        private:
         // The id of the exit point
         int id;
 

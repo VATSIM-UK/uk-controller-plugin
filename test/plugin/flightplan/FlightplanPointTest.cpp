@@ -6,16 +6,14 @@ using UKControllerPlugin::Flightplan::FlightplanPoint;
 
 namespace UKControllerPluginTest::Flightplan {
 
-    class FlightplanPointTest: public testing::Test
+    class FlightplanPointTest : public testing::Test
     {
         public:
-        FlightplanPointTest()
-            : point(1, "FOOOD", std::make_shared<EuroscopeCoordinateWrapper>(GetPosition()))
+        FlightplanPointTest() : point(1, "FOOOD", std::make_shared<EuroscopeCoordinateWrapper>(GetPosition()))
         {
-
         }
 
-        [[nodiscard]] GetPosition() -> EuroScopePlugIn::CPosition
+        [[nodiscard]] static auto GetPosition() -> EuroScopePlugIn::CPosition
         {
             EuroScopePlugIn::CPosition position;
             position.m_Latitude = 5.0;
@@ -23,7 +21,6 @@ namespace UKControllerPluginTest::Flightplan {
             return position;
         }
 
-        EuroScopePlugIn::CPosition position;
         FlightplanPoint point;
     };
 
@@ -39,7 +36,7 @@ namespace UKControllerPluginTest::Flightplan {
 
     TEST_F(FlightplanPointTest, ItHasAPosition)
     {
-        EXPECT_FLOAT_EQ(5, point.Position()->ToEuroscopePosition().m_Latitude);
-        EXPECT_FLOAT_EQ(6, point.Position()->ToEuroscopePosition().m_Longitude);
+        EXPECT_FLOAT_EQ(5, point.Position().ToEuroscopePosition().m_Latitude);
+        EXPECT_FLOAT_EQ(6, point.Position().ToEuroscopePosition().m_Longitude);
     }
 } // namespace UKControllerPluginTest::Flightplan

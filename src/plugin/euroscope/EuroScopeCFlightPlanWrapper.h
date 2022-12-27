@@ -22,9 +22,8 @@ namespace UKControllerPlugin::Euroscope {
         double GetDistanceFromOrigin() const override;
         double GetDistanceToDestination() const override;
         std::string GetExpectedDepartureTime() const override;
-        virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface GetExtractedRoute() const override;
-        [[nodiscard]] std::shared_ptr<Flightplan::ParsedFlightplan>
-        GetParsedFlightplan() override;
+        virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& GetExtractedRoute() const override;
+        [[nodiscard]] std::shared_ptr<Flightplan::ParsedFlightplan> GetParsedFlightplan() const override;
         std::string GetFlightRules() const override;
         std::string GetGroundState() const override;
         std::string GetIcaoWakeCategory() const override;
@@ -57,11 +56,10 @@ namespace UKControllerPlugin::Euroscope {
         // The callsign that will be returned by GetTrackingControllerCallsign if untracked.
         const std::string notTrackedControllerCallsign = "";
 
-
         // Extracted route
-        std::shared_ptr<EuroscopeExtractedRouteInterface> extractedRoute;
+        mutable std::shared_ptr<EuroscopeExtractedRouteInterface> extractedRoute;
 
         // Parsed flightplan
-        std::shared_ptr<Flightplan::ParsedFlightplan> parsedFlightplan;
+        mutable std::shared_ptr<Flightplan::ParsedFlightplan> parsedFlightplan;
     };
 } // namespace UKControllerPlugin::Euroscope

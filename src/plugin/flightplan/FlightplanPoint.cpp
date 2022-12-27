@@ -2,8 +2,9 @@
 #include "euroscope/EuroscopeCoordinateInterface.h"
 
 namespace UKControllerPlugin::Flightplan {
-    FlightplanPoint::FlightplanPoint(int index, std::string identifier, std::shared_ptr<Euroscope::EuroscopeCoordinateInterface> position)
-        : index(index), identifier(identifier), position(std::move(position))
+    FlightplanPoint::FlightplanPoint(
+        int index, std::string identifier, std::shared_ptr<Euroscope::EuroscopeCoordinateInterface> position)
+        : index(index), identifier(std::move(identifier)), position(std::move(position))
     {
     }
 
@@ -19,7 +20,7 @@ namespace UKControllerPlugin::Flightplan {
 
     auto FlightplanPoint::Position() const -> const Euroscope::EuroscopeCoordinateInterface&
     {
-        return position;
+        return *position;
     }
 
 } // namespace UKControllerPlugin::Flightplan

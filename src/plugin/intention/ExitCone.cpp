@@ -11,19 +11,18 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto ExitCone::AircraftIsExiting(
-        const Flightplan::FlightplanPoint& flightplanPoint,
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan
-    ) {
-        const auto nextPoint = flightplan.GetParsedFlightplan().PointByIndex(flightplanPoint.Index());
+        const Flightplan::FlightplanPoint& flightplanPoint, Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        -> bool
+    {
+        const auto nextPoint = flightplan.GetParsedFlightplan()->PointByIndex(flightplanPoint.Index());
 
         if (!nextPoint) {
             return false;
         }
 
-        const auto exitDirection = (int) flightplanPoint.Position().DirectionTo(nextPoint->Position());
+        const auto exitDirection = (int)flightplanPoint.Position().DirectionTo(nextPoint->Position());
 
-        return endDirection <= startDirection
-            ? exitDirection >= startDirection || exitDirection <= endDirection
-            : exitDirection >= startDirection && exitDirection <= endDirection;
+        return endDirection <= startDirection ? exitDirection >= startDirection || exitDirection <= endDirection
+                                              : exitDirection >= startDirection && exitDirection <= endDirection;
     }
 } // namespace UKControllerPlugin::IntentionCode

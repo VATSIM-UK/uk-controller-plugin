@@ -1,20 +1,20 @@
+#include "intention/ExitDetermination.h"
 #include "intention/FirExitPoint.h"
 
 using UKControllerPlugin::IntentionCode::FirExitPoint;
 
 namespace UKControllerPluginTest::IntentionCode {
-    class FirExitPointTest : testing::Test
+    class FirExitPointTest : public testing::Test
     {
         public:
-            FirExitPointTest()
-                : mockExitDetermination(std::make_shared<testing::NiceMock<MockExitDetermination>()),
-                    exitPoint(1, "TEST", true, MockExitDetermination)
-            {
+        FirExitPointTest()
+            : mockExitDetermination(std::make_shared<testing::NiceMock<MockExitDetermination>>()),
+              exitPoint(1, "TEST", true, mockExitDetermination)
+        {
+        }
 
-            }
-            
-            std::shared_ptr<testing::NiceMock<MockExitDetermination>> mockExitDetermination;
-            FirExitPoint exitPoint;
+        std::shared_ptr<testing::NiceMock<MockExitDetermination>> mockExitDetermination;
+        FirExitPoint exitPoint;
     };
 
     TEST_F(FirExitPointTest, ItHasAnId)
@@ -34,6 +34,6 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(FirExitPointTest, ItHasAnExitDetermination)
     {
-        EXPECT_EQ(mockExitDetermination.get(), &exitPoint.ExitDetermination());
+        EXPECT_EQ(mockExitDetermination.get(), &exitPoint.FirExitDetermination());
     }
-} // namespace UKControllerPlugin::IntentionCode
+} // namespace UKControllerPluginTest::IntentionCode

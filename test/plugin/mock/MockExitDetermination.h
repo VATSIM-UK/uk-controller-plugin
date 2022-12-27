@@ -8,7 +8,8 @@ namespace UKControllerPluginTest::IntentionCode {
         MOCK_METHOD(
             bool,
             AircraftIsExiting,
-            (const UKControllerPlugin::Flightplan::FlightplanPoint&, UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& ),
-            (const, override));
+            (const UKControllerPlugin::Flightplan::FlightplanPoint&,
+             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&),
+            (override));
     };
-} // namespace UKControllerPluginTest::Sid
+} // namespace UKControllerPluginTest::IntentionCode

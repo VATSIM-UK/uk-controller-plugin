@@ -1,8 +1,10 @@
+#include "ExitDetermination.h"
 #include "FirExitPoint.h"
 
 namespace UKControllerPlugin::IntentionCode {
-    FirExitPoint::FirExitPoint(int id, std::string identifier, bool internal, std::shared_ptr<ExitDetermination> exitDetermination)
-        : id(id), identifier(std::move(identifier)), exitDetermination(std::move(exitDetermination))
+    FirExitPoint::FirExitPoint(
+        int id, std::string identifier, bool internal, std::shared_ptr<ExitDetermination> exitDetermination)
+        : id(id), identifier(std::move(identifier)), internal(internal), exitDetermination(std::move(exitDetermination))
     {
     }
 
@@ -21,9 +23,8 @@ namespace UKControllerPlugin::IntentionCode {
         return internal;
     }
 
-    auto FirExitPoint::ExitDetermination() const -> const ExitDetermination&
+    auto FirExitPoint::FirExitDetermination() const -> const ExitDetermination&
     {
-        return exitDetermination;
+        return *exitDetermination;
     }
-
 } // namespace UKControllerPlugin::IntentionCode

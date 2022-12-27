@@ -3,18 +3,19 @@
 #include "flightplan/ParsedFlightplan.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeCoordinateWrapper;
+using UKControllerPlugin::Flightplan::FlightplanPoint;
 using UKControllerPlugin::Flightplan::ParsedFlightplan;
 
 namespace UKControllerPluginTest::Flightplan {
     class ParsedFlightplanTest : public testing::Test
     {
         public:
-            auto GetPosition() -> std::shared_ptr<EuroscopeCoordinateWrapper>
-            {
-                return std::make_shared<EuroscopeCoordinateWrapper>(EuroScopePlugIn::CPosition());
-            }
+        auto GetPosition() -> std::shared_ptr<EuroscopeCoordinateWrapper>
+        {
+            return std::make_shared<EuroscopeCoordinateWrapper>(EuroScopePlugIn::CPosition());
+        }
 
-            ParsedFlightplan flightplan;
+        ParsedFlightplan flightplan;
     };
 
     TEST_F(ParsedFlightplanTest, ItAddsAPoint)
@@ -44,22 +45,6 @@ namespace UKControllerPluginTest::Flightplan {
         EXPECT_TRUE(flightplan.HasPointByIdentifier("FOOOD"));
     }
 
-    TEST_F(ParsedFlightplanTest, ItGetsNoPointsByIdentifier)
-    {
-        EXPECT_EQ(std::list<std::shared_ptr<FlightplanPoint>>(), flightplan.PointsByIdentifier("LOL"));
-    }
-
-    TEST_F(ParsedFlightplanTest, ItGetsPointsByIdentifier)
-    {
-        auto point1 = std::make_shared<FlightplanPoint>(1, "FOOOD", GetPosition());
-        auto point2 = std::make_shared<FlightplanPoint>(2, "FOOOD", GetPosition());
-        flightplan.AddPoint(point1);
-        flightplan.AddPoint(point2);
-        flightplan.AddPoint(std::make_shared<FlightplanPoint>(3, "ROOOD", GetPosition()));
-
-        EXPECT_EQ(std::list<std::shared_ptr<FlightplanPoint>>({point1, point2}), flightplan.PointsByIdentifier("FOOOD"));
-    }
-
     TEST_F(ParsedFlightplanTest, ItReturnsNullPtrIfNoPointByIndex)
     {
         flightplan.AddPoint(std::make_shared<FlightplanPoint>(1, "FOOOD", GetPosition()));
@@ -79,4 +64,4 @@ namespace UKControllerPluginTest::Flightplan {
 
         EXPECT_EQ(point2, flightplan.PointByIndex(2));
     }
-} // UKControllerPluginTest::Flightplan
+} // namespace UKControllerPluginTest::Flightplan

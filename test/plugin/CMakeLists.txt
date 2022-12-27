@@ -134,6 +134,7 @@ set(test__flightplan
     "flightplan/FlightPlanEventHandlerCollectionTest.cpp"
     "flightplan/FlightplanStorageBootstrapTest.cpp"
     "flightplan/ParsedFlightplanFactoryTest.cpp"
+    "flightplan/ParsedFlightplanTest.cpp"
     "flightplan/StoredFlightplanCollectionTest.cpp"
     "flightplan/StoredFlightplanEventHandlerTest.cpp"
     "flightplan/StoredFlightplanTest.cpp"

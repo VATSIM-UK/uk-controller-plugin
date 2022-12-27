@@ -5,17 +5,16 @@ namespace UKControllerPlugin::IntentionCode {
     class ExitCone : public ExitDetermination
     {
         public:
-            ExitCone(int startDirection, int endDirection);
-            [[nodiscard]] auto AircraftIsExiting(
-                const Flightplan::FlightplanPoint& flightplanPoint,
-                Euroscope::EuroScopeCFlightPlanInterface& flightplan
-            ) override;
+        ExitCone(int startDirection, int endDirection);
+        [[nodiscard]] auto AircraftIsExiting(
+            const Flightplan::FlightplanPoint& flightplanPoint, Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> bool override;
 
         private:
         // The start of the exit direction cone
-        int exitDirectionStart;
+        int startDirection;
 
         // The end of the exit direction cone, is clockwise from the start
-        int exitDirectionEnd;
-    }
+        int endDirection;
+    };
 } // namespace UKControllerPlugin::IntentionCode

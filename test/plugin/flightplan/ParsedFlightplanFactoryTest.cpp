@@ -5,9 +5,8 @@ using UKControllerPlugin::Flightplan::ParseFlightplanFromEuroscope;
 
 namespace UKControllerPluginTest::Flightplan {
 
-    class ParsedFlightplanFactoryTest()
+    class ParsedFlightplanFactoryTest : public testing::Test
     {
-
     };
 
     TEST_F(ParsedFlightplanFactoryTest, TestItCreatesParsedFlightplan)
@@ -21,15 +20,15 @@ namespace UKControllerPluginTest::Flightplan {
         position2.m_Latitude = 5.0;
         position2.m_Longitude = 6.0;
 
-        EXPECT_CALL(wrapperMock, GetPointsNumber()).WillRepeatedly(Return(2));
-        EXPECT_CALL(wrapperMock, GetPointName(0)).Times(1).WillOnce(Return("ALAN"));
-        EXPECT_CALL(wrapperMock, GetPointPosition(0)).Times(1).WillOnce(Return(position1)));
-        EXPECT_CALL(wrapperMock, GetPointName(1)).Times(1).WillOnce(Return("STEVE"));
-        EXPECT_CALL(wrapperMock, GetPointPosition(1)).Times(1).WillOnce(Return(position2)));
+        EXPECT_CALL(mockExtractedRoute, GetPointsNumber()).WillRepeatedly(testing::Return(2));
+        EXPECT_CALL(mockExtractedRoute, GetPointName(0)).Times(1).WillOnce(testing::Return("ALAN"));
+        EXPECT_CALL(mockExtractedRoute, GetPointPosition(0)).Times(1).WillOnce(testing::Return(position1));
+        EXPECT_CALL(mockExtractedRoute, GetPointName(1)).Times(1).WillOnce(testing::Return("STEVE"));
+        EXPECT_CALL(mockExtractedRoute, GetPointPosition(1)).Times(1).WillOnce(testing::Return(position2));
 
         const auto parsed = ParseFlightplanFromEuroscope(mockExtractedRoute);
         EXPECT_EQ(2, parsed->CountPoints());
         EXPECT_TRUE(parsed->HasPointByIdentifier("ALAN"));
         EXPECT_TRUE(parsed->HasPointByIdentifier("STEVE"));
     }
-} // UKControllerPluginTest::Flightplan
+} // namespace UKControllerPluginTest::Flightplan

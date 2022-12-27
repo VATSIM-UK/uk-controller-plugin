@@ -63,13 +63,14 @@ namespace UKControllerPlugin::Euroscope {
     auto EuroScopeCFlightPlanWrapper::GetExtractedRoute() const -> EuroscopeExtractedRouteInterface&
     {
         if (!this->extractedRoute) {
-            this->extractedRoute = std::make_shared<EuroscopeExtractedRouteInterface>(this->originalData.GetExtractedRoute());
+            this->extractedRoute =
+                std::make_shared<EuroscopeExtractedRouteInterface>(this->originalData.GetExtractedRoute());
         }
 
         return *this->extractedRoute;
     }
 
-    std::shared_ptr<Flightplan::ParsedFlightplan> EuroScopeCFlightPlanWrapper::GetParsedFlightplan()
+    auto EuroScopeCFlightPlanWrapper::GetParsedFlightplan() const -> std::shared_ptr<Flightplan::ParsedFlightplan>
     {
         if (!parsedFlightplan) {
             parsedFlightplan = Flightplan::ParseFlightplanFromEuroscope(GetExtractedRoute());

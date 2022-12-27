@@ -25,8 +25,7 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] virtual std::string GetExpectedDepartureTime() const = 0;
         [[nodiscard]] virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface&
         GetExtractedRoute() const = 0;
-        [[nodiscard]] virtual std::shared_ptr<Flightplan::ParsedFlightplan>
-        GetParsedFlightplan() = 0;
+        [[nodiscard]] virtual std::shared_ptr<Flightplan::ParsedFlightplan> GetParsedFlightplan() const = 0;
         [[nodiscard]] virtual std::string GetFlightRules() const = 0;
         [[nodiscard]] virtual std::string GetGroundState() const = 0;
         [[nodiscard]] virtual std::string GetOrigin() const = 0;

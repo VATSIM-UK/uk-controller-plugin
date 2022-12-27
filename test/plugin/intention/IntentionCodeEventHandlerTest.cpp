@@ -72,7 +72,7 @@ namespace UKControllerPluginTest::IntentionCode {
             &tagColour,
             &fontSize);
 
-        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(1).WillOnce(Return(ByRef(route)));
+        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(1).WillOnce(testing::ReturnRef(route));
 
         ON_CALL(flightplan, GetCallsign).WillByDefault(Return("BAW123"));
 
@@ -106,7 +106,7 @@ namespace UKControllerPluginTest::IntentionCode {
             &tagColour,
             &fontSize);
 
-        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(2).WillRepeatedly(Return(ByRef(route)));
+        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(2).WillRepeatedly(testing::ReturnRef(route));
 
         ON_CALL(flightplan, GetCallsign).WillByDefault(Return("BAW123"));
 
@@ -134,7 +134,7 @@ namespace UKControllerPluginTest::IntentionCode {
         NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
         NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
 
-        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(2).WillRepeatedly(Return(ByRef(route)));
+        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(2).WillRepeatedly(testing::ReturnRef(route));
 
         ON_CALL(flightplan, GetCallsign).WillByDefault(Return("BAW123"));
 
@@ -165,7 +165,7 @@ namespace UKControllerPluginTest::IntentionCode {
             &tagColour,
             &fontSize);
 
-        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(2).WillRepeatedly(Return(ByRef(route)));
+        EXPECT_CALL(flightplan, GetExtractedRoute()).Times(2).WillRepeatedly(testing::ReturnRef(route));
 
         ON_CALL(flightplan, GetCallsign).WillByDefault(Return("BAW123"));
 
