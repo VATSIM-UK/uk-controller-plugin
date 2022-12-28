@@ -1,5 +1,5 @@
 #include "euroscope/EuroscopeCoordinateWrapper.h"
-#include "flightplan/FlightplanPoint.cpp"
+#include "flightplan/FlightplanPoint.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeCoordinateWrapper;
 using UKControllerPlugin::Flightplan::FlightplanPoint;

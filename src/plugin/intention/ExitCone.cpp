@@ -1,8 +1,8 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "ExitCone.h"
 #include "euroscope/EuroscopeCoordinateInterface.h"
 #include "flightplan/FlightplanPoint.h"
 #include "flightplan/ParsedFlightplan.h"
-#include "ExitCone.h"
 
 namespace UKControllerPlugin::IntentionCode {
     ExitCone::ExitCone(int startDirection, int endDirection)
@@ -14,7 +14,7 @@ namespace UKControllerPlugin::IntentionCode {
         const Flightplan::FlightplanPoint& flightplanPoint, Euroscope::EuroScopeCFlightPlanInterface& flightplan)
         -> bool
     {
-        const auto nextPoint = flightplan.GetParsedFlightplan()->PointByIndex(flightplanPoint.Index());
+        const auto nextPoint = flightplan.GetParsedFlightplan()->PointByIndex(flightplanPoint.Index() + 1);
 
         if (!nextPoint) {
             return false;
