@@ -6,6 +6,7 @@ namespace UKControllerPlugin::Flightplan {
         int index, std::string identifier, std::shared_ptr<Euroscope::EuroscopeCoordinateInterface> position)
         : index(index), identifier(std::move(identifier)), position(std::move(position))
     {
+        assert(!position && "No position in flightplan point");
     }
 
     auto FlightplanPoint::Index() const -> int

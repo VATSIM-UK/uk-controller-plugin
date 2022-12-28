@@ -484,7 +484,7 @@ set(src__intention
     "intention/SectorExitRepositoryFactory.h"
     "intention/ShannonAirfieldGroup.cpp"
     "intention/ShannonAirfieldGroup.h"
-)
+        intention/FirExitPointCollection.cpp intention/FirExitPointCollection.h intention/FirExitPointCollectionFactory.cpp intention/FirExitPointCollectionFactory.h)
 source_group("src\\intention" FILES ${src__intention})
 
 set(src__list

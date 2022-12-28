@@ -11,7 +11,7 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto ExitCone::AircraftIsExiting(
-        const Flightplan::FlightplanPoint& flightplanPoint, Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        const Flightplan::FlightplanPoint& flightplanPoint, Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> bool
     {
         const auto nextPoint = flightplan.GetParsedFlightplan()->PointByIndex(flightplanPoint.Index() + 1);
@@ -24,5 +24,15 @@ namespace UKControllerPlugin::IntentionCode {
 
         return endDirection <= startDirection ? exitDirection >= startDirection || exitDirection <= endDirection
                                               : exitDirection >= startDirection && exitDirection <= endDirection;
+    }
+
+    auto ExitCone::StartDirection() const -> int
+    {
+        return startDirection;
+    }
+
+    auto ExitCone::EndDirection() const -> int
+    {
+        return endDirection;
     }
 } // namespace UKControllerPlugin::IntentionCode

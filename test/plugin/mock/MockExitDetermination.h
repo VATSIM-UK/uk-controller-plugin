@@ -10,6 +10,6 @@ namespace UKControllerPluginTest::IntentionCode {
             AircraftIsExiting,
             (const UKControllerPlugin::Flightplan::FlightplanPoint&,
              UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&),
-            (override));
+            (const, override));
     };
 } // namespace UKControllerPluginTest::IntentionCode

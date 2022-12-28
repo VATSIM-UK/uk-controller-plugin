@@ -3,6 +3,7 @@
 
 namespace UKControllerPlugin::IntentionCode {
     struct AircraftFirExit;
+    class FirExitPointCollection;
 
     /*
         Generates aircraft FIR exit data and caches the result for future use.
@@ -10,6 +11,7 @@ namespace UKControllerPlugin::IntentionCode {
     class CachedAircraftFirExitGenerator : public AircraftFirExitGenerator
     {
         public:
+        CachedAircraftFirExitGenerator(std::shared_ptr<FirExitPointCollection> firExitPoints);
         void AddCacheEntry(const std::shared_ptr<AircraftFirExit>& entry);
         [[nodiscard]] auto GetCacheEntryForCallsign(const std::string& callsign) const
             -> std::shared_ptr<AircraftFirExit>;
@@ -22,6 +24,9 @@ namespace UKControllerPlugin::IntentionCode {
             -> std::shared_ptr<AircraftFirExit> override;
 
         private:
+        // The FIR exit points
+        std::shared_ptr<FirExitPointCollection> firExitPoints;
+
         // The cache
         std::map<std::string, std::shared_ptr<AircraftFirExit>> cache;
     };

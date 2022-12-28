@@ -254,7 +254,7 @@ set(test__intention
     "intention/SectorExitPointVeuleTest.cpp"
     "intention/SectorExitRepositoryTest.cpp"
     "intention/ShannonAirfieldGroupTest.cpp"
-)
+        intention/FirExitPointCollectionTest.cpp intention/CachedAircraftFirExitGeneratorTest.cpp intention/FirExitPointCollectionFactoryTest.cpp)
 source_group("test\\intention" FILES ${test__intention})
 
 set(test__list
