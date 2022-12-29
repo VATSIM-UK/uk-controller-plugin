@@ -1,5 +1,6 @@
 #pragma once
 #include "AircraftFirExitGenerator.h"
+#include "flightplan/FlightPlanEventHandlerInterface.h"
 
 namespace UKControllerPlugin::IntentionCode {
     struct AircraftFirExit;
@@ -8,15 +9,21 @@ namespace UKControllerPlugin::IntentionCode {
     /*
         Generates aircraft FIR exit data and caches the result for future use.
     */
-    class CachedAircraftFirExitGenerator : public AircraftFirExitGenerator
+    class CachedAircraftFirExitGenerator : public AircraftFirExitGenerator,
+                                           public Flightplan::FlightPlanEventHandlerInterface
     {
         public:
-        CachedAircraftFirExitGenerator(std::shared_ptr<FirExitPointCollection> firExitPoints);
+        CachedAircraftFirExitGenerator(const FirExitPointCollection& firExitPoints);
         void AddCacheEntry(const std::shared_ptr<AircraftFirExit>& entry);
+        void FlightPlanEvent(
+            Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) override;
+        void FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan) override;
+        void ControllerFlightPlanDataEvent(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
         [[nodiscard]] auto GetCacheEntryForCallsign(const std::string& callsign) const
             -> std::shared_ptr<AircraftFirExit>;
         void RemoveCacheEntryForCallsign(const std::string& callsign);
-        void ClearCache();
         /*
             Generates the aircrafts FIR exit point data, or nullptr if there are none.
         */
@@ -25,7 +32,7 @@ namespace UKControllerPlugin::IntentionCode {
 
         private:
         // The FIR exit points
-        std::shared_ptr<FirExitPointCollection> firExitPoints;
+        const FirExitPointCollection& firExitPoints;
 
         // The cache
         std::map<std::string, std::shared_ptr<AircraftFirExit>> cache;

@@ -1,8 +1,10 @@
 #include "ModuleFactories.h"
 #include "approach/ApproachModuleFactory.h"
+#include "intention/IntentionCodeModuleFactory.h"
 
 namespace UKControllerPlugin::Bootstrap {
 
+    ModuleFactories::ModuleFactories() = default;
     ModuleFactories::~ModuleFactories() = default;
 
     auto ModuleFactories::Approach() -> Approach::ApproachModuleFactory&
@@ -12,5 +14,14 @@ namespace UKControllerPlugin::Bootstrap {
         }
 
         return *approach;
+    }
+
+    auto ModuleFactories::IntentionCode() -> IntentionCode::IntentionCodeModuleFactory&
+    {
+        if (!intentionCode) {
+            intentionCode = std::make_unique<IntentionCode::IntentionCodeModuleFactory>();
+        }
+
+        return *intentionCode;
     }
 } // namespace UKControllerPlugin::Bootstrap

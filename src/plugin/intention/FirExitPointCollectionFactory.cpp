@@ -5,9 +5,9 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    auto MakeFirExitPointCollection(const nlohmann::json& exitPointData) -> std::shared_ptr<FirExitPointCollection>
+    auto MakeFirExitPointCollection(const nlohmann::json& exitPointData) -> std::unique_ptr<FirExitPointCollection>
     {
-        auto collection = std::make_shared<FirExitPointCollection>();
+        auto collection = std::make_unique<FirExitPointCollection>();
         if (!exitPointData.is_array()) {
             return collection;
         }
@@ -26,7 +26,7 @@ namespace UKControllerPlugin::IntentionCode {
                     exitPoint.at("exit_direction_start").get<int>(), exitPoint.at("exit_direction_end").get<int>())));
         }
 
-        LogInfo("Created FIR Exit Points collection with " + std::to_string(collection->CountPoints()) + " points");
+        LogInfo("Loaded " + std::to_string(collection->CountPoints()) + " FIR Exit Points");
         return collection;
     }
 

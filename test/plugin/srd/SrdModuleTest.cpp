@@ -1,11 +1,14 @@
 #include "srd/SrdModule.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "bootstrap/ModuleBootstrap.h"
+#include "dependency/DependencyLoader.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "dialog/DialogManager.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
+using UKControllerPlugin::Bootstrap::ModuleBootstrap;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -24,6 +27,8 @@ namespace UKControllerPluginTest {
             {
                 container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
                 container.dialogManager = std::make_unique<DialogManager>(NiceMock<MockDialogProvider>());
+                container.dependencyLoader = std::make_unique<testing::NiceMock<Dependency::MockDependencyLoader>>();
+                ModuleBootstrap(container);
             }
 
             ConfigurableDisplayCollection displays;

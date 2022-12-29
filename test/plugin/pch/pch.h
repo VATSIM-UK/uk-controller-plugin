@@ -58,6 +58,7 @@
 // Plugin mocks
 #include "../mock/MockAbstractTimedEvent.h"
 #include "../mock/MockActiveCallsignEventHandler.h"
+#include "../mock/MockAircraftFirExitGenerator.h"
 #include "../mock/MockAircraftTypeMapper.h"
 #include "../mock/MockAirfieldGroup.h"
 #include "../mock/MockAsrEventHandlerInterface.h"

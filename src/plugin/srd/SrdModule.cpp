@@ -1,8 +1,10 @@
 #include "SrdModule.h"
 #include "SrdSearchDialog.h"
 #include "SrdSearchHandler.h"
+#include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogManager.h"
+#include "intention/IntentionCodeModuleFactory.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -22,8 +24,10 @@ namespace UKControllerPlugin::Srd {
     void BootstrapPlugin(PersistenceContainer& container)
     {
         // Register the dialog
-        std::shared_ptr<SrdSearchDialog> dialog =
-            std::make_shared<SrdSearchDialog>(*container.api, *container.intentionCodeCache);
+        std::shared_ptr<SrdSearchDialog> dialog = std::make_shared<SrdSearchDialog>(
+            *container.plugin,
+            *container.api,
+            container.moduleFactories->IntentionCode().FirExitGenerator(*container.dependencyLoader));
         container.dialogManager->AddDialog(
             {IDD_SRD_SEARCH,
              "SRD Search",

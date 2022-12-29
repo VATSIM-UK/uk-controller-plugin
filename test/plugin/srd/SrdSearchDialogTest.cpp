@@ -12,10 +12,12 @@ namespace UKControllerPluginTest::Srd {
     class SrdSearchDialogTest : public Test
     {
         public:
-        SrdSearchDialogTest() : dialog(mockApi, codeCache)
+        SrdSearchDialogTest() : dialog(plugin, mockApi, exitGenerator)
         {
         }
 
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
+        testing::NiceMock<IntentionCode::MockAircraftFirExitGenerator> exitGenerator;
         IntentionCodeCache codeCache;
         NiceMock<MockApiInterface> mockApi;
         SrdSearchDialog dialog;

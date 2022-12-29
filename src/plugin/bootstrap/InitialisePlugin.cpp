@@ -197,6 +197,10 @@ namespace UKControllerPlugin {
             winsockInitialised = true;
         }
 
+        // Bootstrap the "new" module factories ready to go
+        Bootstrap::ModuleBootstrap(*this->container);
+
+        // Bootstrap the old modules
         Integration::BootstrapPlugin(*this->container, duplicatePlugin->Duplicate(), winsockInitialised);
         List::BootstrapPlugin(*this->container);
         Aircraft::BootstrapPlugin(*this->container);
@@ -270,7 +274,6 @@ namespace UKControllerPlugin {
         Metar::PressureMonitorBootstrap(*this->container);
 
         // Run the module bootstraps
-        Bootstrap::ModuleBootstrap(*this->container);
         this->container->bootstrapProviders->BootstrapPlugin(*this->container);
 
         // Do post-init and final setup, which involves running tasks that need to happen on load.

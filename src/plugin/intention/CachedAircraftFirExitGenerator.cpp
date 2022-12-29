@@ -9,11 +9,9 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    CachedAircraftFirExitGenerator::CachedAircraftFirExitGenerator(
-        std::shared_ptr<FirExitPointCollection> firExitPoints)
+    CachedAircraftFirExitGenerator::CachedAircraftFirExitGenerator(const FirExitPointCollection& firExitPoints)
         : firExitPoints(firExitPoints)
     {
-        assert(firExitPoints && "FIR exit point collection not set");
     }
 
     void CachedAircraftFirExitGenerator::AddCacheEntry(const std::shared_ptr<AircraftFirExit>& entry)
@@ -30,11 +28,6 @@ namespace UKControllerPlugin::IntentionCode {
     void CachedAircraftFirExitGenerator::RemoveCacheEntryForCallsign(const std::string& callsign)
     {
         cache.erase(callsign);
-    }
-
-    void CachedAircraftFirExitGenerator::ClearCache()
-    {
-        cache.clear();
     }
 
     auto CachedAircraftFirExitGenerator::Generate(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
@@ -57,7 +50,7 @@ namespace UKControllerPlugin::IntentionCode {
                 break;
             }
 
-            const auto firExitPoint = firExitPoints->PointByIdentifier(flightplanPoint->Identifier());
+            const auto firExitPoint = firExitPoints.PointByIdentifier(flightplanPoint->Identifier());
             if (!firExitPoint) {
                 continue;
             }
@@ -80,7 +73,7 @@ namespace UKControllerPlugin::IntentionCode {
 
             /*
              * If the aircraft is not exiting between the two FIRs, then we have reached the UK exit and don't need
-             * to check this any further.
+             * to check this any further.\
              */
             if (firExitPoint->FirExitDetermination().AircraftIsExiting(*flightplanPoint, flightplan)) {
                 exit.ukExitPoint = firExitPoint;
@@ -92,6 +85,23 @@ namespace UKControllerPlugin::IntentionCode {
         AddCacheEntry(cacheItem);
 
         return cacheItem;
+    }
+
+    void CachedAircraftFirExitGenerator::FlightPlanEvent(
+        Euroscope::EuroScopeCFlightPlanInterface& flightPlan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+    {
+        RemoveCacheEntryForCallsign(flightPlan.GetCallsign());
+    }
+
+    void CachedAircraftFirExitGenerator::FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan)
+    {
+        RemoveCacheEntryForCallsign(flightPlan.GetCallsign());
+    }
+
+    void CachedAircraftFirExitGenerator::ControllerFlightPlanDataEvent(
+        Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType)
+    {
+        // Nothing to do here
     }
 
 } // namespace UKControllerPlugin::IntentionCode

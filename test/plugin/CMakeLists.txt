@@ -231,7 +231,7 @@ set(test__integration
     "integration/MessageTypeTest.cpp"
     "integration/OutboundIntegrationMessageHandlerTest.cpp"
     "integration/SocketConnectionTest.cpp"
-)
+        intention/IntentionCodeBootstrapProviderTest.cpp)
 source_group("test\\integration" FILES ${test__integration})
 
 set(test__intention
@@ -254,7 +254,7 @@ set(test__intention
     "intention/SectorExitPointVeuleTest.cpp"
     "intention/SectorExitRepositoryTest.cpp"
     "intention/ShannonAirfieldGroupTest.cpp"
-        intention/FirExitPointCollectionTest.cpp intention/CachedAircraftFirExitGeneratorTest.cpp intention/FirExitPointCollectionFactoryTest.cpp)
+        intention/FirExitPointCollectionTest.cpp intention/CachedAircraftFirExitGeneratorTest.cpp intention/FirExitPointCollectionFactoryTest.cpp intention/IntentionCodeModuleFactoryTest.cpp)
 source_group("test\\intention" FILES ${test__intention})
 
 set(test__list
@@ -370,7 +370,7 @@ set(test__mock
     mock/MockBootstrapProvider.h
     mock/MockPluginSettingsProvider.h
     mock/MockPrenoteMessageEventHandlerInterface.h
-    mock/MockPrenoteUserRelevanceChecker.h)
+    mock/MockPrenoteUserRelevanceChecker.h mock/MockAircraftFirExitGenerator.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -657,7 +657,7 @@ set(ALL_FILES
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
-    $<TARGET_OBJECTS:UKControllerPluginCore>)
+    $<TARGET_OBJECTS:UKControllerPluginCore> intention/IntentionCodeBootstrapProviderTest.cpp)
 
 ################################################################################
 # Target
