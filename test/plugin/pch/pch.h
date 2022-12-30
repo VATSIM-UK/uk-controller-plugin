@@ -64,6 +64,7 @@
 #include "../mock/MockAsrEventHandlerInterface.h"
 #include "../mock/MockBootstrapProvider.h"
 #include "../mock/MockCallsignSelectionProvider.h"
+#include "../mock/MockCondition.h"
 #include "../mock/MockConfigurableDisplay.h"
 #include "../mock/MockConnection.h"
 #include "../mock/MockControllerStatusEventHandlerInterface.h"

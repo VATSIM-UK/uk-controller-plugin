@@ -430,7 +430,7 @@ set(src__integration
     "integration/SocketInterface.h"
     "integration/SocketWrapper.cpp"
     "integration/SocketWrapper.h"
-        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp integration/ExternalMessageHandlerInterface.cpp)
+        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp integration/ExternalMessageHandlerInterface.cpp intention/CruisingLevelAbove.cpp intention/CruisingLevelAbove.h)
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention
@@ -484,7 +484,7 @@ set(src__intention
     "intention/SectorExitRepositoryFactory.h"
     "intention/ShannonAirfieldGroup.cpp"
     "intention/ShannonAirfieldGroup.h"
-        intention/FirExitPointCollection.cpp intention/FirExitPointCollection.h intention/FirExitPointCollectionFactory.cpp intention/FirExitPointCollectionFactory.h intention/IntentionCodeModuleFactory.cpp intention/IntentionCodeModuleFactory.h intention/IntentionCodeBootstrapProvider.cpp intention/IntentionCodeBootstrapProvider.h)
+        intention/FirExitPointCollection.cpp intention/FirExitPointCollection.h intention/FirExitPointCollectionFactory.cpp intention/FirExitPointCollectionFactory.h intention/IntentionCodeModuleFactory.cpp intention/IntentionCodeModuleFactory.h intention/IntentionCodeBootstrapProvider.cpp intention/IntentionCodeBootstrapProvider.h intention/Condition.h intention/AllOf.cpp intention/AllOf.h intention/AnyOf.cpp intention/AnyOf.h intention/Not.cpp intention/Not.h intention/ArrivalAirfields.cpp intention/ArrivalAirfields.h intention/ArrivalAirfieldPattern.cpp intention/ArrivalAirfieldPattern.h intention/MaximumCruisingAltitude.cpp intention/MaximumCruisingAltitude.h intention/ControllerPositionStartsWith.cpp intention/ControllerPositionStartsWith.h intention/ExitingFirAtPoint.cpp intention/ExitingFirAtPoint.h intention/RoutingVia.cpp intention/RoutingVia.h)
 source_group("src\\intention" FILES ${src__intention})
 
 set(src__list
