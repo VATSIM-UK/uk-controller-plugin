@@ -254,7 +254,7 @@ set(test__intention
     "intention/SectorExitPointVeuleTest.cpp"
     "intention/SectorExitRepositoryTest.cpp"
     "intention/ShannonAirfieldGroupTest.cpp"
-        intention/FirExitPointCollectionTest.cpp intention/CachedAircraftFirExitGeneratorTest.cpp intention/FirExitPointCollectionFactoryTest.cpp intention/IntentionCodeModuleFactoryTest.cpp intention/AllOfTest.cpp mock/MockCondition.h intention/AnyOfTest.cpp intention/NotTest.cpp intention/ArrivalAirfieldsTest.cpp intention/ArrivalAirfieldPatternTest.cpp intention/MaximumCruisingAltitudeTest.cpp intention/CruisingLevelAboveTest.cpp intention/ControllerPositionStartsWithTest.cpp intention/ExitingFirAtPointTest.cpp intention/RoutingViaTest.cpp)
+        intention/FirExitPointCollectionTest.cpp intention/CachedAircraftFirExitGeneratorTest.cpp intention/FirExitPointCollectionFactoryTest.cpp intention/IntentionCodeModuleFactoryTest.cpp intention/AllOfTest.cpp mock/MockCondition.h intention/AnyOfTest.cpp intention/NotTest.cpp intention/ArrivalAirfieldsTest.cpp intention/ArrivalAirfieldPatternTest.cpp intention/MaximumCruisingAltitudeTest.cpp intention/CruisingLevelAboveTest.cpp intention/ControllerPositionStartsWithTest.cpp intention/ExitingFirAtPointTest.cpp intention/RoutingViaTest.cpp intention/SingleCodeTest.cpp intention/AirfieldIdentifierTest.cpp intention/FullAirfieldIdentifierTest.cpp)
 source_group("test\\intention" FILES ${test__intention})
 
 set(test__list

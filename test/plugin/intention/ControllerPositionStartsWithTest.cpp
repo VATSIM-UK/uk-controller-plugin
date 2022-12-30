@@ -43,7 +43,7 @@ namespace UKControllerPluginTest::IntentionCode {
     TEST_F(ControllerPositionStartsWithTest, ItFailsIfUserNotOnMatchingPosition)
     {
         ActiveCallsign callsign("LON_S_CTR", "Test", position2, true);
-        callsigns.AddCallsign(callsign);
+        callsigns.AddUserCallsign(callsign);
 
         EXPECT_FALSE(controllers.Passes(flightplan, radarTarget));
     }
@@ -51,7 +51,7 @@ namespace UKControllerPluginTest::IntentionCode {
     TEST_F(ControllerPositionStartsWithTest, ItPassesIfUserOnMatchingPosition)
     {
         ActiveCallsign callsign("LON_S_CTR", "Test", position1, true);
-        callsigns.AddCallsign(callsign);
+        callsigns.AddUserCallsign(callsign);
 
         EXPECT_TRUE(controllers.Passes(flightplan, radarTarget));
     }
