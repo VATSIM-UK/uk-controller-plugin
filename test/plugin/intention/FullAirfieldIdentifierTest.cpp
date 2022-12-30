@@ -51,7 +51,7 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(FullAirfieldIdentifierTest, ItReturnsIcao)
     {
-        EXPECT_CALL(flightplan, GetDestination).Times(2).WillOnce(testing::Return("EGGD"));
+        EXPECT_CALL(flightplan, GetDestination).Times(2).WillRepeatedly(testing::Return("EGGD"));
 
         EXPECT_EQ("EGGD", code.GenerateCode(flightplan));
     }
