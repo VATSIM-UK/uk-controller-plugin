@@ -20,4 +20,9 @@ namespace UKControllerPlugin::IntentionCode {
                activeControllers.GetUserCallsign().GetNormalisedPosition().GetCallsign().substr(0, pattern.size()) ==
                    pattern;
     }
+
+    auto ControllerPositionStartsWith::Pattern() const -> const std::string&
+    {
+        return pattern;
+    }
 } // namespace UKControllerPlugin::IntentionCode

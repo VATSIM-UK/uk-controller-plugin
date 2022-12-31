@@ -13,4 +13,9 @@ namespace UKControllerPlugin::IntentionCode {
     {
         return flightplan.GetCruiseLevel() > altitude;
     }
+
+    auto CruisingLevelAbove::Level() const -> int
+    {
+        return altitude;
+    }
 } // namespace UKControllerPlugin::IntentionCode

@@ -11,6 +11,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         ArrivalAirfieldPattern(std::string pattern);
+        [[nodiscard]] auto Pattern() const -> const std::string&;
         [[nodiscard]] auto Passes(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;

@@ -12,6 +12,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         ExitingFirAtPoint(AircraftFirExitGenerator& firExitGenerator, int firExitPointId);
+        [[nodiscard]] auto ExitPoint() const -> int;
         [[nodiscard]] auto Passes(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;

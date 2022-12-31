@@ -18,4 +18,9 @@ namespace UKControllerPlugin::IntentionCode {
 
         return false;
     }
+
+    auto AnyOf::Subconditions() const -> const std::list<std::shared_ptr<Condition>>&
+    {
+        return conditions;
+    }
 } // namespace UKControllerPlugin::IntentionCode

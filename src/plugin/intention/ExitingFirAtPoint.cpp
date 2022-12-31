@@ -23,4 +23,9 @@ namespace UKControllerPlugin::IntentionCode {
         return (firExit->ukExitPoint && firExit->ukExitPoint->Id() == firExitPointId) ||
                (firExit->internalExitPoint && firExit->internalExitPoint->Id() == firExitPointId);
     }
+
+    auto ExitingFirAtPoint::ExitPoint() const -> int
+    {
+        return firExitPointId;
+    }
 } // namespace UKControllerPlugin::IntentionCode

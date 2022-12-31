@@ -9,6 +9,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         SingleCode(std::string code);
+        [[nodiscard]] auto Code() const -> const std::string&;
         auto GenerateCode(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> std::string override;
 
         private:

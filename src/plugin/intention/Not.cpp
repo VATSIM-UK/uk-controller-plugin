@@ -12,4 +12,9 @@ namespace UKControllerPlugin::IntentionCode {
     {
         return !condition->Passes(flightplan, radarTarget);
     }
+
+    auto Not::Subcondition() const -> const Condition&
+    {
+        return *condition;
+    }
 } // namespace UKControllerPlugin::IntentionCode

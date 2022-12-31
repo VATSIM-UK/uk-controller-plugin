@@ -10,6 +10,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         AllOf(std::list<std::shared_ptr<Condition>> conditions);
+        [[nodiscard]] auto Subconditions() const -> const std::list<std::shared_ptr<Condition>>&;
         [[nodiscard]] auto Passes(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;

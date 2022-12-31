@@ -10,6 +10,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         RoutingVia(std::string via);
+        [[nodiscard]] auto Via() const -> const std::string&;
         [[nodiscard]] auto Passes(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;

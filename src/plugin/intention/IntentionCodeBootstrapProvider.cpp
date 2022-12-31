@@ -9,6 +9,9 @@ namespace UKControllerPlugin::IntentionCode {
 
     void IntentionCodeBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
     {
+        static_cast<void>(container.moduleFactories->IntentionCode().IntentionCodes(*container.dependencyLoader,
+                                                                                    *container.activeCallsigns));
+        
         container.flightplanHandler->RegisterHandler(
             container.moduleFactories->IntentionCode().CachedFirExitGenerator(*container.dependencyLoader));
     }

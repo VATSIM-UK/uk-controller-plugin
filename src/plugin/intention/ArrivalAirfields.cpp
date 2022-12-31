@@ -13,4 +13,9 @@ namespace UKControllerPlugin::IntentionCode {
     {
         return airfields.contains(flightplan.GetDestination());
     }
+
+    auto ArrivalAirfields::Airfields() const -> const std::set<std::string>&
+    {
+        return airfields;
+    }
 } // namespace UKControllerPlugin::IntentionCode

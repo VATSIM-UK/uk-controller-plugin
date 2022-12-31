@@ -14,4 +14,9 @@ namespace UKControllerPlugin::IntentionCode {
     {
         return flightplan.GetParsedFlightplan()->HasPointByIdentifier(via);
     }
+
+    auto RoutingVia::Via() const -> const std::string&
+    {
+        return via;
+    }
 } // namespace UKControllerPlugin::IntentionCode
