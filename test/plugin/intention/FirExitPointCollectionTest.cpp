@@ -62,4 +62,20 @@ namespace UKControllerPluginTest::IntentionCode {
         collection.Add(point3);
         EXPECT_EQ(point1, collection.PointByIdentifier("FOO"));
     }
+
+    TEST_F(FirExitPointCollectionTest, ItReturnsNullptrIfPointNotFoundById)
+    {
+        collection.Add(point1);
+        collection.Add(point2);
+        collection.Add(point3);
+        EXPECT_EQ(nullptr, collection.PointById(55));
+    }
+
+    TEST_F(FirExitPointCollectionTest, ItReturnsPointIfFoundById)
+    {
+        collection.Add(point1);
+        collection.Add(point2);
+        collection.Add(point3);
+        EXPECT_EQ(point1, collection.PointById(1));
+    }
 } // namespace UKControllerPluginTest::IntentionCode

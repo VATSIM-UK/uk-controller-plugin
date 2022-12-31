@@ -12,6 +12,7 @@ namespace UKControllerPlugin::IntentionCode {
         public:
         void Add(const std::shared_ptr<FirExitPoint>& point);
         [[nodiscard]] auto CountPoints() const -> size_t;
+        [[nodiscard]] auto PointById(int id) const -> std::shared_ptr<FirExitPoint>;
         [[nodiscard]] auto PointByIdentifier(const std::string& identifier) const -> std::shared_ptr<FirExitPoint>;
 
         private:

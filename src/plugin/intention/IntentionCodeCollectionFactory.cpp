@@ -10,6 +10,7 @@
 #include "FullAirfieldIdentifier.h"
 #include "IntentionCodeCollection.h"
 #include "IntentionCodeCollectionFactory.h"
+#include "IntentionCodeMetadata.h"
 #include "IntentionCodeModel.h"
 #include "MaximumCruisingAltitude.h"
 #include "Not.h"
@@ -114,7 +115,8 @@ namespace UKControllerPlugin::IntentionCode {
             collection->Add(std::make_shared<IntentionCodeModel>(
                 -1,
                 std::make_unique<FullAirfieldIdentifier>(),
-                std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({}))));
+                std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
+                std::make_unique<IntentionCodeMetadata>(new IntentionCodeMetadata)));
             return std::move(collection);
         }
 
@@ -124,19 +126,22 @@ namespace UKControllerPlugin::IntentionCode {
                 continue;
             }
 
+            auto metadata = std::unique_ptr<IntentionCodeMetadata> (new IntentionCodeMetadata);
             collection->Add(std::make_shared<IntentionCodeModel>(
                 code.at("id").get<int>(),
                 MakeCode(code.at("code")),
-                std::make_unique<AllOf>(MakeConditions(code.at("conditions"), generator, activeControllers))
+                std::make_unique<AllOf>(MakeConditions(code.at("conditions"), generator, activeControllers, *metadata))
 
-                    ));
+                    ,
+                std::move(metadata)));
         }
 
         // Add full airfield icao fallback
         collection->Add(std::make_shared<IntentionCodeModel>(
             -1,
             std::make_unique<FullAirfieldIdentifier>(),
-            std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({}))));
+            std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
+            std::make_unique<IntentionCodeMetadata>(new IntentionCodeMetadata)));
 
         LogInfo("Loaded " + std::to_string(collection->Count()) + " intention codes");
         return std::move(collection);
@@ -154,11 +159,13 @@ namespace UKControllerPlugin::IntentionCode {
     auto MakeConditions(
         const nlohmann::json& conditions,
         AircraftFirExitGenerator& generator,
-        const Controller::ActiveCallsignCollection& activeControllers) -> std::list<std::shared_ptr<Condition>>
+        const Controller::ActiveCallsignCollection& activeControllers,
+            IntentionCodeMetadata& metadata
+        ) -> std::list<std::shared_ptr<Condition>>
     {
         auto conditionList = std::list<std::shared_ptr<Condition>>();
         for (const auto& condition : conditions) {
-            conditionList.push_back(MakeCondition(condition, generator, activeControllers));
+            conditionList.push_back(MakeCondition(condition, generator, activeControllers, metadata));
         }
 
         return conditionList;
@@ -167,7 +174,8 @@ namespace UKControllerPlugin::IntentionCode {
     auto MakeCondition(
         const nlohmann::json& condition,
         AircraftFirExitGenerator& generator,
-        const Controller::ActiveCallsignCollection& activeControllers) -> std::shared_ptr<Condition>
+        const Controller::ActiveCallsignCollection& activeControllers,
+        IntentionCodeMetadata& metadata) -> std::shared_ptr<Condition>
     {
         const auto conditionType = condition.at("type").get<std::string>();
         if (conditionType == "arrival_airfields") {
@@ -179,6 +187,7 @@ namespace UKControllerPlugin::IntentionCode {
         }
 
         if (conditionType == "exit_point") {
+            metadata.exitPoint = condition.at("exit_point");
             return std::make_shared<ExitingFirAtPoint>(generator, condition.at("exit_point"));
         }
 
@@ -199,15 +208,18 @@ namespace UKControllerPlugin::IntentionCode {
         }
 
         if (conditionType == "any_of") {
-            return std::make_shared<AnyOf>(MakeConditions(condition.at("conditions"), generator, activeControllers));
+            return std::make_shared<AnyOf>(MakeConditions(condition.at("conditions"), generator, activeControllers,
+                                                          metadata));
         }
 
         if (conditionType == "all_of") {
-            return std::make_shared<AllOf>(MakeConditions(condition.at("conditions"), generator, activeControllers));
+            return std::make_shared<AllOf>(MakeConditions(condition.at("conditions"), generator, activeControllers,
+                                                          metadata));
         }
 
         // Not is a bit special - its implicitly an inversion of AllOf
         return std::make_shared<Not>(
-            std::make_shared<AllOf>(MakeConditions(condition.at("conditions"), generator, activeControllers)));
+            std::make_shared<AllOf>(MakeConditions(condition.at("conditions"), generator, activeControllers,
+                                                   metadata)));
     }
 } // namespace UKControllerPlugin::IntentionCode

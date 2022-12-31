@@ -10,6 +10,7 @@
 #include "intention/FullAirfieldIdentifier.h"
 #include "intention/IntentionCodeCollection.h"
 #include "intention/IntentionCodeCollectionFactory.h"
+#include "intention/IntentionCodeMetadata.h"
 #include "intention/IntentionCodeModel.h"
 #include "intention/MaximumCruisingAltitude.h"
 #include "intention/Not.h"
@@ -410,6 +411,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItAddsTheDefaultFallbackCodeForCompleteDependency)
@@ -439,6 +442,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesAirfieldIdentifierCode)
@@ -459,6 +464,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesSingleCodeCode)
@@ -480,6 +487,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithArrivalAirfieldsCondition)
@@ -506,6 +515,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithArrivalAirfieldPatternCondition)
@@ -530,6 +541,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithAFirExitPointCondition)
@@ -554,6 +567,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(2, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithAMaximumCrusingLevelCondition)
@@ -578,6 +593,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithACruisingLevelAboveCondition)
@@ -602,6 +619,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithARoutingViaCondition)
@@ -626,6 +645,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithAControllerPositionStartsWithCondition)
@@ -651,6 +672,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithAnAnyOfCondition)
@@ -680,6 +703,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithAnAllOfCondition)
@@ -709,6 +734,8 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 
     TEST_F(IntentionCodeCollectionFactoryTest, ItCreatesACodeWithANotCondition)
@@ -739,5 +766,7 @@ namespace UKControllerPluginTest::IntentionCode {
         } catch (std::bad_cast&) {
             FAIL();
         }
+
+        EXPECT_EQ(-1, intention->Metadata().exitPoint);
     }
 } // namespace UKControllerPluginTest::IntentionCode

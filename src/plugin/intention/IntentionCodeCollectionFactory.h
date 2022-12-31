@@ -9,6 +9,7 @@ namespace UKControllerPlugin::IntentionCode {
     class CodeGenerator;
     class Condition;
     class IntentionCodeCollection;
+    class IntentionCodeMetadata;
 
     [[nodiscard]] auto MakeIntentionCodeCollection(
         const nlohmann::json& codes,
@@ -18,11 +19,13 @@ namespace UKControllerPlugin::IntentionCode {
     [[nodiscard]] auto MakeCondition(
         const nlohmann::json& conditions,
         AircraftFirExitGenerator& generator,
-        const Controller::ActiveCallsignCollection& activeControllers) -> std::shared_ptr<Condition>;
+        const Controller::ActiveCallsignCollection& activeControllers,
+        IntentionCodeMetadata& metadata) -> std::shared_ptr<Condition>;
     [[nodiscard]] auto MakeConditions(
         const nlohmann::json& condition,
         AircraftFirExitGenerator& generator,
-        const Controller::ActiveCallsignCollection& activeControllers) -> std::list<std::shared_ptr<Condition>>;
+        const Controller::ActiveCallsignCollection& activeControllers,
+        IntentionCodeMetadata& metadata) -> std::list<std::shared_ptr<Condition>>;
     [[nodiscard]] auto ConditionsValid(const nlohmann::json& conditions) -> bool;
     [[nodiscard]] auto ConditionValid(const nlohmann::json& condition) -> bool;
     [[nodiscard]] auto CodeValid(const nlohmann::json& code) -> bool;

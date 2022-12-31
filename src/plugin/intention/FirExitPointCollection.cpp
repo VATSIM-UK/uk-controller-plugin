@@ -22,4 +22,16 @@ namespace UKControllerPlugin::IntentionCode {
     {
         return points.contains(identifier) ? points.at(identifier) : nullptr;
     }
+
+    auto FirExitPointCollection::PointById(int id) const -> std::shared_ptr<FirExitPoint>
+    {
+        auto point = std::find_if(
+            points.cbegin(),
+            points.cend(),
+            [&id](const std::pair<std::string, std::shared_ptr<FirExitPoint>>& exitPoint) -> bool {
+                return exitPoint.second->Id() == id;
+            });
+
+        return point != points.cend() ? point->second : nullptr;
+    }
 } // namespace UKControllerPlugin::IntentionCode
