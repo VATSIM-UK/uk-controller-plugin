@@ -102,6 +102,15 @@ namespace UKControllerPlugin::IntentionCode {
                CodeValid(code.at("code")) && code.contains("conditions") && ConditionsValid(code.at("conditions"));
     }
 
+    [[nodiscard]] auto MakeCode(const nlohmann::json& code) -> std::unique_ptr<CodeGenerator>
+    {
+        if (code.at("type").get<std::string>() == "airfield_identifier") {
+            return std::make_unique<AirfieldIdentifier>();
+        }
+
+        return std::make_unique<SingleCode>(code.at("code").get<std::string>());
+    }
+
     auto MakeIntentionCodeCollection(
         const nlohmann::json& codes,
         std::shared_ptr<AircraftFirExitGenerator> generator,
@@ -146,15 +155,6 @@ namespace UKControllerPlugin::IntentionCode {
 
         LogInfo("Loaded " + std::to_string(collection->Count()) + " intention codes");
         return collection;
-    }
-
-    auto MakeCode(const nlohmann::json& code) -> std::unique_ptr<CodeGenerator>
-    {
-        if (code.at("type").get<std::string>() == "airfield_identifier") {
-            return std::make_unique<AirfieldIdentifier>();
-        }
-
-        return std::make_unique<SingleCode>(code.at("code").get<std::string>());
     }
 
     auto MakeConditions(

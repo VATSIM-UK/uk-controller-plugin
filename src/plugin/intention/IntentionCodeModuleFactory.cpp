@@ -1,6 +1,5 @@
 #include "CachedAircraftFirExitGenerator.h"
 #include "CachedAircraftIntentionCodeGenerator.h"
-#include "FirExitPointCollection.h"
 #include "FirExitPointCollectionFactory.h"
 #include "IntentionCodeCollection.h"
 #include "IntentionCodeCollectionFactory.h"
