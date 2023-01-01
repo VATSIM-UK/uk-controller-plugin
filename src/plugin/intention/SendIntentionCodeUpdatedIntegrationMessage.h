@@ -17,8 +17,7 @@ namespace UKControllerPlugin::IntentionCode {
         public:
         SendIntentionCodeUpdatedIntegrationMessage(
             std::shared_ptr<const FirExitPointCollection> exitPoints,
-            std::shared_ptr<const Integration::OutboundIntegrationEventHandler>
-                                                               outboundEvents);
+            std::shared_ptr<const Integration::OutboundIntegrationEventHandler> outboundEvents);
         void IntentionCodeUpdated(const AircraftIntentionCode& intentionCode) override;
 
         private:

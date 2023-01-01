@@ -14,8 +14,8 @@ namespace UKControllerPlugin::IntentionCode {
     [[nodiscard]] auto MakeIntentionCodeCollection(
         const nlohmann::json& codes,
         std::shared_ptr<AircraftFirExitGenerator> generator,
-        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers) ->
-        std::shared_ptr<IntentionCodeCollection>;
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+        -> std::shared_ptr<IntentionCodeCollection>;
     [[nodiscard]] auto MakeCode(const nlohmann::json& code) -> std::unique_ptr<CodeGenerator>;
     [[nodiscard]] auto MakeCondition(
         const nlohmann::json& conditions,
