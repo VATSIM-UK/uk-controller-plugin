@@ -22,6 +22,6 @@ namespace UKControllerPlugin::IntentionCode {
                                    : nullptr;
 
         outboundEvents.SendEvent(std::make_shared<IntentionCodeUpdatedMessage>(
-            intentionCode.callsign, exitPoint ? exitPoint->Identifier() : "--", intentionCode.intentionCode));
+            intentionCode.callsign, exitPoint ? exitPoint->Identifier() : "", intentionCode.intentionCode));
     }
 } // namespace UKControllerPlugin::IntentionCode

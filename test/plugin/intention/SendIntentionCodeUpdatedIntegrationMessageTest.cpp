@@ -43,7 +43,7 @@ namespace UKControllerPluginTest::IntentionCode {
         aircraftIntentionCode.intentionCode = "A1";
 
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
-            std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "--", "A1");
+            std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "A1");
 
         EXPECT_CALL(this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
@@ -64,7 +64,7 @@ namespace UKControllerPluginTest::IntentionCode {
         aircraftIntentionCode.matchedIntentionCode = model;
 
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
-            std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "--", "A1");
+            std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "A1");
 
         EXPECT_CALL(this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
@@ -86,7 +86,7 @@ namespace UKControllerPluginTest::IntentionCode {
         aircraftIntentionCode.matchedIntentionCode = model;
 
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
-            std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "--", "A1");
+            std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "A1");
 
         EXPECT_CALL(this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
