@@ -3,8 +3,6 @@
 namespace UKControllerPlugin {
     namespace Releases {
 
-        const EnrouteReleaseType releaseTypeInvalid = {};
-
         void from_json(const nlohmann::json& json, std::set<EnrouteReleaseType, CompareEnrouteReleaseTypes>& releases)
         {
             if (!DependencyValid(json)) {
