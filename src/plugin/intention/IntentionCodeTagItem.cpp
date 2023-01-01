@@ -13,7 +13,7 @@ namespace UKControllerPlugin::IntentionCode {
 
     auto IntentionCodeTagItem::GetTagItemDescription(int tagItemId) const -> std::string
     {
-        return "UKCP Intention Code";
+        return "Intention Code";
     }
 
     void IntentionCodeTagItem::SetTagItemData(Tag::TagData& tagData)

@@ -54,7 +54,7 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(IntentionCodeTagItemTest, GetTagItemDescriptionReturnsCorrectDescription)
     {
-        EXPECT_EQ("UKCP Intention Code", tagItem.GetTagItemDescription(0));
+        EXPECT_EQ("Intention Code", tagItem.GetTagItemDescription(0));
     }
 
     TEST_F(IntentionCodeTagItemTest, GetTagItemDataSetsTagItem)
