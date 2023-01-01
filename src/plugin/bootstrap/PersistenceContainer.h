@@ -1,5 +1,4 @@
 #pragma once
-#include "integration/IntegrationPersistenceContainer.h"
 
 namespace UKControllerPlugin {
     class UKPlugin;
@@ -72,6 +71,7 @@ namespace UKControllerPlugin {
     } // namespace Hold
     namespace Integration {
         class ExternalMessageEventHandler;
+        struct IntegrationPersistenceContainer;
     } // namespace Integration
     namespace InitialAltitude {
         class InitialAltitudeEventHandler;
@@ -184,7 +184,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
         std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> apiFactory;
         std::shared_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
-        std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
+        std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
         std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
         std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
         std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> pluginUserSettingHandler;

@@ -13,7 +13,7 @@ namespace UKControllerPlugin::IntentionCode {
                                            public Flightplan::FlightPlanEventHandlerInterface
     {
         public:
-        CachedAircraftFirExitGenerator(const FirExitPointCollection& firExitPoints);
+        CachedAircraftFirExitGenerator(std::shared_ptr<const FirExitPointCollection> firExitPoints);
         void AddCacheEntry(const std::shared_ptr<AircraftFirExit>& entry);
         void FlightPlanEvent(
             Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
@@ -32,7 +32,7 @@ namespace UKControllerPlugin::IntentionCode {
 
         private:
         // The FIR exit points
-        const FirExitPointCollection& firExitPoints;
+        std::shared_ptr<const FirExitPointCollection> firExitPoints;
 
         // The cache
         std::map<std::string, std::shared_ptr<AircraftFirExit>> cache;

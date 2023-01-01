@@ -1,4 +1,5 @@
 #include "bootstrap/ModuleFactories.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "integration/IntegrationPersistenceContainer.h"
 #include "integration/IntegrationServer.h"
@@ -6,6 +7,7 @@
 #include "intention/IntentionCodeEventHandlerCollection.h"
 #include "intention/IntentionCodeModuleFactory.h"
 
+using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::IntentionCode::IntentionCodeBootstrapProvider;
 
@@ -22,6 +24,7 @@ namespace UKControllerPluginTest::IntentionCode {
                     new UKControllerPlugin::Integration::IntegrationPersistenceContainer(nullptr, nullptr, nullptr));
             container.integrationModuleContainer->outboundMessageHandler =
                 std::make_unique<testing::NiceMock<Integration::MockOutboundIntegrationEventHandler>>();
+            container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
             ON_CALL(
                 dynamic_cast<testing::NiceMock<Dependency::MockDependencyLoader>&>(*container.dependencyLoader),
                 LoadDependency("DEPENDENCY_FIR_EXIT_POINTS", nlohmann::json::array()))
@@ -40,6 +43,6 @@ namespace UKControllerPluginTest::IntentionCode {
     TEST_F(IntentionCodeModuleBootstrapProviderTest, TestItRegistersIntegrationCodeUpdatedMessageForEvents)
     {
         this->RunBootstrapPlugin(provider);
-        EXPECT_EQ(1, container.moduleFactories->IntentionCode().IntentionCodeEventHandlers().CountHandlers());
+        EXPECT_EQ(1, container.moduleFactories->IntentionCode().IntentionCodeEventHandlers()->CountHandlers());
     }
 } // namespace UKControllerPluginTest::IntentionCode

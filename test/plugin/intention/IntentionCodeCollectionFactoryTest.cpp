@@ -44,11 +44,13 @@ namespace UKControllerPluginTest::IntentionCode {
     {
         public:
         IntentionCodeCollectionFactoryTest()
+            : callsigns(std::make_shared<ActiveCallsignCollection>()),
+              generator(std::make_shared<testing::NiceMock<MockAircraftFirExitGenerator>>())
         {
         }
 
-        ActiveCallsignCollection callsigns;
-        testing::NiceMock<MockAircraftFirExitGenerator> generator;
+        std::shared_ptr<ActiveCallsignCollection> callsigns;
+        std::shared_ptr<testing::NiceMock<MockAircraftFirExitGenerator>> generator;
     };
 
     TEST_F(IntentionCodeCollectionFactoryTest, ConditionsAreValid)

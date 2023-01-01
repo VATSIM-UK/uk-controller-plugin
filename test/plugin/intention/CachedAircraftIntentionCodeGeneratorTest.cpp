@@ -63,13 +63,13 @@ namespace UKControllerPluginTest::IntentionCode {
                   std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
               position(1, "LON_S_CTR", 129.420, std::vector<std::string>{}, true, false),
               nonUserPosition("LON_S_CTR", "Not User", position, false),
-              userPosition("LON_S_CTR", "User", position, true),
+              userPosition("LON_S_CTR", "User", position, true), codes(std::make_shared<IntentionCodeCollection>()),
               mockEventHandler(std::make_shared<CachedAircraftIntentionCodeGeneratorTestEventHandlerMock>()),
-              generator(codes, eventHandlers)
+              eventHandlers(std::make_shared<IntentionCodeEventHandlerCollection>()), generator(codes, eventHandlers)
         {
             ON_CALL(flightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
 
-            eventHandlers.AddHandler(mockEventHandler);
+            eventHandlers->AddHandler(mockEventHandler);
         }
 
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> flightplan;
@@ -80,9 +80,9 @@ namespace UKControllerPluginTest::IntentionCode {
         ControllerPosition position;
         ActiveCallsign nonUserPosition;
         ActiveCallsign userPosition;
-        IntentionCodeCollection codes;
+        std::shared_ptr<IntentionCodeCollection> codes;
         std::shared_ptr<CachedAircraftIntentionCodeGeneratorTestEventHandlerMock> mockEventHandler;
-        IntentionCodeEventHandlerCollection eventHandlers;
+        std::shared_ptr<IntentionCodeEventHandlerCollection> eventHandlers;
         CachedAircraftIntentionCodeGenerator generator;
     };
 
@@ -108,9 +108,9 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(CachedAircraftIntentionCodeGeneratorTest, ItReturnsFirstMatchedCode)
     {
-        codes.Add(code1);
-        codes.Add(code2);
-        codes.Add(code3);
+        codes->Add(code1);
+        codes->Add(code2);
+        codes->Add(code3);
 
         const auto generated = generator.Generate(flightplan, radarTarget);
         EXPECT_NE(nullptr, generated);
@@ -121,9 +121,9 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(CachedAircraftIntentionCodeGeneratorTest, ItCachesMatchedCode)
     {
-        codes.Add(code1);
-        codes.Add(code2);
-        codes.Add(code3);
+        codes->Add(code1);
+        codes->Add(code2);
+        codes->Add(code3);
 
         const auto generated = generator.Generate(flightplan, radarTarget);
         const auto generated1 = generator.Generate(flightplan, radarTarget);
@@ -135,9 +135,9 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(CachedAircraftIntentionCodeGeneratorTest, ItTriggersUpdatedEventWhenCodeGenerated)
     {
-        codes.Add(code1);
-        codes.Add(code2);
-        codes.Add(code3);
+        codes->Add(code1);
+        codes->Add(code2);
+        codes->Add(code3);
 
         const auto generated = generator.Generate(flightplan, radarTarget);
         EXPECT_TRUE(mockEventHandler->updatedCalled);

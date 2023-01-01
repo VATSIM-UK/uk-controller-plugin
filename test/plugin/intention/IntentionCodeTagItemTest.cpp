@@ -34,9 +34,11 @@ namespace UKControllerPluginTest::IntentionCode {
     {
         public:
         IntentionCodeTagItemTest()
-            : generator(std::shared_ptr<AircraftIntentionCode>(new AircraftIntentionCode)), tagItem(generator)
+            : generator(std::make_shared<IntentionCodeTagItemTestMockGenerator>(
+                  std::shared_ptr<AircraftIntentionCode>(new AircraftIntentionCode))),
+              tagItem(generator)
         {
-            generator.returnCode->intentionCode = "FOO";
+            generator->returnCode->intentionCode = "FOO";
         }
 
         const double FONT_SIZE = 24.1;
@@ -46,7 +48,7 @@ namespace UKControllerPluginTest::IntentionCode {
         char itemString[16] = "Foooooo"; // NOLINT
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> flightplan;
         testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> radarTarget;
-        IntentionCodeTagItemTestMockGenerator generator;
+        std::shared_ptr<IntentionCodeTagItemTestMockGenerator> generator;
         IntentionCodeTagItem tagItem;
     };
 

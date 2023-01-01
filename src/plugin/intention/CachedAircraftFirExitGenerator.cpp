@@ -9,9 +9,11 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    CachedAircraftFirExitGenerator::CachedAircraftFirExitGenerator(const FirExitPointCollection& firExitPoints)
+    CachedAircraftFirExitGenerator::CachedAircraftFirExitGenerator(
+        std::shared_ptr<const FirExitPointCollection> firExitPoints)
         : firExitPoints(firExitPoints)
     {
+        assert(firExitPoints && "FIR exit points not set in CachedAircraftFirExitGenerator");
     }
 
     void CachedAircraftFirExitGenerator::AddCacheEntry(const std::shared_ptr<AircraftFirExit>& entry)
@@ -50,7 +52,7 @@ namespace UKControllerPlugin::IntentionCode {
                 break;
             }
 
-            const auto firExitPoint = firExitPoints.PointByIdentifier(flightplanPoint->Identifier());
+            const auto firExitPoint = firExitPoints->PointByIdentifier(flightplanPoint->Identifier());
             if (!firExitPoint) {
                 continue;
             }

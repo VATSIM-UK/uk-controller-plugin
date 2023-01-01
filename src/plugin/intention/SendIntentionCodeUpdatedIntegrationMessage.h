@@ -16,15 +16,17 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         SendIntentionCodeUpdatedIntegrationMessage(
-            const FirExitPointCollection& exitPoints, Integration::OutboundIntegrationEventHandler& outboundEvents);
+            std::shared_ptr<const FirExitPointCollection> exitPoints,
+            std::shared_ptr<const Integration::OutboundIntegrationEventHandler>
+                                                               outboundEvents);
         void IntentionCodeUpdated(const AircraftIntentionCode& intentionCode) override;
 
         private:
         // FIR exit points
-        const FirExitPointCollection& exitPoints;
+        std::shared_ptr<const FirExitPointCollection> exitPoints;
 
         // Sends integration messages
-        Integration::OutboundIntegrationEventHandler& outboundEvents;
+        std::shared_ptr<const Integration::OutboundIntegrationEventHandler> outboundEvents;
     };
 
 } // namespace UKControllerPlugin::IntentionCode

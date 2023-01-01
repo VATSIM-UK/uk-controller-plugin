@@ -16,6 +16,7 @@ namespace UKControllerPluginTest::IntentionCode {
               point1(std::make_shared<FirExitPoint>(1, "KONAN", false, exitDetermination)),
               point2(std::make_shared<FirExitPoint>(2, "KOK", false, exitDetermination)),
               point3(std::make_shared<FirExitPoint>(3, "ETRAT", false, exitDetermination)),
+              firExitGenerator(std::make_shared<testing::NiceMock<MockAircraftFirExitGenerator>>()),
               exitingFirAtPoint(firExitGenerator, 1)
         {
         }
@@ -24,7 +25,7 @@ namespace UKControllerPluginTest::IntentionCode {
         std::shared_ptr<FirExitPoint> point1;
         std::shared_ptr<FirExitPoint> point2;
         std::shared_ptr<FirExitPoint> point3;
-        testing::NiceMock<MockAircraftFirExitGenerator> firExitGenerator;
+        std::shared_ptr<testing::NiceMock<MockAircraftFirExitGenerator>> firExitGenerator;
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> flightplan;
         testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> radarTarget;
         ExitingFirAtPoint exitingFirAtPoint;
@@ -32,7 +33,7 @@ namespace UKControllerPluginTest::IntentionCode {
 
     TEST_F(ExitingFirAtPointTest, ItFailsIfNoFirExitAtAll)
     {
-        EXPECT_CALL(firExitGenerator, Generate(testing::Ref(flightplan))).Times(1).WillOnce(testing::Return(nullptr));
+        EXPECT_CALL(*firExitGenerator, Generate(testing::Ref(flightplan))).Times(1).WillOnce(testing::Return(nullptr));
 
         EXPECT_FALSE(exitingFirAtPoint.Passes(flightplan, radarTarget));
     }
@@ -41,7 +42,7 @@ namespace UKControllerPluginTest::IntentionCode {
     {
         AircraftFirExit exit{"BAW123", nullptr, nullptr};
         const auto exitPointer = std::make_shared<AircraftFirExit>(exit);
-        EXPECT_CALL(firExitGenerator, Generate(testing::Ref(flightplan)))
+        EXPECT_CALL(*firExitGenerator, Generate(testing::Ref(flightplan)))
             .Times(1)
             .WillOnce(testing::Return(exitPointer));
 
@@ -52,7 +53,7 @@ namespace UKControllerPluginTest::IntentionCode {
     {
         AircraftFirExit exit{"BAW123", point2, point3};
         const auto exitPointer = std::make_shared<AircraftFirExit>(exit);
-        EXPECT_CALL(firExitGenerator, Generate(testing::Ref(flightplan)))
+        EXPECT_CALL(*firExitGenerator, Generate(testing::Ref(flightplan)))
             .Times(1)
             .WillOnce(testing::Return(exitPointer));
 
@@ -63,7 +64,7 @@ namespace UKControllerPluginTest::IntentionCode {
     {
         AircraftFirExit exit{"BAW123", point1, point3};
         const auto exitPointer = std::make_shared<AircraftFirExit>(exit);
-        EXPECT_CALL(firExitGenerator, Generate(testing::Ref(flightplan)))
+        EXPECT_CALL(*firExitGenerator, Generate(testing::Ref(flightplan)))
             .Times(1)
             .WillOnce(testing::Return(exitPointer));
 
@@ -74,7 +75,7 @@ namespace UKControllerPluginTest::IntentionCode {
     {
         AircraftFirExit exit{"BAW123", point2, point1};
         const auto exitPointer = std::make_shared<AircraftFirExit>(exit);
-        EXPECT_CALL(firExitGenerator, Generate(testing::Ref(flightplan)))
+        EXPECT_CALL(*firExitGenerator, Generate(testing::Ref(flightplan)))
             .Times(1)
             .WillOnce(testing::Return(exitPointer));
 

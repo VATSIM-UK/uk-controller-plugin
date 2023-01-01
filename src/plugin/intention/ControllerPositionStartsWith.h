@@ -14,7 +14,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         ControllerPositionStartsWith(
-            const UKControllerPlugin::Controller::ActiveCallsignCollection& activeControllers, std::string pattern);
+            std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers, std::string pattern);
         [[nodiscard]] auto Pattern() const -> const std::string&;
         [[nodiscard]] auto Passes(
             const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
@@ -22,7 +22,7 @@ namespace UKControllerPlugin::IntentionCode {
 
         private:
         // Active controllers
-        const UKControllerPlugin::Controller::ActiveCallsignCollection& activeControllers;
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers;
 
         // The airfield pattern to match
         std::string pattern;

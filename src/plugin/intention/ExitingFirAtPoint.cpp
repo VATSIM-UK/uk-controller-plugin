@@ -6,16 +6,17 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    ExitingFirAtPoint::ExitingFirAtPoint(AircraftFirExitGenerator& firExitGenerator, int firExitPointId)
+    ExitingFirAtPoint::ExitingFirAtPoint(std::shared_ptr<AircraftFirExitGenerator> firExitGenerator, int firExitPointId)
         : firExitGenerator(firExitGenerator), firExitPointId(firExitPointId)
     {
+        assert(firExitGenerator && "generator not set in ExitingFirAtPoint");
     }
 
     auto ExitingFirAtPoint::Passes(
         const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
         const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
-        const auto firExit = firExitGenerator.Generate(flightplan);
+        const auto firExit = firExitGenerator->Generate(flightplan);
         if (!firExit) {
             return false;
         }

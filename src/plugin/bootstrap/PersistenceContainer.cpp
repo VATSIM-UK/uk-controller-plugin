@@ -39,6 +39,7 @@
 #include "hold/PublishedHoldCollection.h"
 #include "initialaltitude/InitialAltitudeEventHandler.h"
 #include "integration/ExternalMessageEventHandler.h"
+#include "integration/IntegrationPersistenceContainer.h"
 #include "list/PopupListFactory.h"
 #include "login/Login.h"
 #include "message/UserMessager.h"

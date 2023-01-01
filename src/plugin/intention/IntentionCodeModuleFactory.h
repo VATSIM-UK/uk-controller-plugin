@@ -28,37 +28,40 @@ namespace UKControllerPlugin::IntentionCode {
         IntentionCodeModuleFactory();
         ~IntentionCodeModuleFactory();
         [[nodiscard]] auto FirExitGenerator(Dependency::DependencyLoaderInterface& dependencyLoader)
-            -> AircraftFirExitGenerator&;
+            -> std::shared_ptr<AircraftFirExitGenerator>;
         [[nodiscard]] auto CachedFirExitGenerator(Dependency::DependencyLoaderInterface& dependencyLoader)
             -> std::shared_ptr<CachedAircraftFirExitGenerator>;
         [[nodiscard]] auto ExitPointCollection(Dependency::DependencyLoaderInterface& dependencyLoader)
-            -> const FirExitPointCollection&;
+            -> std::shared_ptr<const FirExitPointCollection>;
         [[nodiscard]] auto IntentionCodes(
             Dependency::DependencyLoaderInterface& dependencyLoader,
-            const Controller::ActiveCallsignCollection& activeControllers) -> const IntentionCodeCollection&;
-        [[nodiscard]] auto IntentionCodeEventHandlers() -> IntentionCodeEventHandlerCollection&;
+            std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+            -> std::shared_ptr<const IntentionCodeCollection>;
+        [[nodiscard]] auto IntentionCodeEventHandlers() -> std::shared_ptr<IntentionCodeEventHandlerCollection>;
         [[nodiscard]] auto IntentionCodeGenerator(
             Dependency::DependencyLoaderInterface& dependencyLoader,
-            const Controller::ActiveCallsignCollection& activeControllers) -> AircraftIntentionCodeGenerator&;
+            std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+            -> std::shared_ptr<AircraftIntentionCodeGenerator>;
         [[nodiscard]] auto CachedIntentionCodeGenerator(
             Dependency::DependencyLoaderInterface& dependencyLoader,
-            const Controller::ActiveCallsignCollection& activeControllers) -> CachedAircraftIntentionCodeGenerator&;
+            std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+            -> std::shared_ptr<CachedAircraftIntentionCodeGenerator>;
 
         private:
         // Generates FIR exit points for an aircraft, whilst using a cache
         std::shared_ptr<CachedAircraftFirExitGenerator> firExitGenerator;
 
         // Stores the FIR exit points
-        std::unique_ptr<FirExitPointCollection> exitPoints;
+        std::shared_ptr<FirExitPointCollection> exitPoints;
 
         // Stores the intention codes
-        std::unique_ptr<IntentionCodeCollection> intentionCodes;
+        std::shared_ptr<IntentionCodeCollection> intentionCodes;
 
         // Stores handlers for intention codes
-        std::unique_ptr<IntentionCodeEventHandlerCollection> intentionCodeEventHandlers;
+        std::shared_ptr<IntentionCodeEventHandlerCollection> intentionCodeEventHandlers;
 
         // Generates intention codes for aircraft
-        std::unique_ptr<CachedAircraftIntentionCodeGenerator> intentionCodeGenerator;
+        std::shared_ptr<CachedAircraftIntentionCodeGenerator> intentionCodeGenerator;
     };
 
 } // namespace UKControllerPlugin::IntentionCode

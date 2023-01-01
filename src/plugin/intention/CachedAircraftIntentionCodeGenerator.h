@@ -17,7 +17,8 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         CachedAircraftIntentionCodeGenerator(
-            const IntentionCodeCollection& intentionCodes, const IntentionCodeEventHandlerCollection& eventHandlers);
+            std::shared_ptr<const IntentionCodeCollection> intentionCodes,
+            std::shared_ptr<const IntentionCodeEventHandlerCollection> eventHandlers);
         void AddCacheEntry(const std::shared_ptr<AircraftIntentionCode>& entry);
         void FlightPlanEvent(
             Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
@@ -41,10 +42,10 @@ namespace UKControllerPlugin::IntentionCode {
 
         private:
         // The intention codes
-        const IntentionCodeCollection& intentionCodes;
+        std::shared_ptr<const IntentionCodeCollection> intentionCodes;
 
         // Handles intention code events
-        const IntentionCodeEventHandlerCollection& eventHandlers;
+        std::shared_ptr<const IntentionCodeEventHandlerCollection> eventHandlers;
 
         // The cache
         std::map<std::string, std::shared_ptr<AircraftIntentionCode>> cache;

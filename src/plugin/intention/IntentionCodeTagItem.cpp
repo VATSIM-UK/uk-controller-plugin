@@ -5,9 +5,10 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    IntentionCodeTagItem::IntentionCodeTagItem(AircraftIntentionCodeGenerator& intentionCodeGenerator)
+    IntentionCodeTagItem::IntentionCodeTagItem(std::shared_ptr<AircraftIntentionCodeGenerator> intentionCodeGenerator)
         : intentionCodeGenerator(intentionCodeGenerator)
     {
+        assert(intentionCodeGenerator && "generator not set in IntentionCodeTagItem");
     }
 
     auto IntentionCodeTagItem::GetTagItemDescription(int tagItemId) const -> std::string
@@ -17,7 +18,7 @@ namespace UKControllerPlugin::IntentionCode {
 
     void IntentionCodeTagItem::SetTagItemData(Tag::TagData& tagData)
     {
-        const auto intentionCode = intentionCodeGenerator.Generate(tagData.GetFlightplan(), tagData.GetRadarTarget());
+        const auto intentionCode = intentionCodeGenerator->Generate(tagData.GetFlightplan(), tagData.GetRadarTarget());
         tagData.SetItemString(intentionCode ? intentionCode->intentionCode : "--");
     }
 } // namespace UKControllerPlugin::IntentionCode

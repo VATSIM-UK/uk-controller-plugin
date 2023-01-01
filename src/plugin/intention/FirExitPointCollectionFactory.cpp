@@ -5,9 +5,9 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    auto MakeFirExitPointCollection(const nlohmann::json& exitPointData) -> std::unique_ptr<FirExitPointCollection>
+    auto MakeFirExitPointCollection(const nlohmann::json& exitPointData) -> std::shared_ptr<FirExitPointCollection>
     {
-        auto collection = std::make_unique<FirExitPointCollection>();
+        auto collection = std::make_shared<FirExitPointCollection>();
         if (!exitPointData.is_array()) {
             return collection;
         }

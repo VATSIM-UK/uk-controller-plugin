@@ -25,6 +25,7 @@ namespace UKControllerPluginTest::IntentionCode {
               exitDetermination4(std::make_shared<testing::NiceMock<MockExitDetermination>>()),
               exitDetermination5(std::make_shared<testing::NiceMock<MockExitDetermination>>()),
               exitDetermination6(std::make_shared<testing::NiceMock<MockExitDetermination>>()),
+              collection(std::make_shared<FirExitPointCollection>()),
               point1(std::make_shared<FirExitPoint>(1, "FOO", false, exitDetermination1)),
               point2(std::make_shared<FirExitPoint>(2, "WOO", false, exitDetermination2)),
               point3(std::make_shared<FirExitPoint>(3, "DOO", false, exitDetermination3)),
@@ -35,12 +36,12 @@ namespace UKControllerPluginTest::IntentionCode {
             ON_CALL(flightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
             ON_CALL(flightplan, GetParsedFlightplan).WillByDefault(testing::Return(parsedFlightplan));
 
-            collection.Add(point1);
-            collection.Add(point2);
-            collection.Add(point3);
-            collection.Add(point4);
-            collection.Add(point5);
-            collection.Add(point6);
+            collection->Add(point1);
+            collection->Add(point2);
+            collection->Add(point3);
+            collection->Add(point4);
+            collection->Add(point5);
+            collection->Add(point6);
         }
 
         std::shared_ptr<testing::NiceMock<Euroscope::MockEuroscopeCoordinateInterface>> coordinate;
@@ -53,7 +54,7 @@ namespace UKControllerPluginTest::IntentionCode {
         std::shared_ptr<testing::NiceMock<MockExitDetermination>> exitDetermination4;
         std::shared_ptr<testing::NiceMock<MockExitDetermination>> exitDetermination5;
         std::shared_ptr<testing::NiceMock<MockExitDetermination>> exitDetermination6;
-        FirExitPointCollection collection;
+        std::shared_ptr<FirExitPointCollection> collection;
         std::shared_ptr<FirExitPoint> point1;
         std::shared_ptr<FirExitPoint> point2;
         std::shared_ptr<FirExitPoint> point3;

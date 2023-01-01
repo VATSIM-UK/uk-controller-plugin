@@ -104,10 +104,11 @@ namespace UKControllerPlugin::IntentionCode {
 
     auto MakeIntentionCodeCollection(
         const nlohmann::json& codes,
-        AircraftFirExitGenerator& generator,
-        const Controller::ActiveCallsignCollection& activeControllers) -> std::unique_ptr<IntentionCodeCollection>
+        std::shared_ptr<AircraftFirExitGenerator> generator,
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+        -> std::shared_ptr<IntentionCodeCollection>
     {
-        auto collection = std::make_unique<IntentionCodeCollection>();
+        auto collection = std::make_shared<IntentionCodeCollection>();
 
         if (!codes.is_array()) {
             LogWarning("Intention codes dependency is invalid");
@@ -117,7 +118,7 @@ namespace UKControllerPlugin::IntentionCode {
                 std::make_unique<FullAirfieldIdentifier>(),
                 std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
                 std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)));
-            return std::move(collection);
+            return collection;
         }
 
         for (const auto& code : codes) {
@@ -144,7 +145,7 @@ namespace UKControllerPlugin::IntentionCode {
             std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)));
 
         LogInfo("Loaded " + std::to_string(collection->Count()) + " intention codes");
-        return std::move(collection);
+        return collection;
     }
 
     auto MakeCode(const nlohmann::json& code) -> std::unique_ptr<CodeGenerator>
@@ -158,8 +159,8 @@ namespace UKControllerPlugin::IntentionCode {
 
     auto MakeConditions(
         const nlohmann::json& conditions,
-        AircraftFirExitGenerator& generator,
-        const Controller::ActiveCallsignCollection& activeControllers,
+        std::shared_ptr<AircraftFirExitGenerator> generator,
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers,
         IntentionCodeMetadata& metadata) -> std::list<std::shared_ptr<Condition>>
     {
         auto conditionList = std::list<std::shared_ptr<Condition>>();
@@ -172,8 +173,8 @@ namespace UKControllerPlugin::IntentionCode {
 
     auto MakeCondition(
         const nlohmann::json& condition,
-        AircraftFirExitGenerator& generator,
-        const Controller::ActiveCallsignCollection& activeControllers,
+        std::shared_ptr<AircraftFirExitGenerator> generator,
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers,
         IntentionCodeMetadata& metadata) -> std::shared_ptr<Condition>
     {
         const auto conditionType = condition.at("type").get<std::string>();

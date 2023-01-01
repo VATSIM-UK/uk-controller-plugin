@@ -11,7 +11,7 @@ namespace UKControllerPlugin::IntentionCode {
     class ExitingFirAtPoint : public Condition
     {
         public:
-        ExitingFirAtPoint(AircraftFirExitGenerator& firExitGenerator, int firExitPointId);
+        ExitingFirAtPoint(std::shared_ptr<AircraftFirExitGenerator> firExitGenerator, int firExitPointId);
         [[nodiscard]] auto ExitPoint() const -> int;
         [[nodiscard]] auto Passes(
             const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
@@ -19,7 +19,7 @@ namespace UKControllerPlugin::IntentionCode {
 
         private:
         // Generates the FIR exit point for an aircraft
-        AircraftFirExitGenerator& firExitGenerator;
+        std::shared_ptr<AircraftFirExitGenerator> firExitGenerator;
 
         // The FIR exit point applying to this rule
         int firExitPointId;

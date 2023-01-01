@@ -15,13 +15,14 @@ namespace UKControllerPluginTest::IntentionCode {
         public:
         ControllerPositionStartsWithTest()
             : position1(1, "LON_S_CTR", 129.420, std::vector<std::string>{}, true, false),
-              position2(2, "SCO_CTR", 129.420, std::vector<std::string>{}, true, false), controllers(callsigns, "LON")
+              position2(2, "SCO_CTR", 129.420, std::vector<std::string>{}, true, false),
+              callsigns(std::make_shared<ActiveCallsignCollection>()), controllers(callsigns, "LON")
         {
         }
 
         ControllerPosition position1;
         ControllerPosition position2;
-        ActiveCallsignCollection callsigns;
+        std::shared_ptr<ActiveCallsignCollection> callsigns;
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> flightplan;
         testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface> radarTarget;
         ControllerPositionStartsWith controllers;
@@ -35,7 +36,7 @@ namespace UKControllerPluginTest::IntentionCode {
     TEST_F(ControllerPositionStartsWithTest, ItFailsIfNotUserOnMatchingPosition)
     {
         ActiveCallsign callsign("LON_S_CTR", "Test", position1, false);
-        callsigns.AddCallsign(callsign);
+        callsigns->AddCallsign(callsign);
 
         EXPECT_FALSE(controllers.Passes(flightplan, radarTarget));
     }
@@ -43,7 +44,7 @@ namespace UKControllerPluginTest::IntentionCode {
     TEST_F(ControllerPositionStartsWithTest, ItFailsIfUserNotOnMatchingPosition)
     {
         ActiveCallsign callsign("LON_S_CTR", "Test", position2, true);
-        callsigns.AddUserCallsign(callsign);
+        callsigns->AddUserCallsign(callsign);
 
         EXPECT_FALSE(controllers.Passes(flightplan, radarTarget));
     }
@@ -51,7 +52,7 @@ namespace UKControllerPluginTest::IntentionCode {
     TEST_F(ControllerPositionStartsWithTest, ItPassesIfUserOnMatchingPosition)
     {
         ActiveCallsign callsign("LON_S_CTR", "Test", position1, true);
-        callsigns.AddUserCallsign(callsign);
+        callsigns->AddUserCallsign(callsign);
 
         EXPECT_TRUE(controllers.Passes(flightplan, radarTarget));
     }

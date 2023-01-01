@@ -27,7 +27,7 @@ namespace UKControllerPluginTest {
                 container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
                 container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
                 container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
-                container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+                container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
                 container.timedHandler = std::make_unique<TimedEventCollection>();
             }
 

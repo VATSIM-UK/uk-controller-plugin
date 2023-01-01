@@ -24,15 +24,17 @@ namespace UKControllerPluginTest::IntentionCode {
         SendIntentionCodeUpdatedIntegrationMessageTest()
             : exitDetermination(std::make_shared<MockExitDetermination>()),
               exitPoint(std::make_shared<FirExitPoint>(1, "TEST", false, exitDetermination)),
+              firExitCollection(std::make_shared<FirExitPointCollection>()),
+              outboundHandler(std::make_shared<testing::NiceMock<Integration::MockOutboundIntegrationEventHandler>>()),
               sendMessage(firExitCollection, outboundHandler)
         {
-            firExitCollection.Add(exitPoint);
+            firExitCollection->Add(exitPoint);
         }
 
         std::shared_ptr<MockExitDetermination> exitDetermination;
         std::shared_ptr<FirExitPoint> exitPoint;
-        FirExitPointCollection firExitCollection;
-        testing::NiceMock<Integration::MockOutboundIntegrationEventHandler> outboundHandler;
+        std::shared_ptr<FirExitPointCollection> firExitCollection;
+        std::shared_ptr<testing::NiceMock<Integration::MockOutboundIntegrationEventHandler>> outboundHandler;
         SendIntentionCodeUpdatedIntegrationMessage sendMessage;
     };
 
@@ -45,7 +47,7 @@ namespace UKControllerPluginTest::IntentionCode {
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
             std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "A1");
 
-        EXPECT_CALL(this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+        EXPECT_CALL(*this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
         sendMessage.IntentionCodeUpdated(aircraftIntentionCode);
     }
@@ -66,7 +68,7 @@ namespace UKControllerPluginTest::IntentionCode {
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
             std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "A1");
 
-        EXPECT_CALL(this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+        EXPECT_CALL(*this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
         sendMessage.IntentionCodeUpdated(aircraftIntentionCode);
     }
@@ -88,7 +90,7 @@ namespace UKControllerPluginTest::IntentionCode {
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
             std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "", "A1");
 
-        EXPECT_CALL(this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+        EXPECT_CALL(*this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
         sendMessage.IntentionCodeUpdated(aircraftIntentionCode);
     }
@@ -110,7 +112,7 @@ namespace UKControllerPluginTest::IntentionCode {
         std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> expectedMessage =
             std::make_shared<IntentionCodeUpdatedMessage>("BAW123", "TEST", "A1");
 
-        EXPECT_CALL(this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+        EXPECT_CALL(*this->outboundHandler, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
 
         sendMessage.IntentionCodeUpdated(aircraftIntentionCode);
     }

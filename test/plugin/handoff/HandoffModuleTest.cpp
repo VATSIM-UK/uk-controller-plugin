@@ -4,6 +4,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "handoff/HandoffModule.h"
 #include "integration/IntegrationServer.h"
+#include "integration/IntegrationPersistenceContainer.h"
 #include "tag/TagItemCollection.h"
 
 using ::testing::NiceMock;
@@ -26,7 +27,7 @@ namespace UKControllerPluginTest::Handoff {
         {
             this->container.tagHandler = std::make_unique<TagItemCollection>();
             this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
-            this->container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+            this->container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
             this->container.runwayDialogEventHandlers = std::make_unique<RunwayDialogAwareCollection>();
             this->container.integrationModuleContainer =
                 std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr);

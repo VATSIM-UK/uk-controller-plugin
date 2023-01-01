@@ -19,7 +19,7 @@ namespace UKControllerPluginTest::Ownership {
         public:
         void SetUp() override
         {
-            this->container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+            this->container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
             this->container.commandHandlers = std::make_unique<CommandHandlerCollection>();
         }
 

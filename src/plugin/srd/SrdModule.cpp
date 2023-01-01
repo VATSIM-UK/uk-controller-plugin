@@ -27,7 +27,7 @@ namespace UKControllerPlugin::Srd {
         std::shared_ptr<SrdSearchDialog> dialog = std::make_shared<SrdSearchDialog>(
             *container.plugin,
             *container.api,
-            container.moduleFactories->IntentionCode().FirExitGenerator(*container.dependencyLoader));
+            *container.moduleFactories->IntentionCode().FirExitGenerator(*container.dependencyLoader));
         container.dialogManager->AddDialog(
             {IDD_SRD_SEARCH,
              "SRD Search",

@@ -11,13 +11,13 @@ namespace UKControllerPlugin::IntentionCode {
     class IntentionCodeTagItem : public Tag::TagItemInterface
     {
         public:
-        IntentionCodeTagItem(AircraftIntentionCodeGenerator& intentionCodeGenerator);
+        IntentionCodeTagItem(std::shared_ptr<AircraftIntentionCodeGenerator> intentionCodeGenerator);
         [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
         void SetTagItemData(Tag::TagData& tagData) override;
 
         private:
         // Generates intention codes
-        AircraftIntentionCodeGenerator& intentionCodeGenerator;
+        std::shared_ptr<AircraftIntentionCodeGenerator> intentionCodeGenerator;
     };
 
 } // namespace UKControllerPlugin::IntentionCode

@@ -12,9 +12,12 @@
 namespace UKControllerPlugin::IntentionCode {
 
     CachedAircraftIntentionCodeGenerator::CachedAircraftIntentionCodeGenerator(
-        const IntentionCodeCollection& intentionCodes, const IntentionCodeEventHandlerCollection& eventHandlers)
+        std::shared_ptr<const IntentionCodeCollection> intentionCodes,
+        std::shared_ptr<const IntentionCodeEventHandlerCollection> eventHandlers)
         : intentionCodes(intentionCodes), eventHandlers(eventHandlers)
     {
+        assert(intentionCodes && "intention codes not set in CachedAircraftIntentionCodeGenerator");
+        assert(eventHandlers && "event handlers codes not set in CachedAircraftIntentionCodeGenerator");
     }
 
     void CachedAircraftIntentionCodeGenerator::AddCacheEntry(const std::shared_ptr<AircraftIntentionCode>& entry)
@@ -46,7 +49,7 @@ namespace UKControllerPlugin::IntentionCode {
         intentionCode.callsign = flightplan.GetCallsign();
 
         const auto matchedIntentionCode =
-            intentionCodes.FirstWhere([&flightplan, &radarTarget](const IntentionCodeModel& code) -> bool {
+            intentionCodes->FirstWhere([&flightplan, &radarTarget](const IntentionCodeModel& code) -> bool {
                 return code.Conditions().Passes(flightplan, radarTarget);
             });
 
@@ -56,7 +59,7 @@ namespace UKControllerPlugin::IntentionCode {
 
         auto cacheItem = std::make_shared<AircraftIntentionCode>(intentionCode);
         AddCacheEntry(cacheItem);
-        eventHandlers.IntentionCodeUpdated(*cacheItem);
+        eventHandlers->IntentionCodeUpdated(*cacheItem);
 
         return cacheItem;
     }

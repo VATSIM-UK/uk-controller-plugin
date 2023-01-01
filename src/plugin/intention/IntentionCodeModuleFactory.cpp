@@ -14,20 +14,20 @@ namespace UKControllerPlugin::IntentionCode {
     IntentionCodeModuleFactory::~IntentionCodeModuleFactory() = default;
 
     auto IntentionCodeModuleFactory::FirExitGenerator(Dependency::DependencyLoaderInterface& dependencyLoader)
-        -> AircraftFirExitGenerator&
+        -> std::shared_ptr<AircraftFirExitGenerator>
     {
-        return *CachedFirExitGenerator(dependencyLoader);
+        return CachedFirExitGenerator(dependencyLoader);
     }
 
     auto IntentionCodeModuleFactory::ExitPointCollection(Dependency::DependencyLoaderInterface& dependencyLoader)
-        -> const FirExitPointCollection&
+        -> std::shared_ptr<const FirExitPointCollection>
     {
         if (!exitPoints) {
             exitPoints = MakeFirExitPointCollection(
                 dependencyLoader.LoadDependency("DEPENDENCY_FIR_EXIT_POINTS", nlohmann::json::array()));
         }
 
-        return *exitPoints;
+        return exitPoints;
     }
 
     auto IntentionCodeModuleFactory::CachedFirExitGenerator(Dependency::DependencyLoaderInterface& dependencyLoader)
@@ -42,7 +42,8 @@ namespace UKControllerPlugin::IntentionCode {
 
     auto IntentionCodeModuleFactory::IntentionCodes(
         Dependency::DependencyLoaderInterface& dependencyLoader,
-        const Controller::ActiveCallsignCollection& activeControllers) -> const IntentionCodeCollection&
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+        -> std::shared_ptr<const IntentionCodeCollection>
     {
         if (!intentionCodes) {
             intentionCodes = MakeIntentionCodeCollection(
@@ -51,34 +52,37 @@ namespace UKControllerPlugin::IntentionCode {
                 activeControllers);
         }
 
-        return *intentionCodes;
+        return intentionCodes;
     }
 
-    auto IntentionCodeModuleFactory::IntentionCodeEventHandlers() -> IntentionCodeEventHandlerCollection&
+    auto IntentionCodeModuleFactory::IntentionCodeEventHandlers()
+        -> std::shared_ptr<IntentionCodeEventHandlerCollection>
     {
         if (!intentionCodeEventHandlers) {
-            intentionCodeEventHandlers = std::make_unique<IntentionCodeEventHandlerCollection>();
+            intentionCodeEventHandlers = std::make_shared<IntentionCodeEventHandlerCollection>();
         }
 
-        return *intentionCodeEventHandlers;
+        return intentionCodeEventHandlers;
     }
 
     auto IntentionCodeModuleFactory::IntentionCodeGenerator(
         Dependency::DependencyLoaderInterface& dependencyLoader,
-        const Controller::ActiveCallsignCollection& activeControllers) -> AircraftIntentionCodeGenerator&
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+        -> std::shared_ptr<AircraftIntentionCodeGenerator>
     {
         return CachedIntentionCodeGenerator(dependencyLoader, activeControllers);
     }
 
     auto IntentionCodeModuleFactory::CachedIntentionCodeGenerator(
         Dependency::DependencyLoaderInterface& dependencyLoader,
-        const Controller::ActiveCallsignCollection& activeControllers) -> CachedAircraftIntentionCodeGenerator&
+        std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
+        -> std::shared_ptr<CachedAircraftIntentionCodeGenerator>
     {
         if (!intentionCodeGenerator) {
-            intentionCodeGenerator = std::make_unique<CachedAircraftIntentionCodeGenerator>(
+            intentionCodeGenerator = std::make_shared<CachedAircraftIntentionCodeGenerator>(
                 IntentionCodes(dependencyLoader, activeControllers), IntentionCodeEventHandlers());
         }
 
-        return *intentionCodeGenerator;
+        return intentionCodeGenerator;
     }
 } // namespace UKControllerPlugin::IntentionCode
