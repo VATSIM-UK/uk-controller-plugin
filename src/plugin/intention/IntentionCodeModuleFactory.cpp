@@ -10,7 +10,29 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    IntentionCodeModuleFactory::IntentionCodeModuleFactory() = default;
+    struct IntentionCodeModuleFactory::Impl
+    {
+        // Generates FIR exit points for an aircraft, whilst using a cache
+        std::shared_ptr<CachedAircraftFirExitGenerator> firExitGenerator;
+
+        // Stores the FIR exit points
+        std::shared_ptr<FirExitPointCollection> exitPoints;
+
+        // Stores the intention codes
+        std::shared_ptr<IntentionCodeCollection> intentionCodes;
+
+        // Stores handlers for intention codes
+        std::shared_ptr<IntentionCodeEventHandlerCollection> intentionCodeEventHandlers;
+
+        // Generates intention codes for aircraft
+        std::shared_ptr<CachedAircraftIntentionCodeGenerator> intentionCodeGenerator;
+    };
+
+    IntentionCodeModuleFactory::IntentionCodeModuleFactory()
+        : pimpl(std::make_unique<IntentionCodeModuleFactory::Impl>())
+    {
+    }
+
     IntentionCodeModuleFactory::~IntentionCodeModuleFactory() = default;
 
     auto IntentionCodeModuleFactory::FirExitGenerator(Dependency::DependencyLoaderInterface& dependencyLoader)
@@ -22,22 +44,23 @@ namespace UKControllerPlugin::IntentionCode {
     auto IntentionCodeModuleFactory::ExitPointCollection(Dependency::DependencyLoaderInterface& dependencyLoader)
         -> std::shared_ptr<const FirExitPointCollection>
     {
-        if (!exitPoints) {
-            exitPoints = MakeFirExitPointCollection(
+        if (!pimpl->exitPoints) {
+            pimpl->exitPoints = MakeFirExitPointCollection(
                 dependencyLoader.LoadDependency("DEPENDENCY_FIR_EXIT_POINTS", nlohmann::json::array()));
         }
 
-        return exitPoints;
+        return pimpl->exitPoints;
     }
 
     auto IntentionCodeModuleFactory::CachedFirExitGenerator(Dependency::DependencyLoaderInterface& dependencyLoader)
         -> std::shared_ptr<CachedAircraftFirExitGenerator>
     {
-        if (!firExitGenerator) {
-            firExitGenerator = std::make_shared<CachedAircraftFirExitGenerator>(ExitPointCollection(dependencyLoader));
+        if (!pimpl->firExitGenerator) {
+            pimpl->firExitGenerator =
+                std::make_shared<CachedAircraftFirExitGenerator>(ExitPointCollection(dependencyLoader));
         }
 
-        return firExitGenerator;
+        return pimpl->firExitGenerator;
     }
 
     auto IntentionCodeModuleFactory::IntentionCodes(
@@ -45,24 +68,24 @@ namespace UKControllerPlugin::IntentionCode {
         std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
         -> std::shared_ptr<const IntentionCodeCollection>
     {
-        if (!intentionCodes) {
-            intentionCodes = MakeIntentionCodeCollection(
+        if (!pimpl->intentionCodes) {
+            pimpl->intentionCodes = MakeIntentionCodeCollection(
                 dependencyLoader.LoadDependency("DEPENDENCY_INTENTION_CODES", nlohmann::json::array()),
                 FirExitGenerator(dependencyLoader),
                 activeControllers);
         }
 
-        return intentionCodes;
+        return pimpl->intentionCodes;
     }
 
     auto IntentionCodeModuleFactory::IntentionCodeEventHandlers()
         -> std::shared_ptr<IntentionCodeEventHandlerCollection>
     {
-        if (!intentionCodeEventHandlers) {
-            intentionCodeEventHandlers = std::make_shared<IntentionCodeEventHandlerCollection>();
+        if (!pimpl->intentionCodeEventHandlers) {
+            pimpl->intentionCodeEventHandlers = std::make_shared<IntentionCodeEventHandlerCollection>();
         }
 
-        return intentionCodeEventHandlers;
+        return pimpl->intentionCodeEventHandlers;
     }
 
     auto IntentionCodeModuleFactory::IntentionCodeGenerator(
@@ -78,11 +101,11 @@ namespace UKControllerPlugin::IntentionCode {
         std::shared_ptr<const Controller::ActiveCallsignCollection> activeControllers)
         -> std::shared_ptr<CachedAircraftIntentionCodeGenerator>
     {
-        if (!intentionCodeGenerator) {
-            intentionCodeGenerator = std::make_shared<CachedAircraftIntentionCodeGenerator>(
+        if (!pimpl->intentionCodeGenerator) {
+            pimpl->intentionCodeGenerator = std::make_shared<CachedAircraftIntentionCodeGenerator>(
                 IntentionCodes(dependencyLoader, activeControllers), IntentionCodeEventHandlers());
         }
 
-        return intentionCodeGenerator;
+        return pimpl->intentionCodeGenerator;
     }
 } // namespace UKControllerPlugin::IntentionCode

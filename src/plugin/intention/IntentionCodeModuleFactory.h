@@ -48,20 +48,9 @@ namespace UKControllerPlugin::IntentionCode {
             -> std::shared_ptr<CachedAircraftIntentionCodeGenerator>;
 
         private:
-        // Generates FIR exit points for an aircraft, whilst using a cache
-        std::shared_ptr<CachedAircraftFirExitGenerator> firExitGenerator;
-
-        // Stores the FIR exit points
-        std::shared_ptr<FirExitPointCollection> exitPoints;
-
-        // Stores the intention codes
-        std::shared_ptr<IntentionCodeCollection> intentionCodes;
-
-        // Stores handlers for intention codes
-        std::shared_ptr<IntentionCodeEventHandlerCollection> intentionCodeEventHandlers;
-
-        // Generates intention codes for aircraft
-        std::shared_ptr<CachedAircraftIntentionCodeGenerator> intentionCodeGenerator;
+        // Internal implementation class - PIMPL
+        struct Impl;
+        std::unique_ptr<Impl> pimpl;
     };
 
 } // namespace UKControllerPlugin::IntentionCode
