@@ -436,55 +436,44 @@ source_group("src\\integration" FILES ${src__integration})
 set(src__intention
     "intention/AircraftFirExit.h"
     "intention/AircraftFirExitGenerator.h"
-    "intention/AirfieldGroup.cpp"
-    "intention/AirfieldGroup.h"
     "intention/CachedAircraftFirExitGenerator.h"
     "intention/CachedAircraftFirExitGenerator.cpp"
-    "intention/AmsterdamAirfieldGroup.cpp"
-    "intention/AmsterdamAirfieldGroup.h"
-    "intention/BrusselsAirfieldGroup.cpp"
-    "intention/BrusselsAirfieldGroup.h"
-    "intention/DublinAirfieldGroup.cpp"
-    "intention/DublinAirfieldGroup.h"
     "intention/ExitCone.h"
     "intention/ExitCone.cpp"
     "intention/ExitDetermination.h"
     "intention/FirExitPoint.h"
     "intention/FirExitPoint.cpp"
-    "intention/HomeAirfieldGroup.cpp"
-    "intention/HomeAirfieldGroup.h"
-    "intention/IntentionCodeCache.cpp"
-    "intention/IntentionCodeCache.h"
-    "intention/IntentionCodeData.h"
-    "intention/IntentionCodeEventHandler.cpp"
-    "intention/IntentionCodeEventHandler.h"
-    "intention/IntentionCodeFactory.cpp"
-    "intention/IntentionCodeFactory.h"
-    "intention/IntentionCodeGenerator.cpp"
-    "intention/IntentionCodeGenerator.h"
-    "intention/IntentionCodeModule.cpp"
-    "intention/IntentionCodeModule.h"
     "intention/IntentionCodeUpdatedMessage.cpp"
     "intention/IntentionCodeUpdatedMessage.h"
-    "intention/SectorExitPoint.cpp"
-    "intention/SectorExitPoint.h"
-    "intention/SectorExitPointEtrat.cpp"
-    "intention/SectorExitPointEtrat.h"
-    "intention/SectorExitPointKonan.cpp"
-    "intention/SectorExitPointKonan.h"
-    "intention/SectorExitPointLelna.cpp"
-    "intention/SectorExitPointLelna.h"
-    "intention/SectorExitPointScottish.cpp"
-    "intention/SectorExitPointScottish.h"
-    "intention/SectorExitPointVeule.cpp"
-    "intention/SectorExitPointVeule.h"
-    "intention/SectorExitRepository.cpp"
-    "intention/SectorExitRepository.h"
-    "intention/SectorExitRepositoryFactory.cpp"
-    "intention/SectorExitRepositoryFactory.h"
-    "intention/ShannonAirfieldGroup.cpp"
-    "intention/ShannonAirfieldGroup.h"
-        intention/FirExitPointCollection.cpp intention/FirExitPointCollection.h intention/FirExitPointCollectionFactory.cpp intention/FirExitPointCollectionFactory.h intention/IntentionCodeModuleFactory.cpp intention/IntentionCodeModuleFactory.h intention/IntentionCodeBootstrapProvider.cpp intention/IntentionCodeBootstrapProvider.h intention/Condition.h intention/AllOf.cpp intention/AllOf.h intention/AnyOf.cpp intention/AnyOf.h intention/Not.cpp intention/Not.h intention/ArrivalAirfields.cpp intention/ArrivalAirfields.h intention/ArrivalAirfieldPattern.cpp intention/ArrivalAirfieldPattern.h intention/MaximumCruisingAltitude.cpp intention/MaximumCruisingAltitude.h intention/ControllerPositionStartsWith.cpp intention/ControllerPositionStartsWith.h intention/ExitingFirAtPoint.cpp intention/ExitingFirAtPoint.h intention/RoutingVia.cpp intention/RoutingVia.h intention/CodeGenerator.h intention/SingleCode.cpp intention/SingleCode.h intention/AirfieldIdentifier.cpp intention/AirfieldIdentifier.h intention/FullAirfieldIdentifier.cpp intention/FullAirfieldIdentifier.h intention/IntentionCodeModel.cpp intention/IntentionCodeModel.h intention/IntentionCodeCollection.cpp intention/IntentionCodeCollection.h intention/IntentionCodeCollectionFactory.cpp intention/IntentionCodeCollectionFactory.h intention/AircraftIntentionCodeGenerator.h intention/AircraftIntentionCode.h intention/CachedAircraftIntentionCodeGenerator.cpp intention/CachedAircraftIntentionCodeGenerator.h intention/IntentionCodeEventHandlerInterface.h intention/SendIntentionCodeUpdatedIntegrationMessage.cpp intention/SendIntentionCodeUpdatedIntegrationMessage.h intention/IntentionCodeMetadata.h intention/IntentionCodeEventHandlerCollection.cpp intention/IntentionCodeEventHandlerCollection.h intention/IntentionCodeTagItem.cpp intention/IntentionCodeTagItem.h)
+    intention/FirExitPointCollection.cpp intention/FirExitPointCollection.h
+    intention/FirExitPointCollectionFactory.cpp intention/FirExitPointCollectionFactory.h
+    intention/IntentionCodeModuleFactory.cpp intention/IntentionCodeModuleFactory.h
+    intention/IntentionCodeBootstrapProvider.cpp intention/IntentionCodeBootstrapProvider.h
+    intention/Condition.h
+    intention/AllOf.cpp intention/AllOf.h
+    intention/AnyOf.cpp intention/AnyOf.h
+    intention/Not.cpp intention/Not.h
+    intention/ArrivalAirfields.cpp intention/ArrivalAirfields.h
+    intention/ArrivalAirfieldPattern.cpp intention/ArrivalAirfieldPattern.h
+    intention/MaximumCruisingAltitude.cpp intention/MaximumCruisingAltitude.h
+    intention/ControllerPositionStartsWith.cpp intention/ControllerPositionStartsWith.h
+    intention/ExitingFirAtPoint.cpp intention/ExitingFirAtPoint.h
+    intention/RoutingVia.cpp intention/RoutingVia.h
+    intention/CodeGenerator.h
+    intention/SingleCode.cpp intention/SingleCode.h
+    intention/AirfieldIdentifier.cpp intention/AirfieldIdentifier.h
+    intention/FullAirfieldIdentifier.cpp intention/FullAirfieldIdentifier.h
+    intention/IntentionCodeModel.cpp intention/IntentionCodeModel.h
+    intention/IntentionCodeCollection.cpp intention/IntentionCodeCollection.h
+    intention/IntentionCodeCollectionFactory.cpp intention/IntentionCodeCollectionFactory.h
+    intention/AircraftIntentionCodeGenerator.h
+    intention/AircraftIntentionCode.h
+    intention/CachedAircraftIntentionCodeGenerator.cpp intention/CachedAircraftIntentionCodeGenerator.h
+    intention/IntentionCodeEventHandlerInterface.h
+    intention/SendIntentionCodeUpdatedIntegrationMessage.cpp intention/SendIntentionCodeUpdatedIntegrationMessage.h
+    intention/IntentionCodeMetadata.h
+    intention/IntentionCodeEventHandlerCollection.cpp intention/IntentionCodeEventHandlerCollection.h
+    intention/IntentionCodeTagItem.cpp intention/IntentionCodeTagItem.h)
 source_group("src\\intention" FILES ${src__intention})
 
 set(src__list

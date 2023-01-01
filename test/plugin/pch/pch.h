@@ -60,7 +60,6 @@
 #include "../mock/MockActiveCallsignEventHandler.h"
 #include "../mock/MockAircraftFirExitGenerator.h"
 #include "../mock/MockAircraftTypeMapper.h"
-#include "../mock/MockAirfieldGroup.h"
 #include "../mock/MockAsrEventHandlerInterface.h"
 #include "../mock/MockBootstrapProvider.h"
 #include "../mock/MockCallsignSelectionProvider.h"

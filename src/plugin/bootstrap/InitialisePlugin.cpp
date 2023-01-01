@@ -30,7 +30,6 @@
 #include "initialaltitude/InitialAltitudeModule.h"
 #include "initialheading/InitialHeadingModule.h"
 #include "integration/IntegrationModule.h"
-#include "intention/IntentionCodeModule.h"
 #include "list/PopupListFactoryBootstrap.h"
 #include "log/LoggerBootstrap.h"
 #include "login/LoginModule.h"
@@ -83,7 +82,6 @@ using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
-using UKControllerPlugin::IntentionCode::IntentionCodeModule;
 using UKControllerPlugin::Log::LoggerBootstrap;
 using UKControllerPlugin::Message::UserMessagerBootstrap;
 using UKControllerPlugin::MinStack::MinStackModule;
@@ -238,7 +236,6 @@ namespace UKControllerPlugin {
         Metar::BootstrapPlugin(*this->container);
         InitialAltitudeModule::BootstrapPlugin(*this->container);
         InitialHeading::BootstrapPlugin(*this->container);
-        // IntentionCodeModule::BootstrapPlugin(*this->container);
         Srd::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(*this->container);
