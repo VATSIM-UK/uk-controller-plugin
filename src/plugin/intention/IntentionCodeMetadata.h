@@ -1,7 +1,6 @@
 #pragma once
 
 namespace UKControllerPlugin::IntentionCode {
-    class IntentionCodeModel;
 
     /*
         Represents some helpful metadata about the intention code for easy access,

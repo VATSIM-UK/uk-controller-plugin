@@ -8,7 +8,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto MaximumCruisingAltitude::Passes(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const Euroscope::EuroScopeCRadarTargetInterface&
+                                                                      radarTarget)
         -> bool
     {
         return flightplan.GetCruiseLevel() <= altitude;

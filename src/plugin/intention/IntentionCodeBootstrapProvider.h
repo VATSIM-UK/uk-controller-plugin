@@ -7,6 +7,9 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         void BootstrapPlugin(Bootstrap::PersistenceContainer& container) override;
+
+        private:
+        static const int intentionCodeTagItemId = 101;
     };
 
 } // namespace UKControllerPlugin::IntentionCode

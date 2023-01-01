@@ -8,7 +8,7 @@ namespace UKControllerPlugin::IntentionCode {
         ExitCone(int startDirection, int endDirection);
         [[nodiscard]] auto AircraftIsExiting(
             const Flightplan::FlightplanPoint& flightplanPoint,
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool override;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool override;
         [[nodiscard]] auto StartDirection() const -> int;
         [[nodiscard]] auto EndDirection() const -> int;
 

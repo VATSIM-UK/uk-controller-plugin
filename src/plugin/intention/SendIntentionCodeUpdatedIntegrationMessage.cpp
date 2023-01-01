@@ -17,7 +17,9 @@ namespace UKControllerPlugin::IntentionCode {
 
     void SendIntentionCodeUpdatedIntegrationMessage::IntentionCodeUpdated(const AircraftIntentionCode& intentionCode)
     {
-        const auto exitPoint = exitPoints.PointById(intentionCode.matchedIntentionCode->Metadata().exitPoint);
+        const auto exitPoint = intentionCode.matchedIntentionCode
+                                   ? exitPoints.PointById(intentionCode.matchedIntentionCode->Metadata().exitPoint)
+                                   : nullptr;
 
         outboundEvents.SendEvent(std::make_shared<IntentionCodeUpdatedMessage>(
             intentionCode.callsign, exitPoint ? exitPoint->Identifier() : "--", intentionCode.intentionCode));

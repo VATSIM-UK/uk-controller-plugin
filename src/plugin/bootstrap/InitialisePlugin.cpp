@@ -238,7 +238,7 @@ namespace UKControllerPlugin {
         Metar::BootstrapPlugin(*this->container);
         InitialAltitudeModule::BootstrapPlugin(*this->container);
         InitialHeading::BootstrapPlugin(*this->container);
-        IntentionCodeModule::BootstrapPlugin(*this->container);
+        // IntentionCodeModule::BootstrapPlugin(*this->container);
         Srd::BootstrapPlugin(*this->container);
         HistoryTrailModule::BootstrapPlugin(*this->container);
         CountdownModule::BootstrapPlugin(*this->container);

@@ -20,6 +20,6 @@ namespace UKControllerPlugin::IntentionCode {
         virtual ~ExitDetermination() = default;
         [[nodiscard]] virtual auto AircraftIsExiting(
             const Flightplan::FlightplanPoint& flightplanPoint,
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool = 0;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool = 0;
     };
 } // namespace UKControllerPlugin::IntentionCode

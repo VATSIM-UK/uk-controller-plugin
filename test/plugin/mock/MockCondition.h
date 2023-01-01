@@ -8,8 +8,8 @@ namespace UKControllerPluginTest::IntentionCode {
         MOCK_METHOD(
             bool,
             Passes,
-            (UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
-             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&),
+            (const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
+             const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&),
             (override));
     };
 } // namespace UKControllerPluginTest::IntentionCode

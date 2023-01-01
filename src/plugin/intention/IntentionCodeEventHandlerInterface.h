@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin::IntentionCode {
 
-    class AircraftIntentionCode;
+    struct AircraftIntentionCode;
 
     /**
      * Interface for classes that want to know about intention code updates

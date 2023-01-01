@@ -4,11 +4,13 @@
 #include "list/PopupListFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
+#include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Bootstrap::ModuleBootstrap;
 using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Tag::TagItemCollection;
 
 namespace UKControllerPluginTest {
 
@@ -38,6 +40,7 @@ namespace UKControllerPluginTest {
             std::make_unique<PopupListFactory>(*container.pluginFunctionHandlers, *container.plugin);
         container.callsignSelectionListFactory =
             std::make_unique<CallsignSelectionListFactory>(*container.popupListFactory);
+        container.tagHandler = std::make_unique<TagItemCollection>();
         return container;
     }
 } // namespace UKControllerPluginTest

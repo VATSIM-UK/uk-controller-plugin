@@ -19,7 +19,7 @@ namespace UKControllerPlugin::IntentionCode {
          * Should return true if the condition is applicable and hence the intention code should be used.
          */
         [[nodiscard]] virtual auto Passes(
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool = 0;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool = 0;
     };
 } // namespace UKControllerPlugin::IntentionCode

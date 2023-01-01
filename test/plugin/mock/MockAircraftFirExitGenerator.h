@@ -8,7 +8,7 @@ namespace UKControllerPluginTest::IntentionCode {
         MOCK_METHOD(
             std::shared_ptr<UKControllerPlugin::IntentionCode::AircraftFirExit>,
             Generate,
-            (UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&),
+            (const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&),
             (override));
     };
 } // namespace UKControllerPluginTest::IntentionCode

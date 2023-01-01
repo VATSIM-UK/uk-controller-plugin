@@ -9,7 +9,7 @@ namespace UKControllerPlugin::IntentionCode {
     class CodeGenerator;
     class Condition;
     class IntentionCodeCollection;
-    class IntentionCodeMetadata;
+    struct IntentionCodeMetadata;
 
     [[nodiscard]] auto MakeIntentionCodeCollection(
         const nlohmann::json& codes,

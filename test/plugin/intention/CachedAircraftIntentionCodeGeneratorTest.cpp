@@ -1,4 +1,3 @@
-#pragma once
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "intention/AircraftIntentionCode.h"
@@ -7,6 +6,8 @@
 #include "intention/CachedAircraftIntentionCodeGenerator.h"
 #include "intention/Condition.h"
 #include "intention/IntentionCodeCollection.h"
+#include "intention/IntentionCodeEventHandlerCollection.h"
+#include "intention/IntentionCodeEventHandlerInterface.h"
 #include "intention/IntentionCodeMetadata.h"
 #include "intention/IntentionCodeModel.h"
 #include "intention/SingleCode.h"
@@ -19,11 +20,28 @@ using UKControllerPlugin::IntentionCode::AnyOf;
 using UKControllerPlugin::IntentionCode::CachedAircraftIntentionCodeGenerator;
 using UKControllerPlugin::IntentionCode::Condition;
 using UKControllerPlugin::IntentionCode::IntentionCodeCollection;
+using UKControllerPlugin::IntentionCode::IntentionCodeEventHandlerCollection;
+using UKControllerPlugin::IntentionCode::IntentionCodeEventHandlerInterface;
 using UKControllerPlugin::IntentionCode::IntentionCodeMetadata;
 using UKControllerPlugin::IntentionCode::IntentionCodeModel;
 using UKControllerPlugin::IntentionCode::SingleCode;
 
 namespace UKControllerPluginTest::IntentionCode {
+
+    // Mock for the test
+    class CachedAircraftIntentionCodeGeneratorTestEventHandlerMock : public IntentionCodeEventHandlerInterface
+    {
+        public:
+        void IntentionCodeUpdated(const AircraftIntentionCode& intentionCode) override
+        {
+            passedCode = &intentionCode;
+            updatedCalled = true;
+        }
+
+        const AircraftIntentionCode* passedCode = nullptr;
+        bool updatedCalled = false;
+    };
+
     class CachedAircraftIntentionCodeGeneratorTest : public testing::Test
     {
         public:
@@ -37,7 +55,7 @@ namespace UKControllerPluginTest::IntentionCode {
                   2,
                   std::make_unique<SingleCode>("A2"),
                   std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
-std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
+                  std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
               code3(std::make_shared<IntentionCodeModel>(
                   3,
                   std::make_unique<SingleCode>("A3"),
@@ -45,9 +63,13 @@ std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
                   std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
               position(1, "LON_S_CTR", 129.420, std::vector<std::string>{}, true, false),
               nonUserPosition("LON_S_CTR", "Not User", position, false),
-              userPosition("LON_S_CTR", "User", position, true), generator(codes)
+              userPosition("LON_S_CTR", "User", position, true),
+              mockEventHandler(std::make_shared<CachedAircraftIntentionCodeGeneratorTestEventHandlerMock>()),
+              generator(codes, eventHandlers)
         {
             ON_CALL(flightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
+
+            eventHandlers.AddHandler(mockEventHandler);
         }
 
         testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface> flightplan;
@@ -59,6 +81,8 @@ std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
         ActiveCallsign nonUserPosition;
         ActiveCallsign userPosition;
         IntentionCodeCollection codes;
+        std::shared_ptr<CachedAircraftIntentionCodeGeneratorTestEventHandlerMock> mockEventHandler;
+        IntentionCodeEventHandlerCollection eventHandlers;
         CachedAircraftIntentionCodeGenerator generator;
     };
 
@@ -70,6 +94,7 @@ std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
 
         EXPECT_EQ(entry, generator.GetCacheEntryForCallsign("BAW123"));
         EXPECT_EQ(entry, generator.Generate(flightplan, radarTarget));
+        EXPECT_FALSE(mockEventHandler->updatedCalled);
     }
 
     TEST_F(CachedAircraftIntentionCodeGeneratorTest, ItReturnsEmptyCodeIfNoMatches)
@@ -78,6 +103,7 @@ std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
         EXPECT_NE(nullptr, generated);
         EXPECT_EQ("BAW123", generated->callsign);
         EXPECT_EQ("--", generated->intentionCode);
+        EXPECT_EQ(nullptr, generated->matchedIntentionCode);
     }
 
     TEST_F(CachedAircraftIntentionCodeGeneratorTest, ItReturnsFirstMatchedCode)
@@ -90,6 +116,7 @@ std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
         EXPECT_NE(nullptr, generated);
         EXPECT_EQ("BAW123", generated->callsign);
         EXPECT_EQ("A2", generated->intentionCode);
+        EXPECT_EQ(code2, generated->matchedIntentionCode);
     }
 
     TEST_F(CachedAircraftIntentionCodeGeneratorTest, ItCachesMatchedCode)
@@ -104,6 +131,17 @@ std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
         EXPECT_NE(nullptr, generated1);
         EXPECT_EQ(generated, generated1);
         EXPECT_EQ(generated, generator.GetCacheEntryForCallsign("BAW123"));
+    }
+
+    TEST_F(CachedAircraftIntentionCodeGeneratorTest, ItTriggersUpdatedEventWhenCodeGenerated)
+    {
+        codes.Add(code1);
+        codes.Add(code2);
+        codes.Add(code3);
+
+        const auto generated = generator.Generate(flightplan, radarTarget);
+        EXPECT_TRUE(mockEventHandler->updatedCalled);
+        EXPECT_EQ(generated.get(), mockEventHandler->passedCode);
     }
 
     TEST_F(CachedAircraftIntentionCodeGeneratorTest, FlightplanEventRemovesEntryFromCache)

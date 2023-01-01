@@ -8,7 +8,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto ArrivalAirfields::Passes(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const Euroscope::EuroScopeCRadarTargetInterface&
+                                                                      radarTarget)
         -> bool
     {
         return airfields.contains(flightplan.GetDestination());

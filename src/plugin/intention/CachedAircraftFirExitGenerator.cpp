@@ -30,7 +30,7 @@ namespace UKControllerPlugin::IntentionCode {
         cache.erase(callsign);
     }
 
-    auto CachedAircraftFirExitGenerator::Generate(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    auto CachedAircraftFirExitGenerator::Generate(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
         -> std::shared_ptr<AircraftFirExit>
     {
         auto cachedEntry = GetCacheEntryForCallsign(flightplan.GetCallsign());

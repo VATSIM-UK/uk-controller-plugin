@@ -12,8 +12,8 @@ namespace UKControllerPlugin::IntentionCode {
         CruisingLevelAbove(int altitude);
         [[nodiscard]] auto Level() const -> int;
         [[nodiscard]] auto Passes(
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
 
         private:
         int altitude;

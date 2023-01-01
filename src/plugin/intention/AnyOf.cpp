@@ -7,8 +7,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto AnyOf::Passes(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
-        -> bool
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
         for (const auto& condition : conditions) {
             if (condition->Passes(flightplan, radarTarget)) {

@@ -11,7 +11,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto ExitCone::AircraftIsExiting(
-        const Flightplan::FlightplanPoint& flightplanPoint, Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+        const Flightplan::FlightplanPoint& flightplanPoint, const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        const
         -> bool
     {
         const auto nextPoint = flightplan.GetParsedFlightplan()->PointByIndex(flightplanPoint.Index() + 1);

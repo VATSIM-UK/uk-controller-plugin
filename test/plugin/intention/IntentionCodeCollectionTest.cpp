@@ -1,8 +1,10 @@
 #include "intention/IntentionCodeCollection.h"
+#include "intention/IntentionCodeMetadata.h"
 #include "intention/IntentionCodeModel.h"
 #include "intention/SingleCode.h"
 
 using UKControllerPlugin::IntentionCode::IntentionCodeCollection;
+using UKControllerPlugin::IntentionCode::IntentionCodeMetadata;
 using UKControllerPlugin::IntentionCode::IntentionCodeModel;
 using UKControllerPlugin::IntentionCode::SingleCode;
 
@@ -12,11 +14,12 @@ namespace UKControllerPluginTest::IntentionCode {
         public:
         IntentionCodeCollectionTest()
             : model1(std::make_shared<IntentionCodeModel>(
-                  1, std::make_unique<SingleCode>("AF"), std::make_unique<testing::NiceMock<MockCondition>>())),
+                  1, std::make_unique<SingleCode>("AF"), std::make_unique<testing::NiceMock<MockCondition>>(),
+                  std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
               model2(std::make_shared<IntentionCodeModel>(
-                  2, std::make_unique<SingleCode>("AF"), std::make_unique<testing::NiceMock<MockCondition>>())),
+                  2, std::make_unique<SingleCode>("AF"), std::make_unique<testing::NiceMock<MockCondition>>(), std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata))),
               model3(std::make_shared<IntentionCodeModel>(
-                  3, std::make_unique<SingleCode>("AF"), std::make_unique<testing::NiceMock<MockCondition>>()))
+                  3, std::make_unique<SingleCode>("AF"), std::make_unique<testing::NiceMock<MockCondition>>(), std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)))
         {
         }
 

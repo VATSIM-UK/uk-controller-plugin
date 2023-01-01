@@ -17,8 +17,8 @@ namespace UKControllerPlugin::IntentionCode {
             const UKControllerPlugin::Controller::ActiveCallsignCollection& activeControllers, std::string pattern);
         [[nodiscard]] auto Pattern() const -> const std::string&;
         [[nodiscard]] auto Passes(
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
 
         private:
         // Active controllers

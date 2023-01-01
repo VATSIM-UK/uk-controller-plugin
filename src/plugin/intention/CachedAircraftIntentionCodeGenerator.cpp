@@ -5,14 +5,15 @@
 #include "IntentionCodeCollection.h"
 #include "IntentionCodeModel.h"
 #include "IntentionCodeUpdatedMessage.h"
+#include "IntentionCodeEventHandlerCollection.h"
 #include "controller/ActiveCallsign.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 
 namespace UKControllerPlugin::IntentionCode {
 
     CachedAircraftIntentionCodeGenerator::CachedAircraftIntentionCodeGenerator(
-        const IntentionCodeCollection& intentionCodes)
-        : intentionCodes(intentionCodes)
+        const IntentionCodeCollection& intentionCodes, const IntentionCodeEventHandlerCollection& eventHandlers)
+        : intentionCodes(intentionCodes), eventHandlers(eventHandlers)
     {
     }
 
@@ -33,8 +34,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto CachedAircraftIntentionCodeGenerator::Generate(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
-        -> std::shared_ptr<AircraftIntentionCode>
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> std::shared_ptr<AircraftIntentionCode>
     {
         auto cachedEntry = GetCacheEntryForCallsign(flightplan.GetCallsign());
         if (cachedEntry) {
@@ -51,9 +52,11 @@ namespace UKControllerPlugin::IntentionCode {
 
         intentionCode.intentionCode =
             matchedIntentionCode ? matchedIntentionCode->Generator().GenerateCode(flightplan) : "--";
+        intentionCode.matchedIntentionCode = matchedIntentionCode;
 
         auto cacheItem = std::make_shared<AircraftIntentionCode>(intentionCode);
         AddCacheEntry(cacheItem);
+        eventHandlers.IntentionCodeUpdated(*cacheItem);
 
         return cacheItem;
     }

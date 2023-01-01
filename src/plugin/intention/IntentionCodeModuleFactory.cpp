@@ -1,8 +1,10 @@
 #include "CachedAircraftFirExitGenerator.h"
+#include "CachedAircraftIntentionCodeGenerator.h"
 #include "FirExitPointCollection.h"
 #include "FirExitPointCollectionFactory.h"
 #include "IntentionCodeCollection.h"
 #include "IntentionCodeCollectionFactory.h"
+#include "IntentionCodeEventHandlerCollection.h"
 #include "IntentionCodeModuleFactory.h"
 #include "dependency/DependencyLoaderInterface.h"
 
@@ -50,5 +52,33 @@ namespace UKControllerPlugin::IntentionCode {
         }
 
         return *intentionCodes;
+    }
+
+    auto IntentionCodeModuleFactory::IntentionCodeEventHandlers() -> IntentionCodeEventHandlerCollection&
+    {
+        if (!intentionCodeEventHandlers) {
+            intentionCodeEventHandlers = std::make_unique<IntentionCodeEventHandlerCollection>();
+        }
+
+        return *intentionCodeEventHandlers;
+    }
+
+    auto IntentionCodeModuleFactory::IntentionCodeGenerator(
+        Dependency::DependencyLoaderInterface& dependencyLoader,
+        const Controller::ActiveCallsignCollection& activeControllers) -> AircraftIntentionCodeGenerator&
+    {
+        return CachedIntentionCodeGenerator(dependencyLoader, activeControllers);
+    }
+
+    auto IntentionCodeModuleFactory::CachedIntentionCodeGenerator(
+        Dependency::DependencyLoaderInterface& dependencyLoader,
+        const Controller::ActiveCallsignCollection& activeControllers) -> CachedAircraftIntentionCodeGenerator&
+    {
+        if (!intentionCodeGenerator) {
+            intentionCodeGenerator = std::make_unique<CachedAircraftIntentionCodeGenerator>(
+                IntentionCodes(dependencyLoader, activeControllers), IntentionCodeEventHandlers());
+        }
+
+        return *intentionCodeGenerator;
     }
 } // namespace UKControllerPlugin::IntentionCode

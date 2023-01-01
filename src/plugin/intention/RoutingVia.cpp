@@ -9,7 +9,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto RoutingVia::Passes(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const Euroscope::EuroScopeCRadarTargetInterface&
+                                                                      radarTarget)
         -> bool
     {
         return flightplan.GetParsedFlightplan()->HasPointByIdentifier(via);

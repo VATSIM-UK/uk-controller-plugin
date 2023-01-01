@@ -12,8 +12,8 @@ namespace UKControllerPlugin::IntentionCode {
         Not(std::shared_ptr<Condition> condition);
         [[nodiscard]] auto Subcondition() const -> const Condition&;
         [[nodiscard]] auto Passes(
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
 
         private:
         // The conditions that must be true

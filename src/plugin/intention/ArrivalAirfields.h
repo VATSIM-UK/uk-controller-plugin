@@ -13,8 +13,8 @@ namespace UKControllerPlugin::IntentionCode {
         ArrivalAirfields(std::set<std::string> airfields);
         [[nodiscard]] auto Airfields() const -> const std::set<std::string>&;
         [[nodiscard]] auto Passes(
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
 
         private:
         std::set<std::string> airfields;

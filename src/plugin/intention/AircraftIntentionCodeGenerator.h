@@ -19,7 +19,7 @@ namespace UKControllerPlugin::IntentionCode {
             Generates the aircrafts FIR exit point data, or nullptr if there are none.
         */
         [[nodiscard]] virtual auto Generate(
-            Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> std::shared_ptr<AircraftIntentionCode> = 0;
+            const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> std::shared_ptr<AircraftIntentionCode> = 0;
     };
 } // namespace UKControllerPlugin::IntentionCode
