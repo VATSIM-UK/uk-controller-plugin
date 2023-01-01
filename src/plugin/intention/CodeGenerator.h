@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin::Euroscope {
     class EuroScopeCFlightPlanInterface;
-} //
+} // namespace UKControllerPlugin::Euroscope
 
 namespace UKControllerPlugin::IntentionCode {
     /**
@@ -12,7 +12,7 @@ namespace UKControllerPlugin::IntentionCode {
     {
         public:
         virtual ~CodeGenerator() = default;
-        [[nodiscard]] virtual auto GenerateCode(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const ->
-            std::string = 0;
+        [[nodiscard]] virtual auto GenerateCode(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+            -> std::string = 0;
     };
 } // namespace UKControllerPlugin::IntentionCode

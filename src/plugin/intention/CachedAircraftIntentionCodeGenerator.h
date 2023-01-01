@@ -33,8 +33,8 @@ namespace UKControllerPlugin::IntentionCode {
         */
         [[nodiscard]] auto Generate(
             const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> std::shared_ptr<AircraftIntentionCode>
-                override;
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+            -> std::shared_ptr<AircraftIntentionCode> override;
 
         void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign) override;
         void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign) override;

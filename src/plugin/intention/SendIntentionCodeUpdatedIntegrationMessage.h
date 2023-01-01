@@ -6,7 +6,7 @@ namespace UKControllerPlugin::Integration {
 } // namespace UKControllerPlugin::Integration
 
 namespace UKControllerPlugin::IntentionCode {
-    
+
     class FirExitPointCollection;
 
     /**
@@ -15,17 +15,14 @@ namespace UKControllerPlugin::IntentionCode {
     class SendIntentionCodeUpdatedIntegrationMessage : public IntentionCodeEventHandlerInterface
     {
         public:
-        SendIntentionCodeUpdatedIntegrationMessage(const
-                                                   FirExitPointCollection& exitPoints,
-                                                       Integration::OutboundIntegrationEventHandler& outboundEvents);
+        SendIntentionCodeUpdatedIntegrationMessage(
+            const FirExitPointCollection& exitPoints, Integration::OutboundIntegrationEventHandler& outboundEvents);
         void IntentionCodeUpdated(const AircraftIntentionCode& intentionCode) override;
 
         private:
-        
         // FIR exit points
-        const
-            FirExitPointCollection& exitPoints;
-        
+        const FirExitPointCollection& exitPoints;
+
         // Sends integration messages
         Integration::OutboundIntegrationEventHandler& outboundEvents;
     };

@@ -5,16 +5,7 @@ namespace UKControllerPluginTest::Euroscope {
     class MockEuroscopeCoordinateInterface : public UKControllerPlugin::Euroscope::EuroscopeCoordinateInterface
     {
         public:
-        MOCK_METHOD(
-            double,
-            DirectionTo,
-            (const EuroscopeCoordinateInterface&),
-            (const, override));
-
-        MOCK_METHOD(
-            const EuroScopePlugIn::CPosition,
-            ToEuroscopePosition,
-            (),
-            (const, override));
+        MOCK_METHOD(double, DirectionTo, (const EuroscopeCoordinateInterface&), (const, override));
+        MOCK_METHOD(const EuroScopePlugIn::CPosition, ToEuroscopePosition, (), (const, override));
     };
-} // namespace UKControllerPluginTest::Sid
+} // namespace UKControllerPluginTest::Euroscope

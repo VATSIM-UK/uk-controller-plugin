@@ -13,9 +13,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto ControllerPositionStartsWith::Passes(
-        const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const Euroscope::EuroScopeCRadarTargetInterface&
-                                                                      radarTarget)
-        -> bool
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
         return activeControllers.UserHasCallsign() &&
                activeControllers.GetUserCallsign().GetNormalisedPosition().GetCallsign().substr(0, pattern.size()) ==

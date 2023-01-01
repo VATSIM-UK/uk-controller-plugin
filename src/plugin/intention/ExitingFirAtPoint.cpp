@@ -12,9 +12,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto ExitingFirAtPoint::Passes(
-        const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const Euroscope::EuroScopeCRadarTargetInterface&
-                                                                      radarTarget)
-        -> bool
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
         const auto firExit = firExitGenerator.Generate(flightplan);
         if (!firExit) {

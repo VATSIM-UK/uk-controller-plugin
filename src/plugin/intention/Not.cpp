@@ -7,9 +7,8 @@ namespace UKControllerPlugin::IntentionCode {
     }
 
     auto Not::Passes(
-        const Euroscope::EuroScopeCFlightPlanInterface& flightplan, const Euroscope::EuroScopeCRadarTargetInterface&
-                                                                      radarTarget)
-        -> bool
+        const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+        const Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool
     {
         return !condition->Passes(flightplan, radarTarget);
     }
