@@ -1,3 +1,4 @@
+#pragma once
 #include "radarscreen/MenuToggleableDisplayInterface.h"
 
 using UKControllerPlugin::RadarScreen::MenuToggleableDisplayInterface;

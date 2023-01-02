@@ -1,3 +1,4 @@
+#pragma once
 #include "metar/MetarEventHandlerInterface.h"
 
 using UKControllerPlugin::Metar::MetarEventHandlerInterface;

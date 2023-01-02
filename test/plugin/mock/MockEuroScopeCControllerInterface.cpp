@@ -1,4 +1,4 @@
-#include "MockEuroscopeCControllerInterface.h"
+#include "MockEuroScopeCControllerInterface.h"
 
-UKControllerPluginTest::Euroscope::MockEuroscopeCControllerInterface::MockEuroscopeCControllerInterface() = default;
-UKControllerPluginTest::Euroscope::MockEuroscopeCControllerInterface::~MockEuroscopeCControllerInterface() = default;
+UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface::MockEuroScopeCControllerInterface() = default;
+UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface::~MockEuroScopeCControllerInterface() = default;

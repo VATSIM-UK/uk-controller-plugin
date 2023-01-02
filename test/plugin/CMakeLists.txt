@@ -341,7 +341,7 @@ set(test__mock
     "mock/MockConnection.h"  mock/MockConnection.cpp
     "mock/MockControllerStatusEventHandlerInterface.h" mock/MockControllerStatusEventHandlerInterface.cpp
     "mock/MockDependencyLoader.h" mock/MockDependencyLoader.cpp
-    "mock/MockEuroScopeCControllerInterface.h" mock/MockEuroscopeCControllerInterface.cpp
+    "mock/MockEuroScopeCControllerInterface.h" mock/MockEuroScopeCControllerInterface.cpp
     "mock/MockEuroScopeCFlightplanInterface.h" mock/MockEuroScopeCFlightplanInterface.cpp
     "mock/MockEuroScopeCRadarTargetInterface.h"  mock/MockEuroScopeCRadarTargetInterface.cpp
     "mock/MockEuroscopeExtractedRouteInterface.h" mock/MockEuroscopeExtractedRouteInterface.cpp
