@@ -17,15 +17,15 @@ set(helper
 source_group("helper" FILES ${helper})
 
 set(mock
-    "mock/MockApiInterface.h"
-    "mock/MockCurlApi.h"
-    "mock/MockDialogProvider.h"
-    "mock/MockTaskRunnerInterface.h"
-    "mock/MockWinApi.h"
-    mock/MockApiSettingsProvider.h
-    mock/MockApiRequestPerformer.h
-    mock/MockApiRequestPerformerFactory.h
-    mock/MockSettingRepository.h)
+    "mock/MockApiInterface.h" mock/MockApiInterface.cpp
+    "mock/MockCurlApi.h" mock/MockCurlApi.cpp
+    "mock/MockDialogProvider.h" mock/MockDialogProvider.cpp
+    "mock/MockTaskRunnerInterface.h" mock/MockTaskRunnerInterface.cpp
+    "mock/MockWinApi.h" mock/MockWinApi.cpp
+    mock/MockApiSettingsProvider.h mock/MockApiSettingsProvider.cpp
+    mock/MockApiRequestPerformer.h mock/MockApiRequestPerformer.cpp
+    mock/MockApiRequestPerformerFactory.h mock/MockApiRequestPerformerFactory.cpp
+    mock/MockSettingRepository.h mock/MockSettingRepository.cpp )
 source_group("mock" FILES ${mock})
 
 set(test
@@ -40,8 +40,7 @@ source_group("test" FILES ${test})
 set(ALL_FILES
     ${helper}
     ${mock}
-    ${test}
-)
+    ${test})
 
 ################################################################################
 # Target

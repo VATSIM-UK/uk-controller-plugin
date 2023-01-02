@@ -7,6 +7,8 @@ namespace UKControllerPluginTest {
         class MockEuroScopeCRadarTargetInterface : public UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface
         {
             public:
+            MockEuroScopeCRadarTargetInterface();
+            virtual ~MockEuroScopeCRadarTargetInterface();
             MOCK_CONST_METHOD0(GetCallsign, const std::string(void));
             MOCK_CONST_METHOD0(GetFlightLevel, int(void));
             MOCK_CONST_METHOD0(GetGroundSpeed, int(void));

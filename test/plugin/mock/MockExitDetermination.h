@@ -5,6 +5,8 @@ namespace UKControllerPluginTest::IntentionCode {
     class MockExitDetermination : public UKControllerPlugin::IntentionCode::ExitDetermination
     {
         public:
+        MockExitDetermination();
+        virtual ~MockExitDetermination();
         MOCK_METHOD(
             bool,
             AircraftIsExiting,

@@ -1,3 +1,4 @@
+#pragma once
 #include "bootstrap/BootstrapProviderInterface.h"
 
 using UKControllerPlugin::Bootstrap::BootstrapProviderInterface;
@@ -11,6 +12,8 @@ namespace UKControllerPluginTest::Bootstrap {
     class MockBootstrapProvider : public BootstrapProviderInterface
     {
         public:
+        MockBootstrapProvider();
+        virtual ~MockBootstrapProvider();
         MOCK_METHOD(void, BootstrapPlugin, (PersistenceContainer&), (override));
         MOCK_METHOD(
             void,

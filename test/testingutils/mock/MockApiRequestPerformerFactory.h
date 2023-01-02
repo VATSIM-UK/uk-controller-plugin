@@ -9,6 +9,8 @@ namespace UKControllerPluginUtilsTest::Api {
     class MockApiRequestPerformerFactory : public AbstractApiRequestPerformerFactory
     {
         public:
+        MockApiRequestPerformerFactory();
+        virtual ~MockApiRequestPerformerFactory();
         MOCK_METHOD(ApiRequestPerformerInterface&, Make, (const ApiSettings&), ());
     };
 } // namespace UKControllerPluginUtilsTest::Api

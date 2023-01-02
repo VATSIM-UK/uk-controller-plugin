@@ -6,9 +6,8 @@ namespace UKControllerPluginTest {
         class MockWinApi : public UKControllerPlugin::Windows::WinApiInterface
         {
             public:
-            MockWinApi() : WinApiInterface(NULL)
-            {
-            }
+            MockWinApi();
+            virtual ~MockWinApi();
             MOCK_CONST_METHOD3(
                 FileOpenDialog,
                 std::wstring(std::wstring title, UINT numFileTypes, const COMDLG_FILTERSPEC* fileTypes));
@@ -30,11 +29,7 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD1(UnloadLibrary, void(HINSTANCE handle));
             MOCK_METHOD2(MoveFileToNewLocation, bool(std::wstring, std::wstring));
             MOCK_CONST_METHOD1(OpenExplorer, void(const std::wstring&));
-
-            std::string ReadFromFile(std::wstring path, bool relative) override
-            {
-                return ReadFromFileMock(path, relative);
-            }
+            std::string ReadFromFile(std::wstring path, bool relative) override;
         };
     } // namespace Windows
 } // namespace UKControllerPluginTest

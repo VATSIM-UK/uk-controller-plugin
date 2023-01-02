@@ -15,6 +15,8 @@ namespace UKControllerPluginTest {
             : public UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface
         {
             public:
+            MockFlightPlanEventHandlerInterface();
+            virtual ~MockFlightPlanEventHandlerInterface();
             MOCK_METHOD2(
                 FlightPlanEvent,
                 void(

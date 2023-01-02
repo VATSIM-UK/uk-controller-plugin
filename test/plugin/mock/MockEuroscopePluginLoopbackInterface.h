@@ -12,16 +12,11 @@ namespace UKControllerPluginTest {
             : public UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface
         {
             public:
-            void AddAllFlightplansItem(MockFlightplanRadarTargetPair item)
-            {
-                this->allFpRtPairs.push_back(item);
-            }
-
+            MockEuroscopePluginLoopbackInterface();
+            virtual ~MockEuroscopePluginLoopbackInterface();
+            void AddAllFlightplansItem(MockFlightplanRadarTargetPair item);
             void
-            AddAllControllersItem(std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> item)
-            {
-                this->allControllers.push_back(item);
-            }
+            AddAllControllersItem(std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface> item);
 
             MOCK_METHOD1(AddItemToPopupList, void(const UKControllerPlugin::Plugin::PopupMenuItem item));
             MOCK_CONST_METHOD0(GetEuroscopeConnectionStatus, int(void));
@@ -61,56 +56,26 @@ namespace UKControllerPluginTest {
                 RegisterFlightplanList,
                 (std::string),
                 (override));
-
             void ApplyFunctionToAllFlightplans(
                 std::function<void(
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>,
-                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>)> function) override
-            {
-                if (this->expectFlightplanLoopNoFire) {
-                    throw std::logic_error("Was not expecting the flightplan loop");
-                }
-
-                for (auto it = this->allFpRtPairs.cbegin(); it != this->allFpRtPairs.cend(); ++it) {
-                    function(it->fp, it->rt);
-                }
-            };
-
+                    std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>)> function) override;
             void ApplyFunctionToAllControllers(
                 std::function<void(std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>)>
-                    function) override
-            {
-                for (auto it = this->allControllers.cbegin(); it != this->allControllers.cend(); ++it) {
-                    function(*it);
-                }
-            }
-
+                    function) override;
             MOCK_METHOD(
                 void,
                 SetEuroscopeSelectedFlightplanPointer,
                 (std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>));
-
             MOCK_METHOD(
                 void,
                 SetEuroscopeSelectedFlightplanReference,
                 (const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&));
-
             void SetEuroscopeSelectedFlightplan(
-                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> flightplan) override
-            {
-                this->SetEuroscopeSelectedFlightplanPointer(flightplan);
-            }
-
+                std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface> flightplan) override;
             void SetEuroscopeSelectedFlightplan(
-                const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) override
-            {
-                this->SetEuroscopeSelectedFlightplanReference(flightplan);
-            }
-
-            void ExpectNoFlightplanLoop()
-            {
-                this->expectFlightplanLoopNoFire = true;
-            }
+                const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) override;
+            void ExpectNoFlightplanLoop();
 
             private:
             std::list<MockFlightplanRadarTargetPair> allFpRtPairs;

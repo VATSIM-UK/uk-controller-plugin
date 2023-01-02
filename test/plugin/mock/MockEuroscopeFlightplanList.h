@@ -8,6 +8,8 @@ namespace UKControllerPluginTest {
         class MockEuroscopeFlightplanList : public UKControllerPlugin::Euroscope::EuroscopeFlightplanListInterface
         {
             public:
+            MockEuroscopeFlightplanList();
+            virtual ~MockEuroscopeFlightplanList();
             MOCK_METHOD(int, NumberOfColumns, (), (override));
             MOCK_METHOD(
                 void,

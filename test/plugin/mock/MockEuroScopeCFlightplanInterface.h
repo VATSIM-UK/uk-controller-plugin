@@ -8,6 +8,8 @@ namespace UKControllerPluginTest {
         class MockEuroScopeCFlightPlanInterface : public UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface
         {
             public:
+            MockEuroScopeCFlightPlanInterface();
+            virtual ~MockEuroScopeCFlightPlanInterface();
             MOCK_CONST_METHOD2(AnnotateFlightStrip, void(int, std::string));
             MOCK_CONST_METHOD1(GetAnnotation, std::string(int));
             MOCK_CONST_METHOD0(GetAircraftType, std::string(void));

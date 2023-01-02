@@ -9,6 +9,8 @@ namespace UKControllerPluginUtilsTest::Api {
     class MockApiRequestPerformer : public ApiRequestPerformerInterface
     {
         public:
+        MockApiRequestPerformer();
+        virtual ~MockApiRequestPerformer();
         MOCK_METHOD(Response, Perform, (const ApiRequestData&), (override));
     };
 } // namespace UKControllerPluginUtilsTest::Api

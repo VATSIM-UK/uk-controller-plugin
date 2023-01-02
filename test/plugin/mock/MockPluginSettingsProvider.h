@@ -9,6 +9,8 @@ namespace UKControllerPluginTest::Euroscope {
     class MockPluginSettingsProvider : public PluginSettingsProviderInterface
     {
         public:
+        MockPluginSettingsProvider();
+        virtual ~MockPluginSettingsProvider();
         MOCK_METHOD(void, LoadSettings, (UserSetting&), (override));
         MOCK_METHOD(void, SaveSettings, (UserSetting&), (override));
     };

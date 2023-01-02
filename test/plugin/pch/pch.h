@@ -82,8 +82,6 @@
 #include "../mock/MockFlightPlanEventHandlerInterface.h"
 #include "../mock/MockFlightplanRadarTargetPair.h"
 #include "../mock/MockGraphicsInterface.h"
-#include "../mock/MockHistoryTrailDialog.h"
-#include "../mock/MockHistoryTrailRepository.h"
 #include "../mock/MockIntegrationActionProcessor.h"
 #include "../mock/MockListItemProvider.h"
 #include "../mock/MockMenuToggleableDisplay.h"

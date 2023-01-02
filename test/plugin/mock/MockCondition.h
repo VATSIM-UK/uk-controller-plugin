@@ -5,6 +5,8 @@ namespace UKControllerPluginTest::IntentionCode {
     class MockCondition : public UKControllerPlugin::IntentionCode::Condition
     {
         public:
+        MockCondition();
+        virtual ~MockCondition();
         MOCK_METHOD(
             bool,
             Passes,

@@ -1,11 +1,12 @@
 #pragma once
-#include "euroscope/EuroscopeExtractedRouteInterface.h"
 
 namespace UKControllerPlugin::Flightplan {
     class ParsedFlightplan;
 } // namespace UKControllerPlugin::Flightplan
 
 namespace UKControllerPlugin::Euroscope {
+
+    class EuroscopeExtractedRouteInterface;
 
     /*
         Interface for interacting with the wrapper around the EuroScope CFlightPlan class.

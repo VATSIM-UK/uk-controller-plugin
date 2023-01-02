@@ -8,6 +8,8 @@ namespace UKControllerPluginTest::List {
     class MockListItemProvider : public ListItemProviderInterface
     {
         public:
+        MockListItemProvider();
+        virtual ~MockListItemProvider();
         MOCK_METHOD(int, ListColumns, (), (override));
         MOCK_METHOD(std::string, ListName, (), (override));
         MOCK_METHOD(std::list<std::shared_ptr<ListItem>>, ListItems, (), (override));

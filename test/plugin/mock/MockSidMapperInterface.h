@@ -18,6 +18,8 @@ namespace UKControllerPluginTest::Sid {
     class MockSidMapperInterface : public SidMapperInterface
     {
         public:
+        MockSidMapperInterface();
+        virtual ~MockSidMapperInterface();
         MOCK_METHOD(
             std::shared_ptr<StandardInstrumentDeparture>,
             MapFlightplanToSid,

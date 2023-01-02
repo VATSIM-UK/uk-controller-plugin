@@ -191,7 +191,6 @@ set(src__euroscope
     "euroscope/EuroscopeCoordinateInterface.h"
     "euroscope/EuroscopeCoordinateWrapper.h"
     "euroscope/EuroscopeCoordinateWrapper.cpp"
-    "euroscope/EuroscopeExtractedRouteInterface.cpp"
     "euroscope/EuroscopeExtractedRouteInterface.h"
     "euroscope/EuroscopeFlightplanListInterface.h"
     "euroscope/EuroscopeFlightplanListWrapper.cpp"
@@ -225,7 +224,12 @@ set(src__euroscope
     "euroscope/UserSettingAwareCollection.h"
     "euroscope/UserSettingAwareInterface.h"
     "euroscope/UserSettingProviderInterface.h"
-        euroscope/AsrEventHandlerInterface.cpp euroscope/UserSettingProviderInterface.cpp euroscope/EuroscopeRadarLoopbackInterface.cpp euroscope/PluginSettingsProviderInterface.h euroscope/PluginSettingsProviderCollection.cpp euroscope/PluginSettingsProviderCollection.h)
+    euroscope/AsrEventHandlerInterface.cpp
+    euroscope/UserSettingProviderInterface.cpp
+    euroscope/EuroscopeRadarLoopbackInterface.cpp
+    euroscope/PluginSettingsProviderInterface.h
+    euroscope/PluginSettingsProviderCollection.cpp euroscope/PluginSettingsProviderCollection.h
+    euroscope/EuroscopeExtractedRouteWrapper.cpp euroscope/EuroscopeExtractedRouteWrapper.h)
 source_group("src\\euroscope" FILES ${src__euroscope})
 
 set(src__flightinformationservice

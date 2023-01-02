@@ -7,6 +7,8 @@ namespace UKControllerPluginTest {
         class MockEuroScopeCControllerInterface : public UKControllerPlugin::Euroscope::EuroScopeCControllerInterface
         {
             public:
+            MockEuroScopeCControllerInterface();
+            virtual ~MockEuroScopeCControllerInterface();
             MOCK_CONST_METHOD0(IsVatsimRecognisedController, bool(void));
             MOCK_CONST_METHOD0(GetCallsign, const std::string(void));
             MOCK_CONST_METHOD0(GetFrequency, double(void));

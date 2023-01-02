@@ -9,6 +9,8 @@ namespace UKControllerPluginTest::Prenote {
     class MockPrenoteMessageEventHandlerInterface : public PrenoteMessageEventHandlerInterface
     {
         public:
+        MockPrenoteMessageEventHandlerInterface();
+        virtual ~MockPrenoteMessageEventHandlerInterface();
         MOCK_METHOD(void, NewMessage, (const PrenoteMessage&), (override));
         MOCK_METHOD(void, MessageCancelled, (const PrenoteMessage&), (override));
         MOCK_METHOD(void, MessageAcknowledged, (const PrenoteMessage&), (override));

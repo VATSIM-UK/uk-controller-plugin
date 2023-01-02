@@ -8,6 +8,8 @@ namespace UKControllerPluginTest {
         class MockUserSettingAwareInterface : public UKControllerPlugin::Euroscope::UserSettingAwareInterface
         {
             public:
+            MockUserSettingAwareInterface();
+            virtual ~MockUserSettingAwareInterface();
             MOCK_METHOD1(UserSettingsUpdated, void(UKControllerPlugin::Euroscope::UserSetting&));
         };
     } // namespace Euroscope
