@@ -1095,11 +1095,10 @@ if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
             /Od
+            /Zi;
         >
         $<$<CONFIG:Release>:
             /O2;
-            /Oi;
-            /Gy
         >
         /std:c++20;
         /sdl;
@@ -1110,15 +1109,16 @@ if(MSVC)
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
         -Wno-unused-parameter # Lots of interfaces don't use everything
         -Wno-missing-field-initializers # Windows has loads of this sadly
+        -ftime-trace
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /DEBUG:FASTLINK;
+            /DEBUG:GHASH;
             /INCREMENTAL
             -flto=thin
             >
         $<$<CONFIG:Release>:
-            /DEBUG;
+            /DEBUG:NONE;
             /OPT:REF;
             /OPT:ICF;
             /INCREMENTAL:NO

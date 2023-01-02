@@ -739,19 +739,18 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /Od;
-            -Zm200
+            -Zm200;
+            /Zi;
         >
         $<$<CONFIG:Release>:
-            /O2;
-            /Oi;
-            /Gy;
-            -Zm120
+            -Zm120;
         >
+        /O1;
         /std:c++20;
         /sdl;
         /W4;
         /WX;
+        -ftime-trace;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
         -Wno-unused-parameter # Lots of interfaces don't use everything
@@ -759,12 +758,12 @@ if(MSVC)
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /DEBUG:FASTLINK;
+            /DEBUG:GHASH;
             /INCREMENTAL
             -flto=thin
         >
         $<$<CONFIG:Release>:
-            /DEBUG;
+            /DEBUG:NONE;
             /OPT:REF;
             /OPT:ICF;
             /INCREMENTAL:NO
