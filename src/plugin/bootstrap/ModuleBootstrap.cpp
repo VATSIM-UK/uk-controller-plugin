@@ -3,7 +3,6 @@
 #include "ModuleBootstrap.h"
 #include "ModuleFactories.h"
 #include "PersistenceContainer.h"
-#include "approach/ApproachModuleFactory.h"
 
 namespace UKControllerPlugin::Bootstrap {
 

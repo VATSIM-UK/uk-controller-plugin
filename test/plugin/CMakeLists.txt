@@ -130,8 +130,11 @@ set(test__flightinformationservice
 source_group("test\\flightinformationservice" FILES ${test__flightinformationservice})
 
 set(test__flightplan
+    "flightplan/FlightplanPointTest.cpp"
     "flightplan/FlightPlanEventHandlerCollectionTest.cpp"
     "flightplan/FlightplanStorageBootstrapTest.cpp"
+    "flightplan/ParsedFlightplanFactoryTest.cpp"
+    "flightplan/ParsedFlightplanTest.cpp"
     "flightplan/StoredFlightplanCollectionTest.cpp"
     "flightplan/StoredFlightplanEventHandlerTest.cpp"
     "flightplan/StoredFlightplanTest.cpp"
@@ -228,28 +231,36 @@ set(test__integration
     "integration/MessageTypeTest.cpp"
     "integration/OutboundIntegrationMessageHandlerTest.cpp"
     "integration/SocketConnectionTest.cpp"
-)
+        intention/IntentionCodeBootstrapProviderTest.cpp intention/IntentionCodeModelTest.cpp)
 source_group("test\\integration" FILES ${test__integration})
 
 set(test__intention
-    "intention/AmsterdamAirfieldGroupTest.cpp"
-    "intention/BrusselsAirfieldGroupTest.cpp"
-    "intention/DublinAirfieldGroupTest.cpp"
-    "intention/HomeAirfieldGroupTest.cpp"
-    "intention/IntentionCodeCacheTest.cpp"
-    "intention/IntentionCodeEventHandlerTest.cpp"
-    "intention/IntentionCodeGeneratorTest.cpp"
-    "intention/IntentionCodeModuleTest.cpp"
+    "intention/ExitConeTest.cpp"
+    "intention/FirExitPointTest.cpp"
     "intention/IntentionCodeUpdatedMessageTest.cpp"
-    "intention/SectorExitPointEtratTest.cpp"
-    "intention/SectorExitPointKonanTest.cpp"
-    "intention/SectorExitPointLelnaTest.cpp"
-    "intention/SectorExitPointScottishTest.cpp"
-    "intention/SectorExitPointTest.cpp"
-    "intention/SectorExitPointVeuleTest.cpp"
-    "intention/SectorExitRepositoryTest.cpp"
-    "intention/ShannonAirfieldGroupTest.cpp"
-)
+    intention/FirExitPointCollectionTest.cpp
+    intention/CachedAircraftFirExitGeneratorTest.cpp
+    intention/FirExitPointCollectionFactoryTest.cpp
+    intention/IntentionCodeModuleFactoryTest.cpp
+    intention/AllOfTest.cpp
+    intention/AnyOfTest.cpp
+    intention/NotTest.cpp
+    intention/ArrivalAirfieldsTest.cpp
+    intention/ArrivalAirfieldPatternTest.cpp
+    intention/MaximumCruisingAltitudeTest.cpp
+    intention/CruisingLevelAboveTest.cpp
+    intention/ControllerPositionStartsWithTest.cpp
+    intention/ExitingFirAtPointTest.cpp
+    intention/RoutingViaTest.cpp
+    intention/SingleCodeTest.cpp
+    intention/AirfieldIdentifierTest.cpp
+    intention/FullAirfieldIdentifierTest.cpp
+    intention/IntentionCodeCollectionTest.cpp
+    intention/IntentionCodeCollectionFactoryTest.cpp
+    intention/CachedAircraftIntentionCodeGeneratorTest.cpp
+    intention/IntentionCodeEventHandlerCollectionTest.cpp
+    intention/SendIntentionCodeUpdatedIntegrationMessageTest.cpp
+    intention/IntentionCodeTagItemTest.cpp)
 source_group("test\\intention" FILES ${test__intention})
 
 set(test__list
@@ -283,7 +294,7 @@ set(test__metar
     metar/MetarModuleTest.cpp
     metar/PressureQueryMessageTest.cpp
     metar/PressureNotFoundMessageTest.cpp
-    metar/PressureQueryCommandHandlerTest.cpp mock/MockMetarEventHandler.h)
+    metar/PressureQueryCommandHandlerTest.cpp)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack
@@ -324,9 +335,9 @@ source_group("test\\missedapproach" FILES ${test__missedapproach})
 set(test__mock
     "mock/MockAbstractTimedEvent.h"
     "mock/MockActiveCallsignEventHandler.h"
-    "mock/MockAirfieldGroup.h"
     "mock/MockAsrEventHandlerInterface.h"
     "mock/MockConfigurableDisplay.h"
+    mock/MockCondition.h
     "mock/MockConnection.h"
     "mock/MockControllerStatusEventHandlerInterface.h"
     "mock/MockDependencyLoader.h"
@@ -335,9 +346,11 @@ set(test__mock
     "mock/MockEuroScopeCRadarTargetInterface.h"
     "mock/MockEuroscopeExtractedRouteInterface.h"
     "mock/MockEuroscopeFlightplanList.h"
+    "mock/MockEuroscopeCoordinateInterface.h"
     "mock/MockEuroscopePluginLoopbackInterface.h"
     "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
     "mock/MockEuroscopeSectorFileElementInterface.h"
+    "mock/MockExitDetermination.h"
     "mock/MockExternalMessageHandlerInterface.h"
     "mock/MockFlightPlanEventHandlerInterface.h"
     "mock/MockFlightplanRadarTargetPair.h"
@@ -363,7 +376,9 @@ set(test__mock
     mock/MockBootstrapProvider.h
     mock/MockPluginSettingsProvider.h
     mock/MockPrenoteMessageEventHandlerInterface.h
-    mock/MockPrenoteUserRelevanceChecker.h)
+    mock/MockPrenoteUserRelevanceChecker.h
+    mock/MockAircraftFirExitGenerator.h
+    mock/MockMetarEventHandler.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -650,7 +665,7 @@ set(ALL_FILES
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
-    $<TARGET_OBJECTS:UKControllerPluginCore>)
+    $<TARGET_OBJECTS:UKControllerPluginCore> intention/IntentionCodeBootstrapProviderTest.cpp)
 
 ################################################################################
 # Target

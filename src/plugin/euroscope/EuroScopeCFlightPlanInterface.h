@@ -1,6 +1,10 @@
 #pragma once
 #include "euroscope/EuroscopeExtractedRouteInterface.h"
 
+namespace UKControllerPlugin::Flightplan {
+    class ParsedFlightplan;
+} // namespace UKControllerPlugin::Flightplan
+
 namespace UKControllerPlugin::Euroscope {
 
     /*
@@ -19,8 +23,9 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] virtual double GetDistanceFromOrigin() const = 0;
         [[nodiscard]] virtual double GetDistanceToDestination() const = 0;
         [[nodiscard]] virtual std::string GetExpectedDepartureTime() const = 0;
-        [[nodiscard]] virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface
+        [[nodiscard]] virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface&
         GetExtractedRoute() const = 0;
+        [[nodiscard]] virtual std::shared_ptr<Flightplan::ParsedFlightplan> GetParsedFlightplan() const = 0;
         [[nodiscard]] virtual std::string GetFlightRules() const = 0;
         [[nodiscard]] virtual std::string GetGroundState() const = 0;
         [[nodiscard]] virtual std::string GetOrigin() const = 0;

@@ -4,6 +4,7 @@
 #include "integration/InitialisationSuccessMessage.h"
 #include "integration/InboundIntegrationMessageHandler.h"
 #include "integration/IntegrationModule.h"
+#include "integration/IntegrationPersistenceContainer.h"
 #include "integration/OutboundIntegrationEventHandler.h"
 #include "timedevent/TimedEventCollection.h"
 

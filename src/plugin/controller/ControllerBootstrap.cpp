@@ -19,7 +19,7 @@ namespace UKControllerPlugin::Controller {
         container.controllerHierarchyFactory =
             std::make_unique<ControllerPositionHierarchyFactory>(*container.controllerPositions);
 
-        container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+        container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
         container.controllerHandler->RegisterHandler(
             std::make_shared<ActiveCallsignMonitor>(*container.controllerPositions, *container.activeCallsigns));
     }
