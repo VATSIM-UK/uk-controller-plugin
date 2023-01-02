@@ -39,14 +39,12 @@ namespace UKControllerPluginTest::Windows {
         this->DrawRectRegularRect(area, pen);
     }
 
-    void MockGraphicsInterface::DrawString(
-        std::wstring text, const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
+    void MockGraphicsInterface::DrawString(std::wstring text, const Gdiplus::RectF& area, const Gdiplus::Brush& brush)
     {
         this->DrawStringRectF(text, area, brush);
     }
 
-    void MockGraphicsInterface::DrawString(
-        std::wstring text, const Gdiplus::Rect& area, const Gdiplus::Brush& brush)
+    void MockGraphicsInterface::DrawString(std::wstring text, const Gdiplus::Rect& area, const Gdiplus::Brush& brush)
     {
         this->DrawStringRect(text, area, brush);
     }
