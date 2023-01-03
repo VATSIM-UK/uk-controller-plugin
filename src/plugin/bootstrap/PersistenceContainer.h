@@ -1,5 +1,4 @@
 #pragma once
-#include "integration/IntegrationPersistenceContainer.h"
 
 namespace UKControllerPlugin {
     class UKPlugin;
@@ -72,12 +71,8 @@ namespace UKControllerPlugin {
     } // namespace Hold
     namespace Integration {
         class ExternalMessageEventHandler;
+        struct IntegrationPersistenceContainer;
     } // namespace Integration
-    namespace IntentionCode {
-        class SectorExitRepository;
-        class IntentionCodeCache;
-        class IntentionCodeGenerator;
-    } // namespace IntentionCode
     namespace InitialAltitude {
         class InitialAltitudeEventHandler;
     } // namespace InitialAltitude
@@ -189,7 +184,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
         std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> apiFactory;
         std::shared_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
-        std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
+        std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
         std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
         std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
         std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> pluginUserSettingHandler;
@@ -255,9 +250,6 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchyFactory> controllerHierarchyFactory;
-        std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
-        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeCache> intentionCodeCache;
-        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeGenerator> intentionCodeGenerator;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::unique_ptr<UKControllerPlugin::Wake::WakeSchemeCollection> wakeSchemes;

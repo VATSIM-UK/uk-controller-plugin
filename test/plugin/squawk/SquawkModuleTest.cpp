@@ -29,7 +29,7 @@ namespace UKControllerPluginTest::Squawk {
             this->container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
             this->container.timedHandler = std::make_unique<TimedEventCollection>();
             this->container.userSettingHandlers = std::make_shared<UserSettingAwareCollection>();
-            this->container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+            this->container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
         }
 
         PersistenceContainer container;

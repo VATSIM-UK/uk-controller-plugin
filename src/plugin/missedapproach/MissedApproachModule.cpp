@@ -22,6 +22,7 @@
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "integration/InboundIntegrationMessageHandler.h"
+#include "integration/IntegrationPersistenceContainer.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"

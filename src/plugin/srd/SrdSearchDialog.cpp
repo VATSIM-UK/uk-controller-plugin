@@ -4,9 +4,12 @@
 #include "api/ApiInterface.h"
 #include "datablock/DatablockFunctions.h"
 #include "dialog/DialogCallArgument.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "helper/HelperFunctions.h"
 #include "hold/HoldDisplayFunctions.h"
-#include "intention/IntentionCodeCache.h"
+#include "intention/AircraftFirExit.h"
+#include "intention/AircraftFirExitGenerator.h"
+#include "intention/FirExitPoint.h"
 #include "srd/SrdSearchParameters.h"
 
 using UKControllerPlugin::Api::ApiException;
@@ -15,8 +18,10 @@ using UKControllerPlugin::Dialog::DialogCallArgument;
 
 namespace UKControllerPlugin::Srd {
     SrdSearchDialog::SrdSearchDialog(
-        const UKControllerPlugin::Api::ApiInterface& api, const IntentionCode::IntentionCodeCache& intentionCodes)
-        : api(api), intentionCodes(intentionCodes)
+        Euroscope::EuroscopePluginLoopbackInterface& plugin,
+        const UKControllerPlugin::Api::ApiInterface& api,
+        IntentionCode::AircraftFirExitGenerator& firExitGenerator)
+        : plugin(plugin), api(api), firExitGenerator(firExitGenerator)
     {
     }
     /*
@@ -370,13 +375,16 @@ namespace UKControllerPlugin::Srd {
         SetDlgItemText(hwnd, IDC_SRD_ORIGIN, wideOrigin.c_str());
 
         auto destination = defaultValues->destination;
-        std::wstring wideDestination = L"";
+        std::wstring wideDestination;
         if (destination.size() >= 2 && (destination.substr(0, 2) == "EG" || destination.substr(0, 2) == "EI")) {
             wideDestination = HelperFunctions::ConvertToWideString(destination);
         } else {
-            auto data = this->intentionCodes.GetDataForAircraft(defaultValues->callsign);
-            if (data.ukExitPointIndex != IntentionCode::IntentionCodeData::INVALID_EXIT_POINT) {
-                wideDestination = HelperFunctions::ConvertToWideString(data.ukExitPoint);
+            const auto flightplan = plugin.GetFlightplanForCallsign(defaultValues->callsign);
+            if (flightplan) {
+                const auto exitPoint = firExitGenerator.Generate(*flightplan);
+                if (exitPoint && exitPoint->ukExitPoint) {
+                    wideDestination = HelperFunctions::ConvertToWideString(exitPoint->ukExitPoint->Identifier());
+                }
             }
         }
 

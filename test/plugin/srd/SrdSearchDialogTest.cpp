@@ -1,9 +1,7 @@
-#include "intention/IntentionCodeCache.h"
 #include "srd/SrdSearchDialog.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
-using UKControllerPlugin::IntentionCode::IntentionCodeCache;
 using UKControllerPlugin::Srd::SrdSearchDialog;
 using UKControllerPluginTest::Api::MockApiInterface;
 
@@ -12,11 +10,12 @@ namespace UKControllerPluginTest::Srd {
     class SrdSearchDialogTest : public Test
     {
         public:
-        SrdSearchDialogTest() : dialog(mockApi, codeCache)
+        SrdSearchDialogTest() : dialog(plugin, mockApi, exitGenerator)
         {
         }
 
-        IntentionCodeCache codeCache;
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
+        testing::NiceMock<IntentionCode::MockAircraftFirExitGenerator> exitGenerator;
         NiceMock<MockApiInterface> mockApi;
         SrdSearchDialog dialog;
     };

@@ -26,7 +26,7 @@ namespace UKControllerPluginTest::Notifications {
             container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
             container.api = std::make_unique<NiceMock<Api::MockApiInterface>>();
             container.dialogManager = std::make_unique<DialogManager>(dialogProvider);
-            container.activeCallsigns = std::make_unique<ActiveCallsignCollection>();
+            container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
         }
 
         ConfigurableDisplayCollection configurableDisplays;

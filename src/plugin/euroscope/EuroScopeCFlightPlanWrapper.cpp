@@ -1,4 +1,5 @@
 #include "EuroScopeCFlightPlanWrapper.h"
+#include "flightplan/ParsedFlightplanFactory.h"
 #include "squawk/SquawkValidator.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
@@ -59,9 +60,23 @@ namespace UKControllerPlugin::Euroscope {
         return this->originalData.GetFlightPlanData().GetEstimatedDepartureTime();
     }
 
-    auto EuroScopeCFlightPlanWrapper::GetExtractedRoute() const -> EuroscopeExtractedRouteInterface
+    auto EuroScopeCFlightPlanWrapper::GetExtractedRoute() const -> EuroscopeExtractedRouteInterface&
     {
-        return EuroscopeExtractedRouteInterface(this->originalData.GetExtractedRoute());
+        if (!this->extractedRoute) {
+            this->extractedRoute =
+                std::make_shared<EuroscopeExtractedRouteInterface>(this->originalData.GetExtractedRoute());
+        }
+
+        return *this->extractedRoute;
+    }
+
+    auto EuroScopeCFlightPlanWrapper::GetParsedFlightplan() const -> std::shared_ptr<Flightplan::ParsedFlightplan>
+    {
+        if (!parsedFlightplan) {
+            parsedFlightplan = Flightplan::ParseFlightplanFromEuroscope(GetExtractedRoute());
+        }
+
+        return parsedFlightplan;
     }
 
     auto EuroScopeCFlightPlanWrapper::GetFlightRules() const -> std::string

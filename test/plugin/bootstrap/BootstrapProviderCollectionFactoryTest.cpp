@@ -1,9 +1,11 @@
 #include "approach/ApproachBootstrapProvider.h"
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/BootstrapProviderCollectionFactory.h"
+#include "intention/IntentionCodeBootstrapProvider.h"
 
 using UKControllerPlugin::Approach::ApproachBootstrapProvider;
 using UKControllerPlugin::Bootstrap::Make;
+using UKControllerPlugin::IntentionCode::IntentionCodeBootstrapProvider;
 
 namespace UKControllerPluginTest::Bootstrap {
     class BootstrapProviderCollectionFactoryTest : public testing::Test
@@ -25,5 +27,10 @@ namespace UKControllerPluginTest::Bootstrap {
     TEST_F(BootstrapProviderCollectionFactoryTest, TestItHasApproachModule)
     {
         AssertHasProvider<ApproachBootstrapProvider>();
+    }
+
+    TEST_F(BootstrapProviderCollectionFactoryTest, TestItHasIntentionCodeModule)
+    {
+        AssertHasProvider<IntentionCodeBootstrapProvider>();
     }
 } // namespace UKControllerPluginTest::Bootstrap

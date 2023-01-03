@@ -12,6 +12,7 @@
 #include "dependency/DependencyLoaderInterface.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "integration/IntegrationPersistenceContainer.h"
 #include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;

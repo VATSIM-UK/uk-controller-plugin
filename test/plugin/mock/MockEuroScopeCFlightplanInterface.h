@@ -19,7 +19,9 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD0(GetDistanceToDestination, double(void));
             MOCK_CONST_METHOD0(GetExpectedDepartureTime, std::string(void));
             MOCK_CONST_METHOD0(
-                GetExtractedRoute, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface(void));
+                GetExtractedRoute, UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface&(void));
+            MOCK_CONST_METHOD0(
+                GetParsedFlightplan, std::shared_ptr<UKControllerPlugin::Flightplan::ParsedFlightplan>(void));
             MOCK_CONST_METHOD0(GetFlightRules, std::string(void));
             MOCK_CONST_METHOD0(GetGroundState, std::string(void));
             MOCK_CONST_METHOD0(GetIcaoWakeCategory, std::string(void));
