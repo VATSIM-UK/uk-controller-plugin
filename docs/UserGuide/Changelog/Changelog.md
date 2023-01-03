@@ -1,5 +1,31 @@
 # UK Controller Plugin Changelog
 
+# [5.6.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.3...5.6.0) (2023-01-03)
+
+
+### Bug Fixes
+
+* determine fir exit properly ([dad6caf](https://github.com/VATSIM-UK/uk-controller-plugin/commit/dad6cafc31fde630ac7887399adecfe30cf41732))
+* send blank exit point if no point for intention code ([8a949c5](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8a949c521bbb47c97448538729aa23527a04e0aa))
+
+
+### Features
+
+* drive intention codes from api data ([690c37f](https://github.com/VATSIM-UK/uk-controller-plugin/commit/690c37ffa7ff7189436a0cef92938499812d1005))
+* intention code code generators ([8b9a2f4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8b9a2f45cee09ed179e5979faa186388489e8119))
+* intention code conditions ([8740c0b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8740c0b95f140076547f0dbb52aee640e8ee1914))
+* load fir exit points from dependency ([6c46b9b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6c46b9b7acc0e617f0367ead3110c088e3bfde3e))
+* load intention codes from API ([9dffdf0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/9dffdf0a763aec48d304cc044c074e9ebfc46af6))
+* populate SRD search using exit points from API ([160f99b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/160f99b6b06aa33d8b7a4fcddf19c47cbe154f59))
+* rename intention code tag item ([fd62564](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fd62564904c4aa638c8aa18ffc193892cb281711))
+
+
+### Performance Improvements
+
+* fix more ([12257a1](https://github.com/VATSIM-UK/uk-controller-plugin/commit/12257a1097790ee664a4c1da1e4bb60ae424be6c))
+* fix my silly syntax errors ([37cfc2e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/37cfc2eac4d6ed5d76a651029ab85bc3ab965e3f))
+* improve gmock compile performance ([0f7621f](https://github.com/VATSIM-UK/uk-controller-plugin/commit/0f7621f6ca1b4da9918a729c4dc3bf623f2060a6))
+
 ## [5.5.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.2...5.5.3) (2022-12-24)
 
 
