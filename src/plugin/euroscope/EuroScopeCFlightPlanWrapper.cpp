@@ -1,4 +1,5 @@
 #include "EuroScopeCFlightPlanWrapper.h"
+#include "EuroscopeExtractedRouteWrapper.h"
 #include "flightplan/ParsedFlightplanFactory.h"
 #include "squawk/SquawkValidator.h"
 
@@ -64,7 +65,7 @@ namespace UKControllerPlugin::Euroscope {
     {
         if (!this->extractedRoute) {
             this->extractedRoute =
-                std::make_shared<EuroscopeExtractedRouteInterface>(this->originalData.GetExtractedRoute());
+                std::make_shared<EuroscopeExtractedRouteWrapper>(this->originalData.GetExtractedRoute());
         }
 
         return *this->extractedRoute;

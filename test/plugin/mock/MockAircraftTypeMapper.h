@@ -9,6 +9,8 @@ namespace UKControllerPluginTest::Aircraft {
     class MockAircraftTypeMapper : public AircraftTypeMapperInterface
     {
         public:
+        MockAircraftTypeMapper();
+        virtual ~MockAircraftTypeMapper();
         MOCK_METHOD(
             std::shared_ptr<AircraftType>, MapForFlightplan, (const EuroScopeCFlightPlanInterface&), (const, override));
     };

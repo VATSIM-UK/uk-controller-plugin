@@ -5,6 +5,8 @@ namespace UKControllerPluginTest::IntentionCode {
     class MockAircraftFirExitGenerator : public UKControllerPlugin::IntentionCode::AircraftFirExitGenerator
     {
         public:
+        MockAircraftFirExitGenerator();
+        virtual ~MockAircraftFirExitGenerator();
         MOCK_METHOD(
             std::shared_ptr<UKControllerPlugin::IntentionCode::AircraftFirExit>,
             Generate,

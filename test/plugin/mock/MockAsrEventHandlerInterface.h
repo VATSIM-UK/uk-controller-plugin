@@ -8,6 +8,8 @@ namespace UKControllerPluginTest {
         class MockAsrEventHandlerInterface : public UKControllerPlugin::Euroscope::AsrEventHandlerInterface
         {
             public:
+            MockAsrEventHandlerInterface();
+            virtual ~MockAsrEventHandlerInterface();
             MOCK_METHOD1(AsrLoadedEvent, void(UKControllerPlugin::Euroscope::UserSetting&));
             MOCK_METHOD1(AsrClosingEvent, void(UKControllerPlugin::Euroscope::UserSetting&));
         };

@@ -10,16 +10,9 @@ namespace UKControllerPluginTest {
             : public UKControllerPlugin::Integration::ExternalMessageHandlerInterface
         {
             public:
-            explicit MockExternalMessageHandlerInterface(bool processMessage) : processMessage(processMessage)
-            {
-            }
-
-            bool ProcessMessage(std::string message)
-            {
-                this->hasBeenCalled = true;
-                this->receivedMessage = message;
-                return processMessage;
-            };
+            explicit MockExternalMessageHandlerInterface(bool processMessage);
+            virtual ~MockExternalMessageHandlerInterface();
+            bool ProcessMessage(std::string message);
 
             bool hasBeenCalled = false;
 

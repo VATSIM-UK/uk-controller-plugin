@@ -9,6 +9,8 @@ namespace UKControllerPluginTest {
         class MockDialogProvider : public UKControllerPlugin::Dialog::DialogProviderInterface
         {
             public:
+            MockDialogProvider();
+            virtual ~MockDialogProvider();
             MOCK_CONST_METHOD2(
                 OpenDialog,
                 void(

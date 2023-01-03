@@ -8,6 +8,8 @@ namespace UKControllerPluginTest {
             : public UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface
         {
             public:
+            MockEuroscopeSectorFileElementInterface();
+            virtual ~MockEuroscopeSectorFileElementInterface();
             MOCK_CONST_METHOD0(Airport, std::string(void));
             MOCK_CONST_METHOD0(Name, std::string(void));
             MOCK_METHOD0(Runway1ActiveForDepartures, bool(void));

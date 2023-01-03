@@ -1,3 +1,4 @@
+#pragma once
 #include "metar/MetarEventHandlerInterface.h"
 
 using UKControllerPlugin::Metar::MetarEventHandlerInterface;
@@ -7,6 +8,8 @@ namespace UKControllerPluginTest::Metar {
     class MockMetarEventHandler : public MetarEventHandlerInterface
     {
         public:
+        MockMetarEventHandler();
+        virtual ~MockMetarEventHandler();
         MOCK_METHOD(void, MetarUpdated, (const ParsedMetar&), (override));
     };
 } // namespace UKControllerPluginTest::Metar

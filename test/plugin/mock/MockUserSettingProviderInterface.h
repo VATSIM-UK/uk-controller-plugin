@@ -7,6 +7,8 @@ namespace UKControllerPluginTest {
         class MockUserSettingProviderInterface : public UKControllerPlugin::Euroscope::UserSettingProviderInterface
         {
             public:
+            MockUserSettingProviderInterface();
+            virtual ~MockUserSettingProviderInterface();
             MOCK_METHOD1(GetKey, std::string(std::string));
             MOCK_METHOD1(KeyExists, bool(std::string));
             MOCK_METHOD3(SetKey, void(std::string, std::string, std::string));

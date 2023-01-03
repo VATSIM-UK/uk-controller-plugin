@@ -9,6 +9,8 @@ namespace UKControllerPluginTest {
         class MockRadarRenderableInterface : public UKControllerPlugin::RadarScreen::RadarRenderableInterface
         {
             public:
+            MockRadarRenderableInterface();
+            virtual ~MockRadarRenderableInterface();
             MOCK_CONST_METHOD0(IsVisible, bool(void));
             MOCK_METHOD5(
                 LeftClick,

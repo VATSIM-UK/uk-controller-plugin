@@ -11,14 +11,9 @@ namespace UKControllerPluginTest {
         class MockConfigurableDisplay : public UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface
         {
             public:
-            MockConfigurableDisplay(std::string firstValue, std::string secondValue)
-                : firstValue(firstValue), secondValue(secondValue)
-            {
-            }
-
-            MockConfigurableDisplay(void) : firstValue("noValue1"), secondValue("noValue2")
-            {
-            }
+            MockConfigurableDisplay(std::string firstValue, std::string secondValue);
+            MockConfigurableDisplay();
+            virtual ~MockConfigurableDisplay();
 
             void Configure(int, std::string, RECT) override
             {

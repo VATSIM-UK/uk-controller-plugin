@@ -8,6 +8,8 @@ namespace UKControllerPluginTest {
         class MockSectorFileProviderInterface : public UKControllerPlugin::SectorFile::SectorFileProviderInterface
         {
             public:
+            MockSectorFileProviderInterface();
+            virtual ~MockSectorFileProviderInterface();
             MOCK_METHOD1(
                 GetAllElementsByType,
                 std::set<std::shared_ptr<UKControllerPlugin::Euroscope::EuroscopeSectorFileElementInterface>>(int));

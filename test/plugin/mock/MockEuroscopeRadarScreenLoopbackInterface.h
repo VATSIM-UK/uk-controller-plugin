@@ -8,6 +8,8 @@ namespace UKControllerPluginTest::Euroscope {
         : public UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface
     {
         public:
+        MockEuroscopeRadarScreenLoopbackInterface();
+        virtual ~MockEuroscopeRadarScreenLoopbackInterface();
         MOCK_METHOD1(AddMenuItem, void(UKControllerPlugin::Plugin::PopupMenuItem menuItem));
         MOCK_METHOD0(GetRadarViewport, RECT(void));
         MOCK_METHOD4(RegisterScreenObject, void(int, std::string, RECT, bool));

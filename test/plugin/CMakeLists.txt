@@ -333,52 +333,52 @@ set(test__missedapproach
 source_group("test\\missedapproach" FILES ${test__missedapproach})
 
 set(test__mock
-    "mock/MockAbstractTimedEvent.h"
-    "mock/MockActiveCallsignEventHandler.h"
-    "mock/MockAsrEventHandlerInterface.h"
-    "mock/MockConfigurableDisplay.h"
-    mock/MockCondition.h
-    "mock/MockConnection.h"
-    "mock/MockControllerStatusEventHandlerInterface.h"
-    "mock/MockDependencyLoader.h"
-    "mock/MockEuroScopeCControllerInterface.h"
-    "mock/MockEuroScopeCFlightplanInterface.h"
-    "mock/MockEuroScopeCRadarTargetInterface.h"
-    "mock/MockEuroscopeExtractedRouteInterface.h"
-    "mock/MockEuroscopeFlightplanList.h"
-    "mock/MockEuroscopeCoordinateInterface.h"
-    "mock/MockEuroscopePluginLoopbackInterface.h"
-    "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-    "mock/MockEuroscopeSectorFileElementInterface.h"
-    "mock/MockExitDetermination.h"
-    "mock/MockExternalMessageHandlerInterface.h"
-    "mock/MockFlightPlanEventHandlerInterface.h"
+    "mock/MockAbstractTimedEvent.h" mock/MockAbstractTimedEvent.cpp
+    "mock/MockActiveCallsignEventHandler.h" mock/MockActiveCallsignEventHandler.cpp
+    "mock/MockAsrEventHandlerInterface.h" mock/MockAsrEventHandlerInterface.cpp
+    "mock/MockConfigurableDisplay.h" mock/MockConfigurableDisplay.cpp
+    mock/MockCondition.h mock/MockCondition.cpp
+    "mock/MockConnection.h"  mock/MockConnection.cpp
+    "mock/MockControllerStatusEventHandlerInterface.h" mock/MockControllerStatusEventHandlerInterface.cpp
+    "mock/MockDependencyLoader.h" mock/MockDependencyLoader.cpp
+    "mock/MockEuroScopeCControllerInterface.h" mock/MockEuroScopeCControllerInterface.cpp
+    "mock/MockEuroScopeCFlightplanInterface.h" mock/MockEuroScopeCFlightplanInterface.cpp
+    "mock/MockEuroScopeCRadarTargetInterface.h"  mock/MockEuroScopeCRadarTargetInterface.cpp
+    "mock/MockEuroscopeExtractedRouteInterface.h" mock/MockEuroscopeExtractedRouteInterface.cpp
+    "mock/MockEuroscopeFlightplanList.h" mock/MockEuroscopeFlightplanList.cpp
+    "mock/MockEuroscopeCoordinateInterface.h" mock/MockEuroscopeCoordinateInterface.cpp
+    "mock/MockEuroscopePluginLoopbackInterface.h" mock/MockEuroscopePluginLoopbackInterface.cpp
+    "mock/MockEuroscopeRadarScreenLoopbackInterface.h" mock/MockEuroscopeRadarScreenLoopbackInterface.cpp
+    "mock/MockEuroscopeSectorFileElementInterface.h" mock/MockEuroscopeSectorFileElementInterface.cpp
+    "mock/MockExitDetermination.h" mock/MockExitDetermination.cpp
+    "mock/MockExternalMessageHandlerInterface.h"  mock/MockExternalMessageHandlerInterface.cpp
+    "mock/MockFlightPlanEventHandlerInterface.h" mock/MockFlightPlanEventHandlerInterface.cpp
     "mock/MockFlightplanRadarTargetPair.h"
-    "mock/MockGraphicsInterface.h"
-    "mock/MockHistoryTrailDialog.h"
-    "mock/MockHistoryTrailRepository.h"
-    "mock/MockIntegrationActionProcessor.h"
-    "mock/MockOutboundIntegrationEventHandler.h"
-    "mock/MockPushEventConnection.h"
-    "mock/MockPushEventProcessor.h"
-    "mock/MockRadarRendererableInterface.h"
-    "mock/MockRadarTargetEventHandlerInterface.h"
-    "mock/MockRunwayDialogAwareInterface.h"
-    "mock/MockSectorFileProviderInterface.h"
-    "mock/MockSocket.h"
-    "mock/MockUserSettingAwareInterface.h"
-    "mock/MockUserSettingProviderInterface.h"
-    mock/MockCallsignSelectionProvider.h
-    mock/MockAircraftTypeMapper.h
-    mock/MockWakeCategoryMapper.h
-    mock/MockListItemProvider.h
-    mock/MockPopupList.h
-    mock/MockBootstrapProvider.h
-    mock/MockPluginSettingsProvider.h
-    mock/MockPrenoteMessageEventHandlerInterface.h
-    mock/MockPrenoteUserRelevanceChecker.h
-    mock/MockAircraftFirExitGenerator.h
-    mock/MockMetarEventHandler.h)
+    "mock/MockGraphicsInterface.h" mock/MockGraphicsInterface.cpp
+    "mock/MockIntegrationActionProcessor.h"  mock/MockIntegrationActionProcessor.cpp
+    mock/MockMenuToggleableDisplay.h mock/MockMenuToggleableDisplay.cpp
+    mock/MockMetarEventHandler.h mock/MockMetarEventHandler.cpp
+    "mock/MockOutboundIntegrationEventHandler.h"  mock/MockOutboundIntegrationEventHandler.cpp
+    "mock/MockPushEventConnection.h" mock/MockPushEventConnection.cpp
+    "mock/MockPushEventProcessor.h" mock/MockPushEventProcessor.cpp
+    "mock/MockRadarRendererableInterface.h"  mock/MockRadarRenderableInterface.cpp
+    "mock/MockRadarTargetEventHandlerInterface.h" mock/MockRadarTargetEventHandlerInterface.cpp
+    "mock/MockRunwayDialogAwareInterface.h" mock/MockRunwayDialogAwareInterface.cpp
+    "mock/MockSectorFileProviderInterface.h" mock/MockSectorFileProviderInterface.cpp
+    mock/MockSidMapperInterface.h mock/MockSidMapperInterface.cpp
+    "mock/MockSocket.h" mock/MockSocket.cpp
+    "mock/MockUserSettingAwareInterface.h" mock/MockUserSettingAwareInterface.cpp
+    "mock/MockUserSettingProviderInterface.h" mock/MockUserSettingProviderInterface.cpp
+    mock/MockCallsignSelectionProvider.h mock/MockCallsignSelectionProvider.cpp
+    mock/MockAircraftTypeMapper.h mock/MockAircraftTypeMapper.cpp
+    mock/MockWakeCategoryMapper.h mock/MockWakeCategoryMapper.cpp
+    mock/MockListItemProvider.h mock/MockListItemProvider.cpp
+    mock/MockPopupList.h mock/MockPopupList.cpp
+    mock/MockBootstrapProvider.h mock/MockBootstrapProvider.cpp
+    mock/MockPluginSettingsProvider.h mock/MockPluginSettingsProvider.cpp
+    mock/MockPrenoteMessageEventHandlerInterface.h mock/MockPrenoteMessageEventHandlerInterface.cpp
+    mock/MockPrenoteUserRelevanceChecker.h mock/MockPrenoteUserRelevanceChecker.cpp
+    mock/MockAircraftFirExitGenerator.h mock/MockAircraftFirExitGenerator.cpp)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -486,7 +486,7 @@ set(test__radarscreen
     "radarscreen/RadarRenderableCollectionTest.cpp"
     "radarscreen/ScreenControlsBootstrapTest.cpp"
     "radarscreen/ScreenControlsTest.cpp"
-        radarscreen/ToggleDisplayFromMenuTest.cpp mock/MockMenuToggleableDisplay.h radarscreen/MenuToggleableDisplayFactoryTest.cpp radarscreen/ConfigurableDisplayCallbackFactoryTest.cpp)
+        radarscreen/ToggleDisplayFromMenuTest.cpp radarscreen/MenuToggleableDisplayFactoryTest.cpp radarscreen/ConfigurableDisplayCallbackFactoryTest.cpp)
 source_group("test\\radarscreen" FILES ${test__radarscreen})
 
 set(test__regional
@@ -536,8 +536,7 @@ set(test__sid
     "sid/SidCollectionTest.cpp"
     "sid/SidModuleTest.cpp"
     "sid/StandardInstrumentDepartureTest.cpp"
-    sid/FlightplanSidMapperTest.cpp
-    mock/MockSidMapperInterface.h)
+    sid/FlightplanSidMapperTest.cpp)
 source_group("test\\sid" FILES ${test__sid})
 
 set(test__squawk
@@ -754,19 +753,18 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /Od;
-            -Zm200
+            -Zm200;
+            /Zi;
         >
         $<$<CONFIG:Release>:
-            /O2;
-            /Oi;
-            /Gy;
-            -Zm120
+            -Zm120;
         >
+        /O1;
         /std:c++20;
         /sdl;
         /W4;
         /WX;
+        -ftime-trace;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
         -Wno-unused-parameter # Lots of interfaces don't use everything
@@ -774,12 +772,12 @@ if(MSVC)
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /DEBUG:FASTLINK;
+            /DEBUG:GHASH;
             /INCREMENTAL
             -flto=thin
         >
         $<$<CONFIG:Release>:
-            /DEBUG;
+            /DEBUG:NONE;
             /OPT:REF;
             /OPT:ICF;
             /INCREMENTAL:NO

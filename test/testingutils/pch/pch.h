@@ -16,6 +16,7 @@
 
 #include <Windows.h>
 #include <string>
+#include <shtypes.h>
 #include <fstream>
 #include <filesystem>
 #define SPDLOG_WCHAR_FILENAMES

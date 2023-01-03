@@ -6,6 +6,8 @@ namespace UKControllerPluginTest::Setting {
     class MockSettingRepository : public SettingRepositoryInterface
     {
         public:
+        MockSettingRepository();
+        virtual ~MockSettingRepository();
         MOCK_METHOD(bool, HasSetting, (const std::string&), (const, override));
         MOCK_METHOD(void, ReloadSetting, (const std::string&), (override));
         MOCK_METHOD(void, UpdateSetting, (const std::string&, const std::string&), (override));

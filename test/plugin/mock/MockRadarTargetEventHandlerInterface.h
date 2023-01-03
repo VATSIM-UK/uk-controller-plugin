@@ -9,6 +9,8 @@ namespace UKControllerPluginTest {
             : public UKControllerPlugin::Euroscope::RadarTargetEventHandlerInterface
         {
             public:
+            MockRadarTargetEventHandlerInterface();
+            virtual ~MockRadarTargetEventHandlerInterface();
             MOCK_METHOD1(
                 RadarTargetPositionUpdateEvent,
                 void(UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget));

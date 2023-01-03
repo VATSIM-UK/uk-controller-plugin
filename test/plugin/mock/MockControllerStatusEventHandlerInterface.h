@@ -8,6 +8,8 @@ namespace UKControllerPluginTest {
             : public UKControllerPlugin::Controller::ControllerStatusEventHandlerInterface
         {
             public:
+            MockControllerStatusEventHandlerInterface();
+            virtual ~MockControllerStatusEventHandlerInterface();
             MOCK_METHOD1(ControllerUpdateEvent, void(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface&));
             MOCK_METHOD1(
                 ControllerDisconnectEvent, void(UKControllerPlugin::Euroscope::EuroScopeCControllerInterface&));

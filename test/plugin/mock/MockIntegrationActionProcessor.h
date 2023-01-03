@@ -11,17 +11,13 @@ namespace UKControllerPluginTest::Integration {
     class MockIntegrationActionProcessor : public IntegrationActionProcessor
     {
         public:
+        MockIntegrationActionProcessor();
+        virtual ~MockIntegrationActionProcessor();
         MOCK_METHOD(std::vector<MessageType>, ActionsToProcess, (), (const, override));
-        ~MockIntegrationActionProcessor() override = default;
-
         void ProcessAction(
             std::shared_ptr<MessageInterface> message,
             std::function<void(void)> success,
-            std::function<void(std::vector<std::string>)> fail) override
-        {
-            success();
-            fail({"foo", "bar"});
-        };
+            std::function<void(std::vector<std::string>)> fail) override;
     };
 
 } // namespace UKControllerPluginTest::Integration
