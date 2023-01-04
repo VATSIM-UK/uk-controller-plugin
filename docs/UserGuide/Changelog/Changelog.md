@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.6.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.6.0...5.6.1) (2023-01-04)
+
+
+### Bug Fixes
+
+* invalidate intention code caches on controller and fp events ([4174460](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4174460f562d21d219112a0d7c0a86d2093212b6))
+
 # [5.6.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.3...5.6.0) (2023-01-03)
 
 
