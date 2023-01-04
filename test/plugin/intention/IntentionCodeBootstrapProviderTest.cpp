@@ -34,10 +34,16 @@ namespace UKControllerPluginTest::IntentionCode {
         IntentionCodeBootstrapProvider provider;
     };
 
-    TEST_F(IntentionCodeModuleBootstrapProviderTest, TestItRegistersFirExitGeneratorForFlightplanEvents)
+    TEST_F(IntentionCodeModuleBootstrapProviderTest, TestItRegistersFirExitAndIntentionGeneratorsForFlightplanEvents)
     {
         this->RunBootstrapPlugin(provider);
-        EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+        EXPECT_EQ(2, container.flightplanHandler->CountHandlers());
+    }
+
+    TEST_F(IntentionCodeModuleBootstrapProviderTest, TestItRegistersIntentionGeneratorForActiveCallsignEvents)
+    {
+        this->RunBootstrapPlugin(provider);
+        EXPECT_EQ(1, container.activeCallsigns->CountHandlers());
     }
 
     TEST_F(IntentionCodeModuleBootstrapProviderTest, TestItRegistersIntegrationCodeUpdatedMessageForEvents)

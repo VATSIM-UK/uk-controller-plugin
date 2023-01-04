@@ -1,4 +1,5 @@
 #include "CachedAircraftFirExitGenerator.h"
+#include "CachedAircraftIntentionCodeGenerator.h"
 #include "IntentionCodeBootstrapProvider.h"
 #include "IntentionCodeEventHandlerCollection.h"
 #include "IntentionCodeModuleFactory.h"
@@ -6,6 +7,7 @@
 #include "SendIntentionCodeUpdatedIntegrationMessage.h"
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "integration/IntegrationPersistenceContainer.h"
 #include "integration/OutboundIntegrationEventHandler.h"
@@ -26,9 +28,13 @@ namespace UKControllerPlugin::IntentionCode {
                 container.integrationModuleContainer->outboundMessageHandler));
 
         // Register the tag item for intention codes
+        const auto intentionCodeGenerator = container.moduleFactories->IntentionCode().CachedIntentionCodeGenerator(
+            *container.dependencyLoader, container.activeCallsigns);
         container.tagHandler->RegisterTagItem(
-            intentionCodeTagItemId,
-            std::make_shared<IntentionCodeTagItem>(container.moduleFactories->IntentionCode().IntentionCodeGenerator(
-                *container.dependencyLoader, container.activeCallsigns)));
+            intentionCodeTagItemId, std::make_shared<IntentionCodeTagItem>(intentionCodeGenerator));
+
+        // Register the intention code generator for flightplan events and controller events
+        container.flightplanHandler->RegisterHandler(intentionCodeGenerator);
+        container.activeCallsigns->AddHandler(intentionCodeGenerator);
     }
 } // namespace UKControllerPlugin::IntentionCode
