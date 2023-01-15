@@ -681,16 +681,19 @@ namespace UKControllerPlugin {
             // Render the title bar
             this->RenderTitleBar(graphics, radarScreen, screenObjectId);
 
+            // Render the data
+            Gdiplus::Rect dataRect = {
+                this->windowPos.x, this->dataStartHeight - 10, this->windowWidth, this->lineHeight};
+
+            // Render a message if no published holds
             if (!this->publishedHolds.size()) {
+                graphics.DrawString(std::wstring(L"No published holds found."), dataRect, this->dataBrush);
                 return;
             }
 
             const HoldingData* hold = *this->publishedHolds.cbegin();
 
             // Render the data
-            Gdiplus::Rect dataRect = {this->windowPos.x, this->dataStartHeight - 10, this->windowWidth,
-                                      this->lineHeight};
-
             graphics.DrawString(
                 std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier), dataRect, this->dataBrush);
 
