@@ -5,6 +5,8 @@
 #include "HoldingDataSerializer.h"
 #include "HoldRestrictionSerializer.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "geometry/MeasurementUnitType.h"
+#include "geometry/MeasurementUnitFactory.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
@@ -29,6 +31,12 @@ namespace UKControllerPlugin::Hold {
         json.at("maximum_altitude").get_to(holdingData.maximum);
         json.at("inbound_heading").get_to(holdingData.inbound);
         json.at("turn_direction").get_to(holdingData.turnDirection);
+
+        if (!json.at("outbound_leg_unit").is_null()) {
+            holdingData.outboundLeg = std::make_unique<Geometry::Measurement>(
+                Geometry::UnitFromString(json.at("outbound_leg_unit").get<std::string>()),
+                json.at("outbound_leg_value").get<double>());
+        }
     }
 
     void from_json_with_restrictions(
@@ -60,6 +68,10 @@ namespace UKControllerPlugin::Hold {
                data.at("turn_direction").is_string() &&
                (data.at("turn_direction") == "left" || data.at("turn_direction") == "right") &&
                data.find("restrictions") != data.end() && data.at("restrictions").is_array() &&
-               data.contains("deemed_separated_holds") && data.at("deemed_separated_holds").is_array();
+               data.contains("deemed_separated_holds") && data.at("deemed_separated_holds").is_array() &&
+               data.contains("outbound_leg_value") && data.contains("outbound_leg_unit") &&
+               (data.at("outbound_leg_unit").is_null() ||
+                (data.at("outbound_leg_value").is_number() && data.at("outbound_leg_unit").is_string() &&
+                 Geometry::UnitStringValid(data.at("outbound_leg_unit").get<std::string>())));
     }
 } // namespace UKControllerPlugin::Hold

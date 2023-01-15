@@ -45,6 +45,8 @@ namespace UKControllerPluginTest {
             hold1["turn_direction"] = "right";
             hold1["restrictions"] = nlohmann::json::array();
             hold1["deemed_separated_holds"] = nlohmann::json::array();
+            hold1["outbound_leg_unit"] = "nm";
+            hold1["outbound_leg_value"] = 1.5;
             nlohmann::json hold2;
             hold2["id"] = 2;
             hold2["description"] = "WILLO";
@@ -53,6 +55,8 @@ namespace UKControllerPluginTest {
             hold2["maximum_altitude"] = 15000;
             hold2["inbound_heading"] = 285;
             hold2["turn_direction"] = "left";
+            hold2["outbound_leg_unit"] = "nm";
+            hold2["outbound_leg_value"] = 1.5;
             hold2["restrictions"] = nlohmann::json::array();
             hold2["deemed_separated_holds"] = nlohmann::json::array();
 
@@ -78,6 +82,8 @@ namespace UKControllerPluginTest {
             hold["maximum_altitude"] = 15000;
             hold["inbound_heading"] = 309;
             hold["turn_direction"] = "left";
+            hold["outbound_leg_unit"] = "nm";
+            hold["outbound_leg_value"] = 1.5;
 
             data = {hold};
 

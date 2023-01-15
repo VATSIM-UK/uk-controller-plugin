@@ -1,4 +1,7 @@
 #pragma once
+#include "geometry/Measurement.h"
+#include "geometry/MeasurementUnit.h"
+#include "geometry/MeasurementUnitType.h"
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -19,10 +22,15 @@ namespace UKControllerPlugin {
                 unsigned int inbound = 361,
                 std::string turnDirection = "up",
                 std::set<std::unique_ptr<AbstractHoldLevelRestriction>> restrictions = {},
-                std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds = {})
+                std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds = {},
+                std::unique_ptr<Geometry::Measurement> outboundLeg = std::make_unique<Geometry::Measurement>(
+                    std::make_unique<Geometry::MeasurementUnit>(Geometry::MeasurementUnitType::None, "Unknown Units"),
+                    -1.0))
                 : identifier(identifier), fix(fix), description(description), minimum(minimum), maximum(maximum),
                   inbound(inbound), turnDirection(turnDirection), restrictions(std::move(restrictions)),
-                  deemedSeparatedHolds(std::move(deemedSeparatedHolds)){};
+                  deemedSeparatedHolds(std::move(deemedSeparatedHolds)), outboundLeg(std::move(outboundLeg))
+            {
+            }
             ~HoldingData();
             HoldingData(HoldingData const&) = delete;
             HoldingData& operator=(HoldingData const&) = delete;
@@ -56,6 +64,9 @@ namespace UKControllerPlugin {
 
             // Holds against which this hold is deemed separated
             std::set<std::unique_ptr<DeemedSeparatedHold>> deemedSeparatedHolds;
+
+            // The outbound leg
+            std::unique_ptr<Geometry::Measurement> outboundLeg;
 
             /*
                 Compare two holds

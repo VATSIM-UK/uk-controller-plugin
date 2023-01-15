@@ -14,6 +14,8 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
+#include "geometry/Measurement.h"
+#include "geometry/MeasurementUnit.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "list/PopupListInterface.h"
 #include "navaids/Navaid.h"
@@ -686,7 +688,8 @@ namespace UKControllerPlugin {
             const HoldingData* hold = *this->publishedHolds.cbegin();
 
             // Render the data
-            Gdiplus::Rect dataRect = {this->windowPos.x, this->dataStartHeight, this->windowWidth, this->lineHeight};
+            Gdiplus::Rect dataRect = {this->windowPos.x, this->dataStartHeight - 10, this->windowWidth,
+                                      this->lineHeight};
 
             graphics.DrawString(
                 std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier), dataRect, this->dataBrush);
@@ -703,6 +706,18 @@ namespace UKControllerPlugin {
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum), dataRect, this->dataBrush);
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
+
+            if (*hold->outboundLeg->unit == Geometry::MeasurementUnitType::None) {
+                graphics.DrawString(std::wstring(L"Outbound Leg: --"), dataRect, this->dataBrush);
+            } else {
+                graphics.DrawString(
+                    std::wstring(L"Outbound Leg: ") + FormatOutboundLegValue(hold->outboundLeg->value) + L" " +
+                        ConvertToTchar(hold->outboundLeg->unit->description),
+                    dataRect,
+                    this->dataBrush);
+            }
         }
 
         /*

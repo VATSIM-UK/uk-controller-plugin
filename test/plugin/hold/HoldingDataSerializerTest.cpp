@@ -3,9 +3,11 @@
 #include "hold/HoldingDataSerializer.h"
 #include "hold/HoldingData.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "geometry/MeasurementUnitType.h"
 
 using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Geometry::MeasurementUnitType;
 using UKControllerPlugin::Hold::from_json_with_restrictions;
 using UKControllerPlugin::Hold::HoldingData;
 using UKControllerPlugin::Hold::holdSerializerInvalid;
@@ -33,6 +35,8 @@ namespace UKControllerPluginTest {
                     {"turn_direction", "right"},
                     {"restrictions", nlohmann::json::array({restriction})},
                     {"deemed_separated_holds", nlohmann::json::array({deemedSeparatedHold})},
+                    {"outbound_leg_unit", "nm"},
+                    {"outbound_leg_value", 1.5},
                 };
             }
 
@@ -43,6 +47,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(HoldingDataSerializerTest, ValidJsonReturnsTrueAllValid)
         {
+            EXPECT_TRUE(JsonValid(this->testData));
+        }
+
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsTrueAllValidWithUnitAndValueNull)
+        {
+            this->testData["outbound_leg_unit"] = nlohmann::json::value_t::null;
+            this->testData["outbound_leg_value"] = nlohmann::json::value_t::null;
             EXPECT_TRUE(JsonValid(this->testData));
         }
 
@@ -154,6 +165,36 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(holdSerializerInvalid, this->testData.get<HoldingData>());
         }
 
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseNoOutboundLegUnit)
+        {
+            this->testData.erase("outbound_leg_unit");
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseOutboundLegUnitNotString)
+        {
+            this->testData["outbound_leg_unit"] = 123;
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseOutboundLegUnitNotValid)
+        {
+            this->testData["outbound_leg_unit"] = "abc";
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseNoOutboundLegValue)
+        {
+            this->testData.erase("outbound_leg_value");
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
+        TEST_F(HoldingDataSerializerTest, ValidJsonReturnsFalseOutboundLegValueNotNumber)
+        {
+            this->testData["outbound_leg_value"] = "abc";
+            EXPECT_FALSE(JsonValid(testData));
+        }
+
         TEST_F(HoldingDataSerializerTest, ReturnsHoldingDataFromJson)
         {
             HoldingData actual = this->testData.get<HoldingData>();
@@ -164,6 +205,8 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(15000, actual.maximum);
             EXPECT_EQ(309, actual.inbound);
             EXPECT_EQ("right", actual.turnDirection);
+            EXPECT_EQ(MeasurementUnitType::NauticalMiles, *actual.outboundLeg->unit);
+            EXPECT_DOUBLE_EQ(1.5, actual.outboundLeg->value);
         }
 
         TEST_F(HoldingDataSerializerTest, ReturnsHoldingDataWithRestrictionsFromJson)
@@ -177,10 +220,28 @@ namespace UKControllerPluginTest {
             EXPECT_EQ(15000, actual.maximum);
             EXPECT_EQ(309, actual.inbound);
             EXPECT_EQ("right", actual.turnDirection);
+            EXPECT_EQ(MeasurementUnitType::NauticalMiles, *actual.outboundLeg->unit);
+            EXPECT_DOUBLE_EQ(1.5, actual.outboundLeg->value);
             EXPECT_EQ(1, actual.restrictions.size());
             EXPECT_TRUE((*actual.restrictions.cbegin())->LevelRestricted(7000));
             EXPECT_TRUE((*actual.restrictions.cbegin())->LevelRestricted(9000));
             EXPECT_EQ(2, (*actual.deemedSeparatedHolds.cbegin())->identifier);
+        }
+
+        TEST_F(HoldingDataSerializerTest, ReturnsHoldingDataFromJsonNoOutboundLegData)
+        {
+            this->testData["outbound_leg_unit"] = nlohmann::json::value_t::null;
+            this->testData["outbound_leg_value"] = nlohmann::json::value_t::null;
+            HoldingData actual = this->testData.get<HoldingData>();
+            EXPECT_EQ(1, actual.identifier);
+            EXPECT_EQ("TIMBA", actual.fix);
+            EXPECT_EQ("TIMBA LOW", actual.description);
+            EXPECT_EQ(7000, actual.minimum);
+            EXPECT_EQ(15000, actual.maximum);
+            EXPECT_EQ(309, actual.inbound);
+            EXPECT_EQ("right", actual.turnDirection);
+            EXPECT_EQ(MeasurementUnitType::None, *actual.outboundLeg->unit);
+            EXPECT_DOUBLE_EQ(-1.0, actual.outboundLeg->value);
         }
     } // namespace Hold
 } // namespace UKControllerPluginTest

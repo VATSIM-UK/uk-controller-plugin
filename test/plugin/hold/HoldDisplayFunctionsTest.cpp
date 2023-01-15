@@ -169,4 +169,19 @@ namespace UKControllerPluginTest::Hold {
     {
         EXPECT_EQ(-1, UKControllerPlugin::Hold::GetVerticalSpeedDirection(-500));
     }
+
+    TEST(HoldDisplayFunctionsTest, ItReturnsOutboundLegValueIfWhole)
+    {
+        EXPECT_EQ(std::wstring(L"2.0"), UKControllerPlugin::Hold::FormatOutboundLegValue(2.0));
+    }
+
+    TEST(HoldDisplayFunctionsTest, ItReturnsOutboundLegValueIfMultipleDecimalPlaces)
+    {
+        EXPECT_EQ(std::wstring(L"3.1"), UKControllerPlugin::Hold::FormatOutboundLegValue(3.134));
+    }
+
+    TEST(HoldDisplayFunctionsTest, ItReturnsOutboundLegValueIfOneDecimalPlace)
+    {
+        EXPECT_EQ(std::wstring(L"4.5"), UKControllerPlugin::Hold::FormatOutboundLegValue(4.5));
+    }
 } // namespace UKControllerPluginTest::Hold
