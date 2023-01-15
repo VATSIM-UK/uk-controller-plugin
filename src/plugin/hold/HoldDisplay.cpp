@@ -686,7 +686,7 @@ namespace UKControllerPlugin {
                 this->windowPos.x, this->dataStartHeight - 10, this->windowWidth, this->lineHeight};
 
             // Render a message if no published holds
-            if (!this->publishedHolds.size()) {
+            if (this->publishedHolds.empty()) {
                 graphics.DrawString(std::wstring(L"No published holds found."), dataRect, this->dataBrush);
                 return;
             }
