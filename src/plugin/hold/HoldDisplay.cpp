@@ -98,6 +98,19 @@ namespace UKControllerPlugin {
                 this->showHoldInformation = !this->showHoldInformation;
             } else if (button == "options") {
                 this->dialogManager.OpenDialog(IDD_HOLD_PARAMS, reinterpret_cast<LPARAM>(this));
+            } else if (button == "prevhold") {
+                if (this->selectedPublishedHoldIndex == 0) {
+                    return;
+                }
+
+                this->selectedPublishedHoldIndex--;
+            } else if (button == "nexthold") {
+                if (this->publishedHolds.empty() ||
+                    this->selectedPublishedHoldIndex == this->publishedHolds.size() - 1) {
+                    return;
+                }
+
+                this->selectedPublishedHoldIndex++;
             }
         }
 
@@ -118,6 +131,11 @@ namespace UKControllerPlugin {
             if (button == "add") {
                 addAircraftSelector->Trigger({this->addButtonClickRect.left, this->addButtonClickRect.top});
             }
+        }
+
+        unsigned int HoldDisplay::GetPublishedHoldIndex() const
+        {
+            return this->selectedPublishedHoldIndex;
         }
 
         /*
@@ -691,8 +709,37 @@ namespace UKControllerPlugin {
             }
 
             // Display the published hold selection buttons
+            const HoldingData* hold = *std::next(this->publishedHolds.cbegin(), this->selectedPublishedHoldIndex);
 
-            const HoldingData* hold = *this->publishedHolds.cbegin();
+            Gdiplus::Rect buttonRect = {this->windowPos.x + 5, this->titleArea.GetBottom() + 5, 20, 20};
+
+            // Left
+            graphics.DrawRect(buttonRect, this->sameLevelBoxPen);
+            graphics.DrawString(L"<", buttonRect, this->dataBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                this->navaid.identifier + "/prevhold",
+                RECT{buttonRect.GetLeft(), buttonRect.GetTop(), buttonRect.GetRight(), buttonRect.GetBottom()},
+                false);
+
+            // Right
+            buttonRect.X = this->titleArea.GetRight() - 25;
+            graphics.DrawRect(buttonRect, this->sameLevelBoxPen);
+            graphics.DrawString(L">", buttonRect, this->dataBrush);
+            radarScreen.RegisterScreenObject(
+                screenObjectId,
+                this->navaid.identifier + "/nexthold",
+                RECT{buttonRect.GetLeft(), buttonRect.GetTop(), buttonRect.GetRight(), buttonRect.GetBottom()},
+                false);
+
+            // Text
+            buttonRect.X = this->windowPos.x + 30;
+            buttonRect.Width = this->titleArea.Width - 60;
+            graphics.DrawString(
+                L"Hold " + std::to_wstring(this->selectedPublishedHoldIndex + 1) + L" of " +
+                    std::to_wstring(this->publishedHolds.size()),
+                buttonRect,
+                this->dataBrush);
 
             // Render the data
             graphics.DrawString(ConvertToTchar(hold->description), dataRect, this->dataBrush);

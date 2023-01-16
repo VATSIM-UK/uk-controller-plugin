@@ -212,6 +212,34 @@ namespace UKControllerPluginTest {
             this->display.SaveDataToAsr(userSetting);
         }
 
+        TEST_F(HoldDisplayTest, ClickingPreviousAndNextHoldChangesSelectedHold)
+        {
+            this->publishedHolds.Add({1, "TIMBA", "TIMBA", 2000, 3000});
+            this->publishedHolds.Add({2, "TIMBA", "TIMBA", 2000, 3000});
+            this->publishedHolds.Add({3, "TIMBA", "TIMBA", 2000, 3000});
+            this->publishedHolds.Add({4, "TIMBA", "TIMBA", 2000, 3000});
+
+            HoldDisplay display2(mockPlugin, holdManager, navaid, publishedHolds, dialogManager, addAircraftList);
+
+            EXPECT_EQ(0, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("nexthold");
+            EXPECT_EQ(1, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("nexthold");
+            EXPECT_EQ(2, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("nexthold");
+            EXPECT_EQ(3, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("nexthold");
+            EXPECT_EQ(3, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("prevhold");
+            EXPECT_EQ(2, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("prevhold");
+            EXPECT_EQ(1, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("prevhold");
+            EXPECT_EQ(0, display2.GetPublishedHoldIndex());
+            display2.ButtonClicked("prevhold");
+            EXPECT_EQ(0, display2.GetPublishedHoldIndex());
+        }
+
         TEST_F(HoldDisplayTest, ClickingMinusDescreasesMaximumDisplayLevelUntilMinimum)
         {
             EXPECT_EQ(15000, this->display.GetMaximumLevel());
