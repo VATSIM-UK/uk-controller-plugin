@@ -681,9 +681,8 @@ namespace UKControllerPlugin {
             // Render the title bar
             this->RenderTitleBar(graphics, radarScreen, screenObjectId);
 
-            // Render the data
             Gdiplus::Rect dataRect = {
-                this->windowPos.x, this->dataStartHeight - 10, this->windowWidth, this->lineHeight};
+                this->windowPos.x, this->dataStartHeight - 15, this->windowWidth, this->lineHeight};
 
             // Render a message if no published holds
             if (this->publishedHolds.empty()) {
@@ -691,9 +690,14 @@ namespace UKControllerPlugin {
                 return;
             }
 
+            // Display the published hold selection buttons
+
             const HoldingData* hold = *this->publishedHolds.cbegin();
 
             // Render the data
+            graphics.DrawString(ConvertToTchar(hold->description), dataRect, this->dataBrush);
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
                 std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier), dataRect, this->dataBrush);
 

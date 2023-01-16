@@ -195,7 +195,7 @@ namespace UKControllerPlugin {
             bool minimised = false;
 
             // The height of the window to use when doing the information display
-            const int informationDisplayWindowHeight = 225;
+            const int informationDisplayWindowHeight = 250;
 
             // The minimum level in the hold
             int minimumLevel = 7000;
