@@ -1,5 +1,15 @@
 # UK Controller Plugin Changelog
 
+# [5.7.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.6.1...5.7.0) (2023-02-11)
+
+
+### Features
+
+* display hold description in information tab ([43560cd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/43560cd7cae92c7ca40829497dbed3e8fabff911))
+* display information for multiple published holds ([c60b62c](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c60b62c6104731f4e933f22c56a715b74fef7f4a))
+* display message when no published holds found ([10904f9](https://github.com/VATSIM-UK/uk-controller-plugin/commit/10904f9d2128328c8331ed61e690c93e721f5b33))
+* display outbound leg information for holds ([ac3b359](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ac3b3595c7b32529c8704c93802f9f7d24112c92))
+
 ## [5.6.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.6.0...5.6.1) (2023-01-04)
 
 
