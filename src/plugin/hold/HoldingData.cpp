@@ -11,7 +11,7 @@ namespace UKControllerPlugin::Hold {
         : identifier(original.identifier), fix(original.fix), description(original.description),
           minimum(original.minimum), maximum(original.maximum), inbound(original.inbound),
           turnDirection(original.turnDirection), restrictions(std::move(original.restrictions)),
-          deemedSeparatedHolds(std::move(original.deemedSeparatedHolds))
+          deemedSeparatedHolds(std::move(original.deemedSeparatedHolds)), outboundLeg(std::move(original.outboundLeg))
     {
     }
 

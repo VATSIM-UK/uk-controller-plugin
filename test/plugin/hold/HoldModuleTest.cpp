@@ -21,6 +21,9 @@
 #include "hold/HoldManager.h"
 #include "hold/PublishedHoldCollection.h"
 #include "hold/HoldSelectionMenu.h"
+#include "geometry/Measurement.h"
+#include "geometry/MeasurementUnit.h"
+#include "geometry/MeasurementUnitFactory.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -67,6 +70,8 @@ namespace UKControllerPluginTest::Hold {
                 {"maximum_altitude", 15000},
                 {"inbound_heading", 309},
                 {"turn_direction", "right"},
+                {"outbound_leg_unit", "nm"},
+                {"outbound_leg_value", 1.5},
                 {"restrictions", nlohmann::json::array()},
                 {"deemed_separated_holds", nlohmann::json::array()}};
 
@@ -79,6 +84,8 @@ namespace UKControllerPluginTest::Hold {
                 {"maximum_altitude", 15000},
                 {"inbound_heading", 309},
                 {"turn_direction", "right"},
+                {"outbound_leg_unit", "nm"},
+                {"outbound_leg_value", 1.5},
                 {"restrictions", nlohmann::json::array()},
                 {"deemed_separated_holds", nlohmann::json::array()}};
 
@@ -194,7 +201,18 @@ namespace UKControllerPluginTest::Hold {
     TEST_F(HoldModuleTest, ItLoadsHoldData)
     {
         BootstrapPlugin(this->mockDependencyProvider, this->container);
-        HoldingData expectedHold = {1, "TIMBA", "TIMBA", 7000, 15000, 309, HoldingData::TURN_DIRECTION_RIGHT, {}, {}};
+        HoldingData expectedHold = {
+            1,
+            "TIMBA",
+            "TIMBA",
+            7000,
+            15000,
+            309,
+            HoldingData::TURN_DIRECTION_RIGHT,
+            {},
+            {},
+            std::make_unique<UKControllerPlugin::Geometry::Measurement>(
+                UKControllerPlugin::Geometry::UnitFromString("nm"), 1.5)};
 
         std::set<const HoldingData*> expectedHoldSet;
         expectedHoldSet.emplace(&expectedHold);

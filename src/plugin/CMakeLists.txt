@@ -269,7 +269,7 @@ set(src__flightrule
 source_group("src\\flightrule" FILES ${src__flightrule})
 
 set(src__geometry
-        geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h)
+        geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h geometry/MeasurementUnitType.h geometry/MeasurementUnitFactory.cpp geometry/MeasurementUnitFactory.h geometry/Measurement.cpp geometry/Measurement.h geometry/MeasurementUnit.cpp geometry/MeasurementUnit.h)
 source_group("src\\geometry" FILES ${src__geometry})
 
 set(src__graphics

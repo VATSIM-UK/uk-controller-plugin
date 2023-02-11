@@ -14,5 +14,6 @@ namespace UKControllerPlugin {
         unsigned int GetDisplayRow(int holdMax, int occupiedLevel);
         std::wstring GetTimeInHoldDisplayString(const std::chrono::system_clock::time_point& entryTime);
         int GetVerticalSpeedDirection(int verticalSpeed);
+        [[nodiscard]] auto FormatOutboundLegValue(double value) -> std::wstring;
     } // namespace Hold
 } // namespace UKControllerPlugin
