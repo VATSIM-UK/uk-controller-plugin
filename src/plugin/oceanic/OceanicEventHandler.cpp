@@ -124,12 +124,7 @@ namespace UKControllerPlugin::Oceanic {
         const std::string& context,
         const POINT& mousePos)
     {
-        auto lock = std::lock_guard(this->clearanceMapMutex);
-        auto storedClearance = this->clearances.find(flightplan.GetCallsign());
-        this->currentlySelectedClearance = storedClearance != this->clearances.cend()
-                                               ? storedClearance->second
-                                               : GetDefaultClearanceForCallsign(flightplan);
-
+        SetCurrentlySelectedClearance(flightplan);
         this->dialogManager.OpenDialog(
             IDD_OCEANIC_CLEARANCE,
             reinterpret_cast<LPARAM>(&this->currentlySelectedClearance) // NOLINT
@@ -244,5 +239,14 @@ namespace UKControllerPlugin::Oceanic {
         -> Clearance
     {
         return Clearance{flightplan.GetCallsign()};
+    }
+
+    void OceanicEventHandler::SetCurrentlySelectedClearance(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
+        auto storedClearance = this->clearances.find(flightplan.GetCallsign());
+        this->currentlySelectedClearance = storedClearance != this->clearances.cend()
+                                               ? storedClearance->second
+                                               : GetDefaultClearanceForCallsign(flightplan);
     }
 } // namespace UKControllerPlugin::Oceanic
