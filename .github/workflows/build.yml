@@ -114,7 +114,6 @@ jobs:
         working-directory: build
         run: |
           .\\bin\\UKControllerPluginCoreTest.exe
-          ctest -C Release --output-on-failure --no-tests=error
 
       # Do Srclinting
       - name: Get Changed Files (Src)
