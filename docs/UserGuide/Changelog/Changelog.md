@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.7.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.0...5.7.1) (2023-03-31)
+
+
+### Bug Fixes
+
+* oceanic tag items crash ([ed8ffed](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ed8ffedf5b29af2ce265d2146749fa909054a334)), closes [#511](https://github.com/VATSIM-UK/uk-controller-plugin/issues/511)
+
 # [5.7.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.6.1...5.7.0) (2023-02-11)
 
 
