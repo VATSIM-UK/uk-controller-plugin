@@ -103,15 +103,12 @@ jobs:
           CFLAGS: -m32
           CXX: clang-cl
           CXXFLAGS: -m32
-        run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild
+        run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -Bbuild
 
       # Run the build and tests
       - name: Run Ninja Build
         working-directory: build
-        run: |
-          Get-ChildItem c:\windows\syswow64 -include *.dll -recurse | foreach-object { "{0}" -f [System.Diagnostics.FileVersionInfo]::GetVersionInfo($_) } | Select-String -Pattern "vcruntime|api-ms-win-crt|msvcp140|gdiplus|normaliz|wldap32|crypt32|advapi32|winmm|ole32|shell32|ws2_32|gdi32|user32|kernel32" > dlls.txt
-          type dlls.txt
-          ninja
+        run: ninja
 
       - name: Run Tests
         working-directory: build
