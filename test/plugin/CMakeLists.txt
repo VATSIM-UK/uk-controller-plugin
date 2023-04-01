@@ -260,7 +260,7 @@ set(test__intention
     intention/CachedAircraftIntentionCodeGeneratorTest.cpp
     intention/IntentionCodeEventHandlerCollectionTest.cpp
     intention/SendIntentionCodeUpdatedIntegrationMessageTest.cpp
-    intention/IntentionCodeTagItemTest.cpp integration/IntegrationDataInitialisersTest.cpp)
+    intention/IntentionCodeTagItemTest.cpp integration/IntegrationDataInitialisersTest.cpp intention/IntentionCodeIntegrationDataInitialiserTest.cpp)
 source_group("test\\intention" FILES ${test__intention})
 
 set(test__list
@@ -378,7 +378,7 @@ set(test__mock
     mock/MockPluginSettingsProvider.h mock/MockPluginSettingsProvider.cpp
     mock/MockPrenoteMessageEventHandlerInterface.h mock/MockPrenoteMessageEventHandlerInterface.cpp
     mock/MockPrenoteUserRelevanceChecker.h mock/MockPrenoteUserRelevanceChecker.cpp
-    mock/MockAircraftFirExitGenerator.h mock/MockAircraftFirExitGenerator.cpp mock/MockIntegrationDataInitialiser.cpp mock/MockIntegrationDataInitialiser.h)
+    mock/MockAircraftFirExitGenerator.h mock/MockAircraftFirExitGenerator.cpp mock/MockIntegrationDataInitialiser.cpp mock/MockIntegrationDataInitialiser.h mock/MockAircraftIntentionCodeGenerator.cpp mock/MockAircraftIntentionCodeGenerator.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids

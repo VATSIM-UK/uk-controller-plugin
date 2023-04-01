@@ -477,7 +477,7 @@ set(src__intention
     intention/SendIntentionCodeUpdatedIntegrationMessage.cpp intention/SendIntentionCodeUpdatedIntegrationMessage.h
     intention/IntentionCodeMetadata.h
     intention/IntentionCodeEventHandlerCollection.cpp intention/IntentionCodeEventHandlerCollection.h
-    intention/IntentionCodeTagItem.cpp intention/IntentionCodeTagItem.h integration/IntegrationDataInitialisers.cpp integration/IntegrationDataInitialisers.h)
+    intention/IntentionCodeTagItem.cpp intention/IntentionCodeTagItem.h integration/IntegrationDataInitialisers.cpp integration/IntegrationDataInitialisers.h intention/IntentionCodeIntegrationDataInitialiser.cpp intention/IntentionCodeIntegrationDataInitialiser.h)
 source_group("src\\intention" FILES ${src__intention})
 
 set(src__list

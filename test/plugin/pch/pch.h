@@ -59,6 +59,7 @@
 #include "../mock/MockAbstractTimedEvent.h"
 #include "../mock/MockActiveCallsignEventHandler.h"
 #include "../mock/MockAircraftFirExitGenerator.h"
+#include "../mock/MockAircraftIntentionCodeGenerator.h"
 #include "../mock/MockAircraftTypeMapper.h"
 #include "../mock/MockAsrEventHandlerInterface.h"
 #include "../mock/MockBootstrapProvider.h"
