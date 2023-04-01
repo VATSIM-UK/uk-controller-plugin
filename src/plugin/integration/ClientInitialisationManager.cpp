@@ -14,8 +14,8 @@ namespace UKControllerPlugin::Integration {
         std::shared_ptr<IntegrationDataInitialisers> dataInitialisers)
         : clientManager(std::move(clientManager)), dataInitialisers(std::move(dataInitialisers))
     {
-        assert(this.clientManager && "Client manager not set in ClientInitialisationManager");
-        assert(this.dataInitialisers && "Data initialisers not set in ClientInitialisationManager");
+        assert(this->clientManager && "Client manager not set in ClientInitialisationManager");
+        assert(this->dataInitialisers && "Data initialisers not set in ClientInitialisationManager");
     }
 
     void ClientInitialisationManager::AddConnection(std::shared_ptr<IntegrationConnection> connection)
