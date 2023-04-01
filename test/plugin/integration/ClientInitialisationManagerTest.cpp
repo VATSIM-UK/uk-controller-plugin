@@ -4,12 +4,16 @@
 #include "integration/IntegrationClient.h"
 #include "integration/IntegrationClientManager.h"
 #include "integration/IntegrationConnection.h"
+#include "integration/IntegrationDataInitialisers.h"
 #include "integration/MessageType.h"
+#include "mock/MockIntegrationDataInitialiser.h"
 #include "time/SystemClock.h"
+#include <gmock/gmock-actions.h>
 
 using UKControllerPlugin::Integration::ClientInitialisationManager;
 using UKControllerPlugin::Integration::InitialisationFailureMessage;
 using UKControllerPlugin::Integration::IntegrationClientManager;
+using UKControllerPlugin::Integration::IntegrationDataInitialisers;
 using UKControllerPlugin::Time::SetTestNow;
 
 namespace UKControllerPluginTest::Integration {
@@ -17,12 +21,19 @@ namespace UKControllerPluginTest::Integration {
     {
         public:
         ClientInitialisationManagerTest()
-            : clientManager(new IntegrationClientManager), initialisationManager(clientManager)
+            : clientManager(new IntegrationClientManager),
+              initialisers(std::make_shared<IntegrationDataInitialisers>()),
+              initialisationManager(clientManager, initialisers)
         {
             mockConnection1 = std::make_shared<testing::NiceMock<MockConnection>>();
             mockConnection2 = std::make_shared<testing::NiceMock<MockConnection>>();
             integration1 = std::make_shared<UKControllerPlugin::Integration::IntegrationConnection>(mockConnection1);
             integration2 = std::make_shared<UKControllerPlugin::Integration::IntegrationConnection>(mockConnection2);
+
+            mockInitialiser = std::make_shared<testing::NiceMock<MockIntegrationDataInitialiser>>();
+            initialisers->Add(mockInitialiser);
+
+            testing::DefaultValue<UKControllerPlugin::Integration::MessageType>::Set({"nope", 0});
         }
 
         void SetUp() override
@@ -40,6 +51,8 @@ namespace UKControllerPluginTest::Integration {
         std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection1;
         std::shared_ptr<testing::NiceMock<MockConnection>> mockConnection2;
         std::shared_ptr<IntegrationClientManager> clientManager;
+        std::shared_ptr<IntegrationDataInitialisers> initialisers;
+        std::shared_ptr<testing::NiceMock<MockIntegrationDataInitialiser>> mockInitialiser;
         ClientInitialisationManager initialisationManager;
     };
 
@@ -238,6 +251,35 @@ namespace UKControllerPluginTest::Integration {
             *this->mockConnection1,
             Send(UKControllerPlugin::Integration::InitialisationSuccessMessage("foo").ToJson().dump()))
             .Times(1);
+
+        initialisationManager.TimedEventTrigger();
+    }
+
+    TEST_F(ClientInitialisationManagerTest, ItInitialisesAClientAndSendsDataInitialisers)
+    {
+        initialisationManager.AddConnection(integration1);
+
+        nlohmann::json integrationMessage = {
+            {"type", "initialise"},
+            {"version", 1},
+            {"id", "foo"},
+            {"data",
+             nlohmann::json::object(
+                 {{"integration_name", "UKCPTEST"},
+                  {"integration_version", "1.5"},
+                  {"event_subscriptions",
+                   nlohmann::json::array(
+                       {nlohmann::json::object({{"type", "foo"}, {"version", 1}}),
+                        nlohmann::json::object({{"type", "bar"}, {"version", 2}})})}})}};
+
+        std::queue<std::string> returnedMessages;
+        returnedMessages.push(integrationMessage.dump());
+        ON_CALL(*this->mockConnection1, Receive).WillByDefault(testing::Return(returnedMessages));
+
+        // Make sure the data initialiser is called
+        UKControllerPlugin::Integration::MessageType messageType{"foo", 1};
+        EXPECT_CALL(*mockInitialiser, InitialisesFor()).Times(1).WillOnce(testing::Return(messageType));
+        EXPECT_CALL(*mockInitialiser, Initialise(testing::_)).Times(1);
 
         initialisationManager.TimedEventTrigger();
     }
