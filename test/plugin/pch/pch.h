@@ -83,6 +83,7 @@
 #include "../mock/MockFlightplanRadarTargetPair.h"
 #include "../mock/MockGraphicsInterface.h"
 #include "../mock/MockIntegrationActionProcessor.h"
+#include "../mock/MockIntegrationDataInitialiser.h"
 #include "../mock/MockListItemProvider.h"
 #include "../mock/MockMenuToggleableDisplay.h"
 #include "../mock/MockMetarEventHandler.h"
