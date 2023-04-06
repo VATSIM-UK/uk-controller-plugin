@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.7.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.1...5.7.2) (2023-04-06)
+
+
+### Bug Fixes
+
+* api key selection window not showing ([67d690a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/67d690a82359d38f1b484f94f17c999932cee21b))
+
 ## [5.7.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.0...5.7.1) (2023-03-31)
 
 
