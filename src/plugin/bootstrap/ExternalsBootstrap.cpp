@@ -41,15 +41,6 @@ namespace UKControllerPlugin::Bootstrap {
     }
 
     /*
-        Return the path to UKCP local files in wide format. This is the LEGACY
-        folder and should not be used going forward.
-    */
-    auto ExternalsBootstrap::GetLegacyPluginFileRoot() -> std::wstring
-    {
-        return GetMyDocumentsPath() + L"/EuroScope/ukcp";
-    }
-
-    /*
         Create the required folder hierarchy for UKCP.
     */
     void ExternalsBootstrap::SetupUkcpFolderRoot(WinApiInterface& winApi)
@@ -70,14 +61,6 @@ namespace UKControllerPlugin::Bootstrap {
                 MB_OK | MB_ICONSTOP);
             throw std::runtime_error("Unable to set permissions on the UKCP root folder");
         }
-    }
-
-    /*
-     * Get the My Documents path
-     */
-    auto ExternalsBootstrap::GetMyDocumentsPath() -> std::wstring
-    {
-        return GetKnownFolderPath(FOLDERID_Documents);
     }
 
     /*
