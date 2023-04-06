@@ -26,11 +26,9 @@ namespace UKControllerPlugin {
             static void Bootstrap(UKControllerPlugin::Bootstrap::PersistenceContainer& persistence, HINSTANCE instance);
 
             static std::wstring GetPluginFileRoot(void);
-            static std::wstring GetLegacyPluginFileRoot(void);
             static void SetupUkcpFolderRoot(UKControllerPlugin::Windows::WinApiInterface& winApi);
 
             private:
-            static std::wstring GetMyDocumentsPath(void);
             static std::wstring GetLocalAppDataPath(void);
             static std::wstring GetKnownFolderPath(GUID folderId);
         };

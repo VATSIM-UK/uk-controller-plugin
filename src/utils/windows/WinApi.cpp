@@ -93,7 +93,7 @@ namespace UKControllerPlugin {
         WinApi::FileOpenDialog(std::wstring title, UINT numFileTypes, const COMDLG_FILTERSPEC* fileTypes) const
         {
             std::wstringstream result;
-            HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+            HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
             if (SUCCEEDED(hr)) {
                 IFileOpenDialog* pFileOpen;
 
