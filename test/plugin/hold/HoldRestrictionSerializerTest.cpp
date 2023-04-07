@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 
 #include "bootstrap/PersistenceContainer.h"
 #include "hold/AbstractHoldLevelRestriction.h"

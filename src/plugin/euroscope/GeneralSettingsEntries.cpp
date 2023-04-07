@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "euroscope/GeneralSettingsEntries.h"
 
 namespace UKControllerPlugin {
@@ -8,6 +7,9 @@ namespace UKControllerPlugin {
         const std::string GeneralSettingsEntries::usePrenoteSettingsKey = "prenoteNotify";
         const std::string GeneralSettingsEntries::usePrenoteSettingsDescription =
             "Notify the user of required controller pre-notes";
+        const std::string GeneralSettingsEntries::prenoteChatAreaMessagesSettingsKey = "sendPrenotesToChat";
+        const std::string GeneralSettingsEntries::prenoteChatAreaMessagesSettingsDescription =
+            "Show prenote activity in chat area";
 
         // SQUAWKS
         const std::string GeneralSettingsEntries::squawkToggleSettingsKey = "autoAssignSquawks";
@@ -31,5 +33,5 @@ namespace UKControllerPlugin {
         const std::string GeneralSettingsEntries::initialHeadingToggleSettingsKey = "autoAssignInitialHeadings";
         const std::string GeneralSettingsEntries::initialHeadingToggleSettingsDescription =
             "Automatically assign initial headings";
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

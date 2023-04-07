@@ -10,6 +10,7 @@ namespace UKControllerPlugin::Wake {
         public:
         void Add(std::shared_ptr<WakeScheme> scheme);
         [[nodiscard]] auto Count() const -> size_t;
+        [[nodiscard]] auto GetById(int id) const -> std::shared_ptr<WakeScheme>;
         [[nodiscard]] auto GetByKey(const std::string& key) const -> std::shared_ptr<WakeScheme>;
         [[nodiscard]] auto GetByName(const std::string& name) const -> std::shared_ptr<WakeScheme>;
         [[nodiscard]] auto FirstWhere(const std::function<bool(const WakeScheme&)> predicate) const

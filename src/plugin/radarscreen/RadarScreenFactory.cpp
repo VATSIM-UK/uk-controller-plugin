@@ -5,6 +5,8 @@
 #include "ScreenControlsBootstrap.h"
 #include "UKRadarScreen.h"
 #include "api/BootstrapApi.h"
+#include "approach/ApproachBootstrapProvider.h"
+#include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "countdown/CountdownModule.h"
@@ -114,6 +116,9 @@ namespace UKControllerPlugin::RadarScreen {
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         Wake::BootstrapRadarScreen(this->persistence, renderers, userSettingHandlers, displayFactory);
 
+        this->persistence.bootstrapProviders->BootstrapRadarScreen(
+            this->persistence, renderers, configurableDisplays, userSettingHandlers, displayFactory);
+
         // Register command for position resets
         this->persistence.commandHandlers->RegisterHandler(std::make_shared<PositionResetCommand>(renderers));
 
@@ -122,6 +127,11 @@ namespace UKControllerPlugin::RadarScreen {
 
         // Last thing we do is ScreenControls
         ScreenControlsBootstrap::BootstrapRadarScreen(configurableDisplays, renderers, *persistence.brushes);
-        return new UKRadarScreen(userSettingHandlers, renderers, commandHandlers, *this->persistence.graphics);
+        return new UKRadarScreen(
+            userSettingHandlers,
+            renderers,
+            commandHandlers,
+            *this->persistence.graphics,
+            *persistence.pluginSettingsProviders);
     }
 } // namespace UKControllerPlugin::RadarScreen

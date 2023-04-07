@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "push/PushEventProxyConnection.h"
 
 namespace UKControllerPlugin {
@@ -19,8 +18,7 @@ namespace UKControllerPlugin {
                 NULL,
                 NULL,
                 GetModuleHandle(NULL),
-                this
-            );
+                this);
 
             if (this->hiddenWindow == nullptr) {
                 LogError("Unable to create push event proxy");

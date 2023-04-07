@@ -9,6 +9,8 @@ namespace UKControllerPluginTest::Wake {
     class MockWakeCategoryMapper : public WakeCategoryMapperInterface
     {
         public:
+        MockWakeCategoryMapper();
+        virtual ~MockWakeCategoryMapper();
         MOCK_METHOD(
             std::shared_ptr<WakeCategory>, MapForFlightplan, (const EuroScopeCFlightPlanInterface&), (override));
     };

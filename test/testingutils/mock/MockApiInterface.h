@@ -6,6 +6,8 @@ namespace UKControllerPluginTest::Api {
     class MockApiInterface : public UKControllerPlugin::Api::ApiInterface
     {
         public:
+        MockApiInterface();
+        virtual ~MockApiInterface();
         MOCK_CONST_METHOD3(
             CreateGeneralSquawkAssignment,
             UKControllerPlugin::Squawk::ApiSquawkAllocation(std::string, std::string, std::string));

@@ -8,9 +8,11 @@ namespace UKControllerPlugin::Integration {
     IntegrationPersistenceContainer::IntegrationPersistenceContainer(
         std::shared_ptr<OutboundIntegrationEventHandler> outboundMessageHandler,
         std::shared_ptr<InboundIntegrationMessageHandler> inboundMessageHandler,
-        std::unique_ptr<IntegrationServer> server)
+        std::unique_ptr<IntegrationServer> server,
+        std::shared_ptr<IntegrationDataInitialisers> dataInitialisers)
         : outboundMessageHandler(std::move(outboundMessageHandler)),
-          inboundMessageHandler(std::move(inboundMessageHandler)), server(std::move(server))
+          inboundMessageHandler(std::move(inboundMessageHandler)), server(std::move(server)),
+          dataInitialisers(std::move(dataInitialisers))
     {
     }
 

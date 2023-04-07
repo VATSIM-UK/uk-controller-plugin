@@ -8,6 +8,7 @@
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagItemCollection.h"
+#include "wake/WakeCategoryMapperCollection.h"
 #include "wake/WakeModule.h"
 #include "wake/WakeSchemeCollection.h"
 
@@ -62,6 +63,17 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_EQ(0, this->container.wakeSchemes->Count());
     }
 
+    TEST_F(WakeModuleTest, ItRegistersTheCategoryMapperCollection)
+    {
+        EXPECT_CALL(dependencies, LoadDependency("DEPENDENCY_WAKE_SCHEME", nlohmann::json::array()))
+            .Times(1)
+            .WillOnce(testing::Return(nlohmann::json::array()));
+
+        BootstrapPlugin(this->container, this->dependencies);
+
+        EXPECT_EQ(0, this->container.wakeCategoryMappers->Count());
+    }
+
     TEST_F(WakeModuleTest, ItAddsToFlightplanHandler)
     {
         BootstrapPlugin(this->container, this->dependencies);
@@ -106,6 +118,7 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeModuleTest, ItRegistersCalculatorForRenderers)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_EQ(1, radarRenderables.CountRenderers());
         EXPECT_EQ(1, radarRenderables.CountRenderersInPhase(radarRenderables.afterLists));
@@ -113,30 +126,35 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeModuleTest, ItRegistersCalculatorForAsrEvents)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_EQ(1, asrEventHandlers.CountHandlers());
     }
 
     TEST_F(WakeModuleTest, ItRegistersLeadAircraftCallback)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Lead Aircraft"));
     }
 
     TEST_F(WakeModuleTest, ItRegistersFollowingAircraftCallback)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Following Aircraft"));
     }
 
     TEST_F(WakeModuleTest, ItRegistersSchemeCallback)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Wake Calculator Scheme"));
     }
 
     TEST_F(WakeModuleTest, ItRegistersToggleableDisplay)
     {
+        BootstrapPlugin(this->container, this->dependencies);
         BootstrapRadarScreen(this->container, radarRenderables, asrEventHandlers, toggleableFactory);
         EXPECT_TRUE(functionCalls.HasCallbackByDescription("Toggle Wake Turbulence Calculator"));
     }

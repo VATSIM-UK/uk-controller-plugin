@@ -8,6 +8,8 @@ namespace UKControllerPluginUtilsTest::Api {
     class MockApiSettingsProvider : public ApiSettingsProviderInterface
     {
         public:
+        MockApiSettingsProvider();
+        virtual ~MockApiSettingsProvider();
         MOCK_METHOD(ApiSettings&, Get, (), (override));
         MOCK_METHOD(bool, Has, (), (override));
         MOCK_METHOD(bool, Reload, (), (override));

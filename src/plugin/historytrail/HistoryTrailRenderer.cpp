@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "historytrail/HistoryTrailRenderer.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"

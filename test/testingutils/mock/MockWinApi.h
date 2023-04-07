@@ -1,21 +1,16 @@
 #pragma once
-#include "pch/pch.h"
 #include "windows/WinApiInterface.h"
 
 namespace UKControllerPluginTest {
     namespace Windows {
         class MockWinApi : public UKControllerPlugin::Windows::WinApiInterface
         {
-        public:
-            MockWinApi() : WinApiInterface(NULL) {}
+            public:
+            MockWinApi();
+            virtual ~MockWinApi();
             MOCK_CONST_METHOD3(
                 FileOpenDialog,
-                std::wstring(
-                    std::wstring title,
-                    UINT numFileTypes,
-                    const COMDLG_FILTERSPEC * fileTypes
-                )
-            );
+                std::wstring(std::wstring title, UINT numFileTypes, const COMDLG_FILTERSPEC* fileTypes));
             MOCK_METHOD3(OpenMessageBox, int(LPCWSTR, LPCWSTR, int));
             MOCK_METHOD1(OpenWebBrowser, void(std::wstring));
             MOCK_METHOD1(PlayWave, void(LPCTSTR));
@@ -33,12 +28,8 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD2(GetFunctionPointerFromLibrary, FARPROC(HINSTANCE, std::string));
             MOCK_CONST_METHOD1(UnloadLibrary, void(HINSTANCE handle));
             MOCK_METHOD2(MoveFileToNewLocation, bool(std::wstring, std::wstring));
-
-
-            std::string ReadFromFile(std::wstring path, bool relative) override
-            {
-                return ReadFromFileMock(path, relative);
-            }
+            MOCK_CONST_METHOD1(OpenExplorer, void(const std::wstring&));
+            std::string ReadFromFile(std::wstring path, bool relative) override;
         };
-    }  // namespace Windows
-}  // namespace UKControllerPluginTest
+    } // namespace Windows
+} // namespace UKControllerPluginTest

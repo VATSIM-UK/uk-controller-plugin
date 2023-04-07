@@ -8,7 +8,7 @@ namespace UKControllerPlugin {
         class ApiResponseFactory
         {
             public:
-                static ApiResponse Create(UKControllerPlugin::Curl::CurlResponse curl);
+            static ApiResponse Create(UKControllerPlugin::Curl::CurlResponse curl);
         };
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+    } // namespace Api
+} // namespace UKControllerPlugin

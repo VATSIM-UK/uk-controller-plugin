@@ -11,19 +11,15 @@ namespace UKControllerPlugin {
         class HandoffEventHandlerCollection
         {
             public:
-                void HandoffInitiated(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,
-                    UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& targetController
-                ) const;
-                size_t CountHandlers(void) const;
-                void RegisterHandler(
-                    std::shared_ptr<UKControllerPlugin::Controller::HandoffEventHandlerInterface> handler
-                );
+            void HandoffInitiated(
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+                UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& transferringController,
+                UKControllerPlugin::Euroscope::EuroScopeCControllerInterface& targetController) const;
+            size_t CountHandlers(void) const;
+            void RegisterHandler(std::shared_ptr<UKControllerPlugin::Controller::HandoffEventHandlerInterface> handler);
+
             private:
-                std::set<
-                    std::shared_ptr<UKControllerPlugin::Controller::HandoffEventHandlerInterface>
-                > eventHandlers;
+            std::set<std::shared_ptr<UKControllerPlugin::Controller::HandoffEventHandlerInterface>> eventHandlers;
         };
-    };  // namespace Controller
-};  // namespace UKControllerPlugin
+    }; // namespace Controller
+};     // namespace UKControllerPlugin

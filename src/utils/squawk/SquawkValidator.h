@@ -1,17 +1,15 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Squawk {
+namespace UKControllerPlugin::Squawk {
 
-        /*
-            Class for validating squawks either returned from the API or manually
-            inserted by the user.
-        */
-        class SquawkValidator
-        {
-            public:
-                bool static AllowedSquawk(std::string squawk);
-                bool static ValidSquawk(std::string squawk);
-        };
-    }  // namespace Squawk
-}  // namespace UKControllerPlugin
+    /*
+        Class for validating squawks either returned from the API or manually
+        inserted by the user.
+    */
+    class SquawkValidator
+    {
+        public:
+        [[nodiscard]] auto static AllowedSquawk(const std::string& squawk) -> bool;
+        [[nodiscard]] auto static ValidSquawk(std::string squawk) -> bool;
+    };
+} // namespace UKControllerPlugin::Squawk

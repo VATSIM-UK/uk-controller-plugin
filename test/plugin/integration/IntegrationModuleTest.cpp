@@ -3,7 +3,9 @@
 #include "integration/ExternalMessageEventHandler.h"
 #include "integration/InitialisationSuccessMessage.h"
 #include "integration/InboundIntegrationMessageHandler.h"
+#include "integration/IntegrationDataInitialisers.h"
 #include "integration/IntegrationModule.h"
+#include "integration/IntegrationPersistenceContainer.h"
 #include "integration/OutboundIntegrationEventHandler.h"
 #include "timedevent/TimedEventCollection.h"
 
@@ -58,6 +60,12 @@ namespace UKControllerPluginTest::Integration {
         EXPECT_NO_THROW(container.integrationModuleContainer->outboundMessageHandler->SendEvent(testEvent));
     }
 
+    TEST_F(IntegrationModuleTest, ItSetsUpDataInitialisersRegardlessOfDuplicatePlugin)
+    {
+        BootstrapPlugin(container, true, true);
+        EXPECT_EQ(0, container.integrationModuleContainer->dataInitialisers->Count());
+    }
+
     TEST_F(IntegrationModuleTest, ItSetsUpExternalEventHandlerRegardlessOfDuplicatePlugin)
     {
         BootstrapPlugin(container, true, true);
@@ -80,6 +88,12 @@ namespace UKControllerPluginTest::Integration {
     {
         BootstrapPlugin(container, false, false);
         EXPECT_EQ(0, container.externalEventHandler->CountHandlers());
+    }
+
+    TEST_F(IntegrationModuleTest, ItSetsUpDataInitialisersRegardlessOfWinsockInitialisation)
+    {
+        BootstrapPlugin(container, false, false);
+        EXPECT_EQ(0, container.integrationModuleContainer->dataInitialisers->Count());
     }
 
     TEST_F(IntegrationModuleTest, ItRegistersForCommands)

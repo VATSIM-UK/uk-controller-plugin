@@ -8,7 +8,6 @@
 #include "euroscope/EuroscopeSectorFileElementInterface.h"
 #include "navaids/NavaidCollection.h"
 #include "tag/TagData.h"
-#include "time/SystemClock.h"
 
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;

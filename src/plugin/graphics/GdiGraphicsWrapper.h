@@ -48,6 +48,7 @@ namespace UKControllerPlugin {
             void Rotated(Gdiplus::REAL angle, std::function<void()> drawFunction) override;
             void FillPolygon(Gdiplus::Point* points, const Gdiplus::Brush& brush, int numPoints) override;
             void FillCircle(const Gdiplus::RectF& area, const Gdiplus::Brush& brush) override;
+            void FillCircle(const Gdiplus::Rect& area, const Gdiplus::Brush& brush) override;
             void FillDiamond(const Gdiplus::RectF& area, const Gdiplus::Brush& brush) override;
 
             private:

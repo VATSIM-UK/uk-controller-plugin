@@ -44,7 +44,7 @@ namespace UKControllerPluginTest::MissedApproach {
             container.dialogManager = std::make_unique<DialogManager>(mockProvider);
             container.airfields = std::make_unique<AirfieldCollection>();
             container.integrationModuleContainer = std::make_unique<IntegrationPersistenceContainer>(
-                nullptr, std::make_shared<InboundIntegrationMessageHandler>(nullptr), nullptr);
+                nullptr, std::make_shared<InboundIntegrationMessageHandler>(nullptr), nullptr, nullptr);
             container.tagHandler = std::make_unique<TagItemCollection>();
         }
 

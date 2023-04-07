@@ -5,6 +5,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "message/UserMessager.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "prenote/PrenoteMessageEventHandlerCollection.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "prenote/PrenoteModule.h"
 #include "push/PushEventProcessorCollection.h"
@@ -140,6 +141,12 @@ namespace UKControllerPluginTest::Prenote {
     {
         PrenoteModule::BootstrapPlugin(container, dependency);
         EXPECT_EQ(0, container.prenotes->Count());
+    }
+
+    TEST_F(PrenoteModuleTest, ItRegistersPrenoteMessageEventHandlerCollectionWithContainer)
+    {
+        PrenoteModule::BootstrapPlugin(container, dependency);
+        EXPECT_EQ(5, container.prenoteMessageHandlers->CountHandlers());
     }
 
     TEST_F(PrenoteModuleTest, ItRegistersRenderables)

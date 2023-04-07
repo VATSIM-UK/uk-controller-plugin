@@ -14,7 +14,7 @@ std::shared_ptr<ApiSettings> settings;
 */
 CurlRequest GetApiCurlRequest(std::string route, std::string method, nlohmann::json body)
 {
-    CurlRequest request(mockApiUrl + route, method);
+    CurlRequest request(mockApiUrl + "/api" + route, method);
     request.SetBody(body.dump());
     request.AddHeader("Authorization", "Bearer " + mockApiKey);
     request.AddHeader("Accept", "application/json");
@@ -27,7 +27,7 @@ CurlRequest GetApiCurlRequest(std::string route, std::string method, nlohmann::j
 */
 CurlRequest GetApiCurlRequest(std::string route, std::string method)
 {
-    CurlRequest request(mockApiUrl + route, method);
+    CurlRequest request(mockApiUrl + "/api" + route, method);
     request.AddHeader("Authorization", "Bearer " + mockApiKey);
     request.AddHeader("Accept", "application/json");
     request.AddHeader("Content-Type", "application/json");

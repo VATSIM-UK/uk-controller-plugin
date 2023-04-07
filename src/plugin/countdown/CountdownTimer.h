@@ -4,8 +4,8 @@
 namespace UKControllerPlugin {
     namespace Windows {
         class WinApiInterface;
-    }  // namespace Windows
-}  // namespace UKControllerPlugin
+    } // namespace Windows
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -16,21 +16,20 @@ namespace UKControllerPlugin {
         */
         class CountdownTimer
         {
-        public:
-            explicit CountdownTimer(UKControllerPlugin::Windows::WinApiInterface & winApi);
+            public:
+            explicit CountdownTimer(UKControllerPlugin::Windows::WinApiInterface& winApi);
             virtual ~CountdownTimer(void);
             std::wstringstream GetCurrentTimeString(int secondsRemaining);
             int GetSecondsRemaining(void);
             virtual void ResetTimer(bool playSound);
             virtual void StartTimer(time_t duration);
 
-        private:
-
+            private:
             // The time (seconds since UNIX epoch) at which the timer was started
             time_t endTime = 0;
 
             // Windows API
-            UKControllerPlugin::Windows::WinApiInterface & winApi;
+            UKControllerPlugin::Windows::WinApiInterface& winApi;
         };
-    }  // namespace Countdown
-}  // namespace UKControllerPlugin
+    } // namespace Countdown
+} // namespace UKControllerPlugin

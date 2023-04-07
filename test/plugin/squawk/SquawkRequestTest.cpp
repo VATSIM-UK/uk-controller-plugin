@@ -1,8 +1,7 @@
-#include "pch/pch.h"
 #include "squawk/SquawkRequest.h"
 
-using UKControllerPlugin::Squawk::SquawkRequest;
 using ::testing::Test;
+using UKControllerPlugin::Squawk::SquawkRequest;
 
 namespace UKControllerPluginTest {
     namespace Squawk {
@@ -10,7 +9,7 @@ namespace UKControllerPluginTest {
         class SquawkRequestTest : public Test
         {
             public:
-                SquawkRequest request;
+            SquawkRequest request;
         };
 
         TEST_F(SquawkRequestTest, TestItReturnsTrueOnSuccessfulStart)
@@ -42,5 +41,5 @@ namespace UKControllerPluginTest {
             EXPECT_NO_THROW(this->request.End("BAW123"));
         }
 
-    }  // namespace Squawk
-}  // namespace UKControllerPluginTest
+    } // namespace Squawk
+} // namespace UKControllerPluginTest

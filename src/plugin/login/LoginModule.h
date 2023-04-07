@@ -4,8 +4,8 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -17,7 +17,7 @@ namespace UKControllerPlugin {
         class LoginModule
         {
             public:
-                static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer & persistence);
+            static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& persistence);
         };
-    }  // namespace Controller
-}  // namespace UKControllerPlugin
+    } // namespace Controller
+} // namespace UKControllerPlugin

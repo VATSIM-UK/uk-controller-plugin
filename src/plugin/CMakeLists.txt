@@ -20,7 +20,7 @@ set(src__aircraft
         aircraft/AircraftTypeFactory.cpp aircraft/AircraftTypeFactory.h
         aircraft/AircraftModule.cpp aircraft/AircraftModule.h
         aircraft/FlightplanAircraftTypeMapper.cpp aircraft/FlightplanAircraftTypeMapper.h
-        aircraft/AircraftTypeMapperInterface.h)
+        aircraft/AircraftTypeMapperInterface.h approach/AirfieldMinimumSeparationSelectorList.cpp approach/AirfieldMinimumSeparationSelectorList.h)
 source_group("src\\aircraft" FILES ${src__aircraft})
 
 set(src__airfield
@@ -41,6 +41,21 @@ set(src__api
     api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h)
 source_group("src\\api" FILES ${src__api})
 
+set(src__approach
+        approach/ApproachSpacingRingRenderer.cpp approach/ApproachSpacingRingRenderer.h
+        approach/ApproachBootstrapProvider.cpp approach/ApproachBootstrapProvider.h
+        approach/ApproachModuleFactory.cpp approach/ApproachModuleFactory.h
+        approach/ApproachSequence.cpp approach/ApproachSequence.h
+        approach/ApproachSequencedAircraft.h approach/ApproachSequencedAircraft.cpp
+        approach/ApproachSequencingMode.h
+        approach/ApproachSequencerDisplay.cpp approach/ApproachSequencerDisplay.h
+        approach/ApproachSequencer.cpp approach/ApproachSequencer.h
+        approach/ApproachSequencerDisplayOptions.cpp approach/ApproachSequencerDisplayOptions.h
+        approach/ApproachSequencerDisplayAsrLoader.cpp approach/ApproachSequencerDisplayAsrLoader.h
+        approach/ToggleApproachSequencerDisplay.cpp approach/ToggleApproachSequencerDisplay.h
+        approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h approach/TargetSelectorList.cpp approach/TargetSelectorList.h approach/ApproachSpacingCalculator.cpp approach/ApproachSpacingCalculator.h approach/ApproachSequencerOptions.cpp approach/ApproachSequencerOptions.h approach/AirfieldApproachOptions.h approach/ApproachSequencerOptionsLoader.cpp approach/ApproachSequencerOptionsLoader.h approach/AirfieldTargetSelectorList.cpp approach/AirfieldTargetSelectorList.h approach/ApproachSequencerDistanceOptions.cpp approach/ApproachSequencerDistanceOptions.h approach/RemoveLandedAircraft.cpp approach/RemoveLandedAircraft.h approach/ApproachFlightplanEventHandler.cpp approach/ApproachFlightplanEventHandler.h)
+source_group("src\\approach" FILES ${src__approach})
+
 set(src__bootstrap
     "bootstrap/BootstrapWarningMessage.cpp"
     "bootstrap/BootstrapWarningMessage.h"
@@ -58,7 +73,7 @@ set(src__bootstrap
     "bootstrap/PersistenceContainer.h"
     "bootstrap/PostInit.cpp"
     "bootstrap/PostInit.h"
-    bootstrap/PersistenceContainer.cpp)
+    bootstrap/PersistenceContainer.cpp bootstrap/BootstrapProviderInterface.h bootstrap/BootstrapProviderCollection.h bootstrap/BootstrapProviderCollection.cpp bootstrap/BootstrapProviderCollection.h bootstrap/ModuleFactories.h bootstrap/ModuleFactories.cpp bootstrap/ModuleFactories.h bootstrap/BootstrapProviderCollectionFactory.cpp bootstrap/BootstrapProviderCollectionFactory.h bootstrap/ModuleBootstrap.cpp bootstrap/ModuleBootstrap.h)
 source_group("src\\bootstrap" FILES ${src__bootstrap})
 
 set(src__command
@@ -79,7 +94,7 @@ set(src__components
     "components/StandardButtons.h"
     "components/TitleBar.cpp"
     "components/TitleBar.h"
-)
+        components/CollapsibleWindowTitleBar.cpp components/CollapsibleWindowTitleBar.h)
 source_group("src\\components" FILES ${src__components})
 
 set(src__controller
@@ -173,7 +188,9 @@ set(src__euroscope
     "euroscope/EuroScopeCRadarTargetPositionDataInterface.h"
     "euroscope/EuroScopeCRadarTargetWrapper.cpp"
     "euroscope/EuroScopeCRadarTargetWrapper.h"
-    "euroscope/EuroscopeExtractedRouteInterface.cpp"
+    "euroscope/EuroscopeCoordinateInterface.h"
+    "euroscope/EuroscopeCoordinateWrapper.h"
+    "euroscope/EuroscopeCoordinateWrapper.cpp"
     "euroscope/EuroscopeExtractedRouteInterface.h"
     "euroscope/EuroscopeFlightplanListInterface.h"
     "euroscope/EuroscopeFlightplanListWrapper.cpp"
@@ -207,7 +224,12 @@ set(src__euroscope
     "euroscope/UserSettingAwareCollection.h"
     "euroscope/UserSettingAwareInterface.h"
     "euroscope/UserSettingProviderInterface.h"
-        euroscope/AsrEventHandlerInterface.cpp euroscope/UserSettingProviderInterface.cpp euroscope/EuroscopeRadarLoopbackInterface.cpp)
+    euroscope/AsrEventHandlerInterface.cpp
+    euroscope/UserSettingProviderInterface.cpp
+    euroscope/EuroscopeRadarLoopbackInterface.cpp
+    euroscope/PluginSettingsProviderInterface.h
+    euroscope/PluginSettingsProviderCollection.cpp euroscope/PluginSettingsProviderCollection.h
+    euroscope/EuroscopeExtractedRouteWrapper.cpp euroscope/EuroscopeExtractedRouteWrapper.h)
 source_group("src\\euroscope" FILES ${src__euroscope})
 
 set(src__flightinformationservice
@@ -219,11 +241,17 @@ set(src__flightinformationservice
 source_group("src\\flightinformationservice" FILES ${src__flightinformationservice})
 
 set(src__flightplan
+    "flightplan/FlightplanPoint.h"
+    "flightplan/FlightplanPoint.cpp"
     "flightplan/FlightPlanEventHandlerCollection.cpp"
     "flightplan/FlightPlanEventHandlerCollection.h"
     "flightplan/FlightPlanEventHandlerInterface.h"
     "flightplan/FlightplanStorageBootstrap.cpp"
     "flightplan/FlightplanStorageBootstrap.h"
+    "flightplan/ParsedFlightplan.h"
+    "flightplan/ParsedFlightplan.cpp"
+    "flightplan/ParsedFlightplanFactory.h"
+    "flightplan/ParsedFlightplanFactory.cpp"
     "flightplan/StoredFlightplan.cpp"
     "flightplan/StoredFlightplan.h"
     "flightplan/StoredFlightplanCollection.cpp"
@@ -239,6 +267,10 @@ set(src__flightrule
         flightrule/FlightRuleModule.cpp flightrule/FlightRuleModule.h
         flightrule/FlightRuleCollectionFactory.cpp flightrule/FlightRuleCollectionFactory.h)
 source_group("src\\flightrule" FILES ${src__flightrule})
+
+set(src__geometry
+        geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h geometry/MeasurementUnitType.h geometry/MeasurementUnitFactory.cpp geometry/MeasurementUnitFactory.h geometry/Measurement.cpp geometry/Measurement.h geometry/MeasurementUnit.cpp geometry/MeasurementUnit.h)
+source_group("src\\geometry" FILES ${src__geometry})
 
 set(src__graphics
     "graphics/GdiGraphicsInterface.h"
@@ -262,7 +294,7 @@ set(src__handoff
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
     controller/HandoffEventHandler.cpp
-    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/ClearCacheOnActiveCallsignChanges.cpp handoff/ClearCacheOnActiveCallsignChanges.h)
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/ClearCacheOnActiveCallsignChanges.cpp handoff/ClearCacheOnActiveCallsignChanges.h handoff/ClearCacheOnRunwayDialogSave.cpp handoff/ClearCacheOnRunwayDialogSave.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__headings headings/Heading.h headings/Heading.cpp)
@@ -402,52 +434,50 @@ set(src__integration
     "integration/SocketInterface.h"
     "integration/SocketWrapper.cpp"
     "integration/SocketWrapper.h"
-        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp integration/ExternalMessageHandlerInterface.cpp)
+        integration/ActionSuccessMessage.cpp integration/ActionSuccessMessage.h integration/ActionFailureMessage.cpp integration/ActionFailureMessage.h integration/MessageType.cpp integration/ExternalMessageHandlerInterface.cpp intention/CruisingLevelAbove.cpp intention/CruisingLevelAbove.h integration/IntegrationDataInitialiser.h)
 source_group("src\\integration" FILES ${src__integration})
 
 set(src__intention
-    "intention/AirfieldGroup.cpp"
-    "intention/AirfieldGroup.h"
-    "intention/AmsterdamAirfieldGroup.cpp"
-    "intention/AmsterdamAirfieldGroup.h"
-    "intention/BrusselsAirfieldGroup.cpp"
-    "intention/BrusselsAirfieldGroup.h"
-    "intention/DublinAirfieldGroup.cpp"
-    "intention/DublinAirfieldGroup.h"
-    "intention/HomeAirfieldGroup.cpp"
-    "intention/HomeAirfieldGroup.h"
-    "intention/IntentionCodeCache.cpp"
-    "intention/IntentionCodeCache.h"
-    "intention/IntentionCodeData.h"
-    "intention/IntentionCodeEventHandler.cpp"
-    "intention/IntentionCodeEventHandler.h"
-    "intention/IntentionCodeFactory.cpp"
-    "intention/IntentionCodeFactory.h"
-    "intention/IntentionCodeGenerator.cpp"
-    "intention/IntentionCodeGenerator.h"
-    "intention/IntentionCodeModule.cpp"
-    "intention/IntentionCodeModule.h"
+    "intention/AircraftFirExit.h"
+    "intention/AircraftFirExitGenerator.h"
+    "intention/CachedAircraftFirExitGenerator.h"
+    "intention/CachedAircraftFirExitGenerator.cpp"
+    "intention/ExitCone.h"
+    "intention/ExitCone.cpp"
+    "intention/ExitDetermination.h"
+    "intention/FirExitPoint.h"
+    "intention/FirExitPoint.cpp"
     "intention/IntentionCodeUpdatedMessage.cpp"
     "intention/IntentionCodeUpdatedMessage.h"
-    "intention/SectorExitPoint.cpp"
-    "intention/SectorExitPoint.h"
-    "intention/SectorExitPointEtrat.cpp"
-    "intention/SectorExitPointEtrat.h"
-    "intention/SectorExitPointKonan.cpp"
-    "intention/SectorExitPointKonan.h"
-    "intention/SectorExitPointLelna.cpp"
-    "intention/SectorExitPointLelna.h"
-    "intention/SectorExitPointScottish.cpp"
-    "intention/SectorExitPointScottish.h"
-    "intention/SectorExitPointVeule.cpp"
-    "intention/SectorExitPointVeule.h"
-    "intention/SectorExitRepository.cpp"
-    "intention/SectorExitRepository.h"
-    "intention/SectorExitRepositoryFactory.cpp"
-    "intention/SectorExitRepositoryFactory.h"
-    "intention/ShannonAirfieldGroup.cpp"
-    "intention/ShannonAirfieldGroup.h"
-)
+    intention/FirExitPointCollection.cpp intention/FirExitPointCollection.h
+    intention/FirExitPointCollectionFactory.cpp intention/FirExitPointCollectionFactory.h
+    intention/IntentionCodeModuleFactory.cpp intention/IntentionCodeModuleFactory.h
+    intention/IntentionCodeBootstrapProvider.cpp intention/IntentionCodeBootstrapProvider.h
+    intention/Condition.h
+    intention/AllOf.cpp intention/AllOf.h
+    intention/AnyOf.cpp intention/AnyOf.h
+    intention/Not.cpp intention/Not.h
+    intention/ArrivalAirfields.cpp intention/ArrivalAirfields.h
+    intention/ArrivalAirfieldPattern.cpp intention/ArrivalAirfieldPattern.h
+    intention/MaximumCruisingAltitude.cpp intention/MaximumCruisingAltitude.h
+    intention/ControllerPositionStartsWith.cpp intention/ControllerPositionStartsWith.h
+    intention/ExitingFirAtPoint.cpp intention/ExitingFirAtPoint.h
+    intention/RoutingVia.cpp intention/RoutingVia.h
+    intention/CodeGenerator.h
+    intention/SingleCode.cpp intention/SingleCode.h
+    intention/AirfieldIdentifier.cpp intention/AirfieldIdentifier.h
+    intention/FullAirfieldIdentifier.cpp intention/FullAirfieldIdentifier.h
+    intention/IntentionCodeModel.cpp intention/IntentionCodeModel.h
+    intention/IntentionCodeCollection.cpp intention/IntentionCodeCollection.h
+    intention/IntentionCodeCollectionFactory.cpp intention/IntentionCodeCollectionFactory.h
+    intention/AircraftIntentionCodeGenerator.h
+    intention/AircraftIntentionCode.h
+    intention/CachedAircraftIntentionCodeGenerator.cpp intention/CachedAircraftIntentionCodeGenerator.h
+    intention/IntentionCodeEventHandlerInterface.h
+    intention/SendIntentionCodeUpdatedIntegrationMessage.cpp intention/SendIntentionCodeUpdatedIntegrationMessage.h
+    intention/IntentionCodeMetadata.h
+    intention/IntentionCodeEventHandlerCollection.cpp intention/IntentionCodeEventHandlerCollection.h
+    intention/IntentionCodeTagItem.cpp intention/IntentionCodeTagItem.h integration/IntegrationDataInitialisers.cpp integration/IntegrationDataInitialisers.h intention/IntentionCodeIntegrationDataInitialiser.cpp intention/IntentionCodeIntegrationDataInitialiser.h)
 source_group("src\\intention" FILES ${src__intention})
 
 set(src__list
@@ -580,6 +610,10 @@ set(src__notifications
 )
 source_group("src\\notifications" FILES ${src__notifications})
 
+set(src__number
+        number/NumberFormat.cpp number/NumberFormat.h)
+source_group("src\\number" FILES ${src__number})
+
 set(src__oceanic
     "oceanic/Clearance.h"
     "oceanic/OceanicClearanceDialog.cpp"
@@ -641,7 +675,7 @@ set(src__plugin
     "plugin/UKPlugin.h"
     "plugin/UkPluginBootstrap.cpp"
     "plugin/UkPluginBootstrap.h"
-        euroscope/UserSettingAwareInterface.cpp)
+        euroscope/UserSettingAwareInterface.cpp plugin/OpenDataFolder.cpp plugin/OpenDataFolder.h plugin/OpenLogsFolder.cpp plugin/OpenLogsFolder.h)
 source_group("src\\plugin" FILES ${src__plugin})
 
 set(src__prenote
@@ -670,7 +704,13 @@ set(src__prenote
     prenote/PublishedPrenoteCollection.cpp prenote/PublishedPrenoteCollection.h
     prenote/PublishedPrenoteCollectionFactory.cpp prenote/PublishedPrenoteCollectionFactory.h
     prenote/PairedAirfieldPrenote.h
-    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h)
+    prenote/PublishedPrenoteMapper.cpp prenote/PublishedPrenoteMapper.h
+    controller/CompareActiveCallsigns.cpp controller/CompareActiveCallsigns.h
+    prenote/PrenoteMessageEventHandlerInterface.h
+    prenote/PlayNewPrenoteMessageSound.cpp prenote/PlayNewPrenoteMessageSound.h
+    prenote/SendNewPrenoteChatAreaMessage.cpp prenote/SendNewPrenoteChatAreaMessage.h
+        prenote/PrenoteIsTargetedToUser.cpp prenote/PrenoteIsTargetedToUser.h
+    prenote/PrenoteUserRelevanceChecker.h prenote/SendPrenoteCancelledChatAreaMessage.cpp prenote/SendPrenoteCancelledChatAreaMessage.h prenote/PrenoteIsSentFromUsersPosition.cpp prenote/PrenoteIsSentFromUsersPosition.h prenote/SendPrenoteAcknowledgedChatAreaMessage.cpp prenote/SendPrenoteAcknowledgedChatAreaMessage.h prenote/SendPrenoteTimeoutChatAreaMessage.cpp prenote/SendPrenoteTimeoutChatAreaMessage.h)
 source_group("src\\prenote" FILES ${src__prenote})
 
 set(src__push
@@ -717,7 +757,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h radarscreen/ConfigurableDisplayCallbackFactory.cpp radarscreen/ConfigurableDisplayCallbackFactory.h)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
@@ -909,7 +949,7 @@ set(src__wake
     wake/WakeIntervalFormatter.cpp wake/WakeIntervalFormatter.h
     wake/ArrivalWakeInterval.cpp wake/ArrivalWakeInterval.h
     wake/ArrivalWakeIntervalFactory.cpp wake/ArrivalWakeIntervalFactory.h
-    wake/WakeIntervalInterface.h)
+    wake/WakeIntervalInterface.h wake/WakeCategoryMapperCollection.cpp wake/WakeCategoryMapperCollection.h wake/WakeCategoryMapperCollectionFactory.cpp wake/WakeCategoryMapperCollectionFactory.h)
 source_group("src\\wake" FILES ${src__wake})
 
 set(ALL_FILES
@@ -917,6 +957,7 @@ set(ALL_FILES
     ${src__aircraft}
     ${src__airfield}
     ${src__api}
+    ${src__approach}
     ${src__bootstrap}
     ${src__command}
     ${src__components}
@@ -929,6 +970,7 @@ set(ALL_FILES
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}
+    ${src__geometry}
     ${src__graphics}
     ${src__handoff}
     ${src__headings}
@@ -946,6 +988,7 @@ set(ALL_FILES
     ${src__missedapproach}
     ${src__navaids}
     ${src__notifications}
+    ${src__number}
     ${src__oceanic}
     ${src__offblock}
     ${src__ownership}
@@ -966,7 +1009,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
-    ${src__wake})
+    ${src__wake} prenote/PrenoteMessageEventHandlerCollection.cpp prenote/PrenoteMessageEventHandlerCollection.h)
 
 ################################################################################
 # Target
@@ -1063,11 +1106,10 @@ if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
             /Od
+            /Zi;
         >
         $<$<CONFIG:Release>:
             /O2;
-            /Oi;
-            /Gy
         >
         /std:c++20;
         /sdl;
@@ -1078,15 +1120,16 @@ if(MSVC)
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
         -Wno-unused-parameter # Lots of interfaces don't use everything
         -Wno-missing-field-initializers # Windows has loads of this sadly
+        -ftime-trace
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /DEBUG:FASTLINK;
+            /DEBUG:GHASH;
             /INCREMENTAL
             -flto=thin
             >
         $<$<CONFIG:Release>:
-            /DEBUG;
+            /DEBUG:NONE;
             /OPT:REF;
             /OPT:ICF;
             /INCREMENTAL:NO

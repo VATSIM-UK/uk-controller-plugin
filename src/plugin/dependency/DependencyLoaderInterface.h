@@ -8,6 +8,7 @@ namespace UKControllerPlugin::Dependency {
     class DependencyLoaderInterface
     {
         public:
+        virtual ~DependencyLoaderInterface() = default;
         [[nodiscard]] virtual nlohmann::json LoadDependency(std::string key, nlohmann::json defaultValue) noexcept = 0;
     };
 

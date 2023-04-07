@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "releases/CompareEnrouteReleaseTypes.h"
 #include "releases/EnrouteReleaseType.h"
 
@@ -16,10 +15,9 @@ namespace UKControllerPlugin {
         }
 
         bool CompareEnrouteReleaseTypes::operator()(
-            const EnrouteReleaseType& releaseTypeA,
-            const EnrouteReleaseType& releaseTypeB
-        ) const {
+            const EnrouteReleaseType& releaseTypeA, const EnrouteReleaseType& releaseTypeB) const
+        {
             return releaseTypeA.id < releaseTypeB.id;
         }
-    }  // namespace Releases
-}  // namespace UKControllerPlugin
+    } // namespace Releases
+} // namespace UKControllerPlugin

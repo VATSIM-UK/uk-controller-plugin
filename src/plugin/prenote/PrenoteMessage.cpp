@@ -1,4 +1,5 @@
 #include "PrenoteMessage.h"
+#include "controller/ControllerPosition.h"
 #include "time/SystemClock.h"
 
 using UKControllerPlugin::Time::TimeNow;
@@ -10,12 +11,12 @@ namespace UKControllerPlugin::Prenote {
         std::string departureAirfield,
         std::string sid,
         std::string destinationAirfield,
-        int sendingControllerId,
-        int targetControllerId,
+        std::shared_ptr<Controller::ControllerPosition> sendingController,
+        std::shared_ptr<Controller::ControllerPosition> targetController,
         std::chrono::system_clock::time_point expiresAt)
         : id(id), callsign(std::move(callsign)), departureAirfield(std::move(departureAirfield)), sid(std::move(sid)),
-          destinationAirfield(std::move(destinationAirfield)), sendingControllerId(sendingControllerId),
-          targetControllerId(targetControllerId), expiresAt(expiresAt),
+          destinationAirfield(std::move(destinationAirfield)), sendingController(sendingController),
+          targetController(targetController), expiresAt(expiresAt),
           acknowledgedAt((std::chrono::system_clock::time_point::max)()), createdAt(Time::TimeNow())
     {
     }
@@ -47,12 +48,12 @@ namespace UKControllerPlugin::Prenote {
 
     auto PrenoteMessage::GetSendingControllerId() const -> int
     {
-        return sendingControllerId;
+        return sendingController->GetId();
     }
 
     auto PrenoteMessage::GetTargetControllerId() const -> int
     {
-        return targetControllerId;
+        return targetController->GetId();
     }
 
     auto PrenoteMessage::GetExpiresAt() const -> const std::chrono::system_clock::time_point&
@@ -78,5 +79,15 @@ namespace UKControllerPlugin::Prenote {
     auto PrenoteMessage::GetCreatedAt() const -> const std::chrono::system_clock::time_point&
     {
         return this->createdAt;
+    }
+
+    auto PrenoteMessage::GetSendingController() const -> std::shared_ptr<Controller::ControllerPosition>
+    {
+        return this->sendingController;
+    }
+
+    auto PrenoteMessage::GetTargetController() const -> std::shared_ptr<Controller::ControllerPosition>
+    {
+        return this->targetController;
     }
 } // namespace UKControllerPlugin::Prenote

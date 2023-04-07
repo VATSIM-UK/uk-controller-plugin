@@ -55,6 +55,7 @@ namespace UKControllerPlugin::Oceanic {
         static auto GetDefaultClearanceForCallsign(Euroscope::EuroScopeCFlightPlanInterface& flightplan) -> Clearance;
         static auto ConvertNattrakLevelToEuroscope(const std::string& level) -> int;
         static auto NattrakLevelValid(std::string level) -> bool;
+        void SetCurrentlySelectedClearance(Euroscope::EuroScopeCFlightPlanInterface& flightplan);
         [[nodiscard]] static auto GetClearedTagItemColour(int clearedLevel, int currentLevel) -> COLORREF;
         void SetClearanceIndicatorTagItem(Tag::TagData& tagData, const Clearance& clearance) const;
         void SetClearedLevelTagItem(Tag::TagData& tagData, const Clearance& clearance) const;
@@ -76,7 +77,7 @@ namespace UKControllerPlugin::Oceanic {
         Dialog::DialogManager& dialogManager;
 
         // The URL to find nattrak
-        const std::string nattrakUrl = "https://nattrak.vatsim.net/pluginapi.php";
+        const std::string nattrakUrl = "https://nattrak.vatsim.net/api/plugins";
 
         // Returned if clearance doesnt exist
         const Clearance invalidClearance = Clearance("NOTAVALIDCLEARANCESORRY");
@@ -92,5 +93,8 @@ namespace UKControllerPlugin::Oceanic {
         static const int CLEARANCE_ENTRY_POINT_TAG_ITEM_ID = 121;
         static const int CLEARANCE_TRACK_TAG_ITEM_ID = 122;
         static const int CLEARANCE_ENTRY_ESTIMATE_TAG_ITEM_ID = 123;
+
+        // Protects the map during updates
+        mutable std::mutex clearanceMapMutex;
     };
 } // namespace UKControllerPlugin::Oceanic

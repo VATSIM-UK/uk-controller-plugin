@@ -4,8 +4,8 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Tag {
@@ -14,30 +14,29 @@ namespace UKControllerPlugin {
             Represents a function that EuroScope will call through its
             OnFunctionCall interface.
         */
-        typedef struct TagFunction {
+        typedef struct TagFunction
+        {
 
             TagFunction();
             TagFunction(
                 int functionId,
                 std::string description,
                 std::function<void(
-                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface &,
-                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &,
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&,
                     std::string context,
-                    const POINT & mousePos
-                )> function
-            );
-            void operator=(const UKControllerPlugin::Tag::TagFunction & copy);
-            bool operator==(const TagFunction & compare) const;
+                    const POINT& mousePos)> function);
+            void operator=(const UKControllerPlugin::Tag::TagFunction& copy);
+            bool operator==(const TagFunction& compare) const;
 
             int functionId;
             std::string description;
             std::function<void(
-                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface &,
-                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface &,
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&,
                 std::string context,
-                const POINT & mousePos
-            )> function;
+                const POINT& mousePos)>
+                function;
         } TagFunction;
-    }  // namespace Tag
-}  // namespace UKControllerPlugin
+    } // namespace Tag
+} // namespace UKControllerPlugin

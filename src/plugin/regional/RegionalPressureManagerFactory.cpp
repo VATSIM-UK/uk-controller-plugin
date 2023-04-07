@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "regional/RegionalPressureManagerFactory.h"
 
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
@@ -10,10 +9,7 @@ namespace UKControllerPlugin {
 
         std::shared_ptr<RegionalPressureManager> Create(DependencyLoaderInterface& dependency)
         {
-            nlohmann::json asrData = dependency.LoadDependency(
-                ASR_NAME_DEPENDENCY,
-                nlohmann::json::array()
-            );
+            nlohmann::json asrData = dependency.LoadDependency(ASR_NAME_DEPENDENCY, nlohmann::json::array());
 
             if (!asrData.is_array()) {
                 LogWarning("Invalid ASR data format");
@@ -36,12 +32,9 @@ namespace UKControllerPlugin {
 
         bool ValidAsr(const nlohmann::json& asr)
         {
-            return asr.is_object() &&
-                asr.count("key") &&
-                asr.at("key").is_string() &&
-                asr.count("name") &&
-                asr.at("name").is_string();
+            return asr.is_object() && asr.count("key") && asr.at("key").is_string() && asr.count("name") &&
+                   asr.at("name").is_string();
         }
 
-    }  // namespace Regional
-}  // namespace UKControllerPlugin
+    } // namespace Regional
+} // namespace UKControllerPlugin

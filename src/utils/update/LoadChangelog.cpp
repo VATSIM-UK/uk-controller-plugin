@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "update/LoadChangelog.h"
 #include "windows/WinApiInterface.h"
 

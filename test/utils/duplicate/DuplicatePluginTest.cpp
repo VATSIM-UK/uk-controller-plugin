@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "duplicate/DuplicatePlugin.h"
 
 using UKControllerPlugin::Duplicate::DuplicatePlugin;
@@ -23,7 +22,7 @@ namespace UKControllerPluginUtilsTest {
 
         TEST(DuplicatePluginTest, NextPluginWillNotBeDuplicateIfPrimaryGoesAway)
         {
-            DuplicatePlugin * plugin1 = new DuplicatePlugin;
+            DuplicatePlugin* plugin1 = new DuplicatePlugin;
             EXPECT_FALSE(plugin1->Duplicate());
 
             DuplicatePlugin plugin2;

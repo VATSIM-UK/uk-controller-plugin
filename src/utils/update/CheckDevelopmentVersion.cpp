@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "update/CheckDevelopmentVersion.h"
 
 const std::string NO_VERSION_SPECIFIED = "#VERSION_STRING#";

@@ -93,4 +93,18 @@ namespace UKControllerPluginTest::Wake {
         collection.ForEach([&values](const WakeScheme& scheme) { values.push_back(scheme.Id()); });
         EXPECT_EQ(std::vector<int>({1, 2}), values);
     }
+
+    TEST_F(WakeSchemeCollectionTest, ItGetsSchemesById)
+    {
+        collection.Add(scheme1);
+        collection.Add(scheme2);
+        EXPECT_EQ(scheme2, collection.GetById(2));
+    }
+
+    TEST_F(WakeSchemeCollectionTest, ItReturnsNullptrIfSchemeByIdNotFound)
+    {
+        collection.Add(scheme1);
+        collection.Add(scheme2);
+        EXPECT_EQ(nullptr, collection.GetById(4));
+    }
 } // namespace UKControllerPluginTest::Wake

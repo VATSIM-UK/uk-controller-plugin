@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "hold/HoldDisplayFunctions.h"
 
 namespace UKControllerPlugin {
@@ -111,6 +110,16 @@ namespace UKControllerPlugin {
             }
 
             return verticalSpeed > 0 ? 1 : -1;
+        }
+
+        auto FormatOutboundLegValue(double value) -> std::wstring
+        {
+            std::wstringstream stream;
+            stream.setf(std::ios::fixed);
+            stream.precision(1);
+            stream << value;
+
+            return stream.str();
         }
     } // namespace Hold
 } // namespace UKControllerPlugin

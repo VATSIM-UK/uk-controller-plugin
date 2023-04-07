@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace UKControllerPlugin {
     namespace Curl {
         /*
@@ -9,7 +8,9 @@ namespace UKControllerPlugin {
         class HttpException : public std::runtime_error
         {
             public:
-                explicit HttpException(std::string message) : runtime_error("HttpException: " + message) {}
+            explicit HttpException(std::string message) : runtime_error("HttpException: " + message)
+            {
+            }
         };
-    }  // namespace Curl
-}  // namespace UKControllerPlugin
+    } // namespace Curl
+} // namespace UKControllerPlugin

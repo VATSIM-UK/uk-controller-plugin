@@ -1,5 +1,9 @@
 #pragma once
 
+namespace UKControllerPlugin::Controller {
+    class ControllerPosition;
+} // namespace UKControllerPlugin::Controller
+
 namespace UKControllerPlugin::Prenote {
     /**
      * Represents a single prenote messsage.
@@ -13,8 +17,8 @@ namespace UKControllerPlugin::Prenote {
             std::string departureAirfield,
             std::string sid,
             std::string destinationAirfield,
-            int sendingControllerId,
-            int targetControllerId,
+            std::shared_ptr<Controller::ControllerPosition> sendingController,
+            std::shared_ptr<Controller::ControllerPosition> targetController,
             std::chrono::system_clock::time_point expiresAt);
         [[nodiscard]] auto GetId() const -> int;
         [[nodiscard]] auto GetCallsign() const -> const std::string&;
@@ -23,6 +27,8 @@ namespace UKControllerPlugin::Prenote {
         [[nodiscard]] auto GetDestinationAirfield() const -> const std::string&;
         [[nodiscard]] auto GetSendingControllerId() const -> int;
         [[nodiscard]] auto GetTargetControllerId() const -> int;
+        [[nodiscard]] auto GetSendingController() const -> std::shared_ptr<Controller::ControllerPosition>;
+        [[nodiscard]] auto GetTargetController() const -> std::shared_ptr<Controller::ControllerPosition>;
         [[nodiscard]] auto GetExpiresAt() const -> const std::chrono::system_clock::time_point&;
         [[nodiscard]] auto IsAcknowledged() const -> bool;
         [[nodiscard]] auto GetAcknowledgedAt() const -> const std::chrono::system_clock::time_point&;
@@ -46,10 +52,10 @@ namespace UKControllerPlugin::Prenote {
         std::string destinationAirfield;
 
         // Who sent the prenote
-        int sendingControllerId;
+        std::shared_ptr<Controller::ControllerPosition> sendingController;
 
         // Who the prenote was aimed at
-        int targetControllerId;
+        std::shared_ptr<Controller::ControllerPosition> targetController;
 
         // What time the prenote expires
         std::chrono::system_clock::time_point expiresAt;

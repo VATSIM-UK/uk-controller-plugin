@@ -9,10 +9,10 @@ namespace UKControllerPlugin::Integration {
     class SocketInterface
     {
         public:
-            virtual ~SocketInterface() = default;
-            virtual SocketInterface& operator>>(std::string& message) = 0;
-            virtual SocketInterface& operator>>(std::stringstream& inboundStream) = 0;
-            virtual SocketInterface& operator<<(std::string& message) = 0;
-            virtual bool Active() const = 0;
+        virtual ~SocketInterface() = default;
+        virtual SocketInterface& operator>>(std::string& message) = 0;
+        virtual SocketInterface& operator>>(std::stringstream& inboundStream) = 0;
+        virtual SocketInterface& operator<<(std::string& message) = 0;
+        virtual bool Active() const = 0;
     };
 } // namespace UKControllerPlugin::Integration

@@ -1,11 +1,10 @@
-#include "pch/pch.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 
-using UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Flightplan::FlightPlanEventHandlerInterface;
 
 namespace UKControllerPlugin {
     namespace Flightplan {
@@ -18,51 +17,41 @@ namespace UKControllerPlugin {
             return this->handlerList.size();
         }
 
-
         /*
             Called whenever there's a flightplan or flightplan controller data event.
         */
         void FlightPlanEventHandlerCollection::FlightPlanEvent(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget
-        ) const {
+            EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget) const
+        {
             // Loop through the handlers and call their handling function.
-            for (
-                std::list<std::shared_ptr<FlightPlanEventHandlerInterface>>::const_iterator it =
-                    this->handlerList.cbegin();
-                it != this->handlerList.cend();
-                ++it
-            ) {
+            for (std::list<std::shared_ptr<FlightPlanEventHandlerInterface>>::const_iterator it =
+                     this->handlerList.cbegin();
+                 it != this->handlerList.cend();
+                 ++it) {
                 (*it)->FlightPlanEvent(flightPlan, radarTarget);
             }
         }
 
         void FlightPlanEventHandlerCollection::ControllerFlightPlanDataEvent(
-            EuroScopeCFlightPlanInterface & flightPlan,
-            EuroScopeCRadarTargetInterface & radarTarget,
-            int dataType
-        ) const {
+            EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget, int dataType) const
+        {
             // Loop through the handlers and call their handling function.
-            for (
-                std::list<std::shared_ptr<FlightPlanEventHandlerInterface>>::const_iterator it =
-                    this->handlerList.cbegin();
-                it != this->handlerList.cend();
-                ++it
-            ) {
+            for (std::list<std::shared_ptr<FlightPlanEventHandlerInterface>>::const_iterator it =
+                     this->handlerList.cbegin();
+                 it != this->handlerList.cend();
+                 ++it) {
                 (*it)->ControllerFlightPlanDataEvent(flightPlan, dataType);
             }
         }
 
-        void FlightPlanEventHandlerCollection::FlightPlanDisconnectEvent(
-            EuroScopeCFlightPlanInterface & flightPlan
-        ) const {
+        void
+        FlightPlanEventHandlerCollection::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan) const
+        {
             // Loop through the handlers and call their handling function.
-            for (
-                std::list<std::shared_ptr<FlightPlanEventHandlerInterface>>::const_iterator it =
-                    this->handlerList.cbegin();
-                    it != this->handlerList.cend();
-                ++it
-            ) {
+            for (std::list<std::shared_ptr<FlightPlanEventHandlerInterface>>::const_iterator it =
+                     this->handlerList.cbegin();
+                 it != this->handlerList.cend();
+                 ++it) {
                 (*it)->FlightPlanDisconnectEvent(flightPlan);
             }
         }
@@ -78,5 +67,5 @@ namespace UKControllerPlugin {
 
             this->handlerList.push_back(handler);
         }
-    }  // namespace Flightplan
-}  // namespace UKControllerPlugin
+    } // namespace Flightplan
+} // namespace UKControllerPlugin

@@ -173,7 +173,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiHelperTest, GetSquawkAssignmentReturnsSquawkAllocation)
     {
-        CurlResponse response(R"({"squawk": "1234"})", false, 200);
+        CurlResponse response(R"({"squawk": "1235"})", false, 200);
 
         EXPECT_CALL(
             this->mockCurlApi, MakeCurlRequest(GetApiCurlRequest("/squawk-assignment/BAW123", CurlRequest::METHOD_GET)))
@@ -181,7 +181,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .WillOnce(Return(response));
 
         ApiSquawkAllocation allocation = this->helper.GetAssignedSquawk("BAW123");
-        EXPECT_TRUE("1234" == allocation.squawk);
+        EXPECT_TRUE("1235" == allocation.squawk);
         EXPECT_TRUE("BAW123" == allocation.callsign);
     }
 
@@ -211,7 +211,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiHelperTest, CreateGeneralSquawkAssignmentReturnsSquawk)
     {
-        CurlResponse response(R"({"squawk": "1234"})", false, 200);
+        CurlResponse response(R"({"squawk": "1235"})", false, 200);
         nlohmann::json requestBody;
         requestBody["type"] = "general";
         requestBody["origin"] = "EGKK";
@@ -224,7 +224,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .WillOnce(Return(response));
 
         ApiSquawkAllocation allocation = this->helper.CreateGeneralSquawkAssignment("BAW123", "EGKK", "EGCC");
-        EXPECT_TRUE("1234" == allocation.squawk);
+        EXPECT_TRUE("1235" == allocation.squawk);
         EXPECT_TRUE("BAW123" == allocation.callsign);
     }
 
@@ -284,7 +284,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiHelperTest, CreateLocalSquawkAssignmentReturnsSquawk)
     {
-        CurlResponse response(R"({"squawk": "1234"})", false, 200);
+        CurlResponse response(R"({"squawk": "1235"})", false, 200);
 
         nlohmann::json requestBody;
         requestBody["type"] = "local";
@@ -298,7 +298,7 @@ namespace UKControllerPluginUtilsTest::Api {
             .WillOnce(Return(response));
 
         ApiSquawkAllocation allocation = this->helper.CreateLocalSquawkAssignment("BAW123", "EGCC", "V");
-        EXPECT_TRUE("1234" == allocation.squawk);
+        EXPECT_TRUE("1235" == allocation.squawk);
         EXPECT_TRUE("BAW123" == allocation.callsign);
     }
 
@@ -423,7 +423,7 @@ namespace UKControllerPluginUtilsTest::Api {
         params.requestedLevel = 10000;
 
         CurlRequest expectedRequest(GetApiGetUriCurlRequest(
-            "http://ukcp.test.com/srd/route/search?origin=EGLL&destination=EGGD&requestedLevel=10000",
+            "http://ukcp.test.com/api/srd/route/search?origin=EGLL&destination=EGGD&requestedLevel=10000",
             CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
@@ -438,7 +438,7 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/hold/assigned", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/api/hold/assigned", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
@@ -523,7 +523,7 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/stand/assignment", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/api/stand/assignment", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 
@@ -632,7 +632,7 @@ namespace UKControllerPluginUtilsTest::Api {
         CurlResponse response(responseData.dump(), false, 200);
 
         CurlRequest expectedRequest(
-            GetApiGetUriCurlRequest("http://ukcp.test.com/version/latest?channel=beta", CurlRequest::METHOD_GET));
+            GetApiGetUriCurlRequest("http://ukcp.test.com/api/version/latest?channel=beta", CurlRequest::METHOD_GET));
 
         EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
 

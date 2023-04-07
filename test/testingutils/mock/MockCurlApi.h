@@ -7,10 +7,11 @@ namespace UKControllerPluginTest {
         class MockCurlApi : public UKControllerPlugin::Curl::CurlInterface
         {
             public:
-                MOCK_METHOD1(
-                    MakeCurlRequest,
-                    UKControllerPlugin::Curl::CurlResponse(const UKControllerPlugin::Curl::CurlRequest & curlRequest)
-                );
-            };
-    }  // namespace Curl
-}  // namespace UKControllerPluginTest
+            MockCurlApi();
+            virtual ~MockCurlApi();
+            MOCK_METHOD1(
+                MakeCurlRequest,
+                UKControllerPlugin::Curl::CurlResponse(const UKControllerPlugin::Curl::CurlRequest& curlRequest));
+        };
+    } // namespace Curl
+} // namespace UKControllerPluginTest

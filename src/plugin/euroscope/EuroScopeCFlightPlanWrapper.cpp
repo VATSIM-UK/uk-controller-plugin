@@ -1,4 +1,6 @@
 #include "EuroScopeCFlightPlanWrapper.h"
+#include "EuroscopeExtractedRouteWrapper.h"
+#include "flightplan/ParsedFlightplanFactory.h"
 #include "squawk/SquawkValidator.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
@@ -59,9 +61,23 @@ namespace UKControllerPlugin::Euroscope {
         return this->originalData.GetFlightPlanData().GetEstimatedDepartureTime();
     }
 
-    auto EuroScopeCFlightPlanWrapper::GetExtractedRoute() const -> EuroscopeExtractedRouteInterface
+    auto EuroScopeCFlightPlanWrapper::GetExtractedRoute() const -> EuroscopeExtractedRouteInterface&
     {
-        return EuroscopeExtractedRouteInterface(this->originalData.GetExtractedRoute());
+        if (!this->extractedRoute) {
+            this->extractedRoute =
+                std::make_shared<EuroscopeExtractedRouteWrapper>(this->originalData.GetExtractedRoute());
+        }
+
+        return *this->extractedRoute;
+    }
+
+    auto EuroScopeCFlightPlanWrapper::GetParsedFlightplan() const -> std::shared_ptr<Flightplan::ParsedFlightplan>
+    {
+        if (!parsedFlightplan) {
+            parsedFlightplan = Flightplan::ParseFlightplanFromEuroscope(GetExtractedRoute());
+        }
+
+        return parsedFlightplan;
     }
 
     auto EuroScopeCFlightPlanWrapper::GetFlightRules() const -> std::string
@@ -103,7 +119,7 @@ namespace UKControllerPlugin::Euroscope {
     {
         std::string squawk = this->originalData.GetControllerAssignedData().GetSquawk();
         return SquawkValidator::ValidSquawk(squawk) && squawk != "0200" && squawk != "2200" && squawk != "1200" &&
-               squawk != "2000" && squawk != "0000";
+               squawk != "2000" && squawk != "0000" && squawk != "1234";
     }
 
     auto EuroScopeCFlightPlanWrapper::HasControllerClearedAltitude() const -> bool

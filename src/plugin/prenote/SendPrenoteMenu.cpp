@@ -94,8 +94,7 @@ namespace UKControllerPlugin::Prenote {
             return;
         }
 
-        auto requestingControllerId = userPosition.GetId();
-        auto targetControllerId = targetController->GetId();
+        auto requestingController = controllers.FetchPositionById(userPosition.GetId());
 
         std::string flightplanCallsign = fp->GetCallsign();
         std::string origin = fp->GetOrigin();
@@ -103,15 +102,15 @@ namespace UKControllerPlugin::Prenote {
         std::string sid = fp->GetSidName();
 
         this->taskRunner.QueueAsynchronousTask(
-            [this, flightplanCallsign, origin, destination, sid, requestingControllerId, targetControllerId]() {
+            [this, flightplanCallsign, origin, destination, sid, requestingController, targetController]() {
                 try {
                     auto prenoteResponse = this->api.CreatePrenoteMessage(
                         flightplanCallsign,
                         origin,
                         sid,
                         destination,
-                        requestingControllerId,
-                        targetControllerId,
+                        requestingController->GetId(),
+                        targetController->GetId(),
                         MESSAGE_EXPIRY_SECONDS);
 
                     if (!ResponseValid(prenoteResponse)) {
@@ -126,8 +125,8 @@ namespace UKControllerPlugin::Prenote {
                         origin,
                         sid,
                         destination,
-                        requestingControllerId,
-                        targetControllerId,
+                        requestingController,
+                        targetController,
                         Time::TimeNow() + std::chrono::seconds(MESSAGE_EXPIRY_SECONDS)));
                     LogInfo("Created prenote message " + std::to_string(prenoteId));
                 } catch (Api::ApiException&) {

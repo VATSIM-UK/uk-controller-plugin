@@ -12,15 +12,13 @@ namespace UKControllerPlugin {
         class DialogProviderInterface
         {
             public:
-
-                /*
-                    Open the given dialog
-                */
-                virtual void OpenDialog(
-                    const UKControllerPlugin::Dialog::DialogData & dialog,
-                    const UKControllerPlugin::Dialog::DialogCallArgument * argument
-                ) const = 0;
+            /*
+                Open the given dialog
+            */
+            virtual void OpenDialog(
+                const UKControllerPlugin::Dialog::DialogData& dialog,
+                const UKControllerPlugin::Dialog::DialogCallArgument* argument) const = 0;
         };
 
-    }  // namespace Dialog
-}  // namespace UKControllerPlugin
+    } // namespace Dialog
+} // namespace UKControllerPlugin

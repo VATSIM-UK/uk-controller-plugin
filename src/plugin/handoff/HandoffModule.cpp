@@ -1,4 +1,5 @@
 #include "ClearCacheOnActiveCallsignChanges.h"
+#include "ClearCacheOnRunwayDialogSave.h"
 #include "DepartureHandoffResolver.h"
 #include "FlightplanAirfieldHandoffMapper.h"
 #include "FlightplanSidHandoffMapper.h"
@@ -9,7 +10,9 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
+#include "euroscope/RunwayDialogAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "integration/IntegrationPersistenceContainer.h"
 #include "tag/TagItemCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -41,6 +44,7 @@ namespace UKControllerPlugin::Handoff {
         container.tagHandler->RegisterTagItem(handoffTagItem, handler);
         container.flightplanHandler->RegisterHandler(handler);
         container.activeCallsigns->AddHandler(std::make_shared<ClearCacheOnActiveCallsignChanges>(*cache));
+        container.runwayDialogEventHandlers->AddHandler(std::make_shared<ClearCacheOnRunwayDialogSave>(cache));
     }
 
     auto GetHandoffDependencyKey() -> std::string

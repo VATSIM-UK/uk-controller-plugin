@@ -3,8 +3,8 @@
 namespace UKControllerPlugin {
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin {
     namespace Message {
@@ -15,9 +15,7 @@ namespace UKControllerPlugin {
         class UserMessagerBootstrap
         {
             public:
-                static void BootstrapPlugin(
-                    UKControllerPlugin::Bootstrap::PersistenceContainer & container
-                );
+            static void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
         };
-    }  // namespace Message
-}  // namespace UKControllerPlugin
+    } // namespace Message
+} // namespace UKControllerPlugin

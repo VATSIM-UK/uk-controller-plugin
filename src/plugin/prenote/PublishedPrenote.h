@@ -12,7 +12,7 @@ namespace UKControllerPlugin::Prenote {
      */
     using PublishedPrenote = struct PublishedPrenote
     {
-        PublishedPrenote(int id, std::string key, std::unique_ptr<Controller::ControllerPositionHierarchy> controllers);
+        PublishedPrenote(int id, std::unique_ptr<Controller::ControllerPositionHierarchy> controllers);
         ~PublishedPrenote();
         PublishedPrenote(const PublishedPrenote&) = delete;
         PublishedPrenote(PublishedPrenote&&) noexcept;
@@ -21,9 +21,6 @@ namespace UKControllerPlugin::Prenote {
 
         // The id of the prenote
         int id;
-
-        // A string key to identify the prenote
-        std::string key;
 
         // The controllers that this prenote refers to
         std::unique_ptr<Controller::ControllerPositionHierarchy> controllers;

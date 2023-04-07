@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "api/ApiResponseValidator.h"
 
 namespace UKControllerPlugin {
@@ -34,19 +33,19 @@ namespace UKControllerPlugin {
 
             // Check its type.
             switch (type) {
-                case ApiResponseValidator::boolean:
-                    return data[field].is_boolean();
-                case ApiResponseValidator::integer:
-                    return data[field].is_number_integer();
-                case ApiResponseValidator::floatingpoint:
-                    return data[field].is_number_float();
-                case ApiResponseValidator::string:
-                    return data[field].is_string();
-                case ApiResponseValidator::object:
-                    return data[field].is_object();
-                default:
-                    return false;
+            case ApiResponseValidator::boolean:
+                return data[field].is_boolean();
+            case ApiResponseValidator::integer:
+                return data[field].is_number_integer();
+            case ApiResponseValidator::floatingpoint:
+                return data[field].is_number_float();
+            case ApiResponseValidator::string:
+                return data[field].is_string();
+            case ApiResponseValidator::object:
+                return data[field].is_object();
+            default:
+                return false;
             }
         }
-    }  // namespace Api
-}  // namespace UKControllerPlugin
+    } // namespace Api
+} // namespace UKControllerPlugin

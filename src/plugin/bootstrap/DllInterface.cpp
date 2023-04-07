@@ -1,5 +1,3 @@
-#include "pch/pch.h"
-
 #include "bootstrap/InitialisePlugin.h"
 #include "update/CheckDevelopmentVersion.h"
 #include "update/PluginVersion.h"

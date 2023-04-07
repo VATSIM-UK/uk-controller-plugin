@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "sectorfile/Runway.h"
 
 using testing::Test;

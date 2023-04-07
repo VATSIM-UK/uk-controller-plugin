@@ -1,10 +1,14 @@
 #include "AcknowledgePrenoteMessage.h"
 #include "CancelPrenoteMessageMenu.h"
 #include "NewPrenotePushEventHandler.h"
+#include "PlayNewPrenoteMessageSound.h"
 #include "PrenoteAcknowledgedPushEventHandler.h"
 #include "PrenoteDeletedPushEventHandler.h"
 #include "PrenoteEventHandler.h"
+#include "PrenoteIsSentFromUsersPosition.h"
+#include "PrenoteIsTargetedToUser.h"
 #include "PrenoteMessageCollection.h"
+#include "PrenoteMessageEventHandlerCollection.h"
 #include "PrenoteMessageStatusView.h"
 #include "PrenoteMessageTimeout.h"
 #include "PrenoteModule.h"
@@ -13,7 +17,11 @@
 #include "PublishedPrenoteCollection.h"
 #include "PublishedPrenoteCollectionFactory.h"
 #include "PublishedPrenoteMapper.h"
+#include "SendNewPrenoteChatAreaMessage.h"
+#include "SendPrenoteAcknowledgedChatAreaMessage.h"
+#include "SendPrenoteCancelledChatAreaMessage.h"
 #include "SendPrenoteMenu.h"
+#include "SendPrenoteTimeoutChatAreaMessage.h"
 #include "TriggerPrenoteMessageStatusView.h"
 #include "bootstrap/BootstrapWarningMessage.h"
 #include "bootstrap/PersistenceContainer.h"
@@ -76,20 +84,32 @@ namespace UKControllerPlugin::Prenote {
             *persistence.pluginUserSettingHandler));
 
         // Electronic prenote messages
+        const auto userTargetPrenoteRelevance = std::make_shared<PrenoteIsTargetedToUser>(*persistence.activeCallsigns);
+        const auto userSendingPrenoteRelevance =
+            std::make_shared<PrenoteIsSentFromUsersPosition>(*persistence.activeCallsigns);
         persistence.prenotes = std::make_shared<PrenoteMessageCollection>();
+        persistence.prenoteMessageHandlers = std::make_unique<PrenoteMessageEventHandlerCollection>();
+        persistence.prenoteMessageHandlers->AddHandler(
+            std::make_shared<PlayNewPrenoteMessageSound>(userTargetPrenoteRelevance, *persistence.windows));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendNewPrenoteChatAreaMessage>(
+            userTargetPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendPrenoteCancelledChatAreaMessage>(
+            userTargetPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendPrenoteAcknowledgedChatAreaMessage>(
+            userSendingPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
+        persistence.prenoteMessageHandlers->AddHandler(std::make_shared<SendPrenoteTimeoutChatAreaMessage>(
+            userSendingPrenoteRelevance, *persistence.plugin, *persistence.pluginUserSettingHandler));
 
         // Push event processors
         persistence.pushEventProcessors->AddProcessor(std::make_shared<NewPrenotePushEventHandler>(
-            persistence.prenotes,
-            *persistence.controllerPositions,
-            *persistence.activeCallsigns,
-            *persistence.windows));
-        persistence.pushEventProcessors->AddProcessor(
-            std::make_shared<PrenoteAcknowledgedPushEventHandler>(persistence.prenotes));
-        persistence.pushEventProcessors->AddProcessor(
-            std::make_shared<PrenoteDeletedPushEventHandler>(persistence.prenotes));
+            persistence.prenotes, *persistence.controllerPositions, *persistence.prenoteMessageHandlers));
+        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteAcknowledgedPushEventHandler>(
+            persistence.prenotes, *persistence.prenoteMessageHandlers));
+        persistence.pushEventProcessors->AddProcessor(std::make_shared<PrenoteDeletedPushEventHandler>(
+            persistence.prenotes, *persistence.prenoteMessageHandlers));
         persistence.timedHandler->RegisterEvent(
-            std::make_shared<PrenoteMessageTimeout>(persistence.prenotes), MESSAGE_TIMEOUT_CHECK_INTERVAL);
+            std::make_shared<PrenoteMessageTimeout>(persistence.prenotes, *persistence.prenoteMessageHandlers),
+            MESSAGE_TIMEOUT_CHECK_INTERVAL);
 
         // Status indicator tag item
         persistence.tagHandler->RegisterTagItem(

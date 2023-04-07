@@ -67,7 +67,7 @@ jobs:
       - name: Setup Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '16'
 
       - name: Get Yarn Cache Directory
         id: yarn-cache-dir-path
@@ -103,7 +103,7 @@ jobs:
           CFLAGS: -m32
           CXX: clang-cl
           CXXFLAGS: -m32
-        run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G Ninja -Bbuild
+        run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -Bbuild
 
       # Run the build and tests
       - name: Run Ninja Build
@@ -112,7 +112,8 @@ jobs:
 
       - name: Run Tests
         working-directory: build
-        run: ctest -C Release --output-on-failure --no-tests=error
+        run: |
+          ctest -C Release --output-on-failure --no-tests=error
 
       # Do Srclinting
       - name: Get Changed Files (Src)
@@ -195,7 +196,7 @@ jobs:
       - name: Setup Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: '12'
+          node-version: '16'
 
       - name: Get Yarn Cache Directory
         id: yarn-cache-dir-path

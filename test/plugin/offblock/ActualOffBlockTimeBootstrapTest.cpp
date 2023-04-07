@@ -1,14 +1,13 @@
-#include "pch/pch.h"
 #include "offblock/ActualOffBlockTimeBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "tag/TagItemCollection.h"
 
-using UKControllerPlugin::Datablock::ActualOffBlockTimeBootstrap;
+using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::Datablock::ActualOffBlockTimeBootstrap;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
-using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Datablock {
@@ -16,14 +15,13 @@ namespace UKControllerPluginTest {
         class ActualOffBlockTimeBootstrapTest : public Test
         {
             public:
+            void SetUp()
+            {
+                container.tagHandler.reset(new TagItemCollection);
+                container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
+            };
 
-                void SetUp()
-                {
-                    container.tagHandler.reset(new TagItemCollection);
-                    container.flightplanHandler.reset(new FlightPlanEventHandlerCollection);
-                };
-
-                PersistenceContainer container;
+            PersistenceContainer container;
         };
 
         TEST_F(ActualOffBlockTimeBootstrapTest, AddsHandlerToFlightplanHandlers)
@@ -37,5 +35,5 @@ namespace UKControllerPluginTest {
             ActualOffBlockTimeBootstrap::BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.tagHandler->CountHandlers());
         }
-    }  // namespace Datablock
+    } // namespace Datablock
 } // namespace UKControllerPluginTest

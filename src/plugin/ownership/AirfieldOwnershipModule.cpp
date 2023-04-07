@@ -4,6 +4,7 @@
 #include "AirfieldServiceProviderCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
 #include "controller/ControllerPositionCollectionFactory.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"

@@ -3,11 +3,14 @@
 
 namespace UKControllerPlugin::Prenote {
     class PrenoteMessageCollection;
+    class PrenoteMessageEventHandlerCollection;
 
     class PrenoteDeletedPushEventHandler : public UKControllerPlugin::Push::PushEventProcessorInterface
     {
         public:
-        explicit PrenoteDeletedPushEventHandler(std::shared_ptr<PrenoteMessageCollection> prenotes);
+        explicit PrenoteDeletedPushEventHandler(
+            std::shared_ptr<PrenoteMessageCollection> prenotes,
+            const PrenoteMessageEventHandlerCollection& eventHandlers);
         void ProcessPushEvent(const Push::PushEvent& message) override;
         [[nodiscard]] auto GetPushEventSubscriptions() const
             -> std::set<UKControllerPlugin::Push::PushEventSubscription> override;
@@ -17,5 +20,8 @@ namespace UKControllerPlugin::Prenote {
 
         // All the prenotes
         const std::shared_ptr<PrenoteMessageCollection> prenotes;
+
+        // Handles prenote events
+        const PrenoteMessageEventHandlerCollection& eventHandlers;
     };
 } // namespace UKControllerPlugin::Prenote

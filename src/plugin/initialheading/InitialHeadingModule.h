@@ -4,11 +4,11 @@
 namespace UKControllerPlugin {
     namespace EventHandler {
         class FlightPlanEventHandlerCollection;
-    }  // namespace EventHandler
+    } // namespace EventHandler
     namespace Bootstrap {
         struct PersistenceContainer;
-    }  // namespace Bootstrap
-}  // namespace UKControllerPlugin
+    } // namespace Bootstrap
+} // namespace UKControllerPlugin
 // END
 
 namespace UKControllerPlugin {
@@ -16,4 +16,4 @@ namespace UKControllerPlugin {
 
         void BootstrapPlugin(Bootstrap::PersistenceContainer& persistence);
     } // namespace InitialHeading
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

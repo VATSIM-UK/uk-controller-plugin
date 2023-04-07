@@ -64,7 +64,7 @@ set(test__log
 source_group("test\\log" FILES ${test__log})
 
 set(test__mock
-        mock/MockSettingProvider.h)
+        mock/MockSettingProvider.h mock/MockSettingProvider.cpp)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__pch

@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "loader/loader.h"
 #include "api/ApiInterface.h"
 #include "windows/WinApiInterface.h"
@@ -60,7 +59,7 @@ LoadPlugin(HINSTANCE pluginLibraryHandle, UKControllerPlugin::Windows::WinApiInt
 
     if (!LoadPlugin) {
         LogError("Cannot find LoadPlugin function in Core binary");
-        std::wstring message = L"Unable find UnloadPlugin function in Core Binary.\r\n\r\n";
+        std::wstring message = L"Unable find LoadPlugin function in Core Binary.\r\n\r\n";
         message += L"Please contact the Web Services Department.";
         DisplayLoaderError(windows, message);
         return nullptr;

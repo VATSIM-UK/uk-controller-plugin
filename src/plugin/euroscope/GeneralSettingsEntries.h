@@ -11,6 +11,8 @@ namespace UKControllerPlugin {
             // PRENOTES
             static const std::string usePrenoteSettingsKey;
             static const std::string usePrenoteSettingsDescription;
+            static const std::string prenoteChatAreaMessagesSettingsKey;
+            static const std::string prenoteChatAreaMessagesSettingsDescription;
 
             // SQUAWKS
             static const std::string squawkToggleSettingsKey;
@@ -32,5 +34,5 @@ namespace UKControllerPlugin {
             static const std::string initialHeadingToggleSettingsKey;
             static const std::string initialHeadingToggleSettingsDescription;
         } GeneralSettingsEntries;
-    }  // namespace Euroscope
-}  // namespace UKControllerPlugin
+    } // namespace Euroscope
+} // namespace UKControllerPlugin

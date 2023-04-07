@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "hold/CompareHoldingAircraft.h"
 #include "hold/HoldingAircraft.h"
 
@@ -15,10 +14,9 @@ namespace UKControllerPlugin {
             return id < hold->GetCallsign();
         }
         bool CompareHoldingAircraft::operator()(
-            const std::shared_ptr<HoldingAircraft>& a,
-            const std::shared_ptr<HoldingAircraft>& b
-        ) const {
+            const std::shared_ptr<HoldingAircraft>& a, const std::shared_ptr<HoldingAircraft>& b) const
+        {
             return a->GetCallsign() < b->GetCallsign();
         }
-    }  // namespace Hold
-}  // namespace UKControllerPlugin
+    } // namespace Hold
+} // namespace UKControllerPlugin

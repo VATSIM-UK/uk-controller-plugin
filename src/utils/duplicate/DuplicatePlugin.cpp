@@ -1,4 +1,3 @@
-#include "pch/pch.h"
 #include "duplicate/DuplicatePlugin.h"
 
 namespace UKControllerPlugin {
@@ -8,9 +7,9 @@ namespace UKControllerPlugin {
         {
             // Check for existing handle
             this->hMapFile = OpenFileMapping(
-                FILE_MAP_ALL_ACCESS,  // read access
-                FALSE,  // do not inherit the name
-                this->szName  // name of mapping object
+                FILE_MAP_ALL_ACCESS, // read access
+                FALSE,               // do not inherit the name
+                this->szName         // name of mapping object
             );
 
             // We are a duplicate plugin
@@ -22,12 +21,12 @@ namespace UKControllerPlugin {
             }
 
             hMapFile = CreateFileMapping(
-                INVALID_HANDLE_VALUE,    // use paging file
-                NULL,                    // default security
-                PAGE_READWRITE,          // read/write access
-                0,                       // maximum object size (high-order DWORD)
-                this->buffSize,          // maximum object size (low-order DWORD)
-                this->szName             // name of mapping object
+                INVALID_HANDLE_VALUE, // use paging file
+                NULL,                 // default security
+                PAGE_READWRITE,       // read/write access
+                0,                    // maximum object size (high-order DWORD)
+                this->buffSize,       // maximum object size (low-order DWORD)
+                this->szName          // name of mapping object
             );
 
             this->isDuplicate = false;
@@ -49,4 +48,4 @@ namespace UKControllerPlugin {
         }
 
     } // namespace Duplicate
-}  // namespace UKControllerPlugin
+} // namespace UKControllerPlugin

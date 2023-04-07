@@ -1,5 +1,215 @@
 # UK Controller Plugin Changelog
 
+## [5.7.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.0...5.7.1) (2023-03-31)
+
+
+### Bug Fixes
+
+* oceanic tag items crash ([ed8ffed](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ed8ffedf5b29af2ce265d2146749fa909054a334)), closes [#511](https://github.com/VATSIM-UK/uk-controller-plugin/issues/511)
+
+# [5.7.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.6.1...5.7.0) (2023-02-11)
+
+
+### Features
+
+* display hold description in information tab ([43560cd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/43560cd7cae92c7ca40829497dbed3e8fabff911))
+* display information for multiple published holds ([c60b62c](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c60b62c6104731f4e933f22c56a715b74fef7f4a))
+* display message when no published holds found ([10904f9](https://github.com/VATSIM-UK/uk-controller-plugin/commit/10904f9d2128328c8331ed61e690c93e721f5b33))
+* display outbound leg information for holds ([ac3b359](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ac3b3595c7b32529c8704c93802f9f7d24112c92))
+
+## [5.6.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.6.0...5.6.1) (2023-01-04)
+
+
+### Bug Fixes
+
+* invalidate intention code caches on controller and fp events ([4174460](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4174460f562d21d219112a0d7c0a86d2093212b6))
+
+# [5.6.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.3...5.6.0) (2023-01-03)
+
+
+### Bug Fixes
+
+* determine fir exit properly ([dad6caf](https://github.com/VATSIM-UK/uk-controller-plugin/commit/dad6cafc31fde630ac7887399adecfe30cf41732))
+* send blank exit point if no point for intention code ([8a949c5](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8a949c521bbb47c97448538729aa23527a04e0aa))
+
+
+### Features
+
+* drive intention codes from api data ([690c37f](https://github.com/VATSIM-UK/uk-controller-plugin/commit/690c37ffa7ff7189436a0cef92938499812d1005))
+* intention code code generators ([8b9a2f4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8b9a2f45cee09ed179e5979faa186388489e8119))
+* intention code conditions ([8740c0b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8740c0b95f140076547f0dbb52aee640e8ee1914))
+* load fir exit points from dependency ([6c46b9b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6c46b9b7acc0e617f0367ead3110c088e3bfde3e))
+* load intention codes from API ([9dffdf0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/9dffdf0a763aec48d304cc044c074e9ebfc46af6))
+* populate SRD search using exit points from API ([160f99b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/160f99b6b06aa33d8b7a4fcddf19c47cbe154f59))
+* rename intention code tag item ([fd62564](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fd62564904c4aa638c8aa18ffc193892cb281711))
+
+
+### Performance Improvements
+
+* fix more ([12257a1](https://github.com/VATSIM-UK/uk-controller-plugin/commit/12257a1097790ee664a4c1da1e4bb60ae424be6c))
+* fix my silly syntax errors ([37cfc2e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/37cfc2eac4d6ed5d76a651029ab85bc3ab965e3f))
+* improve gmock compile performance ([0f7621f](https://github.com/VATSIM-UK/uk-controller-plugin/commit/0f7621f6ca1b4da9918a729c4dc3bf623f2060a6))
+
+## [5.5.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.2...5.5.3) (2022-12-24)
+
+
+### Bug Fixes
+
+* irish G intention code directions ([cd0534a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cd0534a114b78024cdd2ad8096c997a644041e4b))
+
+## [5.5.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.1...5.5.2) (2022-12-10)
+
+
+### Bug Fixes
+
+* TOPPA and GODOS intention code directions ([5401699](https://github.com/VATSIM-UK/uk-controller-plugin/commit/54016992031085e07965b00960cbbbc71a6385f2))
+
+## [5.5.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.5.0...5.5.1) (2022-12-02)
+
+
+### Bug Fixes
+
+* f intention code updates ([fd0c9f1](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fd0c9f1cb5c6fbc4fc10865e26ecfe00961251ee))
+
+# [5.5.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.6...5.5.0) (2022-10-14)
+
+
+### Bug Fixes
+
+* prenote message event handlers registering in release mode ([4e3598a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4e3598a6f09f65abb6407ef07749b8f0b5237b06))
+* properly trigger events after push events ([25382df](https://github.com/VATSIM-UK/uk-controller-plugin/commit/25382df3526a9677728be5d0e21b7c3840019e1b))
+* unused variable ([1582ee2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/1582ee2e50d7b1a31e949a15fe975a641d6419fa))
+
+
+### Features
+
+* add OP item to open data folder ([84a49ef](https://github.com/VATSIM-UK/uk-controller-plugin/commit/84a49eff940e4b1ea62301d821efe65ec0227bbc))
+* add OP item to open logs folder ([fc4036b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fc4036b7d0346fd20d0d6eff465e49ba6499e378))
+* general settings checkbox for prenote chat area messages ([22b74b7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/22b74b75649c5f0da6bc7276f65ca4a850352cba))
+* send a chat area message when a preonte message is cancelled ([ebf2ff7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ebf2ff7e3549f2e056cae5b769abb5938ab8e95e))
+* send message to chat area when prenote received ([af97223](https://github.com/VATSIM-UK/uk-controller-plugin/commit/af97223dca869b8d1b62bec7ef93fada11868c1d))
+* send notifications to sending controller on prenote timeout ([b73eded](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b73eded2af7b7ea190ee190d546cab5ad76f2450))
+* send prenote acknowledgement message to chat area ([4b021f8](https://github.com/VATSIM-UK/uk-controller-plugin/commit/4b021f8e0f4db9a3f9286e8292a4cdfeeb2fe628))
+* users can select whether they want prenote messages in chat area ([981e8af](https://github.com/VATSIM-UK/uk-controller-plugin/commit/981e8af204d8370c1678e37577e4f42be8de9f9b))
+
+## [5.4.6](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.5...5.4.6) (2022-09-19)
+
+
+### Bug Fixes
+
+* allow handoffs with no controllers ([3ef062a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3ef062a0c2c02d49f13794360eb4d808a5161ce7))
+
+## [5.4.5](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.4...5.4.5) (2022-09-03)
+
+
+### Bug Fixes
+
+* treat additional squawks as invalid ([6f2a202](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6f2a202c3ca003e321021c8aa496ff4d9c6002dc))
+
+## [5.4.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.3...5.4.4) (2022-08-20)
+
+
+### Bug Fixes
+
+* display redistributables warning on load error ([a37d810](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a37d8106b1ac3bc95aa9b1eb595ffd01b1232f94))
+* **handoff:** departure frequencies not updating after runway dialog change ([ad9b87b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ad9b87b0d01723604a3d68491fb9ab339f848cac)), closes [#480](https://github.com/VATSIM-UK/uk-controller-plugin/issues/480)
+* LoadPlugin error message ([5b74322](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5b74322cb19e716cc9052712e0d37c142ccdbd49))
+
+## [5.4.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.2...5.4.3) (2022-07-31)
+
+
+### Bug Fixes
+
+* remove key from prenote dependency ([b6d2c70](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b6d2c701ef713c973661483db467b646431c7887))
+
+## [5.4.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.1...5.4.2) (2022-07-31)
+
+
+### Bug Fixes
+
+* remove key from handoffs ([e0e28a0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e0e28a0dcec3600d4022206ebe9ed7c86cc712a6))
+
+## [5.4.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.4.0...5.4.1) (2022-07-24)
+
+
+### Bug Fixes
+
+* **intention:** k3 intention code via larga ([f7150e4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f7150e401d82561dce9421b845ac7128b4087180))
+* **intention:** konan d1 code ([1a864a3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/1a864a37e8b4ba44770c6c351420603cbd36f4a7))
+
+# [5.4.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.3.0...5.4.0) (2022-07-11)
+
+
+### Features
+
+* **api:** use api prefix for all routes ([e9f7338](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e9f7338975717f8e7e791b81ee97e87f92ae2ea5))
+
+# [5.3.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.3...5.3.0) (2022-05-19)
+
+
+### Features
+
+* **intention:** E2 Max Level Change ([50be2d4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/50be2d459cba0ddde7514e1cc0687bbea66d024b))
+* **intention:** Hern intention codes ([966a445](https://github.com/VATSIM-UK/uk-controller-plugin/commit/966a4457fd73e85dc3beee7cddeeb62c2ee21466))
+
+## [5.2.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.2...5.2.3) (2022-05-13)
+
+
+### Bug Fixes
+
+* **ukfis:** Update UKFIS abbreviations ([f70d498](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f70d4985648d325696a41f39ea4acc01cf90ed28))
+
+## [5.2.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.1...5.2.2) (2022-05-12)
+
+
+### Bug Fixes
+
+* **squawk:** treat msfs 1234 default squawk as unassigned ([93182c6](https://github.com/VATSIM-UK/uk-controller-plugin/commit/93182c6098c14583f3abf84251037801ef5cb420))
+
+## [5.2.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.2.0...5.2.1) (2022-04-17)
+
+
+### Bug Fixes
+
+* **oceanic:** Use new Nattrak API endpoint ([717ad68](https://github.com/VATSIM-UK/uk-controller-plugin/commit/717ad68b7832ae74d74ea9b4146162aca9530f81)), closes [#452](https://github.com/VATSIM-UK/uk-controller-plugin/issues/452)
+
+# [5.2.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.1.1...5.2.0) (2022-04-16)
+
+
+### Features
+
+* **intentioncode:** E3 intention code ([270d57b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/270d57b3a264013e840ad58b61df6c7d01fa9236)), closes [#458](https://github.com/VATSIM-UK/uk-controller-plugin/issues/458)
+
+## [5.1.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.1.0...5.1.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* **oceanic:** Crash when updating clearances ([c69ebae](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c69ebae324dbeb6ea5824ab84d90b524b604eb79)), closes [#455](https://github.com/VATSIM-UK/uk-controller-plugin/issues/455)
+
+# [5.1.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.0.0...5.1.0) (2022-03-27)
+
+
+### Features
+
+* **arrival:** Arrival sequencer and spacing aids ([83953e4](https://github.com/VATSIM-UK/uk-controller-plugin/commit/83953e4633a8887f11a1cfe12584b2080826cf75))
+
+# [5.0.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.1...5.0.0) (2022-03-18)
+
+
+### Bug Fixes
+
+* **loader:** Display more debug information when unable to load core binary ([2e8e87d](https://github.com/VATSIM-UK/uk-controller-plugin/commit/2e8e87da05471527a98d8bb126409771046719eb))
+* **loader:** Trigger major version bump ([9fa7052](https://github.com/VATSIM-UK/uk-controller-plugin/commit/9fa7052b0b2993fa95576d8be5ba70998cc374be))
+* **updater:** Fix updates not applying properly ([3fa342f](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3fa342f594ab6c935ce5bbb99236c763c23ab0e1))
+* **updater:** Make sure new loader works for everyone ([22f1d30](https://github.com/VATSIM-UK/uk-controller-plugin/commit/22f1d308cfec480a09bedc640be9d3a4edc24ec6))
+
+
+### BREAKING CHANGES
+
+* **loader:** Members may need to download a new version of the loader
+to get things to work.
+
 # [5.0.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/4.4.2-beta.3...5.0.0-beta.1) (2022-03-17)
 
 

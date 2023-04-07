@@ -4,6 +4,6 @@
 namespace UKControllerPlugin {
     namespace Datablock {
 
-        void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer & container);
-    }  // namespace Datablock
-}  // namespace UKControllerPlugin
+        void BootstrapPlugin(UKControllerPlugin::Bootstrap::PersistenceContainer& container);
+    } // namespace Datablock
+} // namespace UKControllerPlugin

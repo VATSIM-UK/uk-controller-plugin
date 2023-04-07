@@ -1,12 +1,11 @@
-#include "pch/pch.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "timedevent/TimedEventCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 
-using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
+using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
 
 namespace UKControllerPluginTest {
@@ -21,9 +20,7 @@ namespace UKControllerPluginTest {
             FlightplanStorageBootstrap::BootstrapPlugin(container);
             EXPECT_EQ(1, container.timedHandler->CountHandlers());
             EXPECT_EQ(
-                1,
-                container.timedHandler->CountHandlersForFrequency(FlightplanStorageBootstrap::timedEventFrequency)
-            );
+                1, container.timedHandler->CountHandlersForFrequency(FlightplanStorageBootstrap::timedEventFrequency));
         }
 
         TEST(FlightplanStorageBootstrap, BootstrapPluginAddsHandlerToFlightplanEvents)
@@ -35,9 +32,7 @@ namespace UKControllerPluginTest {
             FlightplanStorageBootstrap::BootstrapPlugin(container);
             EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
             EXPECT_EQ(
-                1,
-                container.timedHandler->CountHandlersForFrequency(FlightplanStorageBootstrap::timedEventFrequency)
-            );
+                1, container.timedHandler->CountHandlersForFrequency(FlightplanStorageBootstrap::timedEventFrequency));
         }
-    }  // namespace Flightplan
+    } // namespace Flightplan
 } // namespace UKControllerPluginTest

@@ -1,10 +1,9 @@
-#include "pch/pch.h"
 #include "hold/BlockedHoldLevelRestriction.h"
 #include "hold/BlockedHoldLevelRestrictionSerializer.h"
 
+using ::testing::Test;
 using UKControllerPlugin::Hold::BlockedHoldLevelRestriction;
 using UKControllerPlugin::Hold::ValidateLevelRestrictionData;
-using ::testing::Test;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -12,10 +11,8 @@ namespace UKControllerPluginTest {
         class BlockedHoldLevelRestrictionSerializerTest : public Test
         {
             public:
-            BlockedHoldLevelRestrictionSerializerTest()
-                : restriction(new BlockedHoldLevelRestriction({ 7000, 13000 }))
+            BlockedHoldLevelRestrictionSerializerTest() : restriction(new BlockedHoldLevelRestriction({7000, 13000}))
             {
-
             }
 
             std::unique_ptr<BlockedHoldLevelRestriction> restriction;
@@ -44,14 +41,14 @@ namespace UKControllerPluginTest {
         TEST_F(BlockedHoldLevelRestrictionSerializerTest, ValidateLevelRestrictionDataReturnsFalseLevelsNotNumber)
         {
             nlohmann::json data;
-            data["levels"] = { "7000", 8000, 9000 };
+            data["levels"] = {"7000", 8000, 9000};
             EXPECT_FALSE(ValidateLevelRestrictionData(data));
         }
 
         TEST_F(BlockedHoldLevelRestrictionSerializerTest, ValidateLevelRestrictionDataReturnsTrueValidData)
         {
             nlohmann::json data;
-            data["levels"] = { 7000, 8000, 9000 };
+            data["levels"] = {7000, 8000, 9000};
             EXPECT_TRUE(ValidateLevelRestrictionData(data));
         }
 
@@ -64,9 +61,9 @@ namespace UKControllerPluginTest {
         TEST_F(BlockedHoldLevelRestrictionSerializerTest, FromJsonReturnsObjectIfValid)
         {
             nlohmann::json data;
-            data["levels"] = { 7000, 8000, 9000 };
+            data["levels"] = {7000, 8000, 9000};
 
-            std::set<unsigned int> expectedLevels = { 7000, 8000, 9000 };
+            std::set<unsigned int> expectedLevels = {7000, 8000, 9000};
             EXPECT_EQ(expectedLevels, data.get<std::unique_ptr<BlockedHoldLevelRestriction>>()->GetLevels());
         }
 
@@ -74,9 +71,9 @@ namespace UKControllerPluginTest {
         {
             nlohmann::json expected;
             expected["type"] = "level-block";
-            expected["levels"] = { 7000, 13000 };
+            expected["levels"] = {7000, 13000};
 
             EXPECT_EQ(expected, nlohmann::json(this->restriction));
         }
-    }  // namespace Hold
-}  // namespace UKControllerPluginTest
+    } // namespace Hold
+} // namespace UKControllerPluginTest

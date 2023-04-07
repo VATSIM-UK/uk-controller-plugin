@@ -1,5 +1,4 @@
 #pragma once
-#include "pch/pch.h"
 #include "dialog/DialogProviderInterface.h"
 #include "dialog/DialogData.h"
 #include "dialog/DialogCallArgument.h"
@@ -10,15 +9,13 @@ namespace UKControllerPluginTest {
         class MockDialogProvider : public UKControllerPlugin::Dialog::DialogProviderInterface
         {
             public:
-
-                MOCK_CONST_METHOD2(
-                    OpenDialog,
-                    void(
-                        const UKControllerPlugin::Dialog::DialogData &,
-                        const UKControllerPlugin::Dialog::DialogCallArgument *
-                    )
-                );
-
+            MockDialogProvider();
+            virtual ~MockDialogProvider();
+            MOCK_CONST_METHOD2(
+                OpenDialog,
+                void(
+                    const UKControllerPlugin::Dialog::DialogData&,
+                    const UKControllerPlugin::Dialog::DialogCallArgument*));
         };
-    }  // namespace Dialog
-}  // namespace UKControllerPluginTest
+    } // namespace Dialog
+} // namespace UKControllerPluginTest

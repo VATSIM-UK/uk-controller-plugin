@@ -1,12 +1,12 @@
-#include "pch/pch.h"
 #include "update/CheckDevelopmentVersion.h"
 
 using testing::Test;
 using UKControllerPluginUtils::Update::IsDevelopmentVersion;
 
 namespace UKControllerPluginUtilsTest::Update {
-    class CheckDevelopmentVersionTest: public Test
-    {};
+    class CheckDevelopmentVersionTest : public Test
+    {
+    };
 
     TEST_F(CheckDevelopmentVersionTest, IsDevelopmentIfVersionUnspecified)
     {

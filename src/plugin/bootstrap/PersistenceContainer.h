@@ -1,5 +1,4 @@
 #pragma once
-#include "integration/IntegrationPersistenceContainer.h"
 
 namespace UKControllerPlugin {
     class UKPlugin;
@@ -15,6 +14,10 @@ namespace UKControllerPlugin {
     namespace Api {
         class ApiInterface;
     } // namespace Api
+    namespace Bootstrap {
+        class BootstrapProviderCollection;
+        class ModuleFactories;
+    } // namespace Bootstrap
     namespace Command {
         class CommandHandlerCollection;
     } // namespace Command
@@ -36,10 +39,15 @@ namespace UKControllerPlugin {
     namespace Datablock {
         class DisplayTime;
     } // namespace Datablock
+    namespace Dependency {
+        class DependencyLoaderInterface;
+    } // namespace Dependency
     namespace Dialog {
         class DialogManager;
     } // namespace Dialog
     namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+        class PluginSettingsProviderCollection;
         class RadarTargetEventHandlerCollection;
         class RunwayDialogAwareCollection;
         class UserSetting;
@@ -63,12 +71,8 @@ namespace UKControllerPlugin {
     } // namespace Hold
     namespace Integration {
         class ExternalMessageEventHandler;
+        struct IntegrationPersistenceContainer;
     } // namespace Integration
-    namespace IntentionCode {
-        class SectorExitRepository;
-        class IntentionCodeCache;
-        class IntentionCodeGenerator;
-    } // namespace IntentionCode
     namespace InitialAltitude {
         class InitialAltitudeEventHandler;
     } // namespace InitialAltitude
@@ -98,6 +102,7 @@ namespace UKControllerPlugin {
     } // namespace Plugin
     namespace Prenote {
         class PrenoteMessageCollection;
+        class PrenoteMessageEventHandlerCollection;
     } // namespace Prenote
     namespace Push {
         class PushEventProcessorCollection;
@@ -140,6 +145,7 @@ namespace UKControllerPlugin {
         class TimedEventCollection;
     } // namespace TimedEvent
     namespace Wake {
+        class WakeCategoryMapperCollection;
         class WakeSchemeCollection;
     } // namespace Wake
     namespace Windows {
@@ -178,15 +184,18 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Api::ApiInterface> api;
         std::shared_ptr<UKControllerPluginUtils::Api::ApiFactory> apiFactory;
         std::shared_ptr<UKControllerPlugin::TaskManager::TaskRunnerInterface> taskRunner;
-        std::unique_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
+        std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsignCollection> activeCallsigns;
         std::unique_ptr<UKControllerPlugin::Flightplan::StoredFlightplanCollection> flightplans;
         std::unique_ptr<UKControllerPlugin::Message::UserMessager> userMessager;
         std::unique_ptr<UKControllerPlugin::Euroscope::UserSetting> pluginUserSettingHandler;
+        std::unique_ptr<UKControllerPlugin::Euroscope::PluginSettingsProviderCollection> pluginSettingsProviders;
         std::shared_ptr<UKControllerPlugin::Controller::Login> login;
         std::unique_ptr<UKControllerPlugin::Dialog::DialogManager> dialogManager;
         std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settingsRepository;
         std::shared_ptr<UKControllerPlugin::Datablock::DisplayTime> timeFormatting;
         std::shared_ptr<UKControllerPlugin::Prenote::PrenoteMessageCollection> prenotes;
+        std::unique_ptr<UKControllerPlugin::Prenote::PrenoteMessageEventHandlerCollection> prenoteMessageHandlers;
+        std::shared_ptr<UKControllerPlugin::Dependency::DependencyLoaderInterface> dependencyLoader;
 
         // Collections of event handlers
         std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;
@@ -204,9 +213,11 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<Integration::IntegrationPersistenceContainer> integrationModuleContainer;
 
         // The plugin
-        std::unique_ptr<UKControllerPlugin::UKPlugin> plugin;
+        std::unique_ptr<UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface> plugin;
 
         // The modules
+        std::unique_ptr<ModuleFactories> moduleFactories;
+        std::unique_ptr<BootstrapProviderCollection> bootstrapProviders;
         std::shared_ptr<UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler> initialAltitudeEvents;
         std::unique_ptr<UKControllerPlugin::HistoryTrail::HistoryTrailRepository> historyTrails;
         std::shared_ptr<UKControllerPlugin::Countdown::CountdownTimer> countdownTimer;
@@ -239,12 +250,10 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionCollection> controllerPositions;
         std::unique_ptr<UKControllerPlugin::Controller::ControllerPositionHierarchyFactory> controllerHierarchyFactory;
-        std::unique_ptr<UKControllerPlugin::IntentionCode::SectorExitRepository> sectorExitPoints;
-        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeCache> intentionCodeCache;
-        std::unique_ptr<UKControllerPlugin::IntentionCode::IntentionCodeGenerator> intentionCodeGenerator;
         std::shared_ptr<UKControllerPlugin::SectorFile::RunwayCollection> runways;
         std::shared_ptr<UKControllerPlugin::Navaids::NavaidCollection> navaids;
         std::unique_ptr<UKControllerPlugin::Wake::WakeSchemeCollection> wakeSchemes;
+        std::unique_ptr<UKControllerPlugin::Wake::WakeCategoryMapperCollection> wakeCategoryMappers;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
         std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
         std::unique_ptr<UKControllerPlugin::Runway::RunwayCollection> runwayCollection;

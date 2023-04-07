@@ -12,6 +12,6 @@ namespace UKControllerPluginTest::Bootstrap {
         PersistenceContainer container;
         UkPluginBootstrap::BootstrapPlugin(container);
 
-        EXPECT_NO_THROW(container.plugin->GetPlugInName());
+        EXPECT_NO_THROW(static_cast<UKControllerPlugin::UKPlugin&>(*container.plugin).GetPlugInName());
     }
 } // namespace UKControllerPluginTest::Bootstrap

@@ -1,12 +1,8 @@
 #pragma once
-#include "hold/MinStackHoldLevelRestriction.h"
-#include "bootstrap/PersistenceContainer.h"
 
-namespace UKControllerPlugin {
-    namespace Bootstrap {
-        struct PersistenceContainer;
-    } // namespace Bootstrap
-} // namespace UKControllerPlugin
+namespace UKControllerPlugin::Bootstrap {
+    struct PersistenceContainer;
+} // namespace UKControllerPlugin::Bootstrap
 
 namespace UKControllerPlugin {
     namespace Hold {

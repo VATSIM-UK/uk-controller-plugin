@@ -57,7 +57,7 @@ namespace UKControllerPluginUtilsTest::Api {
     {
         auto& builder = factory.LegacyRequestBuilder();
 
-        CurlRequest expectedRequest("https://ukcp.vatsim.uk/authorise", CurlRequest::METHOD_GET);
+        CurlRequest expectedRequest("https://ukcp.vatsim.uk/api/authorise", CurlRequest::METHOD_GET);
         expectedRequest.AddHeader("Authorization", "Bearer key");
         expectedRequest.AddHeader("Accept", "application/json");
         expectedRequest.AddHeader("Content-Type", "application/json");

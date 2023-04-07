@@ -27,13 +27,28 @@ set(test__api
         api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
+set(test__approach
+        approach/ApproachBootstrapProviderTest.cpp
+        approach/ApproachSequenceTest.cpp
+        approach/ApproachSequencedAircraftTest.cpp
+        approach/ApproachSequencerDisplayTest.cpp
+        approach/ApproachSequencerTest.cpp
+        approach/ApproachSequencerDisplayOptionsTest.cpp
+        approach/ApproachSequencerDisplayAsrLoaderTest.cpp
+        approach/ToggleApproachSequencerDisplayTest.cpp
+        approach/SequencerAirfieldSelectorTest.cpp approach/ApproachModuleFactoryTest.cpp approach/AircraftSelectionProviderTest.cpp approach/TargetSelectorListTest.cpp wake/ApproachSpacingCalculatorTest.cpp approach/ApproachSequencerOptionsTest.cpp approach/ApproachSequencerOptionsLoaderTest.cpp approach/AirfieldTargetSelectorListTest.cpp approach/ApproachSequencerDistanceOptionsTest.cpp approach/AirfieldMinimumSeparationSelectorListTest.cpp approach/RemoveLandedAircraftTest.cpp approach/ApproachFlightplanEventHandlerTest.cpp)
+source_group("test\\approach" FILES ${test__approach})
+
 set(test__bootstrap
     "bootstrap/BootstrapWarningMessageTest.cpp"
     "bootstrap/CollectionBootstrapTest.cpp"
     "bootstrap/EventHandlerCollectionBootstrapTest.cpp"
     "bootstrap/ExternalsBootstrapTest.cpp"
     "bootstrap/HelperBootstrapTest.cpp"
-)
+    bootstrap/ModuleBootstrapTest.cpp
+    bootstrap/ModuleFactoriesTest.cpp
+    bootstrap/BootstrapProviderCollectionTest.cpp
+    bootstrap/BootstrapProviderCollectionFactoryTest.cpp)
 source_group("test\\bootstrap" FILES ${test__bootstrap})
 
 set(test__command
@@ -105,7 +120,7 @@ set(test__euroscope
     "euroscope/RunwayDialogAwareCollectionTest.cpp"
     "euroscope/UserSettingAwareCollectionTest.cpp"
     "euroscope/UserSettingTest.cpp"
-)
+        euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
 
 set(test__flightinformationservice
@@ -115,8 +130,11 @@ set(test__flightinformationservice
 source_group("test\\flightinformationservice" FILES ${test__flightinformationservice})
 
 set(test__flightplan
+    "flightplan/FlightplanPointTest.cpp"
     "flightplan/FlightPlanEventHandlerCollectionTest.cpp"
     "flightplan/FlightplanStorageBootstrapTest.cpp"
+    "flightplan/ParsedFlightplanFactoryTest.cpp"
+    "flightplan/ParsedFlightplanTest.cpp"
     "flightplan/StoredFlightplanCollectionTest.cpp"
     "flightplan/StoredFlightplanEventHandlerTest.cpp"
     "flightplan/StoredFlightplanTest.cpp"
@@ -127,6 +145,10 @@ set(test__flightrule
         flightrule/FlightRuleCollectionTest.cpp flightrule/FlightRuleCollectionFactoryTest.cpp flightrule/FlightRuleModuleTest.cpp)
 source_group("test\\flightrule" FILES ${test__flightrule})
 
+set(test__geometry
+        geometry/LineTest.cpp geometry/DistanceRadiusToScreenRadiusTest.cpp geometry/MeasurementUnitFactoryTest.cpp)
+source_group("test\\geometry" FILES ${test__geometry})
+
 set(test__handoff
     "handoff/HandoffCollectionFactoryTest.cpp"
     "handoff/HandoffCollectionTest.cpp"
@@ -136,7 +158,9 @@ set(test__handoff
     handoff/FlightplanSidHandoffMapperTest.cpp
     handoff/FlightplanAirfieldHandoffMapperTest.cpp
     handoff/HandoffCacheTest.cpp
-    handoff/DepartureHandoffResolverTest.cpp handoff/ClearCacheOnActiveCallsignChangesTest.cpp)
+    handoff/DepartureHandoffResolverTest.cpp
+    handoff/ClearCacheOnActiveCallsignChangesTest.cpp
+    handoff/ClearCacheOnRunwayDialogSaveTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
@@ -207,28 +231,36 @@ set(test__integration
     "integration/MessageTypeTest.cpp"
     "integration/OutboundIntegrationMessageHandlerTest.cpp"
     "integration/SocketConnectionTest.cpp"
-)
+        intention/IntentionCodeBootstrapProviderTest.cpp intention/IntentionCodeModelTest.cpp)
 source_group("test\\integration" FILES ${test__integration})
 
 set(test__intention
-    "intention/AmsterdamAirfieldGroupTest.cpp"
-    "intention/BrusselsAirfieldGroupTest.cpp"
-    "intention/DublinAirfieldGroupTest.cpp"
-    "intention/HomeAirfieldGroupTest.cpp"
-    "intention/IntentionCodeCacheTest.cpp"
-    "intention/IntentionCodeEventHandlerTest.cpp"
-    "intention/IntentionCodeGeneratorTest.cpp"
-    "intention/IntentionCodeModuleTest.cpp"
+    "intention/ExitConeTest.cpp"
+    "intention/FirExitPointTest.cpp"
     "intention/IntentionCodeUpdatedMessageTest.cpp"
-    "intention/SectorExitPointEtratTest.cpp"
-    "intention/SectorExitPointKonanTest.cpp"
-    "intention/SectorExitPointLelnaTest.cpp"
-    "intention/SectorExitPointScottishTest.cpp"
-    "intention/SectorExitPointTest.cpp"
-    "intention/SectorExitPointVeuleTest.cpp"
-    "intention/SectorExitRepositoryTest.cpp"
-    "intention/ShannonAirfieldGroupTest.cpp"
-)
+    intention/FirExitPointCollectionTest.cpp
+    intention/CachedAircraftFirExitGeneratorTest.cpp
+    intention/FirExitPointCollectionFactoryTest.cpp
+    intention/IntentionCodeModuleFactoryTest.cpp
+    intention/AllOfTest.cpp
+    intention/AnyOfTest.cpp
+    intention/NotTest.cpp
+    intention/ArrivalAirfieldsTest.cpp
+    intention/ArrivalAirfieldPatternTest.cpp
+    intention/MaximumCruisingAltitudeTest.cpp
+    intention/CruisingLevelAboveTest.cpp
+    intention/ControllerPositionStartsWithTest.cpp
+    intention/ExitingFirAtPointTest.cpp
+    intention/RoutingViaTest.cpp
+    intention/SingleCodeTest.cpp
+    intention/AirfieldIdentifierTest.cpp
+    intention/FullAirfieldIdentifierTest.cpp
+    intention/IntentionCodeCollectionTest.cpp
+    intention/IntentionCodeCollectionFactoryTest.cpp
+    intention/CachedAircraftIntentionCodeGeneratorTest.cpp
+    intention/IntentionCodeEventHandlerCollectionTest.cpp
+    intention/SendIntentionCodeUpdatedIntegrationMessageTest.cpp
+    intention/IntentionCodeTagItemTest.cpp integration/IntegrationDataInitialisersTest.cpp intention/IntentionCodeIntegrationDataInitialiserTest.cpp)
 source_group("test\\intention" FILES ${test__intention})
 
 set(test__list
@@ -262,7 +294,7 @@ set(test__metar
     metar/MetarModuleTest.cpp
     metar/PressureQueryMessageTest.cpp
     metar/PressureNotFoundMessageTest.cpp
-    metar/PressureQueryCommandHandlerTest.cpp mock/MockMetarEventHandler.h)
+    metar/PressureQueryCommandHandlerTest.cpp)
 source_group("test\\metar" FILES ${test__metar})
 
 set(test__minstack
@@ -301,43 +333,52 @@ set(test__missedapproach
 source_group("test\\missedapproach" FILES ${test__missedapproach})
 
 set(test__mock
-    "mock/MockAbstractTimedEvent.h"
-    "mock/MockActiveCallsignEventHandler.h"
-    "mock/MockAirfieldGroup.h"
-    "mock/MockAsrEventHandlerInterface.h"
-    "mock/MockConfigurableDisplay.h"
-    "mock/MockConnection.h"
-    "mock/MockControllerStatusEventHandlerInterface.h"
-    "mock/MockDependencyLoader.h"
-    "mock/MockEuroScopeCControllerInterface.h"
-    "mock/MockEuroScopeCFlightplanInterface.h"
-    "mock/MockEuroScopeCRadarTargetInterface.h"
-    "mock/MockEuroscopeExtractedRouteInterface.h"
-    "mock/MockEuroscopeFlightplanList.h"
-    "mock/MockEuroscopePluginLoopbackInterface.h"
-    "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
-    "mock/MockEuroscopeSectorFileElementInterface.h"
-    "mock/MockExternalMessageHandlerInterface.h"
-    "mock/MockFlightPlanEventHandlerInterface.h"
+    "mock/MockAbstractTimedEvent.h" mock/MockAbstractTimedEvent.cpp
+    "mock/MockActiveCallsignEventHandler.h" mock/MockActiveCallsignEventHandler.cpp
+    "mock/MockAsrEventHandlerInterface.h" mock/MockAsrEventHandlerInterface.cpp
+    "mock/MockConfigurableDisplay.h" mock/MockConfigurableDisplay.cpp
+    mock/MockCondition.h mock/MockCondition.cpp
+    "mock/MockConnection.h"  mock/MockConnection.cpp
+    "mock/MockControllerStatusEventHandlerInterface.h" mock/MockControllerStatusEventHandlerInterface.cpp
+    "mock/MockDependencyLoader.h" mock/MockDependencyLoader.cpp
+    "mock/MockEuroScopeCControllerInterface.h" mock/MockEuroScopeCControllerInterface.cpp
+    "mock/MockEuroScopeCFlightplanInterface.h" mock/MockEuroScopeCFlightplanInterface.cpp
+    "mock/MockEuroScopeCRadarTargetInterface.h"  mock/MockEuroScopeCRadarTargetInterface.cpp
+    "mock/MockEuroscopeExtractedRouteInterface.h" mock/MockEuroscopeExtractedRouteInterface.cpp
+    "mock/MockEuroscopeFlightplanList.h" mock/MockEuroscopeFlightplanList.cpp
+    "mock/MockEuroscopeCoordinateInterface.h" mock/MockEuroscopeCoordinateInterface.cpp
+    "mock/MockEuroscopePluginLoopbackInterface.h" mock/MockEuroscopePluginLoopbackInterface.cpp
+    "mock/MockEuroscopeRadarScreenLoopbackInterface.h" mock/MockEuroscopeRadarScreenLoopbackInterface.cpp
+    "mock/MockEuroscopeSectorFileElementInterface.h" mock/MockEuroscopeSectorFileElementInterface.cpp
+    "mock/MockExitDetermination.h" mock/MockExitDetermination.cpp
+    "mock/MockExternalMessageHandlerInterface.h"  mock/MockExternalMessageHandlerInterface.cpp
+    "mock/MockFlightPlanEventHandlerInterface.h" mock/MockFlightPlanEventHandlerInterface.cpp
     "mock/MockFlightplanRadarTargetPair.h"
-    "mock/MockGraphicsInterface.h"
-    "mock/MockHistoryTrailDialog.h"
-    "mock/MockHistoryTrailRepository.h"
-    "mock/MockIntegrationActionProcessor.h"
-    "mock/MockOutboundIntegrationEventHandler.h"
-    "mock/MockPushEventConnection.h"
-    "mock/MockPushEventProcessor.h"
-    "mock/MockRadarRendererableInterface.h"
-    "mock/MockRadarTargetEventHandlerInterface.h"
-    "mock/MockRunwayDialogAwareInterface.h"
-    "mock/MockSectorFileProviderInterface.h"
-    "mock/MockSocket.h"
-    "mock/MockUserSettingAwareInterface.h"
-    "mock/MockUserSettingProviderInterface.h"
-    mock/MockCallsignSelectionProvider.h
-    mock/MockAircraftTypeMapper.h
-    mock/MockWakeCategoryMapper.h
-    mock/MockListItemProvider.h mock/MockPopupList.h)
+    "mock/MockGraphicsInterface.h" mock/MockGraphicsInterface.cpp
+    "mock/MockIntegrationActionProcessor.h"  mock/MockIntegrationActionProcessor.cpp
+    mock/MockMenuToggleableDisplay.h mock/MockMenuToggleableDisplay.cpp
+    mock/MockMetarEventHandler.h mock/MockMetarEventHandler.cpp
+    "mock/MockOutboundIntegrationEventHandler.h"  mock/MockOutboundIntegrationEventHandler.cpp
+    "mock/MockPushEventConnection.h" mock/MockPushEventConnection.cpp
+    "mock/MockPushEventProcessor.h" mock/MockPushEventProcessor.cpp
+    "mock/MockRadarRendererableInterface.h"  mock/MockRadarRenderableInterface.cpp
+    "mock/MockRadarTargetEventHandlerInterface.h" mock/MockRadarTargetEventHandlerInterface.cpp
+    "mock/MockRunwayDialogAwareInterface.h" mock/MockRunwayDialogAwareInterface.cpp
+    "mock/MockSectorFileProviderInterface.h" mock/MockSectorFileProviderInterface.cpp
+    mock/MockSidMapperInterface.h mock/MockSidMapperInterface.cpp
+    "mock/MockSocket.h" mock/MockSocket.cpp
+    "mock/MockUserSettingAwareInterface.h" mock/MockUserSettingAwareInterface.cpp
+    "mock/MockUserSettingProviderInterface.h" mock/MockUserSettingProviderInterface.cpp
+    mock/MockCallsignSelectionProvider.h mock/MockCallsignSelectionProvider.cpp
+    mock/MockAircraftTypeMapper.h mock/MockAircraftTypeMapper.cpp
+    mock/MockWakeCategoryMapper.h mock/MockWakeCategoryMapper.cpp
+    mock/MockListItemProvider.h mock/MockListItemProvider.cpp
+    mock/MockPopupList.h mock/MockPopupList.cpp
+    mock/MockBootstrapProvider.h mock/MockBootstrapProvider.cpp
+    mock/MockPluginSettingsProvider.h mock/MockPluginSettingsProvider.cpp
+    mock/MockPrenoteMessageEventHandlerInterface.h mock/MockPrenoteMessageEventHandlerInterface.cpp
+    mock/MockPrenoteUserRelevanceChecker.h mock/MockPrenoteUserRelevanceChecker.cpp
+    mock/MockAircraftFirExitGenerator.h mock/MockAircraftFirExitGenerator.cpp mock/MockIntegrationDataInitialiser.cpp mock/MockIntegrationDataInitialiser.h mock/MockAircraftIntentionCodeGenerator.cpp mock/MockAircraftIntentionCodeGenerator.h)
 source_group("test\\mock" FILES ${test__mock})
 
 set(test__navaids
@@ -358,6 +399,10 @@ set(test__notifications
     "notifications/UnreadNotificationsMessageTest.cpp"
 )
 source_group("test\\notifications" FILES ${test__notifications})
+
+set(test__number
+        number/NumberFormatTest.cpp)
+source_group("test\\number" FILES ${test__number})
 
 set(test__oceanic
     "oceanic/OceanicEventHandlerTest.cpp"
@@ -393,7 +438,7 @@ set(test__plugin
     "plugin/PluginInformationMessageTest.cpp"
     "plugin/PopupMenuItemTest.cpp"
     "plugin/UkPluginBootstrapTest.cpp"
-)
+        plugin/OpenDataFolderTest.cpp plugin/OpenLogsFolderTest.cpp)
 source_group("test\\plugin" FILES ${test__plugin})
 
 set(test__prenote
@@ -415,7 +460,13 @@ set(test__prenote
         "prenote/AcknowledgePrenoteMessageTest.cpp"
         prenote/PublishedPrenoteCollectionTest.cpp
         prenote/PublishedPrenoteCollectionFactoryTest.cpp
-        prenote/PublishedPrenoteMapperTest.cpp)
+        prenote/PublishedPrenoteMapperTest.cpp
+        prenote/PrenoteMessageEventHandlerCollectionTest.cpp
+        prenote/PlayNewPrenoteMessageSoundTest.cpp
+        prenote/PrenoteIsTargetedToUserTest.cpp
+        prenote/SendNewPrenoteChatAreaMessageTest.cpp
+        prenote/SendPrenoteCancelledChatAreaMessageTest.cpp
+        prenote/PrenoteIsSentFromUserPositionTest.cpp prenote/SendPrenoteAcknowledgedChatAreaMessageTest.cpp prenote/SendPrenoteTimeoutChatAreaMessageTest.cpp)
 source_group("test\\prenote" FILES ${test__prenote})
 
 set(test__push
@@ -435,7 +486,7 @@ set(test__radarscreen
     "radarscreen/RadarRenderableCollectionTest.cpp"
     "radarscreen/ScreenControlsBootstrapTest.cpp"
     "radarscreen/ScreenControlsTest.cpp"
-        radarscreen/ToggleDisplayFromMenuTest.cpp mock/MockMenuToggleableDisplay.h radarscreen/MenuToggleableDisplayFactoryTest.cpp)
+        radarscreen/ToggleDisplayFromMenuTest.cpp radarscreen/MenuToggleableDisplayFactoryTest.cpp radarscreen/ConfigurableDisplayCallbackFactoryTest.cpp)
 source_group("test\\radarscreen" FILES ${test__radarscreen})
 
 set(test__regional
@@ -485,8 +536,7 @@ set(test__sid
     "sid/SidCollectionTest.cpp"
     "sid/SidModuleTest.cpp"
     "sid/StandardInstrumentDepartureTest.cpp"
-    sid/FlightplanSidMapperTest.cpp
-    mock/MockSidMapperInterface.h)
+    sid/FlightplanSidMapperTest.cpp)
 source_group("test\\sid" FILES ${test__sid})
 
 set(test__squawk
@@ -523,6 +573,10 @@ set(test__tag
 )
 source_group("test\\tag" FILES ${test__tag})
 
+set(test__test
+        test/BootstrapProviderTestCase.h test/BootstrapProviderTestCase.cpp)
+source_group("test\\test" FILES ${test__test})
+
 set(test__time
     "time/ParseTimeStringsTest.cpp"
     "time/SystemClockTest.cpp"
@@ -549,13 +603,14 @@ set(test__wake
     wake/WakeSchemeFactoryTest.cpp
     wake/WakeSchemeCollectionTest.cpp
     wake/WakeSchemeCollectionFactoryTest.cpp
-    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp wake/ArrivalWakeIntervalFactoryTest.cpp wake/ArrivalWakeIntervalTest.cpp wake/DepartureWakeIntervalTest.cpp)
+    wake/FlightplanWakeCategoryMapperTest.cpp wake/FollowingWakeCallsignProviderTest.cpp wake/LeadWakeCallsignProviderTest.cpp wake/WakeCalculatorOptionsTest.cpp wake/WakeSchemeProviderTest.cpp wake/WakeCalculatorDisplayTest.cpp wake/WakeIntervalFormatterTest.cpp wake/ArrivalWakeIntervalFactoryTest.cpp wake/ArrivalWakeIntervalTest.cpp wake/DepartureWakeIntervalTest.cpp wake/WakeCategoryMapperCollectionTest.cpp wake/WakeCategoryMapperCollectionFactoryTest.cpp)
 source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
     ${test__aircraft}
     ${test__airfield}
     ${test__api}
+    ${test__approach}
     ${test__bootstrap}
     ${test__command}
     ${test__components}
@@ -568,6 +623,7 @@ set(ALL_FILES
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__flightrule}
+    ${test__geometry}
     ${test__handoff}
     ${test__headings}
     ${test__historytrail}
@@ -585,6 +641,7 @@ set(ALL_FILES
     ${test__mock}
     ${test__navaids}
     ${test__notifications}
+    ${test__number}
     ${test__oceanic}
     ${test__offblock}
     ${test__ownership}
@@ -602,11 +659,12 @@ set(ALL_FILES
     ${test__srd}
     ${test__stands}
     ${test__tag}
+    ${test__test}
     ${test__time}
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
-    $<TARGET_OBJECTS:UKControllerPluginCore>)
+    $<TARGET_OBJECTS:UKControllerPluginCore> intention/IntentionCodeBootstrapProviderTest.cpp)
 
 ################################################################################
 # Target
@@ -695,19 +753,18 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /Od;
-            -Zm200
+            -Zm200;
+            /Zi;
         >
         $<$<CONFIG:Release>:
-            /O2;
-            /Oi;
-            /Gy;
-            -Zm120
+            -Zm120;
         >
+        /O1;
         /std:c++20;
         /sdl;
         /W4;
         /WX;
+        -ftime-trace;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
         -Wno-unused-parameter # Lots of interfaces don't use everything
@@ -715,12 +772,12 @@ if(MSVC)
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /DEBUG:FASTLINK;
+            /DEBUG:GHASH;
             /INCREMENTAL
             -flto=thin
         >
         $<$<CONFIG:Release>:
-            /DEBUG;
+            /DEBUG:NONE;
             /OPT:REF;
             /OPT:ICF;
             /INCREMENTAL:NO

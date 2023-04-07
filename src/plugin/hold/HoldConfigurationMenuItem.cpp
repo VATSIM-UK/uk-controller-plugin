@@ -1,4 +1,5 @@
 #include "HoldConfigurationMenuItem.h"
+#include "HoldDisplayManager.h"
 #include "HoldRenderer.h"
 #include "HoldSelectionMenu.h"
 #include "dialog/DialogManager.h"

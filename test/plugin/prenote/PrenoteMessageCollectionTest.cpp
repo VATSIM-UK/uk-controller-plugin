@@ -1,7 +1,9 @@
+#include "controller/ControllerPosition.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "time/SystemClock.h"
 
+using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
 using UKControllerPlugin::Time::TimeNow;
@@ -12,13 +14,24 @@ namespace UKControllerPluginTest::Prenote {
         public:
         PrenoteMessageCollectionTest()
         {
-            message1 = std::make_shared<PrenoteMessage>(1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow());
-            message2 = std::make_shared<PrenoteMessage>(5, "BAW456", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow());
+            sendingPosition = std::make_shared<ControllerPosition>(
+                1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            receivingPosition = std::make_shared<ControllerPosition>(
+                2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            message1 = std::make_shared<PrenoteMessage>(
+                1, "BAW123", "EGGD", "BADIM1X", "EGLL", sendingPosition, receivingPosition, TimeNow());
+            message2 = std::make_shared<PrenoteMessage>(
+                5, "BAW456", "EGGD", "BADIM1X", "EGKK", sendingPosition, receivingPosition, TimeNow());
+            message3 = std::make_shared<PrenoteMessage>(
+                3, "BAW456", "EGGD", "BADIM1X", "EGLL", sendingPosition, receivingPosition, TimeNow());
         }
 
+        std::shared_ptr<ControllerPosition> sendingPosition;
+        std::shared_ptr<ControllerPosition> receivingPosition;
         PrenoteMessageCollection collection;
         std::shared_ptr<PrenoteMessage> message1;
         std::shared_ptr<PrenoteMessage> message2;
+        std::shared_ptr<PrenoteMessage> message3;
     };
 
     TEST_F(PrenoteMessageCollectionTest, ItStartsEmpty)
@@ -117,5 +130,19 @@ namespace UKControllerPluginTest::Prenote {
         collection.RemoveWhere([](const std::shared_ptr<PrenoteMessage>& message) { return message->GetId() == 5; });
         EXPECT_EQ(0, collection.Count());
         EXPECT_EQ(nullptr, collection.GetById(5));
+    }
+
+    TEST_F(PrenoteMessageCollectionTest, ItemsRemovedByPredicateArePassedToCallback)
+    {
+        std::vector<int> prenoteIds;
+        collection.Add(message1);
+        collection.Add(message2);
+        collection.Add(message3);
+        collection.RemoveWhere(
+            [](const std::shared_ptr<PrenoteMessage>& message) { return message->GetDestinationAirfield() == "EGLL"; },
+            [&prenoteIds](const PrenoteMessage& message) { prenoteIds.push_back(message.GetId()); });
+
+        EXPECT_EQ(1, collection.Count());
+        EXPECT_EQ(std::vector<int>({1, 3}), prenoteIds);
     }
 } // namespace UKControllerPluginTest::Prenote

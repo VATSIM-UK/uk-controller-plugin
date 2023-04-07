@@ -17,7 +17,9 @@ namespace UKControllerPlugin::Prenote {
         [[nodiscard]] auto GetById(int id) -> const std::shared_ptr<PrenoteMessage>&;
         void Iterate(const std::function<void(const std::shared_ptr<PrenoteMessage>&)>& function);
         void Remove(int id);
-        void RemoveWhere(const std::function<bool(const std::shared_ptr<PrenoteMessage>&)>& predicate);
+        void RemoveWhere(
+            const std::function<bool(const std::shared_ptr<PrenoteMessage>&)>& predicate,
+            const std::function<void(const PrenoteMessage&)>& onRemove = {});
 
         private:
         [[nodiscard]] auto GetByIdUnsafe(int id) -> const std::shared_ptr<PrenoteMessage>&;

@@ -4,25 +4,20 @@
 #include "integration/MessageInterface.h"
 
 using UKControllerPlugin::Integration::IntegrationActionProcessor;
-using UKControllerPlugin::Integration::MessageType;
 using UKControllerPlugin::Integration::MessageInterface;
+using UKControllerPlugin::Integration::MessageType;
 
 namespace UKControllerPluginTest::Integration {
     class MockIntegrationActionProcessor : public IntegrationActionProcessor
     {
         public:
-            MOCK_METHOD(std::vector<MessageType>, ActionsToProcess, (), (const, override));
-            ~MockIntegrationActionProcessor() override = default;
-
-            void ProcessAction(
-                std::shared_ptr<MessageInterface> message,
-                std::function<void(void)> success,
-                std::function<void(std::vector<std::string>)> fail
-            ) override
-            {
-                success();
-                fail({"foo", "bar"});
-            };
+        MockIntegrationActionProcessor();
+        virtual ~MockIntegrationActionProcessor();
+        MOCK_METHOD(std::vector<MessageType>, ActionsToProcess, (), (const, override));
+        void ProcessAction(
+            std::shared_ptr<MessageInterface> message,
+            std::function<void(void)> success,
+            std::function<void(std::vector<std::string>)> fail) override;
     };
 
 } // namespace UKControllerPluginTest::Integration

@@ -82,6 +82,7 @@ namespace UKControllerPlugin {
             int GetMinimumLevel(void) const;
             void SetMaximumLevel(int level);
             void SetMinimumLevel(int level);
+            unsigned int GetPublishedHoldIndex() const;
             std::map<int, std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>> MapAircraftToLevels(
                 const std::set<std::shared_ptr<HoldingAircraft>, CompareHoldingAircraft>& aircraft) const;
             bool IsInInformationMode(void) const;
@@ -195,7 +196,7 @@ namespace UKControllerPlugin {
             bool minimised = false;
 
             // The height of the window to use when doing the information display
-            const int informationDisplayWindowHeight = 225;
+            const int informationDisplayWindowHeight = 250;
 
             // The minimum level in the hold
             int minimumLevel = 7000;
@@ -205,6 +206,9 @@ namespace UKControllerPlugin {
 
             // Should we display the information about the hold
             bool showHoldInformation = false;
+
+            // The currently selected published hold to display in the information tab
+            unsigned int selectedPublishedHoldIndex = 0;
 
             // Titlebar
             Gdiplus::Rect titleArea = {0, 0, this->windowWidth, 15};

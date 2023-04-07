@@ -1,8 +1,10 @@
+#include "controller/ControllerPosition.h"
 #include "prenote/PrenoteMessage.h"
 #include "time/SystemClock.h"
 
 using ::testing::Test;
 
+using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Prenote::PrenoteMessage;
 using UKControllerPlugin::Time::SetTestNow;
 using UKControllerPlugin::Time::TimeNow;
@@ -14,8 +16,15 @@ namespace UKControllerPluginTest::Prenote {
         PrenoteMessageTest()
         {
             SetTestNow(std::chrono::system_clock::now());
-            message = std::make_unique<PrenoteMessage>(1, "BAW123", "EGGD", "BADIM1X", "EGLL", 1, 2, TimeNow());
+            sendingPosition = std::make_shared<ControllerPosition>(
+                1, "EGKK_TWR", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            receivingPosition = std::make_shared<ControllerPosition>(
+                2, "EGKK_F_APP", 124.225, std::vector<std::string>{"EGKK"}, true, false);
+            message = std::make_unique<PrenoteMessage>(
+                1, "BAW123", "EGGD", "BADIM1X", "EGLL", sendingPosition, receivingPosition, TimeNow());
         }
+        std::shared_ptr<ControllerPosition> sendingPosition;
+        std::shared_ptr<ControllerPosition> receivingPosition;
         std::unique_ptr<PrenoteMessage> message;
     };
 
@@ -46,10 +55,20 @@ namespace UKControllerPluginTest::Prenote {
 
     TEST_F(PrenoteMessageTest, ItHasASendingController)
     {
-        EXPECT_EQ(1, message->GetSendingControllerId());
+        EXPECT_EQ(sendingPosition, message->GetSendingController());
     }
 
     TEST_F(PrenoteMessageTest, ItHasATargetController)
+    {
+        EXPECT_EQ(receivingPosition, message->GetTargetController());
+    }
+
+    TEST_F(PrenoteMessageTest, ItHasASendingControllerId)
+    {
+        EXPECT_EQ(1, message->GetSendingControllerId());
+    }
+
+    TEST_F(PrenoteMessageTest, ItHasATargetControllerId)
     {
         EXPECT_EQ(2, message->GetTargetControllerId());
     }
