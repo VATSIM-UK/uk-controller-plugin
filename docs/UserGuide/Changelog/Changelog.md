@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [5.8.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.1...5.8.0-beta.1) (2023-04-07)
+
+
+### Features
+
+* send initialisation data to integrations ([3227a36](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3227a368c1d2bf909dcb62c83866934d1ffc9f3b))
+* send intention code updates to vStrips if it loads after the plugin ([5f890dd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5f890dd22a4e5103635bd2af27dbafffc2ac42be))
+
 ## [5.7.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.0...5.7.1) (2023-03-31)
 
 
