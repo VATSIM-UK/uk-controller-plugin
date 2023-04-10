@@ -5,7 +5,7 @@
 namespace UKControllerPlugin::EventHandler {
 
     /**
-     * Get
+     * Get the given stream, or create if it doesn't exist
      */
     template <typename T> auto EventBus::GetStream() -> EventStream<T>&
     {

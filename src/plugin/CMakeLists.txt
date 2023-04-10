@@ -158,7 +158,7 @@ set(src__datablock
 source_group("src\\datablock" FILES ${src__datablock})
 
 set(src__departure
-        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h departure/ToggleDepartureCoordinationList.cpp departure/ToggleDepartureCoordinationList.h departure/DepartureModule.cpp departure/DepartureModule.h departure/AircraftDepartedEvent.h departure/DepartureMonitor.h departure/DepartureMonitor.cpp)
+        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h departure/ToggleDepartureCoordinationList.cpp departure/ToggleDepartureCoordinationList.h departure/DepartureModule.cpp departure/DepartureModule.h departure/AircraftDepartedEvent.h departure/DepartureMonitor.h departure/DepartureMonitor.cpp departure/UserShouldClearDepartureDataEvent.h)
 source_group("src\\departure" FILES ${src__departure})
 
 set(src__dependency
@@ -389,7 +389,7 @@ set(src__initialaltitude
     "initialaltitude/InitialAltitudeEventHandler.h"
     "initialaltitude/InitialAltitudeModule.cpp"
     "initialaltitude/InitialAltitudeModule.h"
-)
+        departure/UserShouldClearDepartureDataMonitor.cpp departure/UserShouldClearDepartureDataMonitor.h initialaltitude/ClearInitialAltitude.cpp initialaltitude/ClearInitialAltitude.h)
 source_group("src\\initialaltitude" FILES ${src__initialaltitude})
 
 set(src__initialheading

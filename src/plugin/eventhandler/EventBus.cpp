@@ -23,4 +23,9 @@ namespace UKControllerPlugin::EventHandler {
 
         return *EventBus::singleton;
     }
+
+    auto EventBus::GetAnyStream(const std::type_index& type) const -> const std::any&
+    {
+        return streams.at(type);
+    }
 } // namespace UKControllerPlugin::EventHandler

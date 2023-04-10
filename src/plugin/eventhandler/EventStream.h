@@ -17,7 +17,6 @@ namespace UKControllerPlugin::EventHandler {
          */
         void OnEvent(const T& event);
 
-        private:
         // Contains data about the handlers
         using HandlerData = struct
         {
@@ -25,6 +24,13 @@ namespace UKControllerPlugin::EventHandler {
 
             EventHandlerFlags flags;
         };
+
+        [[nodiscard]] auto Handlers() const -> const std::vector<HandlerData>&
+        {
+            return handlers;
+        }
+
+        private:
         std::vector<HandlerData> handlers;
     };
 } // namespace UKControllerPlugin::EventHandler

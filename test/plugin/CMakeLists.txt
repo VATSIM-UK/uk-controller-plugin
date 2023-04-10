@@ -100,7 +100,7 @@ source_group("test\\datablock" FILES ${test__datablock})
 
 set(test__departure
         
-        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp departure/DepartureMonitorTest.cpp)
+        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp departure/DepartureMonitorTest.cpp departure/UserShouldClearDepartureDataMonitorTest.cpp)
 source_group("test\\departure" FILES ${test__departure})
 
 set(test__dependency
@@ -218,7 +218,7 @@ source_group("test\\initialaltitude" FILES ${test__initialaltitude})
 set(test__initialheading
     "initialheading/InitialHeadingEventHandlerTest.cpp"
     "initialheading/InitialHeadingModuleTest.cpp"
-)
+        initialaltitude/ClearInitialAltitudeTest.cpp)
 source_group("test\\initialheading" FILES ${test__initialheading})
 
 set(test__integration

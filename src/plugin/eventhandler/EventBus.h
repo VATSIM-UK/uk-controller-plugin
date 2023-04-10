@@ -1,5 +1,6 @@
 #pragma once
 #include "EventHandlerFlags.h"
+#include <typeindex>
 
 namespace UKControllerPlugin::EventHandler {
     template <class T> class EventHandler;
@@ -26,6 +27,12 @@ namespace UKControllerPlugin::EventHandler {
          * Fire an event.
          */
         template <typename T> void OnEvent(const T& event);
+
+        /**
+         * Get the given stream as a std::any. For test purposes only and should not be called
+         * anywhere else.
+         */
+        [[nodiscard]] auto GetAnyStream(const std::type_index& type) const -> const std::any&;
 
         protected:
         template <typename T> [[nodiscard]] auto GetStream() -> EventStream<T>&;

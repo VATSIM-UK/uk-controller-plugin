@@ -23,6 +23,7 @@ namespace UKControllerPlugin::Ownership {
             -> const std::shared_ptr<ServiceProvision>&;
         [[nodiscard]] auto AirfieldHasDeliveryProvider(const std::string& icao) const -> bool;
         [[nodiscard]] auto DeliveryControlProvidedByUser(const std::string& icao) const -> bool;
+        [[nodiscard]] auto GroundControlProvidedByUser(const std::string& icao) const -> bool;
         [[nodiscard]] auto FinalApproachControlProvidedByUser(const std::string& icao) const -> bool;
         [[nodiscard]] auto ApproachControlProvidedByUser(const std::string& icao) const -> bool;
         [[nodiscard]] auto TowerControlProvidedByUser(const std::string& icao) const -> bool;

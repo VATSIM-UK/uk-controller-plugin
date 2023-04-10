@@ -23,7 +23,7 @@ namespace UKControllerPlugin::Departure {
 
             if (HasDeparted(*fp, *rt)) {
                 alreadyDeparted.insert({fp->GetCallsign(), fp->GetOrigin()});
-                EventHandler::EventBus::Bus().OnEvent<AircraftDepartedEvent>({"BAW123"});
+                EventHandler::EventBus::Bus().OnEvent<AircraftDepartedEvent>({fp->GetCallsign(), fp->GetOrigin()});
             }
         });
     }

@@ -1,6 +1,5 @@
 #include "departure/AircraftDepartedEvent.h"
 #include "departure/DepartureMonitor.h"
-#include "handoff/HandoffCache.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
@@ -43,6 +42,10 @@ namespace UKControllerPluginTest::Departure {
             "BAW123",
             std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
                 .callsign);
+        EXPECT_EQ(
+            "EGKK",
+            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
+                .airfield);
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDuplicateDepartedEvents)
@@ -60,6 +63,10 @@ namespace UKControllerPluginTest::Departure {
             "BAW123",
             std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
                 .callsign);
+        EXPECT_EQ(
+            "EGKK",
+            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
+                .airfield);
 
         monitor.TimedEventTrigger();
         EXPECT_EQ(1, EventBusObserver().observedEvents.size());
@@ -82,6 +89,10 @@ namespace UKControllerPluginTest::Departure {
             "BAW123",
             std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
                 .callsign);
+        EXPECT_EQ(
+            "EGKK",
+            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
+                .airfield);
     }
 
     TEST_F(DepartureMonitorTest, ItAllowsRedepartureIfAircraftChangesOriginAirport)
@@ -104,6 +115,10 @@ namespace UKControllerPluginTest::Departure {
             "BAW123",
             std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
                 .callsign);
+        EXPECT_EQ(
+            "EGLL",
+            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
+                .airfield);
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntAllowRedepartureIfAircraftDoesntChangeOriginAirport)

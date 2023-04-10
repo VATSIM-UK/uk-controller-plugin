@@ -17,6 +17,7 @@
 #include "controller/ControllerBootstrap.h"
 #include "countdown/CountdownModule.h"
 #include "datablock/DatablockBoostrap.h"
+#include "departure/DepartureModule.h"
 #include "dependency/DependencyLoader.h"
 #include "dependency/UpdateDependencies.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
@@ -267,7 +268,9 @@ namespace UKControllerPlugin {
         SquawkModule::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         PrenoteModule::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        // Handoff has to come before departure as the latter depends on it, namely the handoff cache.
         Handoff::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Departure::BootstrapPlugin(*this->container);
         MissedApproach::BootstrapPlugin(*this->container);
         Selcal::BootstrapPlugin(*this->container);
 
