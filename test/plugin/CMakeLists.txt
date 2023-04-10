@@ -123,6 +123,10 @@ set(test__euroscope
         euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
 
+set(test__eventhandler
+        eventhandler/EventBusTest.cpp test/EventBusTestCase.h)
+source_group("test\\eventhandler" FILES ${test__eventhandler})
+
 set(test__flightinformationservice
     "flightinformationservice/FlightInformationServiceModuleTest.cpp"
     "flightinformationservice/FlightInformationServiceTagItemTest.cpp"
@@ -620,6 +624,7 @@ set(ALL_FILES
     ${test__departure}
     ${test__dependency}
     ${test__euroscope}
+    ${test__eventhandler}
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__flightrule}
