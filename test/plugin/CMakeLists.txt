@@ -218,7 +218,7 @@ source_group("test\\initialaltitude" FILES ${test__initialaltitude})
 set(test__initialheading
     "initialheading/InitialHeadingEventHandlerTest.cpp"
     "initialheading/InitialHeadingModuleTest.cpp"
-        initialaltitude/ClearInitialAltitudeTest.cpp)
+        initialaltitude/ClearInitialAltitudeTest.cpp initialheading/ClearInitialHeadingTest.cpp)
 source_group("test\\initialheading" FILES ${test__initialheading})
 
 set(test__integration

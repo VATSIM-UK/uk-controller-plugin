@@ -1,16 +1,20 @@
+#include "eventhandler/EventBus.h"
+#include "initialheading/ClearInitialHeading.h"
 #include "initialheading/InitialHeadingModule.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "departure/UserShouldClearDepartureDataEvent.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "test/EventBusTestCase.h"
 #include "timedevent/TimedEventCollection.h"
 
 using ::testing::NiceMock;
-using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::EventHandler::EventBus;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::InitialHeading::BootstrapPlugin;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -19,7 +23,7 @@ using UKControllerPlugin::TimedEvent::TimedEventCollection;
 namespace UKControllerPluginTest {
     namespace InitialHeading {
 
-        class InitialHeadingModuleTest : public Test
+        class InitialHeadingModuleTest : public EventBusTestCase
         {
             public:
             void SetUp()
@@ -64,6 +68,19 @@ namespace UKControllerPluginTest {
             BootstrapPlugin(this->container);
             EXPECT_EQ(1, container.timedHandler->CountHandlers());
             EXPECT_EQ(1, container.timedHandler->CountHandlersForFrequency(10));
+        }
+
+        TEST_F(InitialHeadingModuleTest, BootstrapPluginRegistersClearInitialHeading)
+        {
+            BootstrapPlugin(this->container);
+            const auto eventStream = std::any_cast<std::shared_ptr<UKControllerPlugin::EventHandler::EventStream<
+                UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>>>(
+                EventBus::Bus().GetAnyStream(typeid(UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent)));
+            EXPECT_EQ(1, eventStream->Handlers().size());
+            const auto handler = eventStream->Handlers()[0];
+            EXPECT_EQ(UKControllerPlugin::EventHandler::EventHandlerFlags::Sync, handler.flags);
+            EXPECT_NO_THROW(static_cast<void>(
+                dynamic_cast<const UKControllerPlugin::InitialHeading::ClearInitialHeading&>(*handler.handler.get())));
         }
     } // namespace InitialHeading
 } // namespace UKControllerPluginTest

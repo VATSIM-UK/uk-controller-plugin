@@ -397,7 +397,7 @@ set(src__initialheading
     "initialheading/InitialHeadingEventHandler.h"
     "initialheading/InitialHeadingModule.cpp"
     "initialheading/InitialHeadingModule.h"
-)
+        initialheading/ClearInitialHeading.cpp initialheading/ClearInitialHeading.h)
 source_group("src\\initialheading" FILES ${src__initialheading})
 
 set(src__integration

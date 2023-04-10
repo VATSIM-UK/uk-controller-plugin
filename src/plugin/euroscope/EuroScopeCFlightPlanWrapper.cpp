@@ -41,6 +41,11 @@ namespace UKControllerPlugin::Euroscope {
         return this->originalData.GetControllerAssignedData().GetClearedAltitude();
     }
 
+    auto EuroScopeCFlightPlanWrapper::GetAssignedHeading() const -> int
+    {
+        return this->originalData.GetControllerAssignedData().GetAssignedHeading();
+    }
+
     auto EuroScopeCFlightPlanWrapper::GetCruiseLevel() const -> int
     {
         return this->originalData.GetFinalAltitude();
