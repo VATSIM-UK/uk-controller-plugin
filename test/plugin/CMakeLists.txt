@@ -124,7 +124,7 @@ set(test__euroscope
 source_group("test\\euroscope" FILES ${test__euroscope})
 
 set(test__eventhandler
-        eventhandler/EventBusTest.cpp test/EventBusTestCase.h)
+        eventhandler/EventBusTest.cpp test/EventBusTestCase.h eventhandler/EventStreamTest.cpp)
 source_group("test\\eventhandler" FILES ${test__eventhandler})
 
 set(test__flightinformationservice
