@@ -28,6 +28,7 @@ namespace UKControllerPluginTest {
             public:
             void SetUp()
             {
+                EventBusTestCase::SetUp();
                 container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
                 container.userSettingHandlers = std::make_unique<UserSettingAwareCollection>();
                 container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();

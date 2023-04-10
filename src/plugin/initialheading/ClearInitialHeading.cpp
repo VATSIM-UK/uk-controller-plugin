@@ -40,6 +40,6 @@ namespace UKControllerPlugin::InitialHeading {
         }
 
         LogInfo("Removing cleared heading on departure for " + event.callsign);
-        flightplan->SetClearedAltitude(EUROSCOPE_FLIGHTPLAN_NO_HEADING);
+        flightplan->SetHeading(EUROSCOPE_FLIGHTPLAN_NO_HEADING);
     }
 } // namespace UKControllerPlugin::InitialHeading
