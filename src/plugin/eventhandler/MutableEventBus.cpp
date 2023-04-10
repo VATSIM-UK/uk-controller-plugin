@@ -7,6 +7,7 @@ namespace UKControllerPlugin::EventHandler {
     {
         EventBus::singleton = nullptr;
         EventBus::factory = nullptr;
+        LogInfo("EventBus shutdown");
     }
 
     void MutableEventBus::SetObserver(std::shared_ptr<EventObserver> observer)

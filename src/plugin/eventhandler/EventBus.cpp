@@ -18,6 +18,7 @@ namespace UKControllerPlugin::EventHandler {
             throw std::exception("No event bus factory specified");
         }
 
+        LogInfo("Created EventBus");
         EventBus::singleton = EventBus::factory->CreateBus();
 
         return *EventBus::singleton;

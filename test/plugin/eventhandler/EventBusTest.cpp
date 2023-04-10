@@ -37,6 +37,16 @@ namespace UKControllerPluginTest::EventHandler {
         EXPECT_EQ(123, handler->receivedValue);
     }
 
+    TEST_F(EventBusTest, ItProcessesAnEventToMultipleHandlers)
+    {
+        const auto handler1 = std::make_shared<MockHandler>();
+        const auto handler2 = std::make_shared<MockHandler>();
+        EventBus::Bus().AddHandler<int>(handler2, UKControllerPlugin::EventHandler::EventHandlerFlags::Sync);
+        EventBus::Bus().OnEvent(123);
+        EXPECT_EQ(123, handler1->receivedValue);
+        EXPECT_EQ(123, handler2->receivedValue);
+    }
+
     TEST_F(EventBusTest, ItSendsAnEventForObservation)
     {
         EventBus::Bus().OnEvent(123);

@@ -1,8 +1,9 @@
 #include "departure/DepartureModule.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "timedevent/TimedEventCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "push/PushEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
-#include "timedevent/TimedEventCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dialog/DialogManager.h"
@@ -15,6 +16,7 @@ using ::testing::Return;
 using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::HandoffEventHandlerCollection;
+using UKControllerPlugin::Departure::BootstrapPlugin;
 using UKControllerPlugin::Departure::BootstrapRadarScreen;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
@@ -36,6 +38,9 @@ namespace UKControllerPluginTest::Departure {
         {
             container.tagHandler = std::make_unique<TagItemCollection>();
             container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
+            container.timedHandler = std::make_unique<TimedEventCollection>();
+            container.flightplanHandler =
+                std::make_unique<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection>();
         }
 
         PersistenceContainer container;
@@ -43,6 +48,19 @@ namespace UKControllerPluginTest::Departure {
         ConfigurableDisplayCollection configurables;
         UKControllerPlugin::Euroscope::AsrEventHandlerCollection asr;
     };
+
+    TEST_F(DepartureModuleTest, PluginRegistersDepartureMonitorForFlightplanEvents)
+    {
+        BootstrapPlugin(this->container);
+        EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
+    }
+
+    TEST_F(DepartureModuleTest, PluginRegistersDepartureMonitorForTimedEvents)
+    {
+        BootstrapPlugin(this->container);
+        EXPECT_EQ(1, this->container.timedHandler->CountHandlers());
+        EXPECT_EQ(1, this->container.timedHandler->CountHandlersForFrequency(10));
+    }
 
     TEST_F(DepartureModuleTest, RadarScreenAddsRenderable)
     {
