@@ -1,7 +1,10 @@
 #include "UserShouldClearDepartureDataEvent.h"
 #include "UserShouldClearDepartureDataMonitor.h"
+#include "controller/ControllerPosition.h"
 #include "eventhandler/EventBus.h"
 #include "handoff/HandoffCache.h"
+#include "handoff/ResolvedHandoff.h"
+#include "log/LoggerFunctions.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceType.h"
 
@@ -10,7 +13,7 @@ using UKControllerPlugin::EventHandler::EventBus;
 namespace UKControllerPlugin::Departure {
 
     UserShouldClearDepartureDataMonitor::UserShouldClearDepartureDataMonitor(
-        std::shared_ptr<Handoff::HandoffCache> handoffs,
+        std::shared_ptr<const Handoff::HandoffCache> handoffs,
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership)
         : handoffs(std::move(handoffs)), ownership(std::move(ownership))
     {
@@ -22,7 +25,16 @@ namespace UKControllerPlugin::Departure {
     {
         // Check for a handoff, dont do it if there's a handoff currently present.
         const auto handoff = handoffs->Get(event.callsign);
-        if (handoff) {
+        if (!handoff) {
+            LogDebug("Not firing UserShouldClearDepartureDataEvent for " + event.callsign + ", no handoff found");
+            return;
+        }
+
+        // If the resolved controller id is > 0, then theres a handoff controller... -1 is UNICOM in
+        // DepartureHandoffResolver
+        if (handoff->resolvedController->GetId() > 0) {
+            LogDebug(
+                "Not firing UserShouldClearDepartureDataEvent for " + event.callsign + ", handoff controller online");
             return;
         }
 
@@ -35,6 +47,7 @@ namespace UKControllerPlugin::Departure {
             return;
         }
 
+        LogDebug("Firing UserShouldClearDepartureDataEvent for " + event.callsign);
         EventBus::Bus().OnEvent<UserShouldClearDepartureDataEvent>({event.callsign});
     }
 

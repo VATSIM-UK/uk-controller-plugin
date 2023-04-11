@@ -1,6 +1,5 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
-#include "departure/AircraftDepartedEvent.h"
 #include "departure/UserShouldClearDepartureDataEvent.h"
 #include "departure/UserShouldClearDepartureDataMonitor.h"
 #include "handoff/HandoffCache.h"
@@ -24,6 +23,12 @@ namespace UKControllerPluginTest::Departure {
               ownership(std::make_shared<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection>()),
               monitor(handoffs, ownership)
         {
+            handoffs->Add(std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>(
+                "BAW123",
+                std::make_shared<UKControllerPlugin::Controller::ControllerPosition>(
+                    -1, "UNICOM", 122.800, std::vector<std::string>{}, true, false),
+                nullptr,
+                nullptr));
         }
 
         UKControllerPlugin::Controller::ControllerPosition position;
@@ -143,7 +148,7 @@ namespace UKControllerPluginTest::Departure {
         EXPECT_EQ(0, EventBusObserver().observedEvents.size());
     }
 
-    TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfTheresAHandoffPresent)
+    TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfTheresNoHandoffPresent)
     {
         handoffs->Add(
             std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>("BAW123", nullptr, nullptr, nullptr));
@@ -151,6 +156,28 @@ namespace UKControllerPluginTest::Departure {
         provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
             UKControllerPlugin::Ownership::ServiceType::Tower, userCallsign));
         ownership->SetProvidersForAirfield("EGKK", provisions);
+        handoffs->Delete("BAW123");
+
+        monitor.OnEvent({"BAW123", "EGKK"});
+
+        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+    }
+
+    TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfTheHandoffIsNotUnicom)
+    {
+        handoffs->Add(
+            std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>("BAW123", nullptr, nullptr, nullptr));
+        std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
+        provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
+            UKControllerPlugin::Ownership::ServiceType::Tower, userCallsign));
+        ownership->SetProvidersForAirfield("EGKK", provisions);
+        handoffs->Delete("BAW123");
+        handoffs->Add(std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>(
+            "BAW123",
+            std::make_shared<UKControllerPlugin::Controller::ControllerPosition>(
+                1, "LON_S_CTR", 129.420, std::vector<std::string>{}, true, false),
+            nullptr,
+            nullptr));
 
         monitor.OnEvent({"BAW123", "EGKK"});
 

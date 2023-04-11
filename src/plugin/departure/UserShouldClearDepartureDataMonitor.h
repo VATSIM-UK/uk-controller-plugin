@@ -17,7 +17,7 @@ namespace UKControllerPlugin::Departure {
     {
         public:
         UserShouldClearDepartureDataMonitor(
-            std::shared_ptr<Handoff::HandoffCache> handoffs,
+            std::shared_ptr<const Handoff::HandoffCache> handoffs,
             std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership);
         void OnEvent(const Departure::AircraftDepartedEvent& event);
 
@@ -25,7 +25,7 @@ namespace UKControllerPlugin::Departure {
         [[nodiscard]] auto UserIsResponsibleForClearingData(const std::string& airfield) -> bool;
 
         // For getting handoffs
-        std::shared_ptr<Handoff::HandoffCache> handoffs;
+        std::shared_ptr<const Handoff::HandoffCache> handoffs;
 
         // For getting ownership
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership;
