@@ -39,6 +39,11 @@ namespace UKControllerPlugin::InitialAltitude {
             return;
         }
 
+        if (flightplan->GetClearedAltitude() == EUROSCOPE_FLIGHTPLAN_NO_CLEARED_LEVEL) {
+            LogDebug("Not clearing level for " + event.callsign + " on departure, is not set");
+            return;
+        }
+
         LogInfo("Removing cleared level on departure for " + event.callsign);
         flightplan->SetClearedAltitude(EUROSCOPE_FLIGHTPLAN_NO_CLEARED_LEVEL);
     }
