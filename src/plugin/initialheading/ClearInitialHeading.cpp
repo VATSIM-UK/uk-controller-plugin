@@ -39,6 +39,11 @@ namespace UKControllerPlugin::InitialHeading {
             return;
         }
 
+        if (flightplan->GetAssignedHeading() == EUROSCOPE_FLIGHTPLAN_NO_HEADING) {
+            LogDebug("Not clearing heading for " + event.callsign + " on departure, not set");
+            return;
+        }
+
         LogInfo("Removing cleared heading on departure for " + event.callsign);
         flightplan->SetHeading(EUROSCOPE_FLIGHTPLAN_NO_HEADING);
     }
