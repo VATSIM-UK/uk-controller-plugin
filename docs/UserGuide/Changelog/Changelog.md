@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.7.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.2...5.7.3) (2023-04-16)
+
+
+### Bug Fixes
+
+* api settings selection for ES3.2.21r34 ([22c8244](https://github.com/VATSIM-UK/uk-controller-plugin/commit/22c82447d2a412b623175891a45666f4a393000e))
+
 ## [5.7.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.1...5.7.2) (2023-04-06)
 
 
