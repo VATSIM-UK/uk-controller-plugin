@@ -19,6 +19,7 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] virtual std::string GetAnnotation(int index) const = 0;
         [[nodiscard]] virtual std::string GetCallsign() const = 0;
         [[nodiscard]] virtual int GetClearedAltitude() const = 0;
+        [[nodiscard]] virtual int GetAssignedHeading() const = 0;
         [[nodiscard]] virtual int GetCruiseLevel() const = 0;
         [[nodiscard]] virtual std::string GetDestination() const = 0;
         [[nodiscard]] virtual double GetDistanceFromOrigin() const = 0;

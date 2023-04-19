@@ -100,7 +100,7 @@ source_group("test\\datablock" FILES ${test__datablock})
 
 set(test__departure
         
-        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp)
+        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp departure/DepartureMonitorTest.cpp departure/UserShouldClearDepartureDataMonitorTest.cpp)
 source_group("test\\departure" FILES ${test__departure})
 
 set(test__dependency
@@ -122,6 +122,10 @@ set(test__euroscope
     "euroscope/UserSettingTest.cpp"
         euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
+
+set(test__eventhandler
+        eventhandler/EventBusTest.cpp test/EventBusTestCase.h eventhandler/EventStreamTest.cpp)
+source_group("test\\eventhandler" FILES ${test__eventhandler})
 
 set(test__flightinformationservice
     "flightinformationservice/FlightInformationServiceModuleTest.cpp"
@@ -214,7 +218,7 @@ source_group("test\\initialaltitude" FILES ${test__initialaltitude})
 set(test__initialheading
     "initialheading/InitialHeadingEventHandlerTest.cpp"
     "initialheading/InitialHeadingModuleTest.cpp"
-)
+        initialaltitude/ClearInitialAltitudeTest.cpp initialheading/ClearInitialHeadingTest.cpp)
 source_group("test\\initialheading" FILES ${test__initialheading})
 
 set(test__integration
@@ -620,6 +624,7 @@ set(ALL_FILES
     ${test__departure}
     ${test__dependency}
     ${test__euroscope}
+    ${test__eventhandler}
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__flightrule}

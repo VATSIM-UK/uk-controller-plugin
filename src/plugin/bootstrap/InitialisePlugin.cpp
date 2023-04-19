@@ -17,10 +17,13 @@
 #include "controller/ControllerBootstrap.h"
 #include "countdown/CountdownModule.h"
 #include "datablock/DatablockBoostrap.h"
+#include "departure/DepartureModule.h"
 #include "dependency/DependencyLoader.h"
 #include "dependency/UpdateDependencies.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
+#include "eventhandler/MutableEventBus.h"
+#include "eventhandler/StandardEventBusFactory.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
 #include "flightrule/FlightRuleModule.h"
@@ -112,6 +115,10 @@ namespace UKControllerPlugin {
         // Shut down GDI
         Gdiplus::GdiplusShutdown(this->gdiPlusToken);
         LogInfo("Plugin shutdown");
+
+        // Shutdown the event bus
+        EventHandler::MutableEventBus::Reset();
+
         ShutdownLogger();
     }
 
@@ -136,6 +143,9 @@ namespace UKControllerPlugin {
         // Check if we're a duplicate plugin
         this->duplicatePlugin = std::make_unique<DuplicatePlugin>();
         this->container = std::make_unique<PersistenceContainer>();
+
+        // Create the event bus.
+        EventHandler::MutableEventBus::SetFactory(std::make_shared<EventHandler::StandardEventBusFactory>());
 
         // Do helpers.
         EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
@@ -258,7 +268,9 @@ namespace UKControllerPlugin {
         SquawkModule::BootstrapPlugin(*this->container, this->duplicatePlugin->Duplicate());
 
         PrenoteModule::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        // Handoff has to come before departure as the latter depends on it, namely the handoff cache.
         Handoff::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        Departure::BootstrapPlugin(*this->container);
         MissedApproach::BootstrapPlugin(*this->container);
         Selcal::BootstrapPlugin(*this->container);
 

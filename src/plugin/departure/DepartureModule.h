@@ -14,6 +14,8 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Departure {
+    void BootstrapPlugin(const Bootstrap::PersistenceContainer& container);
+
     void BootstrapRadarScreen(
         const Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& renderables,

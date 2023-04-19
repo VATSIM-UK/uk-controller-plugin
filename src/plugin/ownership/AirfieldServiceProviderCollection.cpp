@@ -15,6 +15,11 @@ namespace UKControllerPlugin::Ownership {
         return this->ServiceProvidedAtAirfieldByUser(icao, ServiceType::Delivery);
     }
 
+    auto AirfieldServiceProviderCollection::GroundControlProvidedByUser(const std::string& icao) const -> bool
+    {
+        return this->ServiceProvidedAtAirfieldByUser(icao, ServiceType::Ground);
+    }
+
     auto AirfieldServiceProviderCollection::AirfieldHasDeliveryProvider(const std::string& icao) const -> bool
     {
         return this->ServiceProvidedAtAirfield(icao, ServiceType::Delivery);

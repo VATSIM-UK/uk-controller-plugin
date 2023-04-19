@@ -41,6 +41,7 @@ namespace UKControllerPlugin::Handoff {
             cache,
             *container.integrationModuleContainer->outboundMessageHandler);
 
+        container.handoffCache = cache;
         container.tagHandler->RegisterTagItem(handoffTagItem, handler);
         container.flightplanHandler->RegisterHandler(handler);
         container.activeCallsigns->AddHandler(std::make_shared<ClearCacheOnActiveCallsignChanges>(*cache));

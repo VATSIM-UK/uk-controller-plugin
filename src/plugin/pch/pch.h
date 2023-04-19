@@ -34,6 +34,7 @@ using std::min;
 #include <Shlobj.h>
 #include <Shobjidl.h>
 #include <algorithm>
+#include <any>
 #include <cctype>
 #include <codecvt>
 #include <ctime>
@@ -59,6 +60,7 @@ using std::min;
 #include <string>
 #include <tchar.h>
 #include <type_traits>
+#include <typeindex>
 #include <unordered_set>
 #include <utility>
 #include <variant>

@@ -1,17 +1,39 @@
-#include "DepartureModule.h"
+#include "AircraftDepartedEvent.h"
 #include "DepartureCoordinationList.h"
+#include "DepartureModule.h"
+#include "DepartureMonitor.h"
 #include "ToggleDepartureCoordinationList.h"
+#include "UserShouldClearDepartureDataMonitor.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
+#include "eventhandler/EventBus.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Euroscope::CallbackFunction;
+using UKControllerPlugin::EventHandler::EventBus;
+using UKControllerPlugin::EventHandler::EventHandler;
 
 namespace UKControllerPlugin::Departure {
+
+    void BootstrapPlugin(const Bootstrap::PersistenceContainer& container)
+    {
+        // Create the departure monitor
+        const auto departureMonitor = std::make_shared<DepartureMonitor>(*container.login, *container.plugin);
+        container.flightplanHandler->RegisterHandler(departureMonitor);
+        container.timedHandler->RegisterEvent(departureMonitor, 10);
+
+        // Create the user should clear departure data monitor
+        EventBus::Bus().AddHandler<AircraftDepartedEvent>(
+            std::make_shared<UserShouldClearDepartureDataMonitor>(container.handoffCache, container.airfieldOwnership),
+            UKControllerPlugin::EventHandler::EventHandlerFlags::Sync);
+    }
+
     void BootstrapRadarScreen(
         const Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& renderables,

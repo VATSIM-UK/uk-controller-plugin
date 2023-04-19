@@ -17,6 +17,7 @@ namespace UKControllerPlugin::Euroscope {
         std::string GetAssignedSquawk() const override;
         std::string GetCallsign() const override;
         int GetClearedAltitude() const override;
+        int GetAssignedHeading() const override;
         int GetCruiseLevel() const override;
         std::string GetDestination() const override;
         double GetDistanceFromOrigin() const override;
