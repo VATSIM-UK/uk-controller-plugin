@@ -16,15 +16,15 @@ namespace UKControllerPlugin::Departure {
 
     void DepartureMonitor::TimedEventTrigger()
     {
+        // Not logged in long enough
+        if (login.GetSecondsLoggedIn() < std::chrono::seconds(10)) {
+            LogInfo("Skipping departure monitor check as only just logged in");
+            return;
+        }
+
         plugin.ApplyFunctionToAllFlightplans([this](
                                                  std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface> fp,
                                                  std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface> rt) {
-            // Not logged in long enough
-            if (login.GetSecondsLoggedIn() < std::chrono::seconds(10)) {
-                LogInfo("Skipping departure monitor check as only just logged in");
-                return;
-            }
-
             // You only depart once
             if (alreadyDeparted.contains(fp->GetCallsign())) {
                 return;
