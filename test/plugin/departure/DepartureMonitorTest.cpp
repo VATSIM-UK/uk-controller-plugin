@@ -1,5 +1,7 @@
+#include "controller/ControllerStatusEventHandlerCollection.h"
 #include "departure/AircraftDepartedEvent.h"
 #include "departure/DepartureMonitor.h"
+#include "login/Login.h"
 #include "mock/MockEuroScopeCFlightplanInterface.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
@@ -10,7 +12,7 @@ namespace UKControllerPluginTest::Departure {
     class DepartureMonitorTest : public EventBusTestCase
     {
         public:
-        DepartureMonitorTest() : monitor(mockPlugin)
+        DepartureMonitorTest() : login(mockPlugin, controllerStatuses), monitor(login, mockPlugin)
         {
             mockFlightplan = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
             mockRadarTarget = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
@@ -19,11 +21,14 @@ namespace UKControllerPluginTest::Departure {
             ON_CALL(*mockFlightplan, GetOrigin).WillByDefault(testing::Return("EGKK"));
 
             mockPlugin.AddAllFlightplansItem({mockFlightplan, mockRadarTarget});
+            login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::seconds(11));
         }
 
         std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> mockFlightplan;
         std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
+        UKControllerPlugin::Controller::ControllerStatusEventHandlerCollection controllerStatuses;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
+        UKControllerPlugin::Controller::Login login;
         UKControllerPlugin::Departure::DepartureMonitor monitor;
     };
 
@@ -210,6 +215,21 @@ namespace UKControllerPluginTest::Departure {
         ON_CALL(*mockRadarTarget, GetGroundSpeed).WillByDefault(testing::Return(125));
 
         ON_CALL(*mockRadarTarget, GetFlightLevel).WillByDefault(testing::Return(0));
+
+        monitor.TimedEventTrigger();
+
+        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+    }
+
+    TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventOnlyJustLoggedOn)
+    {
+        login.SetLoginTime(std::chrono::system_clock::now() - std::chrono::seconds(5));
+
+        ON_CALL(*mockFlightplan, GetDistanceFromOrigin).WillByDefault(testing::Return(1));
+
+        ON_CALL(*mockRadarTarget, GetGroundSpeed).WillByDefault(testing::Return(125));
+
+        ON_CALL(*mockRadarTarget, GetFlightLevel).WillByDefault(testing::Return(3000));
 
         monitor.TimedEventTrigger();
 

@@ -3,18 +3,23 @@
 #include "message/UserMessager.h"
 #include "timedevent/AbstractTimedEvent.h"
 
-namespace UKControllerPlugin::Euroscope {
-    class EuroScopeCFlightPlanInterface;
-    class EuroScopeCRadarTargetInterface;
-    class EuroscopePluginLoopbackInterface;
-} // namespace UKControllerPlugin::Euroscope
+namespace UKControllerPlugin {
+    namespace Controller {
+        class Login;
+    } // namespace Controller
+    namespace Euroscope {
+        class EuroScopeCFlightPlanInterface;
+        class EuroScopeCRadarTargetInterface;
+        class EuroscopePluginLoopbackInterface;
+    } // namespace Euroscope
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Departure {
 
     class DepartureMonitor : public TimedEvent::AbstractTimedEvent, public Flightplan::FlightPlanEventHandlerInterface
     {
         public:
-        DepartureMonitor(Euroscope::EuroscopePluginLoopbackInterface& plugin);
+        DepartureMonitor(const Controller::Login& login, Euroscope::EuroscopePluginLoopbackInterface& plugin);
         void TimedEventTrigger() override;
         void FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightplan) override;
         void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightplan, int dataType) override;
@@ -26,6 +31,9 @@ namespace UKControllerPlugin::Departure {
         [[nodiscard]] auto HasDeparted(
             Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const -> bool;
+
+        // For checking controller logins
+        const Controller::Login& login;
 
         // Plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;

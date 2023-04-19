@@ -4,10 +4,13 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "eventhandler/EventBus.h"
+#include "login/Login.h"
 
 namespace UKControllerPlugin::Departure {
 
-    DepartureMonitor::DepartureMonitor(Euroscope::EuroscopePluginLoopbackInterface& plugin) : plugin(plugin)
+    DepartureMonitor::DepartureMonitor(
+        const Controller::Login& login, Euroscope::EuroscopePluginLoopbackInterface& plugin)
+        : login(login), plugin(plugin)
     {
     }
 
@@ -16,6 +19,12 @@ namespace UKControllerPlugin::Departure {
         plugin.ApplyFunctionToAllFlightplans([this](
                                                  std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface> fp,
                                                  std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface> rt) {
+            // Not logged in long enough
+            if (login.GetSecondsLoggedIn() < std::chrono::seconds(10)) {
+                LogInfo("Skipping departure monitor check as only just logged in");
+                return;
+            }
+
             // You only depart once
             if (alreadyDeparted.contains(fp->GetCallsign())) {
                 return;

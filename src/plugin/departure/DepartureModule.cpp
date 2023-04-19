@@ -24,7 +24,7 @@ namespace UKControllerPlugin::Departure {
     void BootstrapPlugin(const Bootstrap::PersistenceContainer& container)
     {
         // Create the departure monitor
-        const auto departureMonitor = std::make_shared<DepartureMonitor>(*container.plugin);
+        const auto departureMonitor = std::make_shared<DepartureMonitor>(*container.login, *container.plugin);
         container.flightplanHandler->RegisterHandler(departureMonitor);
         container.timedHandler->RegisterEvent(departureMonitor, 10);
 
