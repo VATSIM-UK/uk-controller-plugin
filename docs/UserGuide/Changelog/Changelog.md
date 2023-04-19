@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+# [5.8.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.3...5.8.0) (2023-04-19)
+
+
+### Features
+
+* clear initial altitudes automatically on departure ([86dae0c](https://github.com/VATSIM-UK/uk-controller-plugin/commit/86dae0cd6314aed61d118ba7607caf1a6e1d10bb))
+* clear initial heading automatically on departure ([de32d91](https://github.com/VATSIM-UK/uk-controller-plugin/commit/de32d9119abaaa6699a93dcd35daac6d6b339a48))
+
 ## [5.7.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.2...5.7.3) (2023-04-16)
 
 
