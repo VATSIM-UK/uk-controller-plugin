@@ -1,5 +1,5 @@
-#include "eventhandler/EventStream.h"
 #include "eventhandler/EventHandler.h"
+#include "eventhandler/EventStream.h"
 #include "test/EventBusTestCase.h"
 
 using UKControllerPlugin::EventHandler::EventStream;

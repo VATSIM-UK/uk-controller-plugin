@@ -19,6 +19,7 @@
 #include <fmt/include/fmt/chrono.h>
 #pragma warning(pop)
 
+#include <any>
 #include <cstdint>
 #include <CommCtrl.h>
 #include <CommDlg.h>
