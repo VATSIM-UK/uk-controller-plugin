@@ -15,6 +15,7 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD0(GetAircraftType, std::string(void));
             MOCK_CONST_METHOD0(GetCallsign, std::string(void));
             MOCK_CONST_METHOD0(GetClearedAltitude, int(void));
+            MOCK_CONST_METHOD0(GetAssignedHeading, int(void));
             MOCK_CONST_METHOD0(GetCruiseLevel, int(void));
             MOCK_CONST_METHOD0(GetDestination, std::string(void));
             MOCK_CONST_METHOD0(GetDistanceFromOrigin, double(void));

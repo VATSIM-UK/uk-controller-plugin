@@ -2,6 +2,7 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "handoff/HandoffCache.h"
 #include "handoff/HandoffModule.h"
 #include "integration/IntegrationServer.h"
 #include "integration/IntegrationPersistenceContainer.h"
@@ -36,6 +37,12 @@ namespace UKControllerPluginTest::Handoff {
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependencyLoader;
     };
+
+    TEST_F(HandoffModuleTest, ItRegistersHandoffCacheOnContainer)
+    {
+        BootstrapPlugin(this->container, this->dependencyLoader);
+        ASSERT_EQ(0, this->container.handoffCache->Count());
+    }
 
     TEST_F(HandoffModuleTest, TestItRegistersTagItem)
     {

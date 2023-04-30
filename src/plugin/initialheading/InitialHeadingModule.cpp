@@ -1,7 +1,10 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "departure/UserShouldClearDepartureDataEvent.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "eventhandler/EventBus.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "initialheading/ClearInitialHeading.h"
 #include "initialheading/InitialHeadingEventHandler.h"
 #include "initialheading/InitialHeadingModule.h"
 #include "plugin/FunctionCallEventHandler.h"
@@ -10,6 +13,7 @@
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
+using UKControllerPlugin::EventHandler::EventBus;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::InitialHeading::InitialHeadingEventHandler;
 using UKControllerPlugin::Tag::TagFunction;
@@ -46,5 +50,10 @@ namespace UKControllerPlugin::InitialHeading {
                 std::string context,
                 const POINT& mousePos) { handler->RecycleInitialHeading(fp, rt, std::move(context), mousePos); });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(recycleFunction);
+
+        // Register the clear initial heading event handler
+        EventBus::Bus().AddHandler<Departure::UserShouldClearDepartureDataEvent>(
+            std::make_shared<ClearInitialHeading>(*persistence.plugin, *persistence.sidMapper),
+            EventHandler::EventHandlerFlags::Sync);
     }
 } // namespace UKControllerPlugin::InitialHeading
