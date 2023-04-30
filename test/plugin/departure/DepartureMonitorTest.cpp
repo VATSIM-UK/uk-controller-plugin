@@ -42,15 +42,11 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(1, EventBusObserver().observedEvents.size());
-        EXPECT_EQ(
-            "BAW123",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
-                .callsign);
-        EXPECT_EQ(
-            "EGKK",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
-                .airfield);
+        AssertSingleEventDispatched();
+        AssertFirstEventDispatched<UKControllerPlugin::Departure::AircraftDepartedEvent>([](const auto& event) {
+            EXPECT_EQ("BAW123", event.callsign);
+            EXPECT_EQ("EGKK", event.airfield);
+        });
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDuplicateDepartedEvents)
@@ -63,18 +59,14 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(1, EventBusObserver().observedEvents.size());
-        EXPECT_EQ(
-            "BAW123",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
-                .callsign);
-        EXPECT_EQ(
-            "EGKK",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[0])
-                .airfield);
+        AssertSingleEventDispatched();
+        AssertFirstEventDispatched<UKControllerPlugin::Departure::AircraftDepartedEvent>([](const auto& event) {
+            EXPECT_EQ("BAW123", event.callsign);
+            EXPECT_EQ("EGKK", event.airfield);
+        });
 
         monitor.TimedEventTrigger();
-        EXPECT_EQ(1, EventBusObserver().observedEvents.size());
+        AssertSingleEventDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItAllowsRedepartureIfAircraftGoesOffline)
@@ -89,15 +81,11 @@ namespace UKControllerPluginTest::Departure {
         monitor.FlightPlanDisconnectEvent(*mockFlightplan);
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(2, EventBusObserver().observedEvents.size());
-        EXPECT_EQ(
-            "BAW123",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
-                .callsign);
-        EXPECT_EQ(
-            "EGKK",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
-                .airfield);
+        AssertEventDispatchCount(2);
+        AssertEventDispatched<UKControllerPlugin::Departure::AircraftDepartedEvent>(1, [](const auto& event) {
+            EXPECT_EQ("BAW123", event.callsign);
+            EXPECT_EQ("EGKK", event.airfield);
+        });
     }
 
     TEST_F(DepartureMonitorTest, ItAllowsRedepartureIfAircraftChangesOriginAirport)
@@ -115,15 +103,11 @@ namespace UKControllerPluginTest::Departure {
         monitor.FlightPlanEvent(*mockFlightplan, *mockRadarTarget);
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(2, EventBusObserver().observedEvents.size());
-        EXPECT_EQ(
-            "BAW123",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
-                .callsign);
-        EXPECT_EQ(
-            "EGLL",
-            std::any_cast<UKControllerPlugin::Departure::AircraftDepartedEvent>(EventBusObserver().observedEvents[1])
-                .airfield);
+        AssertEventDispatchCount(2);
+        AssertEventDispatched<UKControllerPlugin::Departure::AircraftDepartedEvent>(1, [](const auto& event) {
+            EXPECT_EQ("BAW123", event.callsign);
+            EXPECT_EQ("EGLL", event.airfield);
+        });
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntAllowRedepartureIfAircraftDoesntChangeOriginAirport)
@@ -138,7 +122,7 @@ namespace UKControllerPluginTest::Departure {
         monitor.FlightPlanEvent(*mockFlightplan, *mockRadarTarget);
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(1, EventBusObserver().observedEvents.size());
+        AssertSingleEventDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventNoOrigin)
@@ -153,7 +137,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventTooFarFromOrigin)
@@ -166,7 +150,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventTooHigh)
@@ -179,7 +163,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventTooLow)
@@ -192,7 +176,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventTooSlow)
@@ -205,7 +189,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventOutOfRange)
@@ -218,7 +202,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(DepartureMonitorTest, ItDoesntSendDepartedEventOnlyJustLoggedOn)
@@ -233,6 +217,6 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.TimedEventTrigger();
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 } // namespace UKControllerPluginTest::Departure

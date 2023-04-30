@@ -48,12 +48,9 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(1, EventBusObserver().observedEvents.size());
-        EXPECT_EQ(
-            "BAW123",
-            std::any_cast<UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
-                EventBusObserver().observedEvents[0])
-                .callsign);
+        AssertSingleEventDispatched();
+        AssertFirstEventDispatched<UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
+            [](const auto& event) { EXPECT_EQ("BAW123", event.callsign); });
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItFiresEventIfUserIsOnGroundWithNoTower)
@@ -67,12 +64,9 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(1, EventBusObserver().observedEvents.size());
-        EXPECT_EQ(
-            "BAW123",
-            std::any_cast<UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
-                EventBusObserver().observedEvents[0])
-                .callsign);
+        AssertSingleEventDispatched();
+        AssertFirstEventDispatched<UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
+            [](const auto& event) { EXPECT_EQ("BAW123", event.callsign); });
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItFiresEventIfUserIsOnDeliveryWithNoGroundOrTower)
@@ -84,12 +78,9 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(1, EventBusObserver().observedEvents.size());
-        EXPECT_EQ(
-            "BAW123",
-            std::any_cast<UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
-                EventBusObserver().observedEvents[0])
-                .callsign);
+        AssertSingleEventDispatched();
+        AssertFirstEventDispatched<UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
+            [](const auto& event) { EXPECT_EQ("BAW123", event.callsign); });
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfUserIsOnDeliveryWithGroundProvidedBySomeoneElse)
@@ -103,7 +94,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfUserIsOnDeliveryWithTowerProvidedBySomeoneElse)
@@ -117,7 +108,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfUserIsOnGroundWithTowerProvidedBySomeoneElse)
@@ -131,7 +122,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfUserIsProvidingApproach)
@@ -145,7 +136,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfTheresNoHandoffPresent)
@@ -160,7 +151,7 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfTheHandoffIsNotUnicom)
@@ -181,6 +172,6 @@ namespace UKControllerPluginTest::Departure {
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
-        EXPECT_EQ(0, EventBusObserver().observedEvents.size());
+        AssertNoEventsDispatched();
     }
 } // namespace UKControllerPluginTest::Departure

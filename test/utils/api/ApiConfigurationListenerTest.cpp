@@ -84,8 +84,8 @@ namespace UKControllerPluginUtilsTest::Api {
         EXPECT_EQ(
             "UK Controller Plugin API key received successfully. You may now close this window.",
             response.GetResponse());
-        AssertEventDispatchCount(1);
-        AssertEventDispatched<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
-            0, [](const UKControllerPluginUtils::Api::ApiKeyReceivedEvent& event) { EXPECT_EQ("abc", event.key); });
+        AssertSingleEventDispatched();
+        AssertFirstEventDispatched<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
+            [](const UKControllerPluginUtils::Api::ApiKeyReceivedEvent& event) { EXPECT_EQ("abc", event.key); });
     }
 } // namespace UKControllerPluginUtilsTest::Api
