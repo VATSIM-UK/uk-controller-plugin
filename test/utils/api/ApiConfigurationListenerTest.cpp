@@ -1,9 +1,11 @@
 #include "api/ApiConfigurationListener.h"
+#include "api/ApiKeyReceivedEvent.h"
 #include "curl/CurlApi.h"
 #include "curl/CurlRequest.h"
+#include "test/EventBusTestCase.h"
 
 namespace UKControllerPluginUtilsTest::Api {
-    class ApiConfigurationListenerTest : public testing::Test
+    class ApiConfigurationListenerTest : public EventBusTestCase
     {
         public:
         UKControllerPluginUtils::Api::ApiConfigurationListener listener;
@@ -18,6 +20,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_EQ(400L, response.GetStatusCode());
         EXPECT_EQ("Invalid request.", response.GetResponse());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(ApiConfigurationListenerTest, ItReturnsBadRequestOnKeyEmpty)
@@ -28,6 +31,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_EQ(400L, response.GetStatusCode());
         EXPECT_EQ("Invalid request.", response.GetResponse());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(ApiConfigurationListenerTest, ItReturnsNotFoundOnPost)
@@ -37,6 +41,7 @@ namespace UKControllerPluginUtilsTest::Api {
             UKControllerPlugin::Curl::CurlRequest::METHOD_POST));
 
         EXPECT_EQ(404L, response.GetStatusCode());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(ApiConfigurationListenerTest, ItReturnsNotFoundOnPut)
@@ -46,6 +51,7 @@ namespace UKControllerPluginUtilsTest::Api {
             UKControllerPlugin::Curl::CurlRequest::METHOD_PUT));
 
         EXPECT_EQ(404L, response.GetStatusCode());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(ApiConfigurationListenerTest, ItReturnsNotFoundOnDelete)
@@ -55,6 +61,7 @@ namespace UKControllerPluginUtilsTest::Api {
             UKControllerPlugin::Curl::CurlRequest::METHOD_DELETE));
 
         EXPECT_EQ(404L, response.GetStatusCode());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(ApiConfigurationListenerTest, ItReturnsNotFoundOnPatch)
@@ -64,6 +71,7 @@ namespace UKControllerPluginUtilsTest::Api {
             UKControllerPlugin::Curl::CurlRequest::METHOD_PATCH));
 
         EXPECT_EQ(404L, response.GetStatusCode());
+        AssertNoEventsDispatched();
     }
 
     TEST_F(ApiConfigurationListenerTest, ItReturnsOkOnGoodKey)
@@ -76,5 +84,8 @@ namespace UKControllerPluginUtilsTest::Api {
         EXPECT_EQ(
             "UK Controller Plugin API key received successfully. You may now close this window.",
             response.GetResponse());
+        AssertEventDispatchCount(1);
+        AssertEventDispatched<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
+            0, [](const UKControllerPluginUtils::Api::ApiKeyReceivedEvent& event) { EXPECT_EQ("abc", event.key); });
     }
 } // namespace UKControllerPluginUtilsTest::Api

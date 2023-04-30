@@ -50,6 +50,22 @@ namespace UKControllerPluginUtilsTest {
             testing::Test::TearDown();
         }
 
+        template <typename T> void AssertEventDispatched(int eventNumber, std::function<void(const T&)> assertion)
+        {
+            const auto event = std::any_cast<const T>(EventBusObserver().observedEvents[eventNumber]);
+            assertion(event);
+        }
+
+        void AssertEventDispatchCount(int count)
+        {
+            EXPECT_EQ(count, EventBusObserver().observedEvents.size());
+        }
+
+        void AssertNoEventsDispatched()
+        {
+            AssertEventDispatchCount(0);
+        }
+
         // For observing and making assertions on events
         [[nodiscard]] auto EventBusObserver() const -> TestEventBusObserver&
         {

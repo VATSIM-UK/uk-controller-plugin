@@ -1,4 +1,6 @@
 #include "ApiConfigurationListener.h"
+#include "ApiKeyReceivedEvent.h"
+#include "eventhandler/EventBus.h"
 
 #include "cpp-httplib/httplib.h"
 
@@ -35,6 +37,7 @@ namespace UKControllerPluginUtils::Api {
             const std::string responseString = "UK Controller Plugin API key received successfully. You may now close "
                                                "this window.";
             response.set_content(responseString, "text/plain");
+            EventHandler::EventBus::Bus().OnEvent(ApiKeyReceivedEvent(request.params.find("key")->second));
         });
 
         serverListenThread = std::thread([this]() { server->listen_after_bind(); });
