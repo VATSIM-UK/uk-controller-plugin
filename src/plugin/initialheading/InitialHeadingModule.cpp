@@ -13,10 +13,10 @@
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::EventHandler::EventBus;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::InitialHeading::InitialHeadingEventHandler;
 using UKControllerPlugin::Tag::TagFunction;
+using UKControllerPluginUtils::EventHandler::EventBus;
 namespace UKControllerPlugin::InitialHeading {
 
     // The function id for the recycle initial heading function
@@ -54,6 +54,6 @@ namespace UKControllerPlugin::InitialHeading {
         // Register the clear initial heading event handler
         EventBus::Bus().AddHandler<Departure::UserShouldClearDepartureDataEvent>(
             std::make_shared<ClearInitialHeading>(*persistence.plugin, *persistence.sidMapper),
-            EventHandler::EventHandlerFlags::Sync);
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 } // namespace UKControllerPlugin::InitialHeading

@@ -29,8 +29,6 @@ using UKControllerPlugin::Departure::BootstrapRadarScreen;
 using UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent;
 using UKControllerPlugin::Departure::UserShouldClearDepartureDataMonitor;
 using UKControllerPlugin::Dialog::DialogManager;
-using UKControllerPlugin::EventHandler::EventBus;
-using UKControllerPlugin::EventHandler::EventStream;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
@@ -40,10 +38,12 @@ using UKControllerPlugin::TimedEvent::TimedEventCollection;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginUtils::EventHandler::EventBus;
+using UKControllerPluginUtils::EventHandler::EventStream;
 
 namespace UKControllerPluginTest::Departure {
 
-    class DepartureModuleTest : public EventBusTestCase
+    class DepartureModuleTest : public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
         DepartureModuleTest()
@@ -74,11 +74,11 @@ namespace UKControllerPluginTest::Departure {
     {
         BootstrapPlugin(this->container);
         const auto eventStream = std::any_cast<std::shared_ptr<
-            UKControllerPlugin::EventHandler::EventStream<UKControllerPlugin::Departure::AircraftDepartedEvent>>>(
+            UKControllerPluginUtils::EventHandler::EventStream<UKControllerPlugin::Departure::AircraftDepartedEvent>>>(
             EventBus::Bus().GetAnyStream(typeid(UKControllerPlugin::Departure::AircraftDepartedEvent)));
         EXPECT_EQ(1, eventStream->Handlers().size());
         const auto handler = eventStream->Handlers()[0];
-        EXPECT_EQ(UKControllerPlugin::EventHandler::EventHandlerFlags::Sync, handler.flags);
+        EXPECT_EQ(UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync, handler.flags);
         EXPECT_NO_THROW(
             static_cast<void>(dynamic_cast<const UserShouldClearDepartureDataMonitor&>(*handler.handler.get())));
         EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());

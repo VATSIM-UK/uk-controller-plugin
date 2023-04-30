@@ -2,7 +2,7 @@
 #include "EventBus.h"
 #include "EventBusFactory.h"
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
     class EventObserver;
 
     class MutableEventBus : public EventBus
@@ -12,4 +12,4 @@ namespace UKControllerPlugin::EventHandler {
         void SetObserver(std::shared_ptr<EventObserver> observer);
         static void Reset();
     };
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

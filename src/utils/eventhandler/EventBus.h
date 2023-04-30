@@ -2,7 +2,7 @@
 #include "EventHandlerFlags.h"
 #include <typeindex>
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
     template <class T> class EventHandler;
     template <class T> class EventStream;
     class EventObserver;
@@ -49,7 +49,7 @@ namespace UKControllerPlugin::EventHandler {
         // An observer
         std::shared_ptr<EventObserver> observer = nullptr;
     };
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler
 
 // Include the implementation of template methods
 #include "EventBus.tpp"

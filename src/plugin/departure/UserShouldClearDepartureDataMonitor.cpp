@@ -8,7 +8,7 @@
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceType.h"
 
-using UKControllerPlugin::EventHandler::EventBus;
+using UKControllerPluginUtils::EventHandler::EventBus;
 
 namespace UKControllerPlugin::Departure {
 

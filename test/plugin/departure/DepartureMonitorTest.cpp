@@ -9,7 +9,7 @@
 
 namespace UKControllerPluginTest::Departure {
 
-    class DepartureMonitorTest : public EventBusTestCase
+    class DepartureMonitorTest : public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
         DepartureMonitorTest() : login(mockPlugin, controllerStatuses), monitor(login, mockPlugin)

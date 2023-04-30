@@ -10,7 +10,7 @@
 
 namespace UKControllerPluginTest::Departure {
 
-    class UserShouldClearDepartureDataMonitorTest : public EventBusTestCase
+    class UserShouldClearDepartureDataMonitorTest : public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
         UserShouldClearDepartureDataMonitorTest()

@@ -1,7 +1,7 @@
 #include "EventBus.h"
 #include "EventBusFactory.h"
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
 
     std::unique_ptr<EventBus> EventBus::singleton;
     std::shared_ptr<EventBusFactory> EventBus::factory;
@@ -28,4 +28,4 @@ namespace UKControllerPlugin::EventHandler {
     {
         return streams.at(type);
     }
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

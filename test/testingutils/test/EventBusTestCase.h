@@ -3,8 +3,8 @@
 #include "eventhandler/EventBusFactory.h"
 #include "eventhandler/MutableEventBus.h"
 
-namespace UKControllerPluginTest {
-    class TestEventBusObserver : public UKControllerPlugin::EventHandler::EventObserver
+namespace UKControllerPluginUtilsTest {
+    class TestEventBusObserver : public UKControllerPluginUtils::EventHandler::EventObserver
     {
         public:
         void OnEvent(std::any event) override
@@ -15,17 +15,17 @@ namespace UKControllerPluginTest {
         std::vector<std::any> observedEvents{};
     };
 
-    class TestEventBusFactory : public UKControllerPlugin::EventHandler::EventBusFactory
+    class TestEventBusFactory : public UKControllerPluginUtils::EventHandler::EventBusFactory
     {
         public:
         TestEventBusFactory() : observer(std::make_shared<TestEventBusObserver>())
         {
         }
 
-        auto CreateBus() -> std::unique_ptr<UKControllerPlugin::EventHandler::EventBus> override
+        auto CreateBus() -> std::unique_ptr<UKControllerPluginUtils::EventHandler::EventBus> override
         {
-            auto bus = std::unique_ptr<UKControllerPlugin::EventHandler::MutableEventBus>(
-                new UKControllerPlugin::EventHandler::MutableEventBus);
+            auto bus = std::unique_ptr<UKControllerPluginUtils::EventHandler::MutableEventBus>(
+                new UKControllerPluginUtils::EventHandler::MutableEventBus);
             bus->SetObserver(observer);
 
             return std::move(bus);
@@ -41,12 +41,12 @@ namespace UKControllerPluginTest {
         {
             testing::Test::SetUp();
             busFactory = std::make_shared<TestEventBusFactory>();
-            UKControllerPlugin::EventHandler::MutableEventBus::MutableEventBus::SetFactory(busFactory);
+            UKControllerPluginUtils::EventHandler::MutableEventBus::MutableEventBus::SetFactory(busFactory);
         }
 
         virtual void TearDown()
         {
-            UKControllerPlugin::EventHandler::MutableEventBus::MutableEventBus::Reset();
+            UKControllerPluginUtils::EventHandler::MutableEventBus::MutableEventBus::Reset();
             testing::Test::TearDown();
         }
 
@@ -59,4 +59,4 @@ namespace UKControllerPluginTest {
         private:
         std::shared_ptr<TestEventBusFactory> busFactory;
     };
-} // namespace UKControllerPluginTest
+} // namespace UKControllerPluginUtilsTest

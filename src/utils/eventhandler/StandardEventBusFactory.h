@@ -2,7 +2,7 @@
 #include <memory>
 #include "eventhandler/EventBusFactory.h"
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
 
     /**
      * Creates a "normal" event bus.
@@ -12,4 +12,4 @@ namespace UKControllerPlugin::EventHandler {
         public:
         auto CreateBus() -> std::unique_ptr<EventBus> override;
     };
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

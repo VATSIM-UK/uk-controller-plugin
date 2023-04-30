@@ -1,6 +1,6 @@
 #pragma once
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
 
     template <class T> class EventHandler
     {
@@ -12,4 +12,4 @@ namespace UKControllerPlugin::EventHandler {
          */
         virtual void OnEvent(const T& event) = 0;
     };
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

@@ -117,7 +117,7 @@ namespace UKControllerPlugin {
         LogInfo("Plugin shutdown");
 
         // Shutdown the event bus
-        EventHandler::MutableEventBus::Reset();
+        UKControllerPluginUtils::EventHandler::MutableEventBus::Reset();
 
         ShutdownLogger();
     }
@@ -145,7 +145,8 @@ namespace UKControllerPlugin {
         this->container = std::make_unique<PersistenceContainer>();
 
         // Create the event bus.
-        EventHandler::MutableEventBus::SetFactory(std::make_shared<EventHandler::StandardEventBusFactory>());
+        UKControllerPluginUtils::EventHandler::MutableEventBus::SetFactory(
+            std::make_shared<UKControllerPluginUtils::EventHandler::StandardEventBusFactory>());
 
         // Do helpers.
         EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);

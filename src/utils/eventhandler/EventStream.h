@@ -1,7 +1,7 @@
 #pragma once
 #include "EventHandlerFlags.h"
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
     template <class T> class EventHandler;
 
     template <typename T> class EventStream
@@ -33,7 +33,7 @@ namespace UKControllerPlugin::EventHandler {
         private:
         std::vector<HandlerData> handlers;
     };
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler
 
 // Include the implementation of template methods
 #include "EventStream.tpp"

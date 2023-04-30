@@ -13,7 +13,8 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Departure {
 
-    class UserShouldClearDepartureDataMonitor : public EventHandler::EventHandler<Departure::AircraftDepartedEvent>
+    class UserShouldClearDepartureDataMonitor
+        : public UKControllerPluginUtils::EventHandler::EventHandler<Departure::AircraftDepartedEvent>
     {
         public:
         UserShouldClearDepartureDataMonitor(
