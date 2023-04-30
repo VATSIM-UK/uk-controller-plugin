@@ -58,7 +58,9 @@ set(api
     api/ApiSettingsProviderInterface.h
     api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h
     api/ApiRequestFacade.cpp api/ApiRequestFacade.h
-    api/ApiRequestException.cpp api/ApiRequestException.h)
+    api/ApiRequestException.cpp api/ApiRequestException.h
+    api/ApiConfigurationListener.cpp api/ApiConfigurationListener.h
+    api/ApiConfigurationListenerInterface.h)
 source_group("api" FILES ${api})
 
 set(curl
