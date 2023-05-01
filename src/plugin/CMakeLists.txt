@@ -38,7 +38,8 @@ set(src__api
     "api/ApiConfigurationMenuItem.h"
     api/FirstTimeApiConfigLoader.cpp api/FirstTimeApiConfigLoader.h
     api/BootstrapApi.cpp api/BootstrapApi.h
-    api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h)
+    api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h
+    api/ReplaceApiKeyDialog.cpp api/ReplaceApiKeyDialog.h)
 source_group("src\\api" FILES ${src__api})
 
 set(src__approach

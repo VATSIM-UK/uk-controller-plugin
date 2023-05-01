@@ -347,6 +347,16 @@ BEGIN
     LTEXT           "Remarks",IDC_RELEASE_REJECT_REMARKS_STATIC,7,14,28,8
 END
 
+IDD_API_KEY_REPLACE DIALOGEX 0, 0, 263, 127
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Replace API Key"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Reopen Browser",IDC_API_REOPEN_BROWSER,190,106,66,14
+    PUSHBUTTON      "Cancel",IDC_API_KEY_REPLACE_CANCEL,135,106,50,14
+    LTEXT           "Please go to your web browser and log in to the UK Controller Plugin page. This window will close automatically once your API key has been received. If you are unable to find the page, you can click the button below to re-open it.",IDC_API_KEY_STATIC,7,7,249,89
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -477,6 +487,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 108
     END
+
+    IDD_API_KEY_REPLACE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 256
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 120
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -557,6 +575,11 @@ BEGIN
 END
 
 IDD_DEPARTURE_RELEASE_REJECT AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_API_KEY_REPLACE AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

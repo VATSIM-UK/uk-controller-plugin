@@ -22,7 +22,7 @@ set(test__api
     api/ConfigApiSettingsProviderTest.cpp
     api/CurlApiRequestPerformerTest.cpp
     api/CurlApiRequestPerformerFactoryTest.cpp
-    api/ResponseTest.cpp api/ApiConfigurationListenerTest.cpp api/SetApiKeyInConfigTest.cpp api/SetApiKeyInSettingsTest.cpp)
+    api/ResponseTest.cpp api/ApiConfigurationListenerTest.cpp api/SetApiKeyInConfigTest.cpp api/SetApiKeyInSettingsTest.cpp api/ApiKeyRedirectUrlBuilderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl
