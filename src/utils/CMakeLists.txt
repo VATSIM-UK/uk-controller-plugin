@@ -60,7 +60,7 @@ set(api
     api/ApiRequestFacade.cpp api/ApiRequestFacade.h
     api/ApiRequestException.cpp api/ApiRequestException.h
     api/ApiConfigurationListener.cpp api/ApiConfigurationListener.h
-    api/ApiConfigurationListenerInterface.h api/ApiKeyReceivedEvent.h)
+    api/ApiConfigurationListenerInterface.h api/ApiKeyReceivedEvent.h api/SetApiKeyInConfig.cpp api/SetApiKeyInConfig.h api/SetApiKeyInSettings.cpp api/SetApiKeyInSettings.h)
 source_group("api" FILES ${api})
 
 set(curl

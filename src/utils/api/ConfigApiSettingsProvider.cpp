@@ -58,7 +58,7 @@ namespace UKControllerPluginUtils::Api {
 
     auto ConfigApiSettingsProvider::Has() -> bool
     {
-        const auto settings = this->Get();
+        const auto& settings = this->Get();
         return !settings.Key().empty();
     }
 } // namespace UKControllerPluginUtils::Api

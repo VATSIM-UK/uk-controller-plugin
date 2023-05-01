@@ -19,5 +19,8 @@ namespace UKControllerPluginUtils::Api {
 
         // The users API key
         std::string key;
+
+        // Mutex for async access
+        mutable std::mutex mutex;
     };
 } // namespace UKControllerPluginUtils::Api

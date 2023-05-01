@@ -2,6 +2,7 @@
 #include "eventhandler/EventObserver.h"
 #include "eventhandler/EventBusFactory.h"
 #include "eventhandler/MutableEventBus.h"
+#include <typeinfo>
 
 namespace UKControllerPluginUtilsTest {
     class TestEventBusObserver : public UKControllerPluginUtils::EventHandler::EventObserver
@@ -75,6 +76,41 @@ namespace UKControllerPluginUtilsTest {
         void AssertNoEventsDispatched()
         {
             AssertEventDispatchCount(0);
+        }
+
+        template <typename T>
+        auto GetStreamForEventType() const
+            -> const std::shared_ptr<UKControllerPluginUtils::EventHandler::EventStream<T>>
+        {
+            return std::any_cast<std::shared_ptr<UKControllerPluginUtils::EventHandler::EventStream<T>>>(
+                UKControllerPluginUtils::EventHandler::EventBus::Bus().GetAnyStream(typeid(T)));
+        }
+
+        template <typename T> void AssertEventHandlerRegistrationsCountForEvent(int count)
+        {
+            EXPECT_EQ(count, GetStreamForEventType<T>()->Handlers().size());
+        }
+
+        template <typename T> void AssertSingleEventHandlerRegistrationForEvent()
+        {
+            AssertEventHandlerRegistrationsCountForEvent<T>(1);
+        }
+
+        template <typename EventType, typename HandlerType>
+        void AssertHandlerRegisteredForEvent(UKControllerPluginUtils::EventHandler::EventHandlerFlags flags)
+        {
+            const auto eventStream = GetStreamForEventType<EventType>();
+            for (const auto& handler : eventStream->Handlers()) {
+                try {
+                    static_cast<void>(dynamic_cast<const HandlerType&>(*handler.handler.get()));
+                    EXPECT_EQ(flags, handler.flags);
+                    return;
+                } catch (std::bad_cast&) {
+                    // Noop
+                }
+            }
+
+            FAIL();
         }
 
         // For observing and making assertions on events

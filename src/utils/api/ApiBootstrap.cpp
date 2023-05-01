@@ -1,10 +1,15 @@
 #include "ApiBootstrap.h"
 #include "ApiFactory.h"
 #include "ApiHelper.h"
+#include "ApiKeyReceivedEvent.h"
 #include "ApiSettings.h"
 #include "ConfigApiSettingsProvider.h"
 #include "CurlApiRequestPerformerFactory.h"
+#include "SetApiKeyInConfig.h"
+#include "SetApiKeyInSettings.h"
 #include "curl/CurlApi.h"
+#include "eventhandler/EventBus.h"
+#include "eventhandler/EventHandlerFlags.h"
 #include "setting/SettingRepository.h"
 #include "setting/JsonFileSettingProvider.h"
 
@@ -29,6 +34,12 @@ namespace UKControllerPluginUtils::Api {
         auto factory = std::make_shared<ApiFactory>(
             std::make_shared<ConfigApiSettingsProvider>(settingRepository, windows),
             std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()));
+
+        EventHandler::EventBus::Bus().AddHandler<ApiKeyReceivedEvent>(
+            std::make_shared<SetApiKeyInConfig>(settingRepository), EventHandler::EventHandlerFlags::Async);
+        EventHandler::EventBus::Bus().AddHandler<ApiKeyReceivedEvent>(
+            std::make_shared<SetApiKeyInSettings>(factory->SettingsProvider()->Get()),
+            EventHandler::EventHandlerFlags::Async);
 
         SetApiRequestFactory(factory);
         return factory;
