@@ -35,7 +35,7 @@ namespace UKControllerPluginUtilsTest {
         std::shared_ptr<TestEventBusObserver> observer;
     };
 
-    class EventBusTestCase : public testing::Test
+    class EventBusTestCase : public virtual testing::Test
     {
         public:
         virtual void SetUp()
@@ -96,7 +96,7 @@ namespace UKControllerPluginUtilsTest {
             AssertEventHandlerRegistrationsCountForEvent<T>(1);
         }
 
-        template <typename EventType, typename HandlerType>
+        template <typename HandlerType, typename EventType>
         void AssertHandlerRegisteredForEvent(UKControllerPluginUtils::EventHandler::EventHandlerFlags flags)
         {
             const auto eventStream = GetStreamForEventType<EventType>();

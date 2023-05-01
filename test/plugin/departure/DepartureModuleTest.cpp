@@ -73,15 +73,11 @@ namespace UKControllerPluginTest::Departure {
     TEST_F(DepartureModuleTest, PluginRegistersShouldClearDepartureDataMonitorForDepartedEvents)
     {
         BootstrapPlugin(this->container);
-        const auto eventStream = std::any_cast<std::shared_ptr<
-            UKControllerPluginUtils::EventHandler::EventStream<UKControllerPlugin::Departure::AircraftDepartedEvent>>>(
-            EventBus::Bus().GetAnyStream(typeid(UKControllerPlugin::Departure::AircraftDepartedEvent)));
-        EXPECT_EQ(1, eventStream->Handlers().size());
-        const auto handler = eventStream->Handlers()[0];
-        EXPECT_EQ(UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync, handler.flags);
-        EXPECT_NO_THROW(
-            static_cast<void>(dynamic_cast<const UserShouldClearDepartureDataMonitor&>(*handler.handler.get())));
-        EXPECT_EQ(1, this->container.flightplanHandler->CountHandlers());
+        AssertSingleEventHandlerRegistrationForEvent<UKControllerPlugin::Departure::AircraftDepartedEvent>();
+        AssertHandlerRegisteredForEvent<
+            UserShouldClearDepartureDataMonitor,
+            UKControllerPlugin::Departure::AircraftDepartedEvent>(
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 
     TEST_F(DepartureModuleTest, PluginRegistersDepartureMonitorForTimedEvents)

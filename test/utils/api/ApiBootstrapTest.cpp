@@ -62,8 +62,8 @@ namespace UKControllerPluginUtilsTest::Api {
         static_cast<void>(Bootstrap(settings, windows));
         AssertEventHandlerRegistrationsCountForEvent<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(2);
         AssertHandlerRegisteredForEvent<
-            UKControllerPluginUtils::Api::ApiKeyReceivedEvent,
-            UKControllerPluginUtils::Api::SetApiKeyInConfig>(
+            UKControllerPluginUtils::Api::SetApiKeyInConfig,
+            UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
             UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
     }
 
@@ -72,8 +72,8 @@ namespace UKControllerPluginUtilsTest::Api {
         static_cast<void>(Bootstrap(settings, windows));
         AssertEventHandlerRegistrationsCountForEvent<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(2);
         AssertHandlerRegisteredForEvent<
-            UKControllerPluginUtils::Api::ApiKeyReceivedEvent,
-            UKControllerPluginUtils::Api::SetApiKeyInSettings>(
+            UKControllerPluginUtils::Api::SetApiKeyInSettings,
+            UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
             UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
     }
 } // namespace UKControllerPluginUtilsTest::Api

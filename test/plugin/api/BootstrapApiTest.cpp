@@ -3,6 +3,9 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "setting/SettingRepository.h"
+#include "test/ApiTestCase.h"
+#include "test/EventBusTestCase.h"
+#include <gtest/internal/gtest-internal.h>
 
 using UKControllerPlugin::Api::BootstrapApi;
 using UKControllerPlugin::Api::BootstrapConfigurationMenuItem;
@@ -12,10 +15,22 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Setting::SettingRepository;
 
 namespace UKControllerPluginTest::Api {
-    class BootstrapApiTest : public ApiTestCase
+    class BootstrapApiTest : public ApiTestCase, public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
-        BootstrapApiTest() : ApiTestCase()
+        void SetUp() override
+        {
+            ApiTestCase::SetUp();
+            EventBusTestCase::SetUp();
+        }
+
+        void TearDown() override
+        {
+            ApiTestCase::TearDown();
+            EventBusTestCase::TearDown();
+        }
+
+        BootstrapApiTest() : ApiTestCase(), EventBusTestCase()
         {
             container.windows = std::make_unique<testing::NiceMock<Windows::MockWinApi>>();
             container.settingsRepository = std::make_unique<SettingRepository>();
