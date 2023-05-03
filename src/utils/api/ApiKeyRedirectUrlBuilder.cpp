@@ -3,19 +3,35 @@
 
 namespace UKControllerPluginUtils::Api {
 
+    struct ApiKeyRedirectUrlBuilder::Impl
+    {
+        Impl(const ApiSettings& settings) : settings(settings), curlHandle(curl_easy_init())
+        {
+        }
+
+        ~Impl()
+        {
+            curl_easy_cleanup(curlHandle);
+        }
+
+        // The API settings
+        const ApiSettings& settings;
+
+        // Curl handle
+        CURL* curlHandle;
+    };
+
     ApiKeyRedirectUrlBuilder::ApiKeyRedirectUrlBuilder(const ApiSettings& settings)
-        : settings(settings), curlHandle(curl_easy_init())
+        : impl(std::make_unique<Impl>(settings))
     {
     }
 
-    ApiKeyRedirectUrlBuilder::~ApiKeyRedirectUrlBuilder()
-    {
-        curl_easy_cleanup(curlHandle);
-    };
+    ApiKeyRedirectUrlBuilder::~ApiKeyRedirectUrlBuilder() = default;
 
     auto ApiKeyRedirectUrlBuilder::BuildUrl(const std::string& host, int port) const -> std::string
     {
         const auto redirectUrl = host + ":" + std::to_string(port);
-        return settings.Url() + "?redirect=" + curl_easy_escape(curlHandle, redirectUrl.c_str(), redirectUrl.size());
+        return impl->settings.Url() +
+               "?redirect=" + curl_easy_escape(impl->curlHandle, redirectUrl.c_str(), redirectUrl.size());
     }
 } // namespace UKControllerPluginUtils::Api

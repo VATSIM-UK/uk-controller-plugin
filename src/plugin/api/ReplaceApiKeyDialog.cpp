@@ -15,14 +15,16 @@ namespace UKControllerPlugin::Api {
         assert(this->urlBuilder && "Url builder not set in ReplaceApiKeyDialog");
     }
 
-    LRESULT ReplaceApiKeyDialog::InitDialog()
+    LRESULT ReplaceApiKeyDialog::InitDialog(HWND hwnd)
     {
+        this->handle = hwnd;
         this->OpenBrowserWindow();
         return TRUE;
     }
 
     void ReplaceApiKeyDialog::DestroyDialog()
     {
+        this->handle = nullptr;
         this->apiConfigListener = nullptr;
     }
 
@@ -61,7 +63,7 @@ namespace UKControllerPlugin::Api {
         switch (msg) {
         // Initialise
         case WM_INITDIALOG: {
-            this->InitDialog();
+            this->InitDialog(hwnd);
             return TRUE;
         };
         // Window Closed
@@ -87,5 +89,14 @@ namespace UKControllerPlugin::Api {
         }
 
         return FALSE;
+    }
+
+    void ReplaceApiKeyDialog::OnEvent(const UKControllerPluginUtils::Api::ApiKeyReceivedEvent& event)
+    {
+        if (!this->handle) {
+            return;
+        }
+
+        SendMessage(this->handle, WM_CLOSE, NULL, NULL);
     }
 } // namespace UKControllerPlugin::Api

@@ -12,10 +12,7 @@ namespace UKControllerPluginUtils::Api {
         [[nodiscard]] auto BuildUrl(const std::string& host, int port) const -> std::string;
 
         private:
-        // The API settings
-        const ApiSettings& settings;
-
-        // Curl handle
-        CURL* curlHandle;
+        struct Impl;
+        std::unique_ptr<Impl> impl;
     };
 } // namespace UKControllerPluginUtils::Api

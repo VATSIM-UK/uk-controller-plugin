@@ -16,7 +16,8 @@ namespace UKControllerPlugin::Api {
     /*
         A dialog for replacing the API key.
     */
-    class ReplaceApiKeyDialog : public EventHandler::EventHandler<ApiKeyReceivedEvent>
+    class ReplaceApiKeyDialog
+        : public UKControllerPluginUtils::EventHandler::EventHandler<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>
     {
         public:
         ReplaceApiKeyDialog(
@@ -24,10 +25,11 @@ namespace UKControllerPlugin::Api {
             UKControllerPlugin::Windows::WinApiInterface& windows);
         ~ReplaceApiKeyDialog() = default;
         static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+        void OnEvent(const UKControllerPluginUtils::Api::ApiKeyReceivedEvent& event) override;
 
         private:
         LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-        LRESULT InitDialog();
+        LRESULT InitDialog(HWND hwnd);
         void DestroyDialog();
         void OpenBrowserWindow();
 
@@ -39,5 +41,8 @@ namespace UKControllerPlugin::Api {
 
         // Listnen for api config changes
         std::shared_ptr<UKControllerPluginUtils::Api::ApiConfigurationListener> apiConfigListener;
+
+        // Handle for dialog closing
+        HWND handle;
     };
 } // namespace UKControllerPlugin::Api
