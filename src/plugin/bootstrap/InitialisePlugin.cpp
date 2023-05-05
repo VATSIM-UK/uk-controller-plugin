@@ -185,7 +185,9 @@ namespace UKControllerPlugin {
         if (Api::LocateConfig(
                 *container->dialogManager, *container->windows, *this->container->apiFactory->SettingsProvider())) {
             Api::FirstTimeApiAuthorisationCheck(
-                *this->container->apiFactory->SettingsProvider(), *this->container->windows);
+                *this->container->apiFactory->SettingsProvider(),
+                *this->container->windows,
+                *this->container->dialogManager);
         };
 
         // Dependency loading can happen regardless of plugin version or API status.
