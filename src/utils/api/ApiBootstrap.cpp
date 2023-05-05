@@ -32,7 +32,7 @@ namespace UKControllerPluginUtils::Api {
             L"api-settings.json", std::set<std::string>{"api-key", "api-url"}, windows));
 
         auto factory = std::make_shared<ApiFactory>(
-            std::make_shared<ConfigApiSettingsProvider>(settingRepository, windows),
+            std::make_shared<ConfigApiSettingsProvider>(settingRepository),
             std::make_shared<CurlApiRequestPerformerFactory>(std::make_unique<CurlApi>()));
 
         EventHandler::EventBus::Bus().AddHandler<ApiKeyReceivedEvent>(

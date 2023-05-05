@@ -12,6 +12,5 @@ namespace UKControllerPluginUtilsTest::Api {
         virtual ~MockApiSettingsProvider();
         MOCK_METHOD(ApiSettings&, Get, (), (override));
         MOCK_METHOD(bool, Has, (), (override));
-        MOCK_METHOD(bool, Reload, (), (override));
     };
 } // namespace UKControllerPluginUtilsTest::Api

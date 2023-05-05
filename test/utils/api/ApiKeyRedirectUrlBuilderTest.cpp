@@ -19,6 +19,6 @@ namespace UKControllerPluginUtilsTest::Api {
     {
         EXPECT_EQ(
             "https://vatsim.uk/admin/user-create-api-key/?redirect=http%3A%2F%2Flocalhost%3A62134",
-            builder.BuildUrl("http://localhost", 62134));
+            builder.BuildUrl("localhost", 62134));
     }
 } // namespace UKControllerPluginUtilsTest::Api

@@ -5,9 +5,6 @@ namespace UKControllerPlugin {
     namespace Setting {
         class SettingRepositoryInterface;
     } // namespace Setting
-    namespace Windows {
-        class WinApiInterface;
-    }
 } // namespace UKControllerPlugin
 
 namespace UKControllerPluginUtils::Api {
@@ -15,20 +12,14 @@ namespace UKControllerPluginUtils::Api {
     class ConfigApiSettingsProvider : public ApiSettingsProviderInterface
     {
         public:
-        ConfigApiSettingsProvider(
-            UKControllerPlugin::Setting::SettingRepositoryInterface& settingRepository,
-            UKControllerPlugin::Windows::WinApiInterface& windows);
+        ConfigApiSettingsProvider(UKControllerPlugin::Setting::SettingRepositoryInterface& settingRepository);
         ~ConfigApiSettingsProvider();
         [[nodiscard]] auto Get() -> ApiSettings& override;
         auto Has() -> bool override;
-        [[nodiscard]] auto Reload() -> bool override;
 
         private:
         // Provides us config
         UKControllerPlugin::Setting::SettingRepositoryInterface& settingRepository;
-
-        // For reloading
-        UKControllerPlugin::Windows::WinApiInterface& windows;
 
         // The owned setting object
         std::unique_ptr<ApiSettings> settings;
