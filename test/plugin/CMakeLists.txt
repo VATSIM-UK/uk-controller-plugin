@@ -24,7 +24,7 @@ source_group("test\\airfield" FILES ${test__airfield})
 
 set(test__api
     "api/ApiConfigurationMenuItemTest.cpp"
-        api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp)
+        api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp api/FirstTimeApiConfigLoaderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__approach

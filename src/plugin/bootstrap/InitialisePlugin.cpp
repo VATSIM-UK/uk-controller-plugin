@@ -182,7 +182,8 @@ namespace UKControllerPlugin {
         Datablock::BootstrapPlugin(*this->container);
 
         // Perform a first-time load of API config and check we're authorised.
-        if (Api::LocateConfig(*this->container->apiFactory->SettingsProvider())) {
+        if (Api::LocateConfig(
+                *container->dialogManager, *container->windows, *this->container->apiFactory->SettingsProvider())) {
             Api::FirstTimeApiAuthorisationCheck(
                 *this->container->apiFactory->SettingsProvider(), *this->container->windows);
         };

@@ -21,7 +21,7 @@ namespace UKControllerPluginTest::Api {
 
         UKControllerPlugin::Dialog::DialogData dialogDataRequest = {IDD_API_KEY_REPLACE, "", nullptr, NULL, nullptr};
         testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
-        UKControllerPlugin::Dialog::DialogManager(dialogManager);
+        UKControllerPlugin::Dialog::DialogManager dialogManager;
         NiceMock<MockWinApi> mockWindows;
         ApiConfigurationMenuItem menuItem;
     };
