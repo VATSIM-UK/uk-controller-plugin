@@ -29,7 +29,7 @@ namespace UKControllerPlugin::Api {
 
         private:
         LRESULT _WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-        LRESULT InitDialog(HWND hwnd);
+        LRESULT InitDialog(HWND hwnd, LPARAM lParam);
         void DestroyDialog();
         void OpenBrowserWindow();
 
@@ -39,10 +39,13 @@ namespace UKControllerPlugin::Api {
         // Windows
         UKControllerPlugin::Windows::WinApiInterface& windows;
 
-        // Listnen for api config changes
+        // Listen for api config changes
         std::shared_ptr<UKControllerPluginUtils::Api::ApiConfigurationListener> apiConfigListener;
 
         // Handle for dialog closing
         HWND handle;
+
+        // Data received
+        bool* dataReceived;
     };
 } // namespace UKControllerPlugin::Api

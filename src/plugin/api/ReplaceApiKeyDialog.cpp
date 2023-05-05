@@ -10,13 +10,16 @@ namespace UKControllerPlugin::Api {
     ReplaceApiKeyDialog::ReplaceApiKeyDialog(
         std::unique_ptr<UKControllerPluginUtils::Api::ApiKeyRedirectUrlBuilder> urlBuilder,
         UKControllerPlugin::Windows::WinApiInterface& windows)
-        : urlBuilder(std::move(urlBuilder)), windows(windows)
+        : urlBuilder(std::move(urlBuilder)), windows(windows), handle(nullptr)
     {
         assert(this->urlBuilder && "Url builder not set in ReplaceApiKeyDialog");
     }
 
-    LRESULT ReplaceApiKeyDialog::InitDialog(HWND hwnd)
+    LRESULT ReplaceApiKeyDialog::InitDialog(HWND hwnd, LPARAM lParam)
     {
+        this->dataReceived = reinterpret_cast<bool*>(
+            reinterpret_cast<UKControllerPlugin::Dialog::DialogCallArgument*>(lParam)->contextArgument);
+        *this->dataReceived = false;
         this->handle = hwnd;
         this->OpenBrowserWindow();
         return TRUE;
@@ -63,7 +66,7 @@ namespace UKControllerPlugin::Api {
         switch (msg) {
         // Initialise
         case WM_INITDIALOG: {
-            this->InitDialog(hwnd);
+            this->InitDialog(hwnd, lParam);
             return TRUE;
         };
         // Window Closed
@@ -97,6 +100,7 @@ namespace UKControllerPlugin::Api {
             return;
         }
 
+        *this->dataReceived = true;
         SendMessage(this->handle, WM_CLOSE, NULL, NULL);
     }
 } // namespace UKControllerPlugin::Api

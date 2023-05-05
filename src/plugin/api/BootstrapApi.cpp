@@ -45,8 +45,8 @@ namespace UKControllerPlugin::Api {
     {
         // Register menu item
         unsigned int callbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-        std::shared_ptr<ApiConfigurationMenuItem> menuItem = std::make_shared<ApiConfigurationMenuItem>(
-            *container.apiFactory->SettingsProvider(), *container.windows, callbackId);
+        std::shared_ptr<ApiConfigurationMenuItem> menuItem =
+            std::make_shared<ApiConfigurationMenuItem>(*container.dialogManager, *container.windows, callbackId);
 
         CallbackFunction menuItemSelectedCallback(
             callbackId, // NOLINT
