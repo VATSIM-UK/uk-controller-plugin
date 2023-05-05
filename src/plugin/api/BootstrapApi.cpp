@@ -37,7 +37,7 @@ namespace UKControllerPlugin::Api {
              replaceDialog});
         UKControllerPluginUtils::EventHandler::EventBus::Bus()
             .AddHandler<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
-                replaceDialog, UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
+                replaceDialog, UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
     }
 
     void BootstrapConfigurationMenuItem(

@@ -13,10 +13,13 @@ namespace UKControllerPluginUtils::Api {
 
     ApiConfigurationListener::~ApiConfigurationListener()
     {
+        LogDebug("Shutting down ApiConfigurationListener");
         if (this->server->is_running()) {
+            LogDebug("Stopping ApiConfigurationListener server");
             this->server->stop();
         }
 
+        LogDebug("Joining ApiConfigurationListener thread");
         serverListenThread.join();
     }
 
@@ -24,23 +27,33 @@ namespace UKControllerPluginUtils::Api {
     {
         // Bind server to port
         this->server = std::make_unique<httplib::Server>();
-        this->port = server->bind_to_any_port("localhost");
 
         // Setup our route
         server->Get("/", [](const httplib::Request& request, httplib::Response& response) {
             if (!request.params.contains("key") || request.params.find("key")->second.empty()) {
                 response.set_content("Invalid request.", "text/plain");
                 response.status = 400;
+                LogWarning("Received invalid API key");
                 return;
             }
 
             const std::string responseString = "UK Controller Plugin API key received successfully. You may now close "
                                                "this window.";
             response.set_content(responseString, "text/plain");
+            LogInfo("Received new API key");
             EventHandler::EventBus::Bus().OnEvent(ApiKeyReceivedEvent(request.params.find("key")->second));
         });
 
-        serverListenThread = std::thread([this]() { server->listen_after_bind(); });
+        // Listen on the thread
+        serverListenThread = std::thread([this]() {
+            host = "localhost";
+            port = server->bind_to_any_port(host);
+            server->listen_after_bind();
+        });
+
+        while (!server->is_running()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     }
 
     auto ApiConfigurationListener::Port() const -> int

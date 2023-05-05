@@ -69,7 +69,7 @@ namespace UKControllerPluginTest::Api {
         AssertHandlerRegisteredForEvent<
             UKControllerPlugin::Api::ReplaceApiKeyDialog,
             UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
-            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
     }
 
     TEST_F(BootstrapApiTest, ItBootstrapsTheConfigurationMenuItem)
