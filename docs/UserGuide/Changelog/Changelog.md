@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.9.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.9.0...5.9.1) (2023-05-14)
+
+
+### Bug Fixes
+
+* register eventbus in loader and updater ([a23384e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a23384e42a3c69540c0adeaa3ad5b3c1d19b3597))
+
 # [5.9.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.8.0...5.9.0) (2023-05-14)
 
 
