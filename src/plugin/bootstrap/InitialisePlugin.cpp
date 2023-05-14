@@ -144,7 +144,7 @@ namespace UKControllerPlugin {
         this->duplicatePlugin = std::make_unique<DuplicatePlugin>();
         this->container = std::make_unique<PersistenceContainer>();
 
-        // Create the event bus.
+        // Create the event bus
         UKControllerPluginUtils::EventHandler::MutableEventBus::SetFactory(
             std::make_shared<UKControllerPluginUtils::EventHandler::StandardEventBusFactory>());
 

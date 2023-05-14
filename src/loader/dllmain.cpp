@@ -8,6 +8,8 @@
 #include "setting/SettingRepositoryFactory.h"
 #include "curl/CurlApi.h"
 #include "data/PluginDataLocations.h"
+#include "eventhandler/MutableEventBus.h"
+#include "eventhandler/StandardEventBusFactory.h"
 #include "update/PluginVersion.h"
 
 #ifndef UKCP_LOADER_API
@@ -34,6 +36,10 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
         windows = UKControllerPlugin::Windows::Bootstrap(loaderDllInstance);
         CreatePluginDataRoot(*windows);
         UKControllerPlugin::Log::LoggerBootstrap::Bootstrap(*windows, L"loader");
+
+        // Create the event bus
+        UKControllerPluginUtils::EventHandler::MutableEventBus::SetFactory(
+            std::make_shared<UKControllerPluginUtils::EventHandler::StandardEventBusFactory>());
 
         // Bootstrap the API, download the updater if we don't have it already and run it
         UKControllerPlugin::Curl::CurlApi curl;
@@ -80,7 +86,9 @@ UKCP_LOADER_API void EuroScopePlugInInit(EuroScopePlugIn::CPlugIn** ppPlugInInst
             throw std::exception("UKCP broke");
         }
         *ppPlugInInstance = pluginInstance;
+        UKControllerPluginUtils::EventHandler::MutableEventBus::Reset();
     } catch (std::exception e) {
+        UKControllerPluginUtils::EventHandler::MutableEventBus::Reset();
         ShutdownLogger();
         throw;
     }

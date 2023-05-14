@@ -12,6 +12,7 @@
 
 // add headers that you want to pre-compile here
 #include <Windows.h>
+#include <any>
 #include <filesystem>
 #include <fstream>
 #include <set>

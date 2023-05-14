@@ -5,6 +5,8 @@
 #include "api/ApiFactory.h"
 #include "setting/SettingRepositoryFactory.h"
 #include "curl/CurlApi.h"
+#include "eventhandler/MutableEventBus.h"
+#include "eventhandler/StandardEventBusFactory.h"
 #include "log/LoggerBootstrap.h"
 #include "update/BootstrapReleaseChannelSettings.h"
 #include "update/PluginVersion.h"
@@ -33,6 +35,10 @@ UKCP_UPDATER_API bool PerformUpdates()
     windows = UKControllerPlugin::Windows::Bootstrap(dllInstance);
     UKControllerPlugin::Log::LoggerBootstrap::Bootstrap(*windows, L"updater");
 
+    // Create the event bus
+    UKControllerPluginUtils::EventHandler::MutableEventBus::SetFactory(
+        std::make_shared<UKControllerPluginUtils::EventHandler::StandardEventBusFactory>());
+
     // Bootstrap the API, download the updater if we don't have it already and run it
     UKControllerPlugin::Curl::CurlApi curl;
     std::unique_ptr<UKControllerPlugin::Setting::SettingRepository> settings =
@@ -46,6 +52,10 @@ UKCP_UPDATER_API bool PerformUpdates()
     UKControllerPlugin::Duplicate::DuplicatePlugin duplicatePlugin;
     const bool updatePeformed = CheckForUpdates(
         *api, *windows, curl, duplicatePlugin.Duplicate(), settings->GetSetting("release_channel", "stable"));
+
+    // Shutdown event bus and logger
+    UKControllerPluginUtils::EventHandler::MutableEventBus::Reset();
     ShutdownLogger();
+
     return updatePeformed;
 }
