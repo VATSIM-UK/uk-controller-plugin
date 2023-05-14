@@ -11,6 +11,7 @@
 #pragma warning(pop)
 
 #include <Windows.h>
+#include <any>
 #include <filesystem>
 #include <fstream>
 #include <set>
