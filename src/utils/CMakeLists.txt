@@ -58,7 +58,13 @@ set(api
     api/ApiSettingsProviderInterface.h
     api/ConfigApiSettingsProvider.cpp api/ConfigApiSettingsProvider.h
     api/ApiRequestFacade.cpp api/ApiRequestFacade.h
-    api/ApiRequestException.cpp api/ApiRequestException.h)
+    api/ApiRequestException.cpp api/ApiRequestException.h
+    api/ApiConfigurationListener.cpp api/ApiConfigurationListener.h
+    api/ApiConfigurationListenerInterface.h
+    api/ApiKeyReceivedEvent.h
+    api/SetApiKeyInConfig.cpp api/SetApiKeyInConfig.h
+    api/SetApiKeyInSettings.cpp api/SetApiKeyInSettings.h
+    api/ApiKeyRedirectUrlBuilder.cpp api/ApiKeyRedirectUrlBuilder.h)
 source_group("api" FILES ${api})
 
 set(curl
@@ -95,6 +101,14 @@ set(duplicate
     "duplicate/DuplicatePlugin.h"
 )
 source_group("duplicate" FILES ${duplicate})
+
+set(eventhandler
+        eventhandler/EventHandler.h
+        eventhandler/EventBus.h eventhandler/EventBus.cpp
+        eventhandler/MutableEventBus.h eventhandler/MutableEventBus.cpp
+        eventhandler/EventStream.tpp eventhandler/EventStream.h
+        eventhandler/EventHandlerFlags.h eventhandler/EventBus.tpp eventhandler/EventObserver.h eventhandler/EventBusFactory.h eventhandler/StandardEventBusFactory.cpp eventhandler/StandardEventBusFactory.h)
+source_group("eventhandler" FILES ${eventhandler})
 
 set(helper
     "helper/HelperFunctions.cpp"
@@ -143,10 +157,10 @@ set(string
 source_group("string" FILES ${string})
 
 set(task
-        "../utils/task/TaskRunner.cpp"
-        "../utils/task/TaskRunner.h"
-        "../utils/task/TaskRunnerInterface.h"
-        ../utils/task/RunAsyncTask.cpp ../utils/task/RunAsyncTask.h)
+        "task/TaskRunner.cpp"
+        "task/TaskRunner.h"
+        "task/TaskRunnerInterface.h"
+        task/RunAsyncTask.cpp ../utils/task/RunAsyncTask.h)
 source_group("task" FILES ${task})
 
 set(update
@@ -175,6 +189,7 @@ set(ALL_FILES
     ${data}
     ${dialog}
     ${duplicate}
+    ${eventhandler}
     ${helper}
     ${http}
     ${log}

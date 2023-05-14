@@ -16,15 +16,15 @@ using testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
-using UKControllerPlugin::EventHandler::EventBus;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
+using UKControllerPluginUtils::EventHandler::EventBus;
 
 namespace UKControllerPluginTest::InitialAltitude {
 
-    class InitialAltitudeModuleTest : public EventBusTestCase
+    class InitialAltitudeModuleTest : public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
         void SetUp()
@@ -75,13 +75,11 @@ namespace UKControllerPluginTest::InitialAltitude {
     TEST_F(InitialAltitudeModuleTest, BootstrapPluginRegistersClearInitialAltitude)
     {
         InitialAltitudeModule::BootstrapPlugin(this->container);
-        const auto eventStream = std::any_cast<std::shared_ptr<UKControllerPlugin::EventHandler::EventStream<
-            UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>>>(
-            EventBus::Bus().GetAnyStream(typeid(UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent)));
-        EXPECT_EQ(1, eventStream->Handlers().size());
-        const auto handler = eventStream->Handlers()[0];
-        EXPECT_EQ(UKControllerPlugin::EventHandler::EventHandlerFlags::Sync, handler.flags);
-        EXPECT_NO_THROW(static_cast<void>(
-            dynamic_cast<const UKControllerPlugin::InitialAltitude::ClearInitialAltitude&>(*handler.handler.get())));
+        AssertSingleEventHandlerRegistrationForEvent<
+            UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>();
+        AssertHandlerRegisteredForEvent<
+            UKControllerPlugin::InitialAltitude::ClearInitialAltitude,
+            UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 } // namespace UKControllerPluginTest::InitialAltitude

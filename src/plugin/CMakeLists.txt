@@ -38,7 +38,8 @@ set(src__api
     "api/ApiConfigurationMenuItem.h"
     api/FirstTimeApiConfigLoader.cpp api/FirstTimeApiConfigLoader.h
     api/BootstrapApi.cpp api/BootstrapApi.h
-    api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h)
+    api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h
+    api/ReplaceApiKeyDialog.cpp api/ReplaceApiKeyDialog.h)
 source_group("src\\api" FILES ${src__api})
 
 set(src__approach
@@ -231,14 +232,6 @@ set(src__euroscope
     euroscope/PluginSettingsProviderCollection.cpp euroscope/PluginSettingsProviderCollection.h
     euroscope/EuroscopeExtractedRouteWrapper.cpp euroscope/EuroscopeExtractedRouteWrapper.h)
 source_group("src\\euroscope" FILES ${src__euroscope})
-
-set(src__eventhandler
-        eventhandler/EventHandler.h
-        eventhandler/EventBus.h eventhandler/EventBus.cpp
-        eventhandler/MutableEventBus.h eventhandler/MutableEventBus.cpp
-        eventhandler/EventStream.tpp eventhandler/EventStream.h
-        eventhandler/EventHandlerFlags.h eventhandler/EventBus.tpp eventhandler/EventObserver.h eventhandler/EventBusFactory.h eventhandler/StandardEventBusFactory.cpp eventhandler/StandardEventBusFactory.h)
-source_group("src\\eventhandler" FILES ${src__eventhandler})
 
 set(src__flightinformationservice
     "flightinformationservice/FlightInformationServiceModule.cpp"
@@ -975,7 +968,6 @@ set(ALL_FILES
     ${src__departure}
     ${src__dependency}
     ${src__euroscope}
-    ${src__eventhandler}
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}
@@ -1018,7 +1010,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
-    ${src__wake} prenote/PrenoteMessageEventHandlerCollection.cpp prenote/PrenoteMessageEventHandlerCollection.h eventhandler/MutableEventBus.cpp eventhandler/MutableEventBus.h)
+    ${src__wake} prenote/PrenoteMessageEventHandlerCollection.cpp prenote/PrenoteMessageEventHandlerCollection.h)
 
 ################################################################################
 # Target

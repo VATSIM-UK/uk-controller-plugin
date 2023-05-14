@@ -16,7 +16,8 @@ namespace UKControllerPlugin::InitialHeading {
     /**
      * Clears the initial altitude when a user should be clearing departure settings.
      */
-    class ClearInitialHeading : public EventHandler::EventHandler<Departure::UserShouldClearDepartureDataEvent>
+    class ClearInitialHeading
+        : public UKControllerPluginUtils::EventHandler::EventHandler<Departure ::UserShouldClearDepartureDataEvent>
     {
         public:
         ClearInitialHeading(

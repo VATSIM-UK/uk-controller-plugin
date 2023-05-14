@@ -24,7 +24,7 @@ source_group("test\\airfield" FILES ${test__airfield})
 
 set(test__api
     "api/ApiConfigurationMenuItemTest.cpp"
-        api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp)
+        api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp api/FirstTimeApiConfigLoaderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__approach
@@ -122,10 +122,6 @@ set(test__euroscope
     "euroscope/UserSettingTest.cpp"
         euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
-
-set(test__eventhandler
-        eventhandler/EventBusTest.cpp test/EventBusTestCase.h eventhandler/EventStreamTest.cpp)
-source_group("test\\eventhandler" FILES ${test__eventhandler})
 
 set(test__flightinformationservice
     "flightinformationservice/FlightInformationServiceModuleTest.cpp"

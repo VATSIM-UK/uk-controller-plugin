@@ -1,6 +1,6 @@
 #pragma once
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
     // A set of flags for event handlers
     enum class EventHandlerFlags : unsigned int
     {
@@ -9,4 +9,4 @@ namespace UKControllerPlugin::EventHandler {
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(EventHandlerFlags)
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

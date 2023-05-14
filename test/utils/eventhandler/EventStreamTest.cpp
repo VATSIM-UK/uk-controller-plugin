@@ -1,17 +1,17 @@
-#include "eventhandler/EventStream.h"
 #include "eventhandler/EventHandler.h"
+#include "eventhandler/EventStream.h"
 #include "test/EventBusTestCase.h"
 
-using UKControllerPlugin::EventHandler::EventStream;
+using UKControllerPluginUtils::EventHandler::EventStream;
 
-namespace UKControllerPluginTest::EventHandler {
+namespace UKControllerPluginUtilsTest::EventHandler {
     class EventStreamTest : public testing::Test
     {
         public:
         EventStream<int> stream;
     };
 
-    class MockHandler : public UKControllerPlugin::EventHandler::EventHandler<int>
+    class MockHandler : public UKControllerPluginUtils::EventHandler::EventHandler<int>
     {
         public:
         void OnEvent(const int& event)
@@ -25,7 +25,7 @@ namespace UKControllerPluginTest::EventHandler {
     TEST_F(EventStreamTest, ItProcessesAnEvent)
     {
         const auto handler = std::make_shared<MockHandler>();
-        stream.AddHandler(handler, UKControllerPlugin::EventHandler::EventHandlerFlags::Sync);
+        stream.AddHandler(handler, UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
         stream.OnEvent(123);
         EXPECT_EQ(123, handler->receivedValue);
     }
@@ -33,7 +33,7 @@ namespace UKControllerPluginTest::EventHandler {
     TEST_F(EventStreamTest, ItProcessesAnEventAsync)
     {
         const auto handler = std::make_shared<MockHandler>();
-        stream.AddHandler(handler, UKControllerPlugin::EventHandler::EventHandlerFlags::Async);
+        stream.AddHandler(handler, UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
         stream.OnEvent(123);
         EXPECT_EQ(123, handler->receivedValue);
     }
@@ -42,10 +42,10 @@ namespace UKControllerPluginTest::EventHandler {
     {
         const auto handler1 = std::make_shared<MockHandler>();
         const auto handler2 = std::make_shared<MockHandler>();
-        stream.AddHandler(handler1, UKControllerPlugin::EventHandler::EventHandlerFlags::Sync);
-        stream.AddHandler(handler2, UKControllerPlugin::EventHandler::EventHandlerFlags::Sync);
+        stream.AddHandler(handler1, UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
+        stream.AddHandler(handler2, UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
         stream.OnEvent(123);
         EXPECT_EQ(123, handler1->receivedValue);
         EXPECT_EQ(123, handler2->receivedValue);
     }
-} // namespace UKControllerPluginTest::EventHandler
+} // namespace UKControllerPluginUtilsTest::EventHandler

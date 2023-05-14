@@ -1,7 +1,11 @@
 #include "api/ApiBootstrap.h"
+#include "api/ApiKeyReceivedEvent.h"
+#include "api/SetApiKeyInConfig.h"
+#include "api/SetApiKeyInSettings.h"
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
 #include "setting/SettingRepository.h"
+#include "test/EventBusTestCase.h"
 
 using UKControllerPlugin::Curl::CurlRequest;
 using UKControllerPlugin::Curl::CurlResponse;
@@ -10,7 +14,7 @@ using UKControllerPluginUtils::Api::Bootstrap;
 using UKControllerPluginUtils::Api::BootstrapLegacy;
 
 namespace UKControllerPluginUtilsTest::Api {
-    class ApiBootstrapTest : public testing::Test
+    class ApiBootstrapTest : public EventBusTestCase
     {
         public:
         testing::NiceMock<UKControllerPluginTest::Windows::MockWinApi> windows;
@@ -51,5 +55,25 @@ namespace UKControllerPluginUtilsTest::Api {
             .WillOnce(testing::Return(CurlResponse("", false, 200L)));
 
         static_cast<void>(legacyInterface->CheckApiAuthorisation());
+    }
+
+    TEST_F(ApiBootstrapTest, BootstrapRegistersConfigHandlerForApiKeyReceivedEvent)
+    {
+        static_cast<void>(Bootstrap(settings, windows));
+        AssertEventHandlerRegistrationsCountForEvent<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(2);
+        AssertHandlerRegisteredForEvent<
+            UKControllerPluginUtils::Api::SetApiKeyInConfig,
+            UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
+    }
+
+    TEST_F(ApiBootstrapTest, BootstrapRegistersSettingsHandlerForApiKeyReceivedEvent)
+    {
+        static_cast<void>(Bootstrap(settings, windows));
+        AssertEventHandlerRegistrationsCountForEvent<UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(2);
+        AssertHandlerRegisteredForEvent<
+            UKControllerPluginUtils::Api::SetApiKeyInSettings,
+            UKControllerPluginUtils::Api::ApiKeyReceivedEvent>(
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
     }
 } // namespace UKControllerPluginUtilsTest::Api

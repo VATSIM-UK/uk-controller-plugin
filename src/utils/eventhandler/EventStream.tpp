@@ -1,7 +1,7 @@
 #include "EventHandler.h"
 #include "task/RunAsyncTask.h"
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
     template <typename T>
     void EventStream<T>::AddHandler(std::shared_ptr<EventHandler<T>> handler, EventHandlerFlags flags)
     {
@@ -22,4 +22,4 @@ namespace UKControllerPlugin::EventHandler {
             }
         }
     }
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

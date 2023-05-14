@@ -1,7 +1,7 @@
 #include "EventBusFactory.h"
 #include "MutableEventBus.h"
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
 
     void MutableEventBus::Reset()
     {
@@ -19,4 +19,4 @@ namespace UKControllerPlugin::EventHandler {
     {
         EventBus::factory = std::move(factory);
     }
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

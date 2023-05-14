@@ -2,20 +2,32 @@
 #include "api/ApiRequestFactory.h"
 #include "api/ApiRequestException.h"
 #include "api/ApiSettingsProviderInterface.h"
+#include "dialog/DialogManager.h"
 #include "windows/WinApiInterface.h"
 
 using UKControllerPluginUtils::Api::ApiRequestException;
 
 namespace UKControllerPlugin::Api {
 
+    void ShowNonReplacementMessage(Windows::WinApiInterface& windows)
+    {
+        LogInfo("User elected not to set API key after authentication failure");
+        windows.OpenMessageBox(
+            L"You have elected not to complete API setup at this time. Some functionality of the plugin "
+            "may not work as expected.",
+            L"UKCP API Config Not Updated",
+            MB_OK | MB_ICONWARNING);
+    }
+
     void FirstTimeApiAuthorisationCheck(
         UKControllerPluginUtils::Api::ApiSettingsProviderInterface& settingsProviderInterface,
-        Windows::WinApiInterface& windows)
+        Windows::WinApiInterface& windows,
+        const Dialog::DialogManager& dialogManager)
     {
         ApiRequest()
             .Get("authorise")
             .Then([]() { LogInfo("Api authorisation check was successful."); })
-            .Catch([&windows, &settingsProviderInterface](const ApiRequestException& exception) {
+            .Catch([&windows, &settingsProviderInterface, &dialogManager](const ApiRequestException& exception) {
                 LogWarning(
                     "Api authorisation check failed, status code was " +
                     std::to_string(static_cast<uint64_t>(exception.StatusCode())));
@@ -31,22 +43,29 @@ namespace UKControllerPlugin::Api {
                 }
 
                 auto messageResponse = windows.OpenMessageBox(
-                    L"API authentication failed. Please re-download your credentails from the VATSIM UK website "
-                    "and click OK to try again. If this problem persists, please contact the Web Services Department.",
+                    L"API authentication failed. Please click OK to open the UK Controller Plugin website in your web "
+                    "browser, log in, and replace your credentials. If this problem persists, please contact the Web "
+                    "Services Department.",
                     L"UKCP API Config Invalid",
                     MB_OKCANCEL | MB_ICONWARNING);
 
-                if (messageResponse == IDCANCEL || !settingsProviderInterface.Reload()) {
-                    LogInfo("User elected not to set API key after authentication failure");
-                    windows.OpenMessageBox(
-                        L"You have elected not to complete API setup at this time. Some functionality of the plugin "
-                        "may not work as expected.",
-                        L"UKCP API Config Not Updated",
-                        MB_OK | MB_ICONWARNING);
+                // User didnt want to replace
+                if (messageResponse == IDCANCEL) {
+                    ShowNonReplacementMessage(windows);
                     return;
                 }
 
-                FirstTimeApiAuthorisationCheck(settingsProviderInterface, windows);
+                bool apiKeyReplaced = false;
+                dialogManager.OpenDialog(IDD_API_KEY_REPLACE, reinterpret_cast<LPARAM>(&apiKeyReplaced));
+
+                // User cancelled the replace procedure
+                if (!apiKeyReplaced) {
+                    ShowNonReplacementMessage(windows);
+                    return;
+                }
+
+                // User tried to replace, lets re-check
+                FirstTimeApiAuthorisationCheck(settingsProviderInterface, windows, dialogManager);
             })
             .Await();
     }

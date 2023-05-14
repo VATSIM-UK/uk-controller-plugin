@@ -2,7 +2,7 @@
 #include "EventStream.h"
 #include "log/LoggerFunctions.h"
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
 
     /**
      * Get the given stream, or create if it doesn't exist
@@ -32,4 +32,4 @@ namespace UKControllerPlugin::EventHandler {
         // Send the event to its stream
         this->GetStream<T>().OnEvent(event);
     }
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

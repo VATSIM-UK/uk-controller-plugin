@@ -14,10 +14,10 @@
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPlugin::EventHandler::EventBus;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::Tag::TagFunction;
+using UKControllerPluginUtils::EventHandler::EventBus;
 
 namespace UKControllerPlugin::InitialAltitude {
 
@@ -56,6 +56,6 @@ namespace UKControllerPlugin::InitialAltitude {
         // Register the clear initial altitude event handler
         EventBus::Bus().AddHandler<Departure::UserShouldClearDepartureDataEvent>(
             std::make_shared<ClearInitialAltitude>(*persistence.plugin, *persistence.sidMapper),
-            EventHandler::EventHandlerFlags::Sync);
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 } // namespace UKControllerPlugin::InitialAltitude

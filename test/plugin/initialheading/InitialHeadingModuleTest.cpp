@@ -14,16 +14,16 @@ using ::testing::NiceMock;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
-using UKControllerPlugin::EventHandler::EventBus;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::InitialHeading::BootstrapPlugin;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
+using UKControllerPluginUtils::EventHandler::EventBus;
 
 namespace UKControllerPluginTest {
     namespace InitialHeading {
 
-        class InitialHeadingModuleTest : public EventBusTestCase
+        class InitialHeadingModuleTest : public UKControllerPluginUtilsTest::EventBusTestCase
         {
             public:
             void SetUp()
@@ -74,14 +74,12 @@ namespace UKControllerPluginTest {
         TEST_F(InitialHeadingModuleTest, BootstrapPluginRegistersClearInitialHeading)
         {
             BootstrapPlugin(this->container);
-            const auto eventStream = std::any_cast<std::shared_ptr<UKControllerPlugin::EventHandler::EventStream<
-                UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>>>(
-                EventBus::Bus().GetAnyStream(typeid(UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent)));
-            EXPECT_EQ(1, eventStream->Handlers().size());
-            const auto handler = eventStream->Handlers()[0];
-            EXPECT_EQ(UKControllerPlugin::EventHandler::EventHandlerFlags::Sync, handler.flags);
-            EXPECT_NO_THROW(static_cast<void>(
-                dynamic_cast<const UKControllerPlugin::InitialHeading::ClearInitialHeading&>(*handler.handler.get())));
+            AssertSingleEventHandlerRegistrationForEvent<
+                UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>();
+            AssertHandlerRegisteredForEvent<
+                UKControllerPlugin::InitialHeading::ClearInitialHeading,
+                UKControllerPlugin::Departure::UserShouldClearDepartureDataEvent>(
+                UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
         }
     } // namespace InitialHeading
 } // namespace UKControllerPluginTest

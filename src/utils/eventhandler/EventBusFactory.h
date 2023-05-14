@@ -1,6 +1,6 @@
 #pragma once
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
     class EventBus;
     /**
      * Creates event busses.
@@ -11,4 +11,4 @@ namespace UKControllerPlugin::EventHandler {
         virtual ~EventBusFactory() = default;
         [[nodiscard]] virtual auto CreateBus() -> std::unique_ptr<EventBus> = 0;
     };
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

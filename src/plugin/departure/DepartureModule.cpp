@@ -16,8 +16,8 @@
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Euroscope::CallbackFunction;
-using UKControllerPlugin::EventHandler::EventBus;
-using UKControllerPlugin::EventHandler::EventHandler;
+using UKControllerPluginUtils::EventHandler::EventBus;
+using UKControllerPluginUtils::EventHandler::EventHandler;
 
 namespace UKControllerPlugin::Departure {
 
@@ -31,7 +31,7 @@ namespace UKControllerPlugin::Departure {
         // Create the user should clear departure data monitor
         EventBus::Bus().AddHandler<AircraftDepartedEvent>(
             std::make_shared<UserShouldClearDepartureDataMonitor>(container.handoffCache, container.airfieldOwnership),
-            UKControllerPlugin::EventHandler::EventHandlerFlags::Sync);
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 
     void BootstrapRadarScreen(

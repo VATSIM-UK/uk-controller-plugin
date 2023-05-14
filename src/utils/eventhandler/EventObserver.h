@@ -1,6 +1,6 @@
 #pragma once
 
-namespace UKControllerPlugin::EventHandler {
+namespace UKControllerPluginUtils::EventHandler {
     /**
      * Interface for observing the events coming out of the event bus (for testing purposes)
      */
@@ -10,4 +10,4 @@ namespace UKControllerPlugin::EventHandler {
         virtual ~EventObserver() = default;
         virtual void OnEvent(std::any event) = 0;
     };
-} // namespace UKControllerPlugin::EventHandler
+} // namespace UKControllerPluginUtils::EventHandler

@@ -117,7 +117,7 @@ namespace UKControllerPlugin {
         LogInfo("Plugin shutdown");
 
         // Shutdown the event bus
-        EventHandler::MutableEventBus::Reset();
+        UKControllerPluginUtils::EventHandler::MutableEventBus::Reset();
 
         ShutdownLogger();
     }
@@ -145,7 +145,8 @@ namespace UKControllerPlugin {
         this->container = std::make_unique<PersistenceContainer>();
 
         // Create the event bus.
-        EventHandler::MutableEventBus::SetFactory(std::make_shared<EventHandler::StandardEventBusFactory>());
+        UKControllerPluginUtils::EventHandler::MutableEventBus::SetFactory(
+            std::make_shared<UKControllerPluginUtils::EventHandler::StandardEventBusFactory>());
 
         // Do helpers.
         EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
@@ -181,9 +182,12 @@ namespace UKControllerPlugin {
         Datablock::BootstrapPlugin(*this->container);
 
         // Perform a first-time load of API config and check we're authorised.
-        if (Api::LocateConfig(*this->container->apiFactory->SettingsProvider())) {
+        if (Api::LocateConfig(
+                *container->dialogManager, *container->windows, *this->container->apiFactory->SettingsProvider())) {
             Api::FirstTimeApiAuthorisationCheck(
-                *this->container->apiFactory->SettingsProvider(), *this->container->windows);
+                *this->container->apiFactory->SettingsProvider(),
+                *this->container->windows,
+                *this->container->dialogManager);
         };
 
         // Dependency loading can happen regardless of plugin version or API status.
