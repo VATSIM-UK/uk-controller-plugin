@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [5.9.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.8.0...5.9.0) (2023-05-14)
+
+
+### Features
+
+* easy credential setup ([2d5da9a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/2d5da9a428952029e0a9c62c7b24320bea9afd7e))
+
 # [5.8.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.3...5.8.0) (2023-04-19)
 
 
