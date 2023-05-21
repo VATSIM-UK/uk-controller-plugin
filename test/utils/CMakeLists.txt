@@ -25,6 +25,11 @@ set(test__api
     api/ResponseTest.cpp api/ApiConfigurationListenerTest.cpp api/SetApiKeyInConfigTest.cpp api/SetApiKeyInSettingsTest.cpp api/ApiKeyRedirectUrlBuilderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
+set(test__collection
+        
+        collection/CollectionTest.cpp)
+source_group("test\\collection" FILES ${test__collection})
+
 set(test__curl
     "curl/CurlRequestTest.cpp"
     "curl/CurlResponseTest.cpp"
@@ -100,6 +105,7 @@ source_group("test\\update" FILES ${test__update})
 
 set(ALL_FILES
     ${test__api}
+    ${test__collection}
     ${test__curl}
     ${test__data}
     ${test__dialog}

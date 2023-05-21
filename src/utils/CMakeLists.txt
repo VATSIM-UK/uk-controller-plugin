@@ -67,6 +67,11 @@ set(api
     api/ApiKeyRedirectUrlBuilder.cpp api/ApiKeyRedirectUrlBuilder.h)
 source_group("api" FILES ${api})
 
+set(collection
+        collection/Collection.h
+        collection/Collection.tpp)
+source_group("src\\collection" FILES ${collection})
+
 set(curl
     "curl/CurlApi.cpp"
     "curl/CurlApi.h"
@@ -185,6 +190,7 @@ source_group("windows" FILES ${windows})
 
 set(ALL_FILES
     ${api}
+    ${collection}
     ${curl}
     ${data}
     ${dialog}
