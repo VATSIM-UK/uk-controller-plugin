@@ -37,6 +37,24 @@ namespace UKControllerPluginUtilsTest::Collection {
         EXPECT_EQ(1, collection.Count());
     }
 
+    TEST_F(CollectionTest, ItFindsFirstItem)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        auto item2 = std::make_shared<MockCollectionValue>(2);
+        collection.Add(item);
+        collection.Add(item2);
+        EXPECT_EQ(item2, collection.FirstOrDefault([](const auto& item) { return item->CollectionKey() == 2; }));
+    }
+
+    TEST_F(CollectionTest, ItReturnsNullptrIfNoItemFound)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        auto item2 = std::make_shared<MockCollectionValue>(2);
+        collection.Add(item);
+        collection.Add(item2);
+        EXPECT_EQ(nullptr, collection.FirstOrDefault([](const auto& item) { return item->CollectionKey() == 3; }));
+    }
+
     TEST_F(CollectionTest, ItGetsItemsByKey)
     {
         auto item = std::make_shared<MockCollectionValue>(1);
@@ -137,5 +155,117 @@ namespace UKControllerPluginUtilsTest::Collection {
         collection.Add(item);
         collection.Remove(nullptr);
         EXPECT_EQ(1, collection.Count());
+    }
+
+    TEST_F(CollectionTest, ItRemovesItemsMatchingPredicate)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        auto item2 = std::make_shared<MockCollectionValue>(2);
+        collection.Add(item);
+        collection.Add(item2);
+        collection.RemoveWhere([](const auto& item) { return item->CollectionKey() == 2; });
+        EXPECT_EQ(1, collection.Count());
+        EXPECT_EQ(item, collection.Get(1));
+        EXPECT_EQ(nullptr, collection.Get(2));
+    }
+
+    TEST_F(CollectionTest, ItDoesNotRemoveItemsMatchingPredicateIfNone)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        auto item2 = std::make_shared<MockCollectionValue>(2);
+        collection.Add(item);
+        collection.Add(item2);
+        collection.RemoveWhere([](const auto& item) { return item->CollectionKey() == 3; });
+        EXPECT_EQ(2, collection.Count());
+        EXPECT_EQ(item, collection.Get(1));
+        EXPECT_EQ(item2, collection.Get(2));
+    }
+
+    TEST_F(CollectionTest, ItReturnsABeginIterator)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        collection.Add(item);
+        EXPECT_EQ(1, (*collection.begin()).id);
+    }
+
+    TEST_F(CollectionTest, ItCanBeIterated)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        auto item2 = std::make_shared<MockCollectionValue>(2);
+        collection.Add(item);
+        collection.Add(item2);
+        std::vector<MockCollectionValue> items;
+        for (const auto& item : collection) {
+            items.push_back(item);
+        }
+        EXPECT_EQ(2, items.size());
+        EXPECT_EQ(1, items[0].id);
+        EXPECT_EQ(2, items[1].id);
+    }
+
+    TEST_F(CollectionTest, ItReturnsAnEndIterator)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        collection.Add(item);
+        EXPECT_EQ(collection.end(), ++collection.begin());
+    }
+
+    TEST_F(CollectionTest, ItReturnsAConstBeginIterator)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        collection.Add(item);
+        EXPECT_EQ(1, (*collection.cbegin()).id);
+    }
+
+    TEST_F(CollectionTest, ItCanBeIteratedWithConstIterator)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        auto item2 = std::make_shared<MockCollectionValue>(2);
+        collection.Add(item);
+        collection.Add(item2);
+        std::vector<MockCollectionValue> items;
+        for (const auto& item : collection) {
+            items.push_back(item);
+        }
+        EXPECT_EQ(2, items.size());
+        EXPECT_EQ(1, items[0].id);
+        EXPECT_EQ(2, items[1].id);
+    }
+
+    TEST_F(CollectionTest, ItReturnsAConstEndIterator)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        collection.Add(item);
+        EXPECT_EQ(collection.cend(), ++collection.cbegin());
+    }
+
+    TEST_F(CollectionTest, ItReturnsAReverseBeginIterator)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        collection.Add(item);
+        EXPECT_EQ(1, (*collection.rbegin()).id);
+    }
+
+    TEST_F(CollectionTest, ItCanBeReverseIterated)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        auto item2 = std::make_shared<MockCollectionValue>(2);
+        collection.Add(item);
+        collection.Add(item2);
+        std::vector<MockCollectionValue> items;
+        for (auto it = collection.rbegin(); it != collection.rend(); ++it) {
+            items.push_back(*it);
+        }
+
+        EXPECT_EQ(2, items.size());
+        EXPECT_EQ(2, items[0].id);
+        EXPECT_EQ(1, items[1].id);
+    }
+
+    TEST_F(CollectionTest, ItReturnsAReverseEndIterator)
+    {
+        auto item = std::make_shared<MockCollectionValue>(1);
+        collection.Add(item);
+        EXPECT_EQ(collection.rend(), ++collection.rbegin());
     }
 } // namespace UKControllerPluginUtilsTest::Collection

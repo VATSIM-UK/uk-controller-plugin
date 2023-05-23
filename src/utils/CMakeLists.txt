@@ -69,7 +69,7 @@ source_group("api" FILES ${api})
 
 set(collection
         collection/Collection.h
-        collection/Collection.tpp)
+        collection/Collection.tpp collection/CollectionIterator.h collection/CollectionIterator.tpp)
 source_group("src\\collection" FILES ${collection})
 
 set(curl

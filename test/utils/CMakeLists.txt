@@ -27,7 +27,7 @@ source_group("test\\api" FILES ${test__api})
 
 set(test__collection
         
-        collection/CollectionTest.cpp)
+        collection/CollectionTest.cpp collection/CollectionIteratorTest.cpp)
 source_group("test\\collection" FILES ${test__collection})
 
 set(test__curl
