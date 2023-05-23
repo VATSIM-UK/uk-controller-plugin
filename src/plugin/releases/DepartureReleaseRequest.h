@@ -13,6 +13,7 @@ namespace UKControllerPlugin::Releases {
             std::chrono::system_clock::time_point requestExpiresAt);
 
         void Acknowledge();
+        [[nodiscard]] auto CollectionKey() const -> int;
         void Reject(std::string remarks);
         void Approve(
             std::chrono::system_clock::time_point releasedAtTime,

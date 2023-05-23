@@ -77,6 +77,11 @@ set(src__bootstrap
     bootstrap/PersistenceContainer.cpp bootstrap/BootstrapProviderInterface.h bootstrap/BootstrapProviderCollection.h bootstrap/BootstrapProviderCollection.cpp bootstrap/BootstrapProviderCollection.h bootstrap/ModuleFactories.h bootstrap/ModuleFactories.cpp bootstrap/ModuleFactories.h bootstrap/BootstrapProviderCollectionFactory.cpp bootstrap/BootstrapProviderCollectionFactory.h bootstrap/ModuleBootstrap.cpp bootstrap/ModuleBootstrap.h)
 source_group("src\\bootstrap" FILES ${src__bootstrap})
 
+set(src__collection
+        
+        collection/PluginCollectionTypesFwd.h)
+source_group("src\\collection" FILES ${src__collection})
+
 set(src__command
     "command/CommandHandlerCollection.cpp"
     "command/CommandHandlerCollection.h"
@@ -960,6 +965,7 @@ set(ALL_FILES
     ${src__api}
     ${src__approach}
     ${src__bootstrap}
+    ${src__collection}
     ${src__command}
     ${src__components}
     ${src__controller}

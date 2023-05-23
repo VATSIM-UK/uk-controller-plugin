@@ -8,6 +8,7 @@
 #include "ReleaseModule.h"
 #include "RequestDepartureReleaseDialog.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "collection/Collection.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "dialog/DialogManager.h"
@@ -113,7 +114,9 @@ namespace UKControllerPlugin::Releases {
         // Create the event handler
         const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         const int releaseCancellationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        auto releaseCollection = std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>();
         auto departureHandler = std::make_shared<DepartureReleaseEventHandler>(
+            releaseCollection,
             *container.api,
             *container.taskRunner,
             *container.plugin,

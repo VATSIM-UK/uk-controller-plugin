@@ -1,4 +1,5 @@
 #include "api/ApiException.h"
+#include "collection/Collection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
@@ -35,7 +36,17 @@ namespace UKControllerPluginTest::Releases {
         DepartureReleaseEventHandlerTest()
             : dialogManager(dialogProvider), messager(mockPlugin),
               handler(
-                  api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, messager, 3, 4)
+                  std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>(),
+                  api,
+                  mockTaskRunner,
+                  mockPlugin,
+                  controllers,
+                  activeCallsigns,
+                  dialogManager,
+                  windows,
+                  messager,
+                  3,
+                  4)
         {
             request = std::make_shared<DepartureReleaseRequest>(
                 1, "BAW123", 3, 2, std::chrono::system_clock::now() + std::chrono::minutes(5));
