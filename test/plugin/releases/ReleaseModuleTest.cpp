@@ -1,5 +1,10 @@
+#include "controller/ActiveCallsignCollection.h"
 #include "releases/ReleaseModule.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "releases/DepartureReleaseRequestedEvent.h"
+#include "releases/DepartureReleaseRequestedEvent.h"
+#include "releases/SendReleaseRequestedChatAreaMessage.h"
+#include "test/EventBusTestCase.h"
 #include "push/PushEventProcessorCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
@@ -28,7 +33,7 @@ using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 namespace UKControllerPluginTest {
     namespace Releases {
 
-        class ReleaseModuleTest : public Test
+        class ReleaseModuleTest : public UKControllerPluginUtilsTest::EventBusTestCase
         {
             public:
             ReleaseModuleTest()
@@ -39,6 +44,8 @@ namespace UKControllerPluginTest {
                 container.pluginFunctionHandlers.reset(new FunctionCallEventHandler);
                 container.controllerHandoffHandlers.reset(new HandoffEventHandlerCollection);
                 container.dialogManager.reset(new DialogManager(this->dialogProvider));
+                container.activeCallsigns =
+                    std::make_shared<UKControllerPlugin::Controller::ActiveCallsignCollection>();
 
                 nlohmann::json dependency = nlohmann::json::array();
                 dependency.push_back({{"id", 1}, {"tag_string", "RFC"}, {"description", "Released For Climb"}});
@@ -177,6 +184,17 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
             EXPECT_EQ(1, this->container.tagHandler->HasHandlerForItemId(126));
+        }
+
+        TEST_F(ReleaseModuleTest, ItRegistersReleaseRequestedChatAreaHandler)
+        {
+            BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
+            AssertSingleEventHandlerRegistrationForEvent<
+                UKControllerPlugin::Releases::DepartureReleaseRequestedEvent>();
+            AssertHandlerRegisteredForEvent<
+                UKControllerPlugin::Releases::SendReleaseRequestedChatAreaMessage,
+                UKControllerPlugin::Releases::DepartureReleaseRequestedEvent>(
+                UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
         }
     } // namespace Releases
 } // namespace UKControllerPluginTest

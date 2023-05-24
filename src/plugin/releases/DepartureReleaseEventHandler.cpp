@@ -2,6 +2,7 @@
 #include "DepartureReleaseCountdownColours.h"
 #include "DepartureReleaseEventHandler.h"
 #include "DepartureReleaseRequest.h"
+#include "DepartureReleaseRequestedEvent.h"
 #include "DepartureReleaseRequestView.h"
 #include "ReleaseApprovalRemarksUserMessage.h"
 #include "ReleaseRejectionRemarksUserMessage.h"
@@ -15,6 +16,7 @@
 #include "dialog/DialogManager.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "eventhandler/EventBus.h"
 #include "message/UserMessager.h"
 #include "tag/TagData.h"
 #include "task/TaskRunnerInterface.h"
@@ -524,18 +526,23 @@ namespace UKControllerPlugin::Releases {
         int releaseRequestId = data.at("id").get<int>();
         int targetController = data.at("target_controller").get<int>();
         auto callsign = data.at("callsign").get<std::string>();
-        this->releaseRequests->Add(std::make_shared<DepartureReleaseRequest>(
+        auto request = std::make_shared<DepartureReleaseRequest>(
             releaseRequestId,
             callsign,
             data.at("requesting_controller").get<int>(),
             targetController,
-            Time::ParseTimeString(data.at("expires_at").get<std::string>())));
+            Time::ParseTimeString(data.at("expires_at").get<std::string>()));
+        this->releaseRequests->Add(request);
 
         // Remove any others for the same callsign and controller
         this->releaseRequests->RemoveWhere([callsign, targetController, releaseRequestId](const auto& releaseRequest) {
             return releaseRequest->Callsign() == callsign && releaseRequest->TargetController() == targetController &&
                    releaseRequest->Id() != releaseRequestId;
         });
+
+        // Trigger an event
+        LogDebug("Triggering departure release requested event");
+        UKControllerPluginUtils::EventHandler::EventBus::Bus().OnEvent(DepartureReleaseRequestedEvent{request});
 
         // Play a sound to alert the controller if we are the target
         if (this->activeCallsigns.UserHasCallsign() &&

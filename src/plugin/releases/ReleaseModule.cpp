@@ -2,11 +2,14 @@
 #include "CompareEnrouteReleaseTypes.h"
 #include "DepartureReleaseEventHandler.h"
 #include "DepartureReleaseRequestView.h"
+#include "DepartureReleaseRequestedEvent.h"
 #include "EnrouteReleaseEventHandler.h"
 #include "EnrouteReleaseTypesSerializer.h"
 #include "RejectDepartureReleaseDialog.h"
+#include "ReleaseIsTargetedAtUser.h"
 #include "ReleaseModule.h"
 #include "RequestDepartureReleaseDialog.h"
+#include "SendReleaseRequestedChatAreaMessage.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "collection/Collection.h"
 #include "controller/HandoffEventHandlerCollection.h"
@@ -14,6 +17,8 @@
 #include "dialog/DialogManager.h"
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "eventhandler/EventBus.h"
+#include "eventhandler/EventHandlerFlags.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
@@ -229,6 +234,13 @@ namespace UKControllerPlugin::Releases {
 
         // Add to handlers
         container.timedHandler->RegisterEvent(departureHandler, departureReleaseEventFrequency);
+
+        // Event handlers for displaying chat area messages
+        auto releaseIsTargetedAtUser = std::make_shared<ReleaseIsTargetedAtUser>(container.activeCallsigns);
+        UKControllerPluginUtils::EventHandler::EventBus::Bus().AddHandler<DepartureReleaseRequestedEvent>(
+            std::make_shared<SendReleaseRequestedChatAreaMessage>(
+                releaseIsTargetedAtUser, *container.plugin, *container.pluginUserSettingHandler),
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 
     void

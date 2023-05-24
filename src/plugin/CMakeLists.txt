@@ -814,7 +814,7 @@ set(src__releases
     releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp
     releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h
     releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h
-    releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
+    releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h releases/DepartureReleaseRequestedEvent.h releases/SendReleaseRequestedChatAreaMessage.cpp releases/SendReleaseRequestedChatAreaMessage.h releases/DepartureReleaseRelevanceChecker.h releases/ReleaseIsTargetedAtUser.cpp releases/ReleaseIsTargetedAtUser.h)
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__runway
