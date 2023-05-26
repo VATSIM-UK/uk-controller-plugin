@@ -3,7 +3,9 @@
 
 namespace UKControllerPlugin::Integration {
     class IntegrationConnection;
+    class IntegrationClient;
     class IntegrationClientManager;
+    class IntegrationDataInitialisers;
     class MessageInterface;
 
     /*
@@ -14,7 +16,9 @@ namespace UKControllerPlugin::Integration {
     class ClientInitialisationManager : public TimedEvent::AbstractTimedEvent
     {
         public:
-        explicit ClientInitialisationManager(std::shared_ptr<IntegrationClientManager> clientManager);
+        explicit ClientInitialisationManager(
+            std::shared_ptr<IntegrationClientManager> clientManager,
+            std::shared_ptr<IntegrationDataInitialisers> dataInitialisers);
         void AddConnection(std::shared_ptr<IntegrationConnection> connection);
         void TimedEventTrigger() override;
         [[nodiscard]] auto CountConnections() const -> size_t;
@@ -48,9 +52,9 @@ namespace UKControllerPlugin::Integration {
         static auto ValidateMessageData(const std::shared_ptr<MessageInterface>& message) -> std::vector<std::string>;
         static auto ValidateIntegrationDetails(const nlohmann::json& data) -> std::vector<std::string>;
         static auto ValidateEventSubscriptions(const nlohmann::json& data) -> std::vector<std::string>;
-        void UpgradeToClient(
+        [[nodiscard]] auto UpgradeToClient(
             const std::shared_ptr<IntegrationConnection>& connection,
-            const std::shared_ptr<MessageInterface>& initialisationMessage);
+            const std::shared_ptr<MessageInterface>& initialisationMessage) -> std::shared_ptr<IntegrationClient>;
         static void SendInitialisationSuccessMessage(
             const std::shared_ptr<IntegrationConnection>& connection,
             const std::shared_ptr<MessageInterface>& initialisationMessage);
@@ -61,6 +65,9 @@ namespace UKControllerPlugin::Integration {
 
         // Manages clients once fully initialised
         std::shared_ptr<IntegrationClientManager> clientManager;
+
+        // Handles data initialisation
+        std::shared_ptr<IntegrationDataInitialisers> dataInitialisers;
 
         // Clients that are fully initialised
         std::map<std::shared_ptr<IntegrationConnection>, std::chrono::system_clock::time_point> connections;

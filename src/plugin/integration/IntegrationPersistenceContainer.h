@@ -5,6 +5,7 @@ namespace UKControllerPlugin::Integration {
     class OutboundIntegrationEventHandler;
     class InboundIntegrationMessageHandler;
     class IntegrationServer;
+    class IntegrationDataInitialisers;
 
     /*
      * Persists things relating to the integration
@@ -16,7 +17,8 @@ namespace UKControllerPlugin::Integration {
         IntegrationPersistenceContainer(
             std::shared_ptr<OutboundIntegrationEventHandler> outboundMessageHandler,
             std::shared_ptr<InboundIntegrationMessageHandler> inboundMessageHandler,
-            std::unique_ptr<IntegrationServer> server);
+            std::unique_ptr<IntegrationServer> server,
+            std::shared_ptr<IntegrationDataInitialisers> dataInitialisers);
         ~IntegrationPersistenceContainer();
         IntegrationPersistenceContainer(const IntegrationPersistenceContainer&) = delete;
         IntegrationPersistenceContainer(IntegrationPersistenceContainer&&) noexcept;
@@ -31,5 +33,8 @@ namespace UKControllerPlugin::Integration {
 
         // The server that listens for connections
         std::unique_ptr<IntegrationServer> server{};
+
+        // Initialises integrations with data
+        std::shared_ptr<IntegrationDataInitialisers> dataInitialisers{};
     };
 } // namespace UKControllerPlugin::Integration

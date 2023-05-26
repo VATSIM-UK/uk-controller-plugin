@@ -4,18 +4,23 @@
 #include "IntegrationClient.h"
 #include "IntegrationClientManager.h"
 #include "IntegrationConnection.h"
+#include "IntegrationDataInitialisers.h"
 #include "time/SystemClock.h"
 
 namespace UKControllerPlugin::Integration {
 
-    ClientInitialisationManager::ClientInitialisationManager(std::shared_ptr<IntegrationClientManager> clientManager)
-        : clientManager(std::move(clientManager))
+    ClientInitialisationManager::ClientInitialisationManager(
+        std::shared_ptr<IntegrationClientManager> clientManager,
+        std::shared_ptr<IntegrationDataInitialisers> dataInitialisers)
+        : clientManager(std::move(clientManager)), dataInitialisers(std::move(dataInitialisers))
     {
+        assert(this->clientManager && "Client manager not set in ClientInitialisationManager");
+        assert(this->dataInitialisers && "Data initialisers not set in ClientInitialisationManager");
     }
 
     void ClientInitialisationManager::AddConnection(std::shared_ptr<IntegrationConnection> connection)
     {
-        if (this->connections.count(connection) > 0) {
+        if (this->connections.contains(connection)) {
             LogWarning("A duplicate integration client was added");
             return;
         }
@@ -69,8 +74,10 @@ namespace UKControllerPlugin::Integration {
                 continue;
             }
 
-            this->UpgradeToClient(connection, incomingMessages.front());
+            const auto client = this->UpgradeToClient(connection, incomingMessages.front());
             SendInitialisationSuccessMessage(connection, incomingMessages.front());
+            this->dataInitialisers->InitialiseClient(*client);
+
             return true;
         }
 
@@ -157,9 +164,9 @@ namespace UKControllerPlugin::Integration {
         return errors;
     }
 
-    void ClientInitialisationManager::UpgradeToClient(
+    auto ClientInitialisationManager::UpgradeToClient(
         const std::shared_ptr<IntegrationConnection>& connection,
-        const std::shared_ptr<MessageInterface>& initialisationMessage)
+        const std::shared_ptr<MessageInterface>& initialisationMessage) -> std::shared_ptr<IntegrationClient>
     {
         auto data = initialisationMessage->GetMessageData();
         auto client = std::make_shared<IntegrationClient>(
@@ -172,6 +179,8 @@ namespace UKControllerPlugin::Integration {
                 MessageType{interestedEvent.at("type").get<std::string>(), interestedEvent.at("version").get<int>()}));
         }
         this->clientManager->AddClient(client);
+
+        return client;
     }
 
     void ClientInitialisationManager::SendInitialisationSuccessMessage(

@@ -38,7 +38,7 @@ namespace UKControllerPluginTest::Stands {
             container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
             container.externalEventHandler = std::make_shared<ExternalMessageEventHandler>(true);
             container.integrationModuleContainer =
-                std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr);
+                std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr, nullptr);
             container.integrationModuleContainer->inboundMessageHandler =
                 std::make_shared<InboundIntegrationMessageHandler>(nullptr);
 

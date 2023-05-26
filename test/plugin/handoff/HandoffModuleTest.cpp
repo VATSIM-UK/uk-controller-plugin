@@ -31,7 +31,7 @@ namespace UKControllerPluginTest::Handoff {
             this->container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
             this->container.runwayDialogEventHandlers = std::make_unique<RunwayDialogAwareCollection>();
             this->container.integrationModuleContainer =
-                std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr);
+                std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr, nullptr);
         }
 
         PersistenceContainer container;
