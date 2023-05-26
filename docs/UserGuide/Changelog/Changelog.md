@@ -1,5 +1,27 @@
 # UK Controller Plugin Changelog
 
+## [5.9.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.9.0...5.9.1) (2023-05-14)
+
+
+### Bug Fixes
+
+* register eventbus in loader and updater ([a23384e](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a23384e42a3c69540c0adeaa3ad5b3c1d19b3597))
+
+# [5.9.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.8.0...5.9.0) (2023-05-14)
+
+
+### Features
+
+* easy credential setup ([2d5da9a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/2d5da9a428952029e0a9c62c7b24320bea9afd7e))
+
+# [5.8.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.3...5.8.0) (2023-04-19)
+
+
+### Features
+
+* clear initial altitudes automatically on departure ([86dae0c](https://github.com/VATSIM-UK/uk-controller-plugin/commit/86dae0cd6314aed61d118ba7607caf1a6e1d10bb))
+* clear initial heading automatically on departure ([de32d91](https://github.com/VATSIM-UK/uk-controller-plugin/commit/de32d9119abaaa6699a93dcd35daac6d6b339a48))
+
 # [5.8.0-beta.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.1...5.8.0-beta.1) (2023-04-07)
 
 
@@ -7,6 +29,22 @@
 
 * send initialisation data to integrations ([3227a36](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3227a368c1d2bf909dcb62c83866934d1ffc9f3b))
 * send intention code updates to vStrips if it loads after the plugin ([5f890dd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5f890dd22a4e5103635bd2af27dbafffc2ac42be))
+    
+
+## [5.7.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.2...5.7.3) (2023-04-16)
+
+
+### Bug Fixes
+
+* api settings selection for ES3.2.21r34 ([22c8244](https://github.com/VATSIM-UK/uk-controller-plugin/commit/22c82447d2a412b623175891a45666f4a393000e))
+
+## [5.7.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.1...5.7.2) (2023-04-06)
+
+
+### Bug Fixes
+
+* api key selection window not showing ([67d690a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/67d690a82359d38f1b484f94f17c999932cee21b))
+>>>>>>> upstream/main
 
 ## [5.7.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.7.0...5.7.1) (2023-03-31)
 

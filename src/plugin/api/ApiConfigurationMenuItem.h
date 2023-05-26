@@ -6,9 +6,14 @@ namespace UKControllerPluginUtils::Api {
     class ApiSettingsProviderInterface;
 } // namespace UKControllerPluginUtils::Api
 
-namespace UKControllerPlugin::Windows {
-    class WinApiInterface;
-} // namespace UKControllerPlugin::Windows
+namespace UKControllerPlugin {
+    namespace Dialog {
+        class DialogManager;
+    } // namespace Dialog
+    namespace Window {
+        class WinApiInterface;
+    } // namespace Window
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Api {
 
@@ -21,9 +26,7 @@ namespace UKControllerPlugin::Api {
     {
         public:
         ApiConfigurationMenuItem(
-            UKControllerPluginUtils::Api::ApiSettingsProviderInterface& provider,
-            Windows::WinApiInterface& windows,
-            int menuCallbackId);
+            Dialog::DialogManager& dialogManager, Windows::WinApiInterface& windows, int menuCallbackId);
 
         // Inherited via ConfigurableDisplayInterface
         void Configure(int functionId, std::string subject, RECT area) override;
@@ -33,8 +36,8 @@ namespace UKControllerPlugin::Api {
         // The item description
         const std::string itemDescription = "Replace Personal API Configuration";
 
-        // Api credential provider
-        UKControllerPluginUtils::Api::ApiSettingsProviderInterface& provider;
+        // Dialogs
+        Dialog::DialogManager& dialogManager;
 
         // Windows API for the dialogs
         Windows::WinApiInterface& windows;

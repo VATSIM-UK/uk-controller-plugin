@@ -29,6 +29,7 @@
 #define IDD_MISSED_APPROACH             137
 #define IDD_MISSED_APPROACH_ACKNOWLEDGE 139
 #define IDD_DEPARTURE_RELEASE_REJECT    141
+#define IDD_API_KEY_REPLACE             143
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -83,6 +84,7 @@
 #define IDC_ROUTE_COPY                  1046
 #define IDC_SRD_ROUTE_COPY              1046
 #define IDC_HOLD_CLOSE                  1046
+#define IDC_API_KEY_REPLACE_CANCEL      1046
 #define TIMER1_EDIT_DURATION            1047
 #define TIMER2_EDIT_DURATION            1048
 #define IDC_TIME_FORMAT_CHECK           1048
@@ -123,6 +125,7 @@
 #define IDC_SRD_SEARCH                  1086
 #define IDC_HOLDS_SAVE                  1086
 #define IDC_OPEN_NOTIFICATION           1086
+#define IDC_API_REOPEN_BROWSER          1086
 #define IDC_EDIT1                       1087
 #define IDC_SRD_NOTES                   1087
 #define IDC_READ_NOTIFICATION           1087
@@ -198,14 +201,15 @@
 #define IDC_RELEASE_REJECT_REMARKS_STATIC 1141
 #define IDC_GEN_SETTINGS_EXPERIMENTAL   1142
 #define IDC_RELEASE_CHANNEL             1143
+#define IDC_API_KEY_STATIC              1144
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1144
+#define _APS_NEXT_CONTROL_VALUE         1145
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

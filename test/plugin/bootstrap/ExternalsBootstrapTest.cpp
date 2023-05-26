@@ -23,20 +23,6 @@ namespace UKControllerPluginTest::Bootstrap {
     {
         public:
         /*
-            Get the My Documents path
-        */
-        static auto GetMyDocumentsPath() -> std::wstring
-        {
-            TCHAR* myDocumentsPath = nullptr;
-            SHGetKnownFolderPath(FOLDERID_Documents, KF_FLAG_SIMPLE_IDLIST, nullptr, &myDocumentsPath);
-
-            std::wstring widePath(myDocumentsPath);
-            std::replace(widePath.begin(), widePath.end(), L'\\', L'/');
-            CoTaskMemFree(myDocumentsPath);
-            return widePath;
-        }
-
-        /*
             Get the local app data path
         */
         static auto GetLocalAppDataPath(void) -> std::wstring
@@ -53,11 +39,6 @@ namespace UKControllerPluginTest::Bootstrap {
         auto GetExpectedUkcpFolder() -> std::wstring
         {
             return this->GetLocalAppDataPath() + L"/UKControllerPlugin";
-        }
-
-        auto GetExpectedLegacyUkcpFolder() -> std::wstring
-        {
-            return this->GetMyDocumentsPath() + L"/EuroScope/ukcp";
         }
 
         NiceMock<MockWinApi> winApiMock;
@@ -115,11 +96,6 @@ namespace UKControllerPluginTest::Bootstrap {
     {
         std::wstring expected = this->GetLocalAppDataPath() + L"/UKControllerPlugin";
         EXPECT_EQ(this->GetExpectedUkcpFolder(), ExternalsBootstrap::GetPluginFileRoot());
-    }
-
-    TEST_F(ExternalsBootstrapTest, GetLegacyPluginFileRootReturnsMyDocumentsEuroscopeFolder)
-    {
-        EXPECT_EQ(this->GetExpectedLegacyUkcpFolder(), ExternalsBootstrap::GetLegacyPluginFileRoot());
     }
 
     TEST_F(ExternalsBootstrapTest, SetupUkcpFolderRootThrowsExceptionOnFailedCreatingUkcpFolder)

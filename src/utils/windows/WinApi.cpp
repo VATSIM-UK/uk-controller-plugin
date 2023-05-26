@@ -93,7 +93,13 @@ namespace UKControllerPlugin {
         WinApi::FileOpenDialog(std::wstring title, UINT numFileTypes, const COMDLG_FILTERSPEC* fileTypes) const
         {
             std::wstringstream result;
-            HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+            HRESULT hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
+            // Compatibility with EuroScope 3.2.21r34, which uses a different mode
+            if (hr == RPC_E_CHANGED_MODE) {
+                hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+            }
+
             if (SUCCEEDED(hr)) {
                 IFileOpenDialog* pFileOpen;
 
@@ -105,18 +111,18 @@ namespace UKControllerPlugin {
                     // Show the Open dialog box.
                     pFileOpen->SetTitle(title.c_str());
                     pFileOpen->SetFileTypes(numFileTypes, fileTypes);
-                    hr = pFileOpen->Show(NULL);
+                    HRESULT fileOpenHr = pFileOpen->Show(NULL);
 
                     // Get the file name from the dialog box.
-                    if (SUCCEEDED(hr)) {
+                    if (SUCCEEDED(fileOpenHr)) {
                         IShellItem* pItem;
-                        hr = pFileOpen->GetResult(&pItem);
-                        if (SUCCEEDED(hr)) {
+                        HRESULT getResultHr = pFileOpen->GetResult(&pItem);
+                        if (SUCCEEDED(getResultHr)) {
                             PWSTR pszFilePath;
-                            hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+                            HRESULT getDisplayNameHr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
 
                             // Display the file name to the user.
-                            if (SUCCEEDED(hr)) {
+                            if (SUCCEEDED(getDisplayNameHr)) {
                                 result << pszFilePath;
                                 CoTaskMemFree(pszFilePath);
                             }
@@ -125,7 +131,11 @@ namespace UKControllerPlugin {
                     }
                     pFileOpen->Release();
                 }
-                CoUninitialize();
+
+                // If we were the ones to initialise COM, uninitialise it.
+                if (hr == S_OK) {
+                    CoUninitialize();
+                }
             }
 
             return result.str();

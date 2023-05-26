@@ -14,7 +14,7 @@ namespace UKControllerPluginUtilsTest::Api {
 } // namespace UKControllerPluginUtilsTest::Api
 
 namespace UKControllerPluginTest {
-    class ApiTestCase : public testing::Test
+    class ApiTestCase : public virtual testing::Test
     {
         public:
         ApiTestCase();

@@ -13,3 +13,6 @@
 [submodule "third_party/spdlog"]
 	path = third_party/spdlog
 	url = git@github.com:gabime/spdlog.git
+[submodule "third_party/cpp-httplib"]
+	path = third_party/cpp-httplib
+	url = git@github.com:yhirose/cpp-httplib.git

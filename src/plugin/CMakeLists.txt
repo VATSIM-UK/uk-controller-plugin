@@ -38,7 +38,8 @@ set(src__api
     "api/ApiConfigurationMenuItem.h"
     api/FirstTimeApiConfigLoader.cpp api/FirstTimeApiConfigLoader.h
     api/BootstrapApi.cpp api/BootstrapApi.h
-    api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h)
+    api/FirstTimeApiAuthorisationChecker.cpp api/FirstTimeApiAuthorisationChecker.h
+    api/ReplaceApiKeyDialog.cpp api/ReplaceApiKeyDialog.h)
 source_group("src\\api" FILES ${src__api})
 
 set(src__approach
@@ -158,7 +159,7 @@ set(src__datablock
 source_group("src\\datablock" FILES ${src__datablock})
 
 set(src__departure
-        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h departure/ToggleDepartureCoordinationList.cpp departure/ToggleDepartureCoordinationList.h departure/DepartureModule.cpp departure/DepartureModule.h)
+        departure/DepartureCoordinationList.cpp departure/DepartureCoordinationList.h departure/ToggleDepartureCoordinationList.cpp departure/ToggleDepartureCoordinationList.h departure/DepartureModule.cpp departure/DepartureModule.h departure/AircraftDepartedEvent.h departure/DepartureMonitor.h departure/DepartureMonitor.cpp departure/UserShouldClearDepartureDataEvent.h)
 source_group("src\\departure" FILES ${src__departure})
 
 set(src__dependency
@@ -381,7 +382,7 @@ set(src__initialaltitude
     "initialaltitude/InitialAltitudeEventHandler.h"
     "initialaltitude/InitialAltitudeModule.cpp"
     "initialaltitude/InitialAltitudeModule.h"
-)
+        departure/UserShouldClearDepartureDataMonitor.cpp departure/UserShouldClearDepartureDataMonitor.h initialaltitude/ClearInitialAltitude.cpp initialaltitude/ClearInitialAltitude.h)
 source_group("src\\initialaltitude" FILES ${src__initialaltitude})
 
 set(src__initialheading
@@ -389,7 +390,7 @@ set(src__initialheading
     "initialheading/InitialHeadingEventHandler.h"
     "initialheading/InitialHeadingModule.cpp"
     "initialheading/InitialHeadingModule.h"
-)
+        initialheading/ClearInitialHeading.cpp initialheading/ClearInitialHeading.h)
 source_group("src\\initialheading" FILES ${src__initialheading})
 
 set(src__integration

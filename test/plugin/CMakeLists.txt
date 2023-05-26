@@ -24,7 +24,7 @@ source_group("test\\airfield" FILES ${test__airfield})
 
 set(test__api
     "api/ApiConfigurationMenuItemTest.cpp"
-        api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp)
+        api/BootstrapApiTest.cpp api/FirstTimeApiAuthorisationCheckerTest.cpp api/FirstTimeApiConfigLoaderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__approach
@@ -100,7 +100,7 @@ source_group("test\\datablock" FILES ${test__datablock})
 
 set(test__departure
         
-        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp)
+        departure/DepartureCoordinationListTest.cpp departure/ToggleDepartureCoordinationListTest.cpp departure/DepartureModuleTest.cpp departure/DepartureMonitorTest.cpp departure/UserShouldClearDepartureDataMonitorTest.cpp)
 source_group("test\\departure" FILES ${test__departure})
 
 set(test__dependency
@@ -214,7 +214,7 @@ source_group("test\\initialaltitude" FILES ${test__initialaltitude})
 set(test__initialheading
     "initialheading/InitialHeadingEventHandlerTest.cpp"
     "initialheading/InitialHeadingModuleTest.cpp"
-)
+        initialaltitude/ClearInitialAltitudeTest.cpp initialheading/ClearInitialHeadingTest.cpp)
 source_group("test\\initialheading" FILES ${test__initialheading})
 
 set(test__integration
@@ -620,6 +620,7 @@ set(ALL_FILES
     ${test__departure}
     ${test__dependency}
     ${test__euroscope}
+    ${test__eventhandler}
     ${test__flightinformationservice}
     ${test__flightplan}
     ${test__flightrule}

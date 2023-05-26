@@ -24,6 +24,7 @@
 #include "ShlObj.h"
 #include "shtypes.h"
 
+#include <any>
 #include <algorithm>
 #include <chrono>
 #include <filesystem>
@@ -31,11 +32,13 @@
 #include <gdiplusgraphics.h>
 #include <gdiplustypes.h>
 #include <gdiplusenums.h>
+#include <list>
 #include <mutex>
 #include <queue>
 #include <regex>
 #include <set>
 #include <string>
+#include <typeindex>
 #include <unordered_set>
 
 // Euroscope

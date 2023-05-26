@@ -34,7 +34,8 @@ set(test
         test/ApiMethodExpectation.h
         test/ApiUriExpectation.h
         test/ApiRequestExpectation.h
-        test/ApiResponseExpectation.h)
+        test/ApiResponseExpectation.h
+        test/EventBusTestCase.h)
 source_group("test" FILES ${test})
 
 set(ALL_FILES

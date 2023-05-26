@@ -1,4 +1,5 @@
 #include "api/ApiConfigurationMenuItem.h"
+#include "dialog/DialogManager.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -12,9 +13,15 @@ namespace UKControllerPluginTest::Api {
     class ApiConfigurationMenuItemTest : public ApiTestCase
     {
         public:
-        ApiConfigurationMenuItemTest() : ApiTestCase(), menuItem(this->SettingsProvider(), mockWindows, 55)
+        ApiConfigurationMenuItemTest()
+            : ApiTestCase(), dialogManager(dialogProvider), menuItem(dialogManager, mockWindows, 55)
         {
+            dialogManager.AddDialog(dialogDataRequest);
         }
+
+        UKControllerPlugin::Dialog::DialogData dialogDataRequest = {IDD_API_KEY_REPLACE, "", nullptr, NULL, nullptr};
+        testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;
+        UKControllerPlugin::Dialog::DialogManager dialogManager;
         NiceMock<MockWinApi> mockWindows;
         ApiConfigurationMenuItem menuItem;
     };
@@ -34,7 +41,13 @@ namespace UKControllerPluginTest::Api {
 
     TEST_F(ApiConfigurationMenuItemTest, ConfigureDoesntReplaceTheSettingsIfUserDoesntReload)
     {
-        EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(false));
+        EXPECT_CALL(dialogProvider, OpenDialog(this->dialogDataRequest, testing::_))
+            .Times(1)
+            .WillOnce(testing::Invoke([](auto dialog, auto arg) {
+                bool* dataReceived = reinterpret_cast<bool*>(
+                    reinterpret_cast<const UKControllerPlugin::Dialog::DialogCallArgument*>(arg)->contextArgument);
+                *dataReceived = false;
+            }));
 
         this->ExpectNoApiRequests();
 
@@ -43,10 +56,15 @@ namespace UKControllerPluginTest::Api {
 
     TEST_F(ApiConfigurationMenuItemTest, ConfigureReplacesTheApiSettings)
     {
-        EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(true));
+        EXPECT_CALL(dialogProvider, OpenDialog(this->dialogDataRequest, testing::_))
+            .Times(1)
+            .WillOnce(testing::Invoke([](auto dialog, auto arg) {
+                bool* dataReceived = reinterpret_cast<bool*>(
+                    reinterpret_cast<const UKControllerPlugin::Dialog::DialogCallArgument*>(arg)->contextArgument);
+                *dataReceived = true;
+            }));
 
         this->ExpectApiRequest()->Get().To("authorise").WithoutBody().WillReturnOk();
-
         EXPECT_CALL(
             this->mockWindows,
             OpenMessageBox(testing::_, testing::StrEq(L"Configuration Updated"), MB_OK | MB_ICONINFORMATION))
@@ -58,7 +76,13 @@ namespace UKControllerPluginTest::Api {
 
     TEST_F(ApiConfigurationMenuItemTest, ConfigureHandlesAuthenticationErrorDuringAuthCheck)
     {
-        EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(true));
+        EXPECT_CALL(dialogProvider, OpenDialog(this->dialogDataRequest, testing::_))
+            .Times(1)
+            .WillOnce(testing::Invoke([](auto dialog, auto arg) {
+                bool* dataReceived = reinterpret_cast<bool*>(
+                    reinterpret_cast<const UKControllerPlugin::Dialog::DialogCallArgument*>(arg)->contextArgument);
+                *dataReceived = true;
+            }));
 
         this->ExpectApiRequest()->Get().To("authorise").WithoutBody().WillReturnForbidden();
 
@@ -73,10 +97,15 @@ namespace UKControllerPluginTest::Api {
 
     TEST_F(ApiConfigurationMenuItemTest, ConfigureHandlesServerErrorDuringAuthCheck)
     {
-        EXPECT_CALL(this->SettingsProvider(), Reload).Times(1).WillOnce(testing::Return(true));
+        EXPECT_CALL(dialogProvider, OpenDialog(this->dialogDataRequest, testing::_))
+            .Times(1)
+            .WillOnce(testing::Invoke([](auto dialog, auto arg) {
+                bool* dataReceived = reinterpret_cast<bool*>(
+                    reinterpret_cast<const UKControllerPlugin::Dialog::DialogCallArgument*>(arg)->contextArgument);
+                *dataReceived = true;
+            }));
 
         this->ExpectApiRequest()->Get().To("authorise").WithoutBody().WillReturnServerError();
-
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::StrEq(L"Server Error"), testing::_))
             .Times(1)
             .WillOnce(Return(IDOK));

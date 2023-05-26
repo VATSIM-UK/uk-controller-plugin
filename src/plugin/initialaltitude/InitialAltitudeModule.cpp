@@ -1,7 +1,11 @@
+#include "ClearInitialAltitude.h"
 #include "InitialAltitudeModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ActiveCallsignCollection.h"
+#include "departure/UserShouldClearDepartureDataEvent.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "eventhandler/EventBus.h"
+#include "eventhandler/EventHandlerFlags.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "InitialAltitudeEventHandler.h"
 #include "plugin/FunctionCallEventHandler.h"
@@ -13,6 +17,8 @@ using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeEventHandler;
 using UKControllerPlugin::Tag::TagFunction;
+using UKControllerPluginUtils::EventHandler::EventBus;
+
 namespace UKControllerPlugin::InitialAltitude {
 
     const int timedHandlerFrequency = 10;
@@ -46,5 +52,10 @@ namespace UKControllerPlugin::InitialAltitude {
                 initialAltitudeEventHandler->RecycleInitialAltitude(fp, rt, std::move(context), mousePos);
             });
         persistence.pluginFunctionHandlers->RegisterFunctionCall(recycleFunction);
+
+        // Register the clear initial altitude event handler
+        EventBus::Bus().AddHandler<Departure::UserShouldClearDepartureDataEvent>(
+            std::make_shared<ClearInitialAltitude>(*persistence.plugin, *persistence.sidMapper),
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 } // namespace UKControllerPlugin::InitialAltitude

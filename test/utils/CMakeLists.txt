@@ -22,7 +22,7 @@ set(test__api
     api/ConfigApiSettingsProviderTest.cpp
     api/CurlApiRequestPerformerTest.cpp
     api/CurlApiRequestPerformerFactoryTest.cpp
-    api/ResponseTest.cpp)
+    api/ResponseTest.cpp api/ApiConfigurationListenerTest.cpp api/SetApiKeyInConfigTest.cpp api/SetApiKeyInSettingsTest.cpp api/ApiKeyRedirectUrlBuilderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
 set(test__curl
@@ -47,6 +47,10 @@ set(test__duplicate
     "duplicate/DuplicatePluginTest.cpp"
 )
 source_group("test\\duplicate" FILES ${test__duplicate})
+
+set(test__eventhandler
+        eventhandler/EventBusTest.cpp eventhandler/EventStreamTest.cpp)
+source_group("test\\eventhandler" FILES ${test__eventhandler})
 
 set(test__helper
     "helper/HelperFunctionsTest.cpp"
@@ -100,6 +104,7 @@ set(ALL_FILES
     ${test__data}
     ${test__dialog}
     ${test__duplicate}
+    ${test__eventhandler}
     ${test__helper}
     ${test__http}
     ${test__log}
