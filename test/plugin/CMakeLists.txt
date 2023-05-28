@@ -550,7 +550,7 @@ set(test__squawk
     "squawk/SquawkGeneratorTest.cpp"
     "squawk/SquawkModuleTest.cpp"
     "squawk/SquawkRequestTest.cpp"
-)
+        squawk/ResetSquawkOnFailedDeleteTest.cpp)
 source_group("test\\squawk" FILES ${test__squawk})
 
 set(test__srd

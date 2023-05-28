@@ -1,5 +1,7 @@
 #include "ApiSquawkAllocationHandler.h"
+#include "ResetSquawkOnFailedDelete.h"
 #include "SquawkAssignment.h"
+#include "SquawkAssignmentDeleteForConspicuityFailedEvent.h"
 #include "SquawkEventHandler.h"
 #include "SquawkGenerator.h"
 #include "SquawkModule.h"
@@ -7,6 +9,8 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "eventhandler/EventBus.h"
+#include "eventhandler/EventHandlerFlags.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
@@ -84,5 +88,11 @@ namespace UKControllerPlugin::Squawk {
                 const POINT& mousePos) { eventHandler->SquawkRecycleLocal(fp, rt, context, mousePos); });
 
         container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackLocal);
+
+        // Handler to reset squawks if delete fails
+        UKControllerPluginUtils::EventHandler::EventBus::Bus()
+            .AddHandler<SquawkAssignmentDeleteForConspicuityFailedEvent>(
+                std::make_shared<ResetSquawkOnFailedDelete>(*container.plugin, *container.flightplans),
+                UKControllerPluginUtils::EventHandler::EventHandlerFlags::EuroscopeThread);
     }
 } // namespace UKControllerPlugin::Squawk

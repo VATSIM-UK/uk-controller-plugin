@@ -38,6 +38,9 @@ namespace UKControllerPlugin::Squawk {
             const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns,
             const UKControllerPlugin::Flightplan::StoredFlightplanCollection& storedFlightplans,
             const std::shared_ptr<UKControllerPlugin::Squawk::ApiSquawkAllocationHandler>& allocations);
+        auto
+        AssignConspicuitySquawkForAircraft(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> bool;
         auto AssignCircuitSquawkForAircraft(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const -> bool;

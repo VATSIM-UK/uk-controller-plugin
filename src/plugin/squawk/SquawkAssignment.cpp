@@ -45,6 +45,11 @@ namespace UKControllerPlugin::Squawk {
                this->GeneralAssignmentNeeded(flightplan, radarTarget);
     }
 
+    bool SquawkAssignment::AssignConspicuityAllowed(EuroScopeCFlightPlanInterface& flightplan) const
+    {
+        return this->activeCallsigns.UserHasCallsign() && (flightplan.IsTrackedByUser() || !flightplan.IsTracked());
+    }
+
     /*
         Returns whether or not the controller is in a position that they may force squawk assignment.
     */

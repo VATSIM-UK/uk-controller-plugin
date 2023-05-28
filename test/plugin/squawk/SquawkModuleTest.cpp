@@ -1,15 +1,16 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
+#include "eventhandler/EventHandlerFlags.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "squawk/ResetSquawkOnFailedDelete.h"
+#include "squawk/SquawkAssignmentDeleteForConspicuityFailedEvent.h"
 #include "squawk/SquawkEventHandler.h"
 #include "squawk/SquawkModule.h"
+#include "test/EventBusTestCase.h"
 #include "timedevent/TimedEventCollection.h"
-#include "memory"
-#include "memory"
 
-using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
@@ -20,11 +21,12 @@ using UKControllerPlugin::TimedEvent::TimedEventCollection;
 
 namespace UKControllerPluginTest::Squawk {
 
-    class SquawkModuleTest : public Test
+    class SquawkModuleTest : public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
         void SetUp() override
         {
+            UKControllerPluginUtilsTest::EventBusTestCase::SetUp();
             this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             this->container.pluginFunctionHandlers = std::make_unique<FunctionCallEventHandler>();
             this->container.timedHandler = std::make_unique<TimedEventCollection>();
@@ -77,5 +79,16 @@ namespace UKControllerPluginTest::Squawk {
     {
         SquawkModule::BootstrapPlugin(container, true);
         EXPECT_TRUE(this->container.squawkEvents->AutomaticAssignmentsDisabled());
+    }
+
+    TEST_F(SquawkModuleTest, BootstrapPluginRegistersResetSquawkOnFailedDelete)
+    {
+        SquawkModule::BootstrapPlugin(container, true);
+        AssertSingleEventHandlerRegistrationForEvent<
+            UKControllerPlugin::Squawk ::SquawkAssignmentDeleteForConspicuityFailedEvent>();
+        AssertHandlerRegisteredForEvent<
+            UKControllerPlugin::Squawk ::ResetSquawkOnFailedDelete,
+            UKControllerPlugin::Squawk ::SquawkAssignmentDeleteForConspicuityFailedEvent>(
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::EuroscopeThread);
     }
 } // namespace UKControllerPluginTest::Squawk

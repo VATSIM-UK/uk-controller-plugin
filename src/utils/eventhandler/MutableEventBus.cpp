@@ -27,6 +27,6 @@ namespace UKControllerPluginUtils::EventHandler {
 
     auto MutableEventBus::IsInitialised() -> bool
     {
-        return EventBus::singleton != nullptr;
+        return EventBus::factory != nullptr;
     }
 } // namespace UKControllerPluginUtils::EventHandler

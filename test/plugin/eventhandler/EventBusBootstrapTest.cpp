@@ -3,7 +3,6 @@
 #include "eventhandler/EventBusBootstrap.h"
 #include "eventhandler/EventHandler.h"
 #include "eventhandler/MutableEventBus.h"
-#include "eventhandler/EventBusFactory.h"
 #include "timedevent/TimedEventCollection.h"
 
 namespace UKControllerPluginTest::EventHandler {

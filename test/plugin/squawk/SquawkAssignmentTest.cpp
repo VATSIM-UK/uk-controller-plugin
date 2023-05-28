@@ -886,5 +886,30 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
+        TEST_F(SquawkAssignmentTest, AssignConspicuityAllowedReturnsFalseIfUserHasNoCallsign)
+        {
+            this->activeCallsigns.Flush();
+            EXPECT_FALSE(this->assignment.AssignConspicuityAllowed(*this->mockFlightplan));
+        }
+
+        TEST_F(SquawkAssignmentTest, AssignConspicuityAllowedReturnsFalseIfFlightplanTrackedBySomeoneElse)
+        {
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(false));
+            ON_CALL(*this->mockFlightplan, IsTracked()).WillByDefault(Return(true));
+            EXPECT_FALSE(this->assignment.AssignConspicuityAllowed(*this->mockFlightplan));
+        }
+
+        TEST_F(SquawkAssignmentTest, AssignConspicuityAllowedReturnsTrueIfFlightplanTrackedByUser)
+        {
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
+            ON_CALL(*this->mockFlightplan, IsTracked()).WillByDefault(Return(true));
+            EXPECT_TRUE(this->assignment.AssignConspicuityAllowed(*this->mockFlightplan));
+        }
+
+        TEST_F(SquawkAssignmentTest, AssignConspicuityAllowedReturnsTrueIfFlightplanNotTracked)
+        {
+            ON_CALL(*this->mockFlightplan, IsTracked()).WillByDefault(Return(false));
+            EXPECT_TRUE(this->assignment.AssignConspicuityAllowed(*this->mockFlightplan));
+        }
     } // namespace Squawk
 } // namespace UKControllerPluginTest

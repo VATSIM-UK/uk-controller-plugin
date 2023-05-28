@@ -1,9 +1,11 @@
 #include "ApiSquawkAllocationHandler.h"
 #include "SquawkAssignment.h"
+#include "SquawkAssignmentDeleteForConspicuityFailedEvent.h"
 #include "SquawkGenerator.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "api/ApiNotFoundException.h"
+#include "eventhandler/EventBus.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
@@ -12,6 +14,7 @@
 #include "flightplan/StoredFlightplan.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "helper/HelperFunctions.h"
+#include "log/LoggerFunctions.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Api::ApiException;
@@ -53,6 +56,41 @@ namespace UKControllerPlugin::Squawk {
 
         LogInfo("Assigned circuit squawk to " + flightplan.GetCallsign());
         flightplan.SetSquawk("7010");
+        return true;
+    }
+
+    /**
+     * Removes the API squawk assignment and deletes the local
+     */
+    auto SquawkGenerator::AssignConspicuitySquawkForAircraft(EuroScopeCFlightPlanInterface& flightplan) -> bool
+    {
+        if (!this->assignmentRules.AssignConspicuityAllowed(flightplan)) {
+            LogWarning("Cannot assign conspicuity squawk to " + flightplan.GetCallsign() + " - not allowed");
+            return false;
+        }
+
+        const auto currentSquawk = flightplan.GetAssignedSquawk();
+        if (!this->StartSquawkUpdate(flightplan)) {
+            return false;
+        }
+
+        const auto callsign = flightplan.GetCallsign();
+        if (storedFlightplans.HasFlightplanForCallsign(callsign)) {
+            storedFlightplans.GetFlightplanForCallsign(callsign).SetPreviouslyAssignedSquawk("7000");
+        }
+
+        this->taskRunner->QueueAsynchronousTask([this, callsign, currentSquawk]() {
+            try {
+                this->api.DeleteSquawkAssignment(callsign);
+            } catch (const ApiException& e) {
+                LogWarning("Cannot delete squawk for " + callsign + " - " + e.what());
+                UKControllerPluginUtils::EventHandler::EventBus::Bus()
+                    .OnEvent<SquawkAssignmentDeleteForConspicuityFailedEvent>({callsign, currentSquawk});
+            }
+
+            this->EndSquawkUpdate(callsign);
+        });
+
         return true;
     }
 

@@ -867,7 +867,7 @@ set(src__squawk
     "squawk/SquawkModule.h"
     "squawk/SquawkRequest.cpp"
     "squawk/SquawkRequest.h"
-)
+        squawk/SquawkAssignmentMenu.cpp squawk/SquawkAssignmentMenu.h squawk/SquawkAssignmentDeleteForConspicuityFailedEvent.h squawk/ResetSquawkOnFailedDelete.cpp squawk/ResetSquawkOnFailedDelete.h)
 source_group("src\\squawk" FILES ${src__squawk})
 
 set(src__srd
