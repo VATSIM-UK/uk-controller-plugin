@@ -233,6 +233,10 @@ set(src__euroscope
     euroscope/EuroscopeExtractedRouteWrapper.cpp euroscope/EuroscopeExtractedRouteWrapper.h)
 source_group("src\\euroscope" FILES ${src__euroscope})
 
+set(src__eventhandler
+        eventhandler/ProcessEventBusEventsOnTimer.cpp eventhandler/ProcessEventBusEventsOnTimer.h eventhandler/EventBusBootstrap.cpp eventhandler/EventBusBootstrap.h)
+source_group("src\\eventhandler" FILES ${src__eventhandler})
+
 set(src__flightinformationservice
     "flightinformationservice/FlightInformationServiceModule.cpp"
     "flightinformationservice/FlightInformationServiceModule.h"
@@ -968,6 +972,7 @@ set(ALL_FILES
     ${src__departure}
     ${src__dependency}
     ${src__euroscope}
+    ${src__eventhandler}
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}

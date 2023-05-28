@@ -6,6 +6,12 @@ namespace UKControllerPluginUtils::EventHandler {
     std::unique_ptr<EventBus> EventBus::singleton;
     std::shared_ptr<EventBusFactory> EventBus::factory;
 
+    EventBus::EventBus(std::shared_ptr<EuroscopeThreadEventSink> euroscopeThreadEventProcessor)
+        : euroscopeThreadEventProcessor(std::move(euroscopeThreadEventProcessor))
+    {
+        assert(this->euroscopeThreadEventProcessor && "Euroscope thread event processor cannot be null");
+    }
+
     EventBus::~EventBus() = default;
 
     auto EventBus::Bus() -> EventBus&

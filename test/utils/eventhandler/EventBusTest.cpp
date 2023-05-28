@@ -37,6 +37,15 @@ namespace UKControllerPluginUtilsTest::EventHandler {
         EXPECT_EQ(123, handler->receivedValue);
     }
 
+    TEST_F(EventBusTest, ItProcessesAnEventOnTheEuroscopeThread)
+    {
+        const auto handler = std::make_shared<MockHandler>();
+        EventBus::Bus().AddHandler<int>(
+            handler, UKControllerPluginUtils::EventHandler::EventHandlerFlags::EuroscopeThread);
+        EventBus::Bus().OnEvent(123);
+        EXPECT_EQ(123, handler->receivedValue);
+    }
+
     TEST_F(EventBusTest, ItProcessesAnEventToMultipleHandlers)
     {
         const auto handler1 = std::make_shared<MockHandler>();

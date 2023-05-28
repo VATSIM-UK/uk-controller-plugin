@@ -107,7 +107,7 @@ set(eventhandler
         eventhandler/EventBus.h eventhandler/EventBus.cpp
         eventhandler/MutableEventBus.h eventhandler/MutableEventBus.cpp
         eventhandler/EventStream.tpp eventhandler/EventStream.h
-        eventhandler/EventHandlerFlags.h eventhandler/EventBus.tpp eventhandler/EventObserver.h eventhandler/EventBusFactory.h eventhandler/StandardEventBusFactory.cpp eventhandler/StandardEventBusFactory.h)
+        eventhandler/EventHandlerFlags.h eventhandler/EventBus.tpp eventhandler/EventObserver.h eventhandler/EventBusFactory.h eventhandler/StandardEventBusFactory.cpp eventhandler/StandardEventBusFactory.h eventhandler/EuroscopeThreadEventSink.h eventhandler/EuroscopeThreadEventProcessor.cpp eventhandler/EuroscopeThreadEventProcessor.h eventhandler/DrainableEuroscopeThreadEventSink.h)
 source_group("eventhandler" FILES ${eventhandler})
 
 set(helper
