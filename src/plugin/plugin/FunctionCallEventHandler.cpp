@@ -1,7 +1,10 @@
 #include "plugin/FunctionCallEventHandler.h"
+#include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "tag/TagFunction.h"
+#include "tag/RadarScreenTagFunction.h"
 
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
@@ -10,6 +13,33 @@ using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;
 using UKControllerPlugin::Tag::TagFunction;
 
 namespace UKControllerPlugin::Plugin {
+
+    struct FunctionCallEventHandler::Impl
+    {
+        static const int INITIAL_DYNAMIC_FUNCTION_ID = 10000;
+
+        /*
+            The next available dynamic function ID. These ids can be used by any function that doesn't
+            need to have the same id every time the plugin runs. For example, these would be perfect for
+            a callback on a popup menu item. These wouldn't be useful for, say, a TAG function
+            - which is probably saved in the settings somewhere.
+        */
+        int nextDynamicFunctionId = INITIAL_DYNAMIC_FUNCTION_ID;
+
+        // The registered functions which have dynamic ids - may be different on each load.
+        std::unordered_map<int, UKControllerPlugin::Euroscope::CallbackFunction> callbackFunctions;
+
+        // The registered functions which have fixed ids - always the same on every load, as defined in the wiki.
+        std::unordered_map<int, UKControllerPlugin::Tag::TagFunction> tagFunctions;
+
+        // The registered functions which have fixed ids - always the same on every load, as defined in the wiki.
+        // This is for functions called at the RadarScreen level.
+        std::unordered_map<int, UKControllerPlugin::Tag::RadarScreenTagFunction> radarScreenTagFunctions;
+    };
+
+    FunctionCallEventHandler::FunctionCallEventHandler() : impl(std::make_unique<Impl>())
+    {
+    }
 
     /*
         Call the given function.
@@ -22,14 +52,14 @@ namespace UKControllerPlugin::Plugin {
         const POINT& mousePos,
         const RECT& area) const
     {
-        auto callbackFunction = this->callbackFunctions.find(functionId);
-        if (callbackFunction != this->callbackFunctions.cend()) {
+        auto callbackFunction = this->impl->callbackFunctions.find(functionId);
+        if (callbackFunction != this->impl->callbackFunctions.cend()) {
             callbackFunction->second.function(functionId, subject, area);
             return;
         }
 
-        auto tagFunction = this->tagFunctions.find(functionId);
-        if (tagFunction != this->tagFunctions.cend()) {
+        auto tagFunction = this->impl->tagFunctions.find(functionId);
+        if (tagFunction != this->impl->tagFunctions.cend()) {
             tagFunction->second.function(flightplan, radarTarget, subject, mousePos);
             return;
         }
@@ -44,20 +74,22 @@ namespace UKControllerPlugin::Plugin {
         const POINT& mousePos,
         const RECT& area) const
     {
-        auto tagFunction = this->radarScreenTagFunctions.find(functionId);
-        if (tagFunction == this->radarScreenTagFunctions.cend()) {
+        auto tagFunction = this->impl->radarScreenTagFunctions.find(functionId);
+        if (tagFunction == this->impl->radarScreenTagFunctions.cend()) {
             return;
         }
 
         tagFunction->second.function(radarScreen, flightplan, radarTarget, subject, mousePos, area);
     }
 
+    FunctionCallEventHandler::~FunctionCallEventHandler() = default;
+
     /*
         Returns the number of registered functions.
     */
     auto FunctionCallEventHandler::CountCallbacks() const -> size_t
     {
-        return this->callbackFunctions.size();
+        return this->impl->callbackFunctions.size();
     }
 
     /*
@@ -65,23 +97,23 @@ namespace UKControllerPlugin::Plugin {
     */
     auto FunctionCallEventHandler::CountTagFunctions() const -> size_t
     {
-        return this->tagFunctions.size();
+        return this->impl->tagFunctions.size();
     }
 
     /*
         Returns true if a callback function exists
     */
-    auto FunctionCallEventHandler::HasCallbackFunction(int id) const -> bool
+    auto FunctionCallEventHandler::HasCallbackFunction(int functionId) const -> bool
     {
-        return this->callbackFunctions.find(id) != this->callbackFunctions.cend();
+        return this->impl->callbackFunctions.find(functionId) != this->impl->callbackFunctions.cend();
     }
 
     /*
         Returns true if a tag function exists
     */
-    auto FunctionCallEventHandler::HasTagFunction(int id) const -> bool
+    auto FunctionCallEventHandler::HasTagFunction(int functionId) const -> bool
     {
-        return this->tagFunctions.find(id) != this->tagFunctions.cend();
+        return this->impl->tagFunctions.find(functionId) != this->impl->tagFunctions.cend();
     }
 
     /*
@@ -89,7 +121,7 @@ namespace UKControllerPlugin::Plugin {
     */
     auto FunctionCallEventHandler::ReserveNextDynamicFunctionId() -> int
     {
-        return this->nextDynamicFunctionId++;
+        return this->impl->nextDynamicFunctionId++;
     }
 
     /*
@@ -98,12 +130,12 @@ namespace UKControllerPlugin::Plugin {
     void FunctionCallEventHandler::RegisterTagFunctionsWithEuroscope(EuroscopePluginLoopbackInterface& plugin) const
     {
         // Register the regular TAG functions
-        for (const auto& tagFunction : tagFunctions) {
+        for (const auto& tagFunction : this->impl->tagFunctions) {
             plugin.RegisterTagFunction(tagFunction.first, tagFunction.second.description);
         }
 
         // Register the radar screen TAG functions
-        for (const auto& tagFunction : radarScreenTagFunctions) {
+        for (const auto& tagFunction : this->impl->radarScreenTagFunctions) {
             plugin.RegisterTagFunction(tagFunction.first, tagFunction.second.description);
         }
     }
@@ -113,11 +145,11 @@ namespace UKControllerPlugin::Plugin {
     */
     void FunctionCallEventHandler::RegisterFunctionCall(const CallbackFunction& function)
     {
-        if (this->callbackFunctions.contains(function.functionId)) {
+        if (this->impl->callbackFunctions.contains(function.functionId)) {
             throw std::invalid_argument("Function already registered for this id!");
         }
 
-        this->callbackFunctions[function.functionId] = function;
+        this->impl->callbackFunctions[function.functionId] = function;
     }
 
     /*
@@ -125,22 +157,19 @@ namespace UKControllerPlugin::Plugin {
     */
     void FunctionCallEventHandler::RegisterFunctionCall(const UKControllerPlugin::Tag::TagFunction& function)
     {
-        if (this->tagFunctions.contains(function.functionId)) {
+        if (this->impl->tagFunctions.contains(function.functionId)) {
             throw std::invalid_argument("Function already registered for this id!");
         }
 
-        this->tagFunctions[function.functionId] = function;
+        this->impl->tagFunctions[function.functionId] = function;
     }
 
     auto FunctionCallEventHandler::HasCallbackByDescription(const std::string& description) const -> bool
     {
-        for (const auto& callback : this->callbackFunctions) {
-            if (callback.second.description == description) {
-                return true;
-            }
-        }
-
-        return false;
+        return std::any_of(
+            this->impl->callbackFunctions.cbegin(),
+            this->impl->callbackFunctions.cend(),
+            [&description](const auto& callback) { return callback.second.description == description; });
     }
 
     void FunctionCallEventHandler::RegisterFunctionCall(const Tag::RadarScreenTagFunction& function)
@@ -149,16 +178,16 @@ namespace UKControllerPlugin::Plugin {
             throw std::invalid_argument("Function already registered for this id!");
         }
 
-        this->radarScreenTagFunctions[function.functionId] = function;
+        this->impl->radarScreenTagFunctions[function.functionId] = function;
     }
 
-    auto FunctionCallEventHandler::HasRadarScreenTagFunction(int id) const -> bool
+    auto FunctionCallEventHandler::HasRadarScreenTagFunction(int functionId) const -> bool
     {
-        return this->radarScreenTagFunctions.contains(id);
+        return this->impl->radarScreenTagFunctions.contains(functionId);
     }
 
     auto FunctionCallEventHandler::CountRadarScreenTagFunctions() const -> size_t
     {
-        return this->radarScreenTagFunctions.size();
+        return this->impl->radarScreenTagFunctions.size();
     }
 } // namespace UKControllerPlugin::Plugin

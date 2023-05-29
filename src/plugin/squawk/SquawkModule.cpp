@@ -14,6 +14,7 @@
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
+#include "tag/TagFunction.h"
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Squawk::ApiSquawkAllocationHandler;

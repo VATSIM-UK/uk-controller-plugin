@@ -1,6 +1,7 @@
 #include "ListItemProviderInterface.h"
 #include "PopupList.h"
 #include "PopupListFactory.h"
+#include "euroscope/CallbackFunction.h"
 #include "plugin/FunctionCallEventHandler.h"
 
 namespace UKControllerPlugin::List {

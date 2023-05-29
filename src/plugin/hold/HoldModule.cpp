@@ -32,6 +32,7 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "task/TaskRunnerInterface.h"
 #include "tag/TagItemCollection.h"
+#include "tag/TagFunction.h"
 #include "timedevent/TimedEventCollection.h"
 #include "windows/WinApiInterface.h"
 

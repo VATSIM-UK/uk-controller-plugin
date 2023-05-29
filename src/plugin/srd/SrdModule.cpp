@@ -4,8 +4,10 @@
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogManager.h"
+#include "euroscope/CallbackFunction.h"
 #include "intention/IntentionCodeModuleFactory.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
+#include "tag/TagFunction.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dialog::DialogData;
@@ -17,7 +19,7 @@ namespace UKControllerPlugin::Srd {
 
     const int srdDialogTagFunctionId = 9004;
 
-    int handlerCallbackId; // NOLINT
+    int handlerCallbackId;                              // NOLINT
 
     std::shared_ptr<SrdSearchHandler> srdSearchHandler; // NOLINT
 
