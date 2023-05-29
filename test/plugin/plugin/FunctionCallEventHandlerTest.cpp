@@ -1,7 +1,10 @@
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
+#include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "tag/RadarScreenTagFunction.h"
 #include "tag/TagFunction.h"
 
 using ::testing::StrictMock;
@@ -10,11 +13,14 @@ using ::testing::Test;
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
+using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Tag::RadarScreenTagFunction;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 
 namespace UKControllerPluginTest::Plugin {
 
@@ -23,6 +29,7 @@ namespace UKControllerPluginTest::Plugin {
         public:
         StrictMock<MockEuroScopeCFlightPlanInterface> flightplan;
         StrictMock<MockEuroScopeCRadarTargetInterface> radarTarget;
+        StrictMock<MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
     };
 
     TEST_F(FunctionCallEventHandlerTest, ReserveNextDynamicFunctionIdReturnsConsecutiveIds)
@@ -106,10 +113,25 @@ namespace UKControllerPluginTest::Plugin {
             [](EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&, std::string, POINT) {});
         StrictMock<MockEuroscopePluginLoopbackInterface> mockPlugin;
 
+        RadarScreenTagFunction radarScreenTagFunction(
+            9001,
+            "Test Radar Screen Function",
+            [](EuroscopeRadarLoopbackInterface&,
+               EuroScopeCFlightPlanInterface&,
+               EuroScopeCRadarTargetInterface&,
+               std::string,
+               const POINT&,
+               const RECT&) {});
+
+        EXPECT_CALL(mockPlugin, RegisterTagFunction(function.functionId, function.description)).Times(0);
         EXPECT_CALL(mockPlugin, RegisterTagFunction(function2.functionId, function2.description)).Times(1);
+        EXPECT_CALL(
+            mockPlugin, RegisterTagFunction(radarScreenTagFunction.functionId, radarScreenTagFunction.description))
+            .Times(1);
 
         handler.RegisterFunctionCall(function);
         handler.RegisterFunctionCall(function2);
+        handler.RegisterFunctionCall(radarScreenTagFunction);
         handler.RegisterTagFunctionsWithEuroscope(mockPlugin);
     }
 
@@ -123,5 +145,66 @@ namespace UKControllerPluginTest::Plugin {
     {
         FunctionCallEventHandler handler;
         EXPECT_NO_THROW(handler.CallFunction(5000, "some test", flightplan, radarTarget, POINT(), RECT()));
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, RadarScreenFunctionCallHandlesNonExistant)
+    {
+        FunctionCallEventHandler handler;
+        EXPECT_NO_THROW(handler.CallFunction(radarScreen, 5000, "some test", flightplan, radarTarget, POINT(), RECT()));
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, RegisterFunctionCallRegistersRadarScreenTagFunctionForCalling)
+    {
+        FunctionCallEventHandler handler;
+        std::string output;
+        RadarScreenTagFunction function(
+            9000,
+            "Test Radar Screen Function",
+            [&output](
+                EuroscopeRadarLoopbackInterface&,
+                EuroScopeCFlightPlanInterface&,
+                EuroScopeCRadarTargetInterface&,
+                std::string,
+                const POINT&,
+                const RECT&) { output = "some test"; });
+
+        handler.RegisterFunctionCall(function);
+        EXPECT_EQ(1, handler.CountRadarScreenTagFunctions());
+        handler.CallFunction(radarScreen, 9000, "some test", flightplan, radarTarget, POINT(), RECT());
+        EXPECT_TRUE(output == "some test");
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, HasRadarScreenTagFunctionFunctionReturnsTrueIfItExists)
+    {
+        FunctionCallEventHandler handler;
+        RadarScreenTagFunction function(
+            9000,
+            "Test Radar Screen Function",
+            [](EuroscopeRadarLoopbackInterface&,
+               EuroScopeCFlightPlanInterface&,
+               EuroScopeCRadarTargetInterface&,
+               std::string,
+               const POINT&,
+               const RECT&) {});
+
+        handler.RegisterFunctionCall(function);
+        EXPECT_TRUE(handler.HasRadarScreenTagFunction(9000));
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, RegisterFunctionCallThrowsExceptionIfSameRadarScreenTagFunctionRegisteredTwice)
+    {
+        FunctionCallEventHandler handler;
+        RadarScreenTagFunction function(
+            9000,
+            "Test Radar Screen Function",
+            [](EuroscopeRadarLoopbackInterface&,
+               EuroScopeCFlightPlanInterface&,
+               EuroScopeCRadarTargetInterface&,
+               std::string,
+               const POINT&,
+               const RECT&) {});
+
+        handler.RegisterFunctionCall(function);
+        EXPECT_THROW(handler.RegisterFunctionCall(function), std::invalid_argument);
     }
 } // namespace UKControllerPluginTest::Plugin

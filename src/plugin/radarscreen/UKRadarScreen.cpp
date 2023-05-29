@@ -1,8 +1,11 @@
 #include "RadarRenderableCollection.h"
 #include "UKRadarScreen.h"
+#include "euroscope/EuroScopeCFlightPlanWrapper.h"
+#include "euroscope/EuroScopeCRadarTargetWrapper.h"
 #include "euroscope/PluginSettingsProviderCollection.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "plugin/FunctionCallEventHandler.h"
 #include "update/PluginVersion.h"
 
 using UKControllerPlugin::Euroscope::AsrEventHandlerCollection;
@@ -16,10 +19,11 @@ namespace UKControllerPlugin {
         const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderers,
         UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
         UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
-        const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders)
+        const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders,
+        const Plugin::FunctionCallEventHandler& functionHandler)
         : graphics(graphics), userSettingEventHandler(std::move(userSettingEventHandler)), renderers(renderers),
           commandHandlers(std::move(commandHandlers)), pluginSettingsProviders(pluginSettingsProviders),
-          asrContentLoaded(false), lastContext(nullptr)
+          functionHandler(functionHandler), asrContentLoaded(false), lastContext(nullptr)
     {
     }
 
@@ -237,5 +241,12 @@ namespace UKControllerPlugin {
     auto UKRadarScreen::ConvertScreenPointToCoordinate(const POINT& point) -> EuroScopePlugIn::CPosition
     {
         return this->ConvertCoordFromPixelToPosition(point);
+    }
+
+    void UKRadarScreen::OnFunctionCall(int FunctionId, const char* sItemString, POINT Pt, RECT Area)
+    {
+        auto flightplan = Euroscope::EuroScopeCFlightPlanWrapper(this->GetPlugIn()->FlightPlanSelectASEL());
+        auto radarTarget = Euroscope::EuroScopeCRadarTargetWrapper(this->GetPlugIn()->RadarTargetSelectASEL());
+        this->functionHandler.CallFunction(*this, FunctionId, sItemString, flightplan, radarTarget, Pt, Area);
     }
 } // namespace UKControllerPlugin

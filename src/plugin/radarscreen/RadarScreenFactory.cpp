@@ -132,6 +132,7 @@ namespace UKControllerPlugin::RadarScreen {
             renderers,
             commandHandlers,
             *this->persistence.graphics,
-            *persistence.pluginSettingsProviders);
+            *persistence.pluginSettingsProviders,
+            *persistence.pluginFunctionHandlers);
     }
 } // namespace UKControllerPlugin::RadarScreen

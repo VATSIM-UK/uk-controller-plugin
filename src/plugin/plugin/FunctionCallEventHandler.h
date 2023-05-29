@@ -1,12 +1,14 @@
 #pragma once
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/CompareFunctions.h"
+#include "tag/RadarScreenTagFunction.h"
 #include "tag/TagFunction.h"
 
 namespace UKControllerPlugin::Euroscope {
     class EuroScopeCFlightPlanInterface;
     class EuroScopeCRadarTargetInterface;
     class EuroscopePluginLoopbackInterface;
+    class EuroscopeRadarLoopbackInterface;
 } // namespace UKControllerPlugin::Euroscope
 
 namespace UKControllerPlugin::Plugin {
@@ -26,14 +28,25 @@ namespace UKControllerPlugin::Plugin {
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
             const POINT& mousePos,
             const RECT& area) const;
+        void CallFunction(
+            Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            int functionId,
+            const std::string& subject,
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const POINT& mousePos,
+            const RECT& area) const;
         [[nodiscard]] size_t CountCallbacks() const;
         [[nodiscard]] size_t CountTagFunctions() const;
+        [[nodiscard]] size_t CountRadarScreenTagFunctions() const;
         [[nodiscard]] bool HasCallbackFunction(int id) const;
         [[nodiscard]] bool HasCallbackByDescription(const std::string& description) const;
         [[nodiscard]] bool HasTagFunction(int id) const;
+        [[nodiscard]] bool HasRadarScreenTagFunction(int id) const;
         int ReserveNextDynamicFunctionId();
         void RegisterFunctionCall(const UKControllerPlugin::Euroscope::CallbackFunction& function);
         void RegisterFunctionCall(const UKControllerPlugin::Tag::TagFunction& function);
+        void RegisterFunctionCall(const UKControllerPlugin::Tag::RadarScreenTagFunction& function);
         void RegisterTagFunctionsWithEuroscope(
             UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin) const;
 
@@ -57,5 +70,9 @@ namespace UKControllerPlugin::Plugin {
 
         // The registered functions which have fixed ids - always the same on every load, as defined in the wiki.
         std::set<UKControllerPlugin::Tag::TagFunction, UKControllerPlugin::Euroscope::CompareFunctions> tagFunctions;
+
+        // The registered functions which have fixed ids - always the same on every load, as defined in the wiki.
+        // This is for functions called at the RadarScreen level.
+        std::map<int, UKControllerPlugin::Tag::RadarScreenTagFunction> radarScreenTagFunctions;
     };
 } // namespace UKControllerPlugin::Plugin

@@ -669,7 +669,7 @@ set(ALL_FILES
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
-    $<TARGET_OBJECTS:UKControllerPluginCore> intention/IntentionCodeBootstrapProviderTest.cpp)
+    $<TARGET_OBJECTS:UKControllerPluginCore> intention/IntentionCodeBootstrapProviderTest.cpp tag/RadarScreenTagFunctionTest.cpp)
 
 ################################################################################
 # Target

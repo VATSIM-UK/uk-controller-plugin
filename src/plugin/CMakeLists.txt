@@ -904,7 +904,7 @@ set(src__tag
     "tag/TagItemCollection.h"
     "tag/TagItemInterface.h"
     "tag/TagItemInterface.cpp"
-)
+        tag/RadarScreenTagFunction.cpp tag/RadarScreenTagFunction.h)
 source_group("src\\tag" FILES ${src__tag})
 
 set(src__time
