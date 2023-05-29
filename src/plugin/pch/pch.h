@@ -61,6 +61,7 @@ using std::min;
 #include <tchar.h>
 #include <type_traits>
 #include <typeindex>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <variant>

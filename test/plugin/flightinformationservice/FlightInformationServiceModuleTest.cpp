@@ -56,7 +56,7 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container);
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
-            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("UKFIS Selected"));
         }
     } // namespace FlightInformationService
 } // namespace UKControllerPluginTest

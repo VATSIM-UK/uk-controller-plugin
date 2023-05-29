@@ -112,8 +112,7 @@ source_group("test\\dependency" FILES ${test__dependency})
 set(test__euroscope
     "euroscope/AsrEventHandlerCollectionTest.cpp"
     "euroscope/CallbackFunctionTest.cpp"
-    "euroscope/CompareFunctionsTest.cpp"
-    "euroscope/GeneralSettingsConfigurationBootstrapTest.cpp"
+        "euroscope/GeneralSettingsConfigurationBootstrapTest.cpp"
     "euroscope/GeneralSettingsConfigurationTest.cpp"
     "euroscope/LoadDefaultUserSettingsTest.cpp"
     "euroscope/RadarTargetEventHandlerCollectionTest.cpp"

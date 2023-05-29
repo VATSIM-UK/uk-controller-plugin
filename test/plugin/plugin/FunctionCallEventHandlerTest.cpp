@@ -35,19 +35,19 @@ namespace UKControllerPluginTest::Plugin {
     TEST_F(FunctionCallEventHandlerTest, ReserveNextDynamicFunctionIdReturnsConsecutiveIds)
     {
         FunctionCallEventHandler handler;
-        EXPECT_EQ(5000, handler.ReserveNextDynamicFunctionId());
-        EXPECT_EQ(5001, handler.ReserveNextDynamicFunctionId());
-        EXPECT_EQ(5002, handler.ReserveNextDynamicFunctionId());
-        EXPECT_EQ(5003, handler.ReserveNextDynamicFunctionId());
-        EXPECT_EQ(5004, handler.ReserveNextDynamicFunctionId());
-        EXPECT_EQ(5005, handler.ReserveNextDynamicFunctionId());
+        EXPECT_EQ(10000, handler.ReserveNextDynamicFunctionId());
+        EXPECT_EQ(10001, handler.ReserveNextDynamicFunctionId());
+        EXPECT_EQ(10002, handler.ReserveNextDynamicFunctionId());
+        EXPECT_EQ(10003, handler.ReserveNextDynamicFunctionId());
+        EXPECT_EQ(10004, handler.ReserveNextDynamicFunctionId());
+        EXPECT_EQ(10005, handler.ReserveNextDynamicFunctionId());
     }
 
     TEST_F(FunctionCallEventHandlerTest, RegisterFunctionCallThrowExceptionIfAlreadyRegistered)
     {
         FunctionCallEventHandler handler;
-        CallbackFunction function(5000, "Test Function", [](int, std::string, RECT) {});
-        CallbackFunction function2(5000, "Test Function", [](int, std::string, RECT) {});
+        CallbackFunction function(10000, "Test Function", [](int, std::string, RECT) {});
+        CallbackFunction function2(10000, "Test Function", [](int, std::string, RECT) {});
 
         EXPECT_NO_THROW(handler.RegisterFunctionCall(function));
         EXPECT_THROW(handler.RegisterFunctionCall(function2), std::invalid_argument);
@@ -57,11 +57,11 @@ namespace UKControllerPluginTest::Plugin {
     {
         FunctionCallEventHandler handler;
         std::string output;
-        CallbackFunction function(5000, "Test Function", [&output](int, std::string input, RECT) { output = input; });
+        CallbackFunction function(10000, "Test Function", [&output](int, std::string input, RECT) { output = input; });
 
         handler.RegisterFunctionCall(function);
         EXPECT_EQ(1, handler.CountCallbacks());
-        handler.CallFunction(5000, "some test", flightplan, radarTarget, POINT(), RECT());
+        handler.CallFunction(10000, "some test", flightplan, radarTarget, POINT(), RECT());
         EXPECT_TRUE(output == "some test");
     }
 
@@ -85,10 +85,10 @@ namespace UKControllerPluginTest::Plugin {
     TEST_F(FunctionCallEventHandlerTest, HasCallbackFunctionReturnsTrueIfItExists)
     {
         FunctionCallEventHandler handler;
-        CallbackFunction function(5000, "Test Function", [](int, std::string input, RECT) {});
+        CallbackFunction function(10000, "Test Function", [](int, std::string input, RECT) {});
 
         handler.RegisterFunctionCall(function);
-        EXPECT_TRUE(handler.HasCallbackFunction(5000));
+        EXPECT_TRUE(handler.HasCallbackFunction(10000));
     }
 
     TEST_F(FunctionCallEventHandlerTest, HasTagFunctionFunctionReturnsTrueIfItExists)
@@ -106,7 +106,7 @@ namespace UKControllerPluginTest::Plugin {
     TEST_F(FunctionCallEventHandlerTest, RegisterFunctionsWithEuroscopeRegistersTagFunctions)
     {
         FunctionCallEventHandler handler;
-        CallbackFunction function(5000, "Test Function", [](int, std::string, RECT) {});
+        CallbackFunction function(10000, "Test Function", [](int, std::string, RECT) {});
         TagFunction function2(
             9000,
             "Test Tag Function",
@@ -144,13 +144,14 @@ namespace UKControllerPluginTest::Plugin {
     TEST_F(FunctionCallEventHandlerTest, DynamicFunctionCallHandlesNonExistant)
     {
         FunctionCallEventHandler handler;
-        EXPECT_NO_THROW(handler.CallFunction(5000, "some test", flightplan, radarTarget, POINT(), RECT()));
+        EXPECT_NO_THROW(handler.CallFunction(10000, "some test", flightplan, radarTarget, POINT(), RECT()));
     }
 
     TEST_F(FunctionCallEventHandlerTest, RadarScreenFunctionCallHandlesNonExistant)
     {
         FunctionCallEventHandler handler;
-        EXPECT_NO_THROW(handler.CallFunction(radarScreen, 5000, "some test", flightplan, radarTarget, POINT(), RECT()));
+        EXPECT_NO_THROW(
+            handler.CallFunction(radarScreen, 10000, "some test", flightplan, radarTarget, POINT(), RECT()));
     }
 
     TEST_F(FunctionCallEventHandlerTest, RegisterFunctionCallRegistersRadarScreenTagFunctionForCalling)
