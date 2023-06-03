@@ -2,12 +2,15 @@
 #include "ResetSquawkOnFailedDelete.h"
 #include "SquawkAssignment.h"
 #include "SquawkAssignmentDeleteForConspicuityFailedEvent.h"
+#include "SquawkAssignmentMenu.h"
 #include "SquawkEventHandler.h"
 #include "SquawkGenerator.h"
 #include "SquawkModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
+#include "euroscope/EuroscopeRadarLoopbackInterface.h"
+#include "euroscope/RadarScreenCallbackFunction.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "eventhandler/EventBus.h"
 #include "eventhandler/EventHandlerFlags.h"
@@ -89,6 +92,34 @@ namespace UKControllerPlugin::Squawk {
                 const POINT& mousePos) { eventHandler->SquawkRecycleLocal(fp, rt, context, mousePos); });
 
         container.pluginFunctionHandlers->RegisterFunctionCall(forceSquawkCallbackLocal);
+
+        // Squawk assignment menu
+        int squawkMenuCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        std::shared_ptr<SquawkAssignmentMenu> squawkMenu = std::make_shared<SquawkAssignmentMenu>(
+            squawkMenuCallbackId, *container.squawkGenerator, *container.activeCallsigns, *container.plugin);
+
+        // Register a callback function for when the option is selected
+        Euroscope::RadarScreenCallbackFunction menuCallbackFunction(
+            squawkMenuCallbackId,
+            "Squawk Assignment Menu Callback",
+            [squawkMenu](
+                int,
+                UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+                const std::string& context,
+                const POINT& mousePos,
+                const RECT& area) { squawkMenu->MenuOptionSelected(radarScreen, context, mousePos, area); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(menuCallbackFunction);
+
+        // Register the tag function
+        TagFunction squawkMenuTagFunction(
+            9022,
+            "Open Squawk Assignment Menu",
+            [squawkMenu](
+                UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& fp,
+                UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& rt,
+                const std::string& context,
+                const POINT& mousePos) { squawkMenu->DisplaySquawkAssignmentMenu(fp, mousePos); });
+        container.pluginFunctionHandlers->RegisterFunctionCall(squawkMenuTagFunction);
 
         // Handler to reset squawks if delete fails
         UKControllerPluginUtils::EventHandler::EventBus::Bus()

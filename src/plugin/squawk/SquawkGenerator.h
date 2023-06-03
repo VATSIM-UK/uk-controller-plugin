@@ -1,5 +1,7 @@
 #pragma once
+#include "SquawkGeneratorInterface.h"
 #include "SquawkRequest.h"
+#include "squawk/SquawkGeneratorInterface.h"
 #include "task/TaskRunnerInterface.h"
 
 namespace UKControllerPlugin {
@@ -28,7 +30,7 @@ namespace UKControllerPlugin::Squawk {
     /*
         Makes the relevant API calls to generate a squawk for an aircraft.
     */
-    class SquawkGenerator
+    class SquawkGenerator : public SquawkGeneratorInterface
     {
         public:
         SquawkGenerator(
@@ -38,18 +40,18 @@ namespace UKControllerPlugin::Squawk {
             const UKControllerPlugin::Controller::ActiveCallsignCollection& callsigns,
             const UKControllerPlugin::Flightplan::StoredFlightplanCollection& storedFlightplans,
             const std::shared_ptr<UKControllerPlugin::Squawk::ApiSquawkAllocationHandler>& allocations);
-        auto
-        AssignConspicuitySquawkForAircraft(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan)
-            -> bool;
         auto AssignCircuitSquawkForAircraft(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const -> bool;
+        auto DeleteApiSquawkAndSetTo(
+            const std::string& squawk, UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> bool override;
         auto ForceGeneralSquawkForAircraft(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
         auto ForceLocalSquawkForAircraft(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
-            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool;
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) -> bool override;
         auto ReassignPreviousSquawkToAircraft(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) const -> bool;
@@ -69,7 +71,9 @@ namespace UKControllerPlugin::Squawk {
         CreateLocalSquawkAssignment(const std::string& callsign, std::string unit, std::string flightRules) const
             -> bool;
         void EndSquawkUpdate(std::string callsign);
-        auto StartSquawkUpdate(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) -> bool;
+        auto StartSquawkUpdate(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            const std::string& processSquawk = "7000") -> bool;
 
         // Callsigns of logged in controllers
         const UKControllerPlugin::Controller::ActiveCallsignCollection& activeCallsigns;
@@ -91,8 +95,5 @@ namespace UKControllerPlugin::Squawk {
 
         // Receives API squawk allocations, so that they may be assigned to flightplans on the main thread
         const std::shared_ptr<UKControllerPlugin::Squawk::ApiSquawkAllocationHandler> allocations;
-
-        // The squawk we set when a squawk is being generated
-        const std::string PROCESS_SQUAWK = "7000";
     };
 } // namespace UKControllerPlugin::Squawk

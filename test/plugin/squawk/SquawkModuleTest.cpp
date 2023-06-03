@@ -65,7 +65,7 @@ namespace UKControllerPluginTest::Squawk {
     TEST_F(SquawkModuleTest, BootstrapPluginRegistersFunctionCallbacks)
     {
         SquawkModule::BootstrapPlugin(container, false);
-        EXPECT_EQ(2, this->container.pluginFunctionHandlers->CountTagFunctions());
+        EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountTagFunctions());
         EXPECT_EQ(0, this->container.pluginFunctionHandlers->CountCallbacks());
     }
 
@@ -90,5 +90,18 @@ namespace UKControllerPluginTest::Squawk {
             UKControllerPlugin::Squawk ::ResetSquawkOnFailedDelete,
             UKControllerPlugin::Squawk ::SquawkAssignmentDeleteForConspicuityFailedEvent>(
             UKControllerPluginUtils::EventHandler::EventHandlerFlags::EuroscopeThread);
+    }
+
+    TEST_F(SquawkModuleTest, BootstrapPluginRegistersSquawkAssignmentMenuTagFunction)
+    {
+        SquawkModule::BootstrapPlugin(container, true);
+        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9022));
+    }
+
+    TEST_F(SquawkModuleTest, BootstrapPluginRegistersSquawkAssignmentMenuCallbackFunction)
+    {
+        SquawkModule::BootstrapPlugin(container, true);
+        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasRadarScreenCallbackByDescription(
+            "Squawk Assignment Menu Callback"));
     }
 } // namespace UKControllerPluginTest::Squawk

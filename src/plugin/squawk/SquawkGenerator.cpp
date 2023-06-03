@@ -60,23 +60,24 @@ namespace UKControllerPlugin::Squawk {
     }
 
     /**
-     * Removes the API squawk assignment and deletes the local
+     * Removes the API squawk assignment and changes the EuroScope callotion to the provided squawk.
      */
-    auto SquawkGenerator::AssignConspicuitySquawkForAircraft(EuroScopeCFlightPlanInterface& flightplan) -> bool
+    auto SquawkGenerator::DeleteApiSquawkAndSetTo(const std::string& squawk, EuroScopeCFlightPlanInterface& flightplan)
+        -> bool
     {
-        if (!this->assignmentRules.AssignConspicuityAllowed(flightplan)) {
-            LogWarning("Cannot assign conspicuity squawk to " + flightplan.GetCallsign() + " - not allowed");
+        if (!this->assignmentRules.DeleteApiSquawkAllowed(flightplan)) {
+            LogWarning("Cannot delete api squawk " + flightplan.GetCallsign() + " - not allowed");
             return false;
         }
 
         const auto currentSquawk = flightplan.GetAssignedSquawk();
-        if (!this->StartSquawkUpdate(flightplan)) {
+        if (!this->StartSquawkUpdate(flightplan, squawk)) {
             return false;
         }
 
         const auto callsign = flightplan.GetCallsign();
         if (storedFlightplans.HasFlightplanForCallsign(callsign)) {
-            storedFlightplans.GetFlightplanForCallsign(callsign).SetPreviouslyAssignedSquawk("7000");
+            storedFlightplans.GetFlightplanForCallsign(callsign).SetPreviouslyAssignedSquawk(squawk);
         }
 
         this->taskRunner->QueueAsynchronousTask([this, callsign, currentSquawk]() {
@@ -306,14 +307,16 @@ namespace UKControllerPlugin::Squawk {
     /*
         Places a request in progress to prevent duplicate requests
     */
-    auto SquawkGenerator::StartSquawkUpdate(EuroScopeCFlightPlanInterface& flightplan) -> bool
+    auto SquawkGenerator::StartSquawkUpdate(EuroScopeCFlightPlanInterface& flightplan, const std::string& processSquawk)
+        -> bool
     {
         // Lock the requests queue and mark the request as in progress. Set a holding squawk.
         if (!this->squawkRequests.Start(flightplan.GetCallsign())) {
             return false;
         }
 
-        flightplan.SetSquawk(this->PROCESS_SQUAWK);
+        flightplan.SetSquawk(processSquawk);
+
         return true;
     }
 

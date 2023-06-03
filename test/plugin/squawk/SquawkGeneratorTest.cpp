@@ -555,14 +555,14 @@ namespace UKControllerPluginTest {
             EXPECT_TRUE(this->generator->AssignCircuitSquawkForAircraft(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
-        TEST_F(SquawkGeneratorTest, ConspicuityReturnsFalseOnNoAction)
+        TEST_F(SquawkGeneratorTest, DeleteApiSquawkAndSetToReturnsFalseOnNoAction)
         {
             this->activeCallsigns.Flush();
             EXPECT_CALL(*this->mockFlightplan, SetSquawk).Times(0);
-            EXPECT_FALSE(this->generator->AssignConspicuitySquawkForAircraft(*this->mockFlightplan));
+            EXPECT_FALSE(this->generator->DeleteApiSquawkAndSetTo("7000", *this->mockFlightplan));
         }
 
-        TEST_F(SquawkGeneratorTest, ConspicuityReturnsFalseOnNoActionRequestAlreadyHappening)
+        TEST_F(SquawkGeneratorTest, DeleteApiSquawkAndSetToReturnsFalseOnNoActionRequestAlreadyHappening)
         {
             MockTaskRunnerInterface mockRunnerNoExecute(false);
             SquawkGenerator newGenerator(
@@ -578,11 +578,11 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, GetAssignedSquawk()).WillByDefault(Return("1234"));
             EXPECT_CALL(*this->mockFlightplan, SetSquawk("7000")).Times(1);
 
-            EXPECT_TRUE(newGenerator.AssignConspicuitySquawkForAircraft(*this->mockFlightplan));
-            EXPECT_FALSE(newGenerator.AssignConspicuitySquawkForAircraft(*this->mockFlightplan));
+            EXPECT_TRUE(newGenerator.DeleteApiSquawkAndSetTo("7000", *this->mockFlightplan));
+            EXPECT_FALSE(newGenerator.DeleteApiSquawkAndSetTo("7000", *this->mockFlightplan));
         }
 
-        TEST_F(SquawkGeneratorTest, ConspicuityDeletesSquawk)
+        TEST_F(SquawkGeneratorTest, DeleteApiSquawkAndSetToDeletesSquawk)
         {
             StoredFlightplan storedPlan("BAW1252", "EGKK", "EGPH");
             storedPlan.SetPreviouslyAssignedSquawk("1234");
@@ -591,14 +591,14 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
             ON_CALL(*this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW1252"));
             ON_CALL(*this->mockFlightplan, GetAssignedSquawk()).WillByDefault(Return("1234"));
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("7000")).Times(1);
+            EXPECT_CALL(*this->mockFlightplan, SetSquawk("7010")).Times(1);
             EXPECT_CALL(this->api, DeleteSquawkAssignment("BAW1252")).Times(1);
 
-            EXPECT_TRUE(this->generator->AssignConspicuitySquawkForAircraft(*this->mockFlightplan));
-            EXPECT_EQ("7000", this->flightplans.GetFlightplanForCallsign("BAW1252").GetPreviouslyAssignedSquawk());
+            EXPECT_TRUE(this->generator->DeleteApiSquawkAndSetTo("7010", *this->mockFlightplan));
+            EXPECT_EQ("7010", this->flightplans.GetFlightplanForCallsign("BAW1252").GetPreviouslyAssignedSquawk());
         }
 
-        TEST_F(SquawkGeneratorTest, ConspicuityDeletesSquawkAndTriggersFailedEventIfDeleteFails)
+        TEST_F(SquawkGeneratorTest, DeleteApiSquawkAndSetToDeletesSquawkAndTriggersFailedEventIfDeleteFails)
         {
             StoredFlightplan storedPlan("BAW1252", "EGKK", "EGPH");
             storedPlan.SetPreviouslyAssignedSquawk("1234");
@@ -607,12 +607,12 @@ namespace UKControllerPluginTest {
             ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
             ON_CALL(*this->mockFlightplan, GetCallsign()).WillByDefault(Return("BAW1252"));
             ON_CALL(*this->mockFlightplan, GetAssignedSquawk()).WillByDefault(Return("1234"));
-            EXPECT_CALL(*this->mockFlightplan, SetSquawk("7000")).Times(1);
+            EXPECT_CALL(*this->mockFlightplan, SetSquawk("2831")).Times(1);
             EXPECT_CALL(this->api, DeleteSquawkAssignment("BAW1252"))
                 .WillOnce(Throw(ApiNotFoundException("Not found")));
 
-            EXPECT_TRUE(this->generator->AssignConspicuitySquawkForAircraft(*this->mockFlightplan));
-            EXPECT_EQ("7000", this->flightplans.GetFlightplanForCallsign("BAW1252").GetPreviouslyAssignedSquawk());
+            EXPECT_TRUE(this->generator->DeleteApiSquawkAndSetTo("2831", *this->mockFlightplan));
+            EXPECT_EQ("2831", this->flightplans.GetFlightplanForCallsign("BAW1252").GetPreviouslyAssignedSquawk());
 
             AssertSingleEventDispatched();
             AssertFirstEventDispatched<UKControllerPlugin::Squawk::SquawkAssignmentDeleteForConspicuityFailedEvent>(
