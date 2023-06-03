@@ -9,8 +9,8 @@
 #include "bootstrap/PersistenceContainer.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerStatusEventHandlerCollection.h"
+#include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
-#include "euroscope/RadarScreenCallbackFunction.h"
 #include "euroscope/UserSettingAwareCollection.h"
 #include "eventhandler/EventBus.h"
 #include "eventhandler/EventHandlerFlags.h"
@@ -95,20 +95,31 @@ namespace UKControllerPlugin::Squawk {
 
         // Squawk assignment menu
         int squawkMenuCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        int manualSquawkEnteredCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         std::shared_ptr<SquawkAssignmentMenu> squawkMenu = std::make_shared<SquawkAssignmentMenu>(
-            squawkMenuCallbackId, *container.squawkGenerator, *container.activeCallsigns, *container.plugin);
+            squawkMenuCallbackId,
+            manualSquawkEnteredCallbackId,
+            *container.squawkGenerator,
+            *container.activeCallsigns,
+            *container.plugin);
 
         // Register a callback function for when the option is selected
-        Euroscope::RadarScreenCallbackFunction menuCallbackFunction(
+        Euroscope::CallbackFunction menuCallbackFunction(
             squawkMenuCallbackId,
             "Squawk Assignment Menu Callback",
-            [squawkMenu](
-                int,
-                UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-                const std::string& context,
-                const POINT& mousePos,
-                const RECT& area) { squawkMenu->MenuOptionSelected(radarScreen, context, mousePos, area); });
+            [squawkMenu](int, const std::string& context, const RECT& area) {
+                squawkMenu->MenuOptionSelected(context, area);
+            });
         container.pluginFunctionHandlers->RegisterFunctionCall(menuCallbackFunction);
+
+        // Register a callback function for when a manual squawk is entered
+        Euroscope::CallbackFunction manualSquawkEnteredCallbackFunction(
+            manualSquawkEnteredCallbackId,
+            "Manual Squawk Entered Callback",
+            [squawkMenu](int, const std::string& context, const RECT& area) {
+                squawkMenu->ManualSquawkEntered(context);
+            });
+        container.pluginFunctionHandlers->RegisterFunctionCall(manualSquawkEnteredCallbackFunction);
 
         // Register the tag function
         TagFunction squawkMenuTagFunction(

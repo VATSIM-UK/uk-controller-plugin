@@ -2,6 +2,7 @@
 #include "UKRadarScreen.h"
 #include "euroscope/EuroScopeCFlightPlanWrapper.h"
 #include "euroscope/EuroScopeCRadarTargetWrapper.h"
+#include "euroscope/EuroScopePlugIn.h"
 #include "euroscope/PluginSettingsProviderCollection.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
@@ -213,12 +214,11 @@ namespace UKControllerPlugin {
     void UKRadarScreen::ToggleEuroscopeTagFunction(
         int functionId, const std::string& callsign, const POINT& mousePos, const RECT& tagItemArea)
     {
-        this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));
-        this->StartTagFunction(
-            callsign.c_str(),
+        StartTagFunction(
+            this->GetPlugIn()->FlightPlanSelectASEL().GetCallsign(),
             nullptr,
-            EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
-            callsign.c_str(),
+            0,
+            "",
             nullptr,
             functionId,
             mousePos,
@@ -262,6 +262,7 @@ namespace UKControllerPlugin {
     {
         auto flightplan = Euroscope::EuroScopeCFlightPlanWrapper(this->GetPlugIn()->FlightPlanSelectASEL());
         auto radarTarget = Euroscope::EuroScopeCRadarTargetWrapper(this->GetPlugIn()->RadarTargetSelectASEL());
+
         this->functionHandler.CallFunction(*this, FunctionId, sItemString, flightplan, radarTarget, Pt, Area);
     }
 } // namespace UKControllerPlugin

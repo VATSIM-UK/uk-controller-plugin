@@ -23,15 +23,13 @@ namespace UKControllerPlugin::Squawk {
         public:
         SquawkAssignmentMenu(
             int callbackId,
+            int manualSquawkCallbackId,
             SquawkGeneratorInterface& squawkGenerator,
             Controller::ActiveCallsignCollection& activeCallsigns,
             Euroscope::EuroscopePluginLoopbackInterface& plugin);
         void DisplaySquawkAssignmentMenu(Euroscope::EuroScopeCFlightPlanInterface& flightplan, const POINT& mousePos);
-        void MenuOptionSelected(
-            Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-            const std::string& option,
-            const POINT& mousePos,
-            const RECT& tagItemArea);
+        void MenuOptionSelected(const std::string& option, const RECT& tagItemArea);
+        void ManualSquawkEntered(const std::string& squawk);
 
         private:
         void AddMenuOptions();
@@ -41,9 +39,9 @@ namespace UKControllerPlugin::Squawk {
         const char* LOCAL_SQUAWK = "Local";
         const char* CONSPICUITY = "Conspicuity (7000)";
         const char* CIRCUIT = "Circuit (7010)";
-        const char* EUROSCOPE = "Euroscope";
+        const char* MANUAL = "Manual";
 
-        std::list<const char*> squawkOptions = {GENERAL_SQUAWK, LOCAL_SQUAWK, CONSPICUITY, CIRCUIT, EUROSCOPE};
+        std::list<const char*> squawkOptions = {GENERAL_SQUAWK, LOCAL_SQUAWK, CONSPICUITY, CIRCUIT, MANUAL};
 
         // Menu sizes
         static const int MENU_WIDTH = 200;
@@ -51,6 +49,9 @@ namespace UKControllerPlugin::Squawk {
 
         // The callback id to use for when a menu item is clicked
         const int callbackId;
+
+        // The callback id to use for when the manual squawk menu item is clicked and a squawk provided
+        const int manualSquawkCallbackId;
 
         // The squawk generator
         SquawkGeneratorInterface& squawkGenerator;

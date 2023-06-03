@@ -1,19 +1,21 @@
 #include "SquawkAssignmentMenu.h"
+#include "SquawkCodeValid.h"
 #include "SquawkGeneratorInterface.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "euroscope/EuroscopeRadarLoopbackInterface.h"
 
 namespace UKControllerPlugin::Squawk {
 
     SquawkAssignmentMenu::SquawkAssignmentMenu(
         int callbackId,
+        int manualSquawkCallbackId,
         SquawkGeneratorInterface& squawkGenerator,
         Controller::ActiveCallsignCollection& activeCallsigns,
         Euroscope::EuroscopePluginLoopbackInterface& plugin)
-        : callbackId(callbackId), squawkGenerator(squawkGenerator), activeCallsigns(activeCallsigns), plugin(plugin)
+        : callbackId(callbackId), manualSquawkCallbackId(manualSquawkCallbackId), squawkGenerator(squawkGenerator),
+          activeCallsigns(activeCallsigns), plugin(plugin)
     {
     }
 
@@ -54,11 +56,7 @@ namespace UKControllerPlugin::Squawk {
         }
     }
 
-    void SquawkAssignmentMenu::MenuOptionSelected(
-        Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-        const std::string& option,
-        const POINT& mousePos,
-        const RECT& tagItemArea)
+    void SquawkAssignmentMenu::MenuOptionSelected(const std::string& option, const RECT& tagItemArea)
     {
         auto flightplan = this->plugin.GetSelectedFlightplan();
         auto radarTarget = this->plugin.GetSelectedRadarTarget();
@@ -87,10 +85,29 @@ namespace UKControllerPlugin::Squawk {
             return;
         }
 
-        if (option == EUROSCOPE) {
-            radarScreen.ToggleEuroscopeTagFunction(
-                EuroScopePlugIn::TAG_ITEM_FUNCTION_SQUAWK_POPUP, flightplan->GetCallsign(), mousePos, tagItemArea);
+        if (option == MANUAL) {
+            plugin.ShowTextEditPopup(
+                {tagItemArea.left, tagItemArea.top, tagItemArea.left + 50, tagItemArea.top + 25}, // NOLINT
+                manualSquawkCallbackId,
+                flightplan->GetAssignedSquawk());
             return;
         }
+    }
+
+    void SquawkAssignmentMenu::ManualSquawkEntered(const std::string& squawk)
+    {
+        auto flightplan = this->plugin.GetSelectedFlightplan();
+        auto radarTarget = this->plugin.GetSelectedRadarTarget();
+        if (!flightplan || !radarTarget) {
+            LogWarning("No flightplan selected, cant action squawk menu selection");
+            return;
+        }
+
+        if (!SquawkCodeValid(squawk)) {
+            LogWarning("Invalid squawk entered: " + squawk);
+            return;
+        }
+
+        this->squawkGenerator.DeleteApiSquawkAndSetTo(squawk, *flightplan);
     }
 } // namespace UKControllerPlugin::Squawk

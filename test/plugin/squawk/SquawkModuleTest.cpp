@@ -66,7 +66,7 @@ namespace UKControllerPluginTest::Squawk {
     {
         SquawkModule::BootstrapPlugin(container, false);
         EXPECT_EQ(3, this->container.pluginFunctionHandlers->CountTagFunctions());
-        EXPECT_EQ(0, this->container.pluginFunctionHandlers->CountCallbacks());
+        EXPECT_EQ(2, this->container.pluginFunctionHandlers->CountCallbacks());
     }
 
     TEST_F(SquawkModuleTest, BootstrapPluginRegistersForUserSettingsEvents)
@@ -101,7 +101,13 @@ namespace UKControllerPluginTest::Squawk {
     TEST_F(SquawkModuleTest, BootstrapPluginRegistersSquawkAssignmentMenuCallbackFunction)
     {
         SquawkModule::BootstrapPlugin(container, true);
-        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasRadarScreenCallbackByDescription(
-            "Squawk Assignment Menu Callback"));
+        EXPECT_TRUE(
+            this->container.pluginFunctionHandlers->HasCallbackByDescription("Squawk Assignment Menu Callback"));
+    }
+
+    TEST_F(SquawkModuleTest, BootstrapPluginRegistersManaulSquawkEnteredCallbackFunction)
+    {
+        SquawkModule::BootstrapPlugin(container, true);
+        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Manual Squawk Entered Callback"));
     }
 } // namespace UKControllerPluginTest::Squawk

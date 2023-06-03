@@ -36,7 +36,7 @@ namespace UKControllerPluginTest::Squawk {
         SquawkAssignmentMenuTest()
             : mockFlightplan(std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>()),
               mockRadarTarget(std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>()),
-              menu(55, squawkGenerator, activeCallsigns, plugin)
+              menu(55, 66, squawkGenerator, activeCallsigns, plugin)
         {
             ON_CALL(*mockFlightplan, GetCallsign).WillByDefault(testing::Return("BAW123"));
 
@@ -52,7 +52,6 @@ namespace UKControllerPluginTest::Squawk {
         std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> mockFlightplan;
         std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>> mockRadarTarget;
         testing::NiceMock<MockSquawkGenerator> squawkGenerator;
-        testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> radarScreen;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
         UKControllerPlugin::Squawk::SquawkAssignmentMenu menu;
@@ -126,7 +125,7 @@ namespace UKControllerPluginTest::Squawk {
         EXPECT_CALL(plugin, AddItemToPopupList(expectedItem4)).Times(1);
 
         UKControllerPlugin::Plugin::PopupMenuItem expectedItem5;
-        expectedItem5.firstValue = "Euroscope";
+        expectedItem5.firstValue = "Manual";
         expectedItem5.secondValue = "";
         expectedItem5.callbackFunctionId = 55;
         expectedItem5.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
@@ -187,7 +186,7 @@ namespace UKControllerPluginTest::Squawk {
         EXPECT_CALL(plugin, AddItemToPopupList(expectedItem4)).Times(1);
 
         UKControllerPlugin::Plugin::PopupMenuItem expectedItem5;
-        expectedItem5.firstValue = "Euroscope";
+        expectedItem5.firstValue = "Manual";
         expectedItem5.secondValue = "";
         expectedItem5.callbackFunctionId = 55;
         expectedItem5.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
@@ -207,7 +206,7 @@ namespace UKControllerPluginTest::Squawk {
 
         EXPECT_CALL(squawkGenerator, ForceGeneralSquawkForAircraft).Times(0);
 
-        menu.MenuOptionSelected(radarScreen, "General", {0, 0}, {0, 0, 0, 0});
+        menu.MenuOptionSelected("General", {0, 0, 0, 0});
     }
 
     TEST_F(SquawkAssignmentMenuTest, TestItHandlesNoRadarTargetOnMenuItemSelected)
@@ -218,7 +217,7 @@ namespace UKControllerPluginTest::Squawk {
 
         EXPECT_CALL(squawkGenerator, ForceGeneralSquawkForAircraft).Times(0);
 
-        menu.MenuOptionSelected(radarScreen, "General", {0, 0}, {0, 0, 0, 0});
+        menu.MenuOptionSelected("General", {0, 0, 0, 0});
     }
 
     TEST_F(SquawkAssignmentMenuTest, TestItHandlesGeneralSquawkMenuOption)
@@ -232,7 +231,7 @@ namespace UKControllerPluginTest::Squawk {
             ForceGeneralSquawkForAircraft(testing::Ref(*mockFlightplan), testing::Ref(*mockRadarTarget)))
             .Times(1);
 
-        menu.MenuOptionSelected(radarScreen, "General", {0, 0}, {0, 0, 0, 0});
+        menu.MenuOptionSelected("General", {0, 0, 0, 0});
     }
 
     TEST_F(SquawkAssignmentMenuTest, TestItHandlesLocalSquawkMenuOption)
@@ -245,7 +244,7 @@ namespace UKControllerPluginTest::Squawk {
             squawkGenerator, ForceLocalSquawkForAircraft(testing::Ref(*mockFlightplan), testing::Ref(*mockRadarTarget)))
             .Times(1);
 
-        menu.MenuOptionSelected(radarScreen, "Local", {0, 0}, {0, 0, 0, 0});
+        menu.MenuOptionSelected("Local", {0, 0, 0, 0});
     }
 
     TEST_F(SquawkAssignmentMenuTest, TestItHandlesConspicuityMenuOption)
@@ -256,7 +255,7 @@ namespace UKControllerPluginTest::Squawk {
 
         EXPECT_CALL(squawkGenerator, DeleteApiSquawkAndSetTo("7000", testing::Ref(*mockFlightplan))).Times(1);
 
-        menu.MenuOptionSelected(radarScreen, "Conspicuity (7000)", {0, 0}, {0, 0, 0, 0});
+        menu.MenuOptionSelected("Conspicuity (7000)", {0, 0, 0, 0});
     }
 
     TEST_F(SquawkAssignmentMenuTest, TestItHandlesCircuitMenuOption)
@@ -267,26 +266,54 @@ namespace UKControllerPluginTest::Squawk {
 
         EXPECT_CALL(squawkGenerator, DeleteApiSquawkAndSetTo("7010", testing::Ref(*mockFlightplan))).Times(1);
 
-        menu.MenuOptionSelected(radarScreen, "Circuit (7010)", {0, 0}, {0, 0, 0, 0});
+        menu.MenuOptionSelected("Circuit (7010)", {0, 0, 0, 0});
     }
 
-    TEST_F(SquawkAssignmentMenuTest, TestItHandlesEuroscopeMenuOption)
+    TEST_F(SquawkAssignmentMenuTest, TestItHandlesManualMenuOption)
     {
         ON_CALL(plugin, GetSelectedFlightplan).WillByDefault(testing::Return(mockFlightplan));
+        ON_CALL(plugin, GetSelectedRadarTarget).WillByDefault(testing::Return(mockRadarTarget));
+        ON_CALL(*mockFlightplan, GetAssignedSquawk).WillByDefault(testing::Return("5214"));
 
+        RECT expectedRect = {0, 0, 50, 25};
+        EXPECT_CALL(plugin, ShowTextEditPopup(RectEq(expectedRect), 66, "5214")).Times(1);
+
+        menu.MenuOptionSelected("Manual", {0, 0, 0, 0});
+    }
+
+    TEST_F(SquawkAssignmentMenuTest, ItDoesntEnterManualSquawkIfPluginReturnsNullptrFlightplan)
+    {
+        ON_CALL(plugin, GetSelectedFlightplan).WillByDefault(testing::Return(nullptr));
         ON_CALL(plugin, GetSelectedRadarTarget).WillByDefault(testing::Return(mockRadarTarget));
 
-        POINT expectedPoint = {0, 0};
-        RECT expectedRect = {0, 0, 0, 0};
-        EXPECT_CALL(
-            radarScreen,
-            ToggleEuroscopeTagFunction(
-                EuroScopePlugIn::TAG_ITEM_FUNCTION_SQUAWK_POPUP,
-                "BAW123",
-                PointEq(expectedPoint),
-                RectEq(expectedRect)))
-            .Times(1);
+        EXPECT_CALL(squawkGenerator, DeleteApiSquawkAndSetTo("5123", testing::Ref(*mockFlightplan))).Times(0);
+        menu.ManualSquawkEntered("5123");
+    }
 
-        menu.MenuOptionSelected(radarScreen, "Euroscope", {0, 0}, {0, 0, 0, 0});
+    TEST_F(SquawkAssignmentMenuTest, ItDoesntEnterManualSquawkIfPluginReturnsNullptrRadarTarget)
+    {
+        ON_CALL(plugin, GetSelectedFlightplan).WillByDefault(testing::Return(mockFlightplan));
+        ON_CALL(plugin, GetSelectedRadarTarget).WillByDefault(testing::Return(nullptr));
+
+        EXPECT_CALL(squawkGenerator, DeleteApiSquawkAndSetTo("5123", testing::Ref(*mockFlightplan))).Times(0);
+        menu.ManualSquawkEntered("5123");
+    }
+
+    TEST_F(SquawkAssignmentMenuTest, ItDoesntEnterManualSquawkIfPluginReturnsNullptrSquawkInvalid)
+    {
+        ON_CALL(plugin, GetSelectedFlightplan).WillByDefault(testing::Return(mockFlightplan));
+        ON_CALL(plugin, GetSelectedRadarTarget).WillByDefault(testing::Return(mockRadarTarget));
+
+        EXPECT_CALL(squawkGenerator, DeleteApiSquawkAndSetTo("XYZA", testing::Ref(*mockFlightplan))).Times(0);
+        menu.ManualSquawkEntered("XYZA");
+    }
+
+    TEST_F(SquawkAssignmentMenuTest, ItEntersAManualSquawk)
+    {
+        ON_CALL(plugin, GetSelectedFlightplan).WillByDefault(testing::Return(mockFlightplan));
+        ON_CALL(plugin, GetSelectedRadarTarget).WillByDefault(testing::Return(mockRadarTarget));
+
+        EXPECT_CALL(squawkGenerator, DeleteApiSquawkAndSetTo("5421", testing::Ref(*mockFlightplan))).Times(1);
+        menu.ManualSquawkEntered("5421");
     }
 } // namespace UKControllerPluginTest::Squawk
