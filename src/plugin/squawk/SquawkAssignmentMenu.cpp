@@ -25,6 +25,11 @@ namespace UKControllerPlugin::Squawk {
             return;
         }
 
+        // If the flightplan is tracked by someone else, don't show
+        if (flightplan.IsTracked() && !flightplan.IsTrackedByUser()) {
+            return;
+        }
+
         // Trigger the menu
         plugin.TriggerPopupList(
             {mousePos.x, mousePos.y, mousePos.x + MENU_WIDTH, mousePos.y + MENU_HEIGHT}, "Assign Squawk", 1);
@@ -42,7 +47,6 @@ namespace UKControllerPlugin::Squawk {
         item.checked = EuroScopePlugIn::POPUP_ELEMENT_NO_CHECKBOX;
         item.disabled = false;
         item.fixedPosition = false;
-        this->plugin.AddItemToPopupList(item);
 
         for (const auto& menuItem : this->squawkOptions) {
             item.firstValue = menuItem;
