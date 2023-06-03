@@ -3,6 +3,7 @@
 namespace UKControllerPlugin {
     namespace Euroscope {
         struct CallbackFunction;
+        struct RadarScreenCallbackFunction;
         class EuroScopeCFlightPlanInterface;
         class EuroScopeCRadarTargetInterface;
         class EuroscopePluginLoopbackInterface;
@@ -42,14 +43,18 @@ namespace UKControllerPlugin::Plugin {
             const POINT& mousePos,
             const RECT& area) const;
         [[nodiscard]] auto CountCallbacks() const -> size_t;
+        [[nodiscard]] auto CountRadarScreenCallbacks() const -> size_t;
         [[nodiscard]] auto CountTagFunctions() const -> size_t;
         [[nodiscard]] auto CountRadarScreenTagFunctions() const -> size_t;
         [[nodiscard]] auto HasCallbackFunction(int functionId) const -> bool;
         [[nodiscard]] auto HasCallbackByDescription(const std::string& description) const -> bool;
+        [[nodiscard]] auto HasRadarScreenCallbackFunction(int functionId) const -> bool;
+        [[nodiscard]] auto HasRadarScreenCallbackByDescription(const std::string& description) const -> bool;
         [[nodiscard]] auto HasTagFunction(int functionId) const -> bool;
         [[nodiscard]] auto HasRadarScreenTagFunction(int functionId) const -> bool;
         auto ReserveNextDynamicFunctionId() -> int;
         void RegisterFunctionCall(const UKControllerPlugin::Euroscope::CallbackFunction& function);
+        void RegisterFunctionCall(const UKControllerPlugin::Euroscope::RadarScreenCallbackFunction& function);
         void RegisterFunctionCall(const UKControllerPlugin::Tag::TagFunction& function);
         void RegisterFunctionCall(const UKControllerPlugin::Tag::RadarScreenTagFunction& function);
         void RegisterTagFunctionsWithEuroscope(

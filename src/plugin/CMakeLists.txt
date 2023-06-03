@@ -760,7 +760,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h radarscreen/ConfigurableDisplayCallbackFactory.cpp radarscreen/ConfigurableDisplayCallbackFactory.h)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h radarscreen/ConfigurableDisplayCallbackFactory.cpp radarscreen/ConfigurableDisplayCallbackFactory.h euroscope/RadarScreenCallbackFunction.cpp euroscope/RadarScreenCallbackFunction.h)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
@@ -865,7 +865,7 @@ set(src__squawk
     "squawk/SquawkModule.h"
     "squawk/SquawkRequest.cpp"
     "squawk/SquawkRequest.h"
-        squawk/SquawkAssignmentMenu.cpp squawk/SquawkAssignmentMenu.h squawk/SquawkAssignmentDeleteForConspicuityFailedEvent.h squawk/ResetSquawkOnFailedDelete.cpp squawk/ResetSquawkOnFailedDelete.h)
+        squawk/SquawkAssignmentMenu.cpp squawk/SquawkAssignmentMenu.h squawk/SquawkAssignmentDeleteForConspicuityFailedEvent.h squawk/ResetSquawkOnFailedDelete.cpp squawk/ResetSquawkOnFailedDelete.h squawk/SquawkGeneratorInterface.h)
 source_group("src\\squawk" FILES ${src__squawk})
 
 set(src__srd

@@ -21,5 +21,6 @@ namespace UKControllerPluginTest::Euroscope {
         MOCK_METHOD1(ConvertScreenPointToCoordinate, EuroScopePlugIn::CPosition(const POINT&));
         MOCK_METHOD3(ToggleTemporaryAltitudePopupList, void(std::string, POINT, RECT));
         MOCK_METHOD4(TogglePluginTagFunction, void(std::string, int, POINT, RECT));
+        MOCK_METHOD4(ToggleEuroscopeTagFunction, void(int, const std::string&, const POINT&, const RECT&));
     };
 } // namespace UKControllerPluginTest::Euroscope

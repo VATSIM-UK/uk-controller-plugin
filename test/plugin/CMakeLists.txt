@@ -119,7 +119,7 @@ set(test__euroscope
     "euroscope/RunwayDialogAwareCollectionTest.cpp"
     "euroscope/UserSettingAwareCollectionTest.cpp"
     "euroscope/UserSettingTest.cpp"
-        euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
+        euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp euroscope/RadarScreenCallbackFunctionTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
 
 set(test__eventhandler

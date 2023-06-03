@@ -210,6 +210,21 @@ namespace UKControllerPlugin {
         this->GetPlugIn()->OpenPopupList(area, title.c_str(), numColumns);
     }
 
+    void UKRadarScreen::ToggleEuroscopeTagFunction(
+        int functionId, const std::string& callsign, const POINT& mousePos, const RECT& tagItemArea)
+    {
+        this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));
+        this->StartTagFunction(
+            callsign.c_str(),
+            nullptr,
+            EuroScopePlugIn::TAG_ITEM_TYPE_CALLSIGN,
+            callsign.c_str(),
+            nullptr,
+            functionId,
+            mousePos,
+            tagItemArea);
+    }
+
     void UKRadarScreen::ToggleTemporaryAltitudePopupList(std::string callsign, POINT mousePos, RECT tagItemArea)
     {
         this->GetPlugIn()->SetASELAircraft(this->GetPlugIn()->FlightPlanSelect(callsign.c_str()));

@@ -2,6 +2,7 @@
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
+#include "euroscope/RadarScreenCallbackFunction.h"
 #include "mock/MockEuroscopeRadarScreenLoopbackInterface.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/RadarScreenTagFunction.h"
@@ -14,6 +15,7 @@ using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface;
 using UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
+using UKControllerPlugin::Euroscope::RadarScreenCallbackFunction;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Tag::RadarScreenTagFunction;
 using UKControllerPlugin::Tag::TagFunction;
@@ -63,6 +65,70 @@ namespace UKControllerPluginTest::Plugin {
         EXPECT_EQ(1, handler.CountCallbacks());
         handler.CallFunction(10000, "some test", flightplan, radarTarget, POINT(), RECT());
         EXPECT_TRUE(output == "some test");
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, RegisterRadarScreenFunctionCallRegistersRadarScreenTagFunctionForCalling)
+    {
+        FunctionCallEventHandler handler;
+        std::string output;
+        RadarScreenCallbackFunction function(
+            10000,
+            "Test Radar Screen Callback Function",
+            [&output](int, EuroscopeRadarLoopbackInterface&, std::string, const POINT&, const RECT&) {
+                output = "some test";
+            });
+
+        handler.RegisterFunctionCall(function);
+        EXPECT_EQ(1, handler.CountRadarScreenCallbacks());
+        handler.CallFunction(radarScreen, 10000, "some test", flightplan, radarTarget, POINT(), RECT());
+        EXPECT_TRUE(output == "some test");
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, HasRadarScreenCallbackFunctionFunctionReturnsTrueIfItExists)
+    {
+        FunctionCallEventHandler handler;
+        std::string output;
+        RadarScreenCallbackFunction function(
+            10000,
+            "Test Radar Screen Callback Function",
+            [&output](int, EuroscopeRadarLoopbackInterface&, std::string, const POINT&, const RECT&) {
+                output = "some test";
+            });
+
+        handler.RegisterFunctionCall(function);
+        EXPECT_TRUE(handler.HasRadarScreenCallbackFunction(10000));
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, HasRadarScreenCallbackByDescriptionReturnsTrueIfItExists)
+    {
+        FunctionCallEventHandler handler;
+        std::string output;
+        RadarScreenCallbackFunction function(
+            10000,
+            "Test Radar Screen Callback Function",
+            [&output](int, EuroscopeRadarLoopbackInterface&, std::string, const POINT&, const RECT&) {
+                output = "some test";
+            });
+
+        handler.RegisterFunctionCall(function);
+        EXPECT_TRUE(handler.HasRadarScreenCallbackByDescription("Test Radar Screen Callback Function"));
+    }
+
+    TEST_F(
+        FunctionCallEventHandlerTest,
+        RegisterFunctionCallThrowsExceptionIfSameRadarScreenCallbackFunctionRegisteredTwice)
+    {
+        FunctionCallEventHandler handler;
+        std::string output;
+        RadarScreenCallbackFunction function(
+            10000,
+            "Test Radar Screen Callback Function",
+            [&output](int, EuroscopeRadarLoopbackInterface&, std::string, const POINT&, const RECT&) {
+                output = "some test";
+            });
+
+        handler.RegisterFunctionCall(function);
+        EXPECT_THROW(handler.RegisterFunctionCall(function), std::invalid_argument);
     }
 
     TEST_F(FunctionCallEventHandlerTest, RegisterFunctionCallRegistersTagFunctionForCalling)
@@ -145,6 +211,13 @@ namespace UKControllerPluginTest::Plugin {
     {
         FunctionCallEventHandler handler;
         EXPECT_NO_THROW(handler.CallFunction(10000, "some test", flightplan, radarTarget, POINT(), RECT()));
+    }
+
+    TEST_F(FunctionCallEventHandlerTest, DynamicRadarScreenFunctionCallHandlesNonExistant)
+    {
+        FunctionCallEventHandler handler;
+        EXPECT_NO_THROW(
+            handler.CallFunction(radarScreen, 10000, "some test", flightplan, radarTarget, POINT(), RECT()));
     }
 
     TEST_F(FunctionCallEventHandlerTest, RadarScreenFunctionCallHandlesNonExistant)

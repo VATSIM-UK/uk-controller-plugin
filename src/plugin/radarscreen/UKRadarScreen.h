@@ -69,6 +69,8 @@ namespace UKControllerPlugin {
         void RegisterScreenObject(int objectType, std::string objectId, RECT location, bool moveable) override;
         void SetKey(std::string key, std::string description, std::string value) override;
         void ToggleTemporaryAltitudePopupList(std::string callsign, POINT mousePos, RECT tagItemArea) override;
+        void ToggleEuroscopeTagFunction(
+            int functionId, const std::string& callsign, const POINT& mousePos, const RECT& tagItemArea) override;
         void TogglePluginTagFunction(std::string callsign, int functionId, POINT mousePos, RECT tagItemArea) override;
         void ToogleMenu(RECT area, std::string title, int numColumns) override;
 
