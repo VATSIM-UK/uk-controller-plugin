@@ -18,9 +18,7 @@ using UKControllerPlugin::Tag::TagFunction;
 namespace UKControllerPlugin::Srd {
 
     const int srdDialogTagFunctionId = 9004;
-
     int handlerCallbackId;                              // NOLINT
-
     std::shared_ptr<SrdSearchHandler> srdSearchHandler; // NOLINT
 
     void BootstrapPlugin(PersistenceContainer& container)
