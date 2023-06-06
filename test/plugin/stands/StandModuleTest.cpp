@@ -90,7 +90,7 @@ namespace UKControllerPluginTest::Stands {
         BootstrapPlugin(this->container, this->dependencyLoader);
         EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9007));
         EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
-        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Stand Selected"));
     }
 
     TEST_F(StandModuleTest, ItRegistersTheStandAssignmentEditBoxFunction)
@@ -98,7 +98,6 @@ namespace UKControllerPluginTest::Stands {
         BootstrapPlugin(this->container, this->dependencyLoader);
         EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9008));
         EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
-        EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
     }
 
     TEST_F(StandModuleTest, ItRegistersForExternalMessages)

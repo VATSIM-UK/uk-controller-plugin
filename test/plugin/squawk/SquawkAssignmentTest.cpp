@@ -886,5 +886,30 @@ namespace UKControllerPluginTest {
             EXPECT_FALSE(this->assignment.CircuitAssignmentNeeded(*this->mockFlightplan, *this->mockRadarTarget));
         }
 
+        TEST_F(SquawkAssignmentTest, DeleteApiSquawkAllowedReturnsFalseIfUserHasNoCallsign)
+        {
+            this->activeCallsigns.Flush();
+            EXPECT_FALSE(this->assignment.DeleteApiSquawkAllowed(*this->mockFlightplan));
+        }
+
+        TEST_F(SquawkAssignmentTest, DeleteApiSquawkAllowedReturnsFalseIfFlightplanTrackedBySomeoneElse)
+        {
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(false));
+            ON_CALL(*this->mockFlightplan, IsTracked()).WillByDefault(Return(true));
+            EXPECT_FALSE(this->assignment.DeleteApiSquawkAllowed(*this->mockFlightplan));
+        }
+
+        TEST_F(SquawkAssignmentTest, DeleteApiSquawkAllowedReturnsTrueIfFlightplanTrackedByUser)
+        {
+            ON_CALL(*this->mockFlightplan, IsTrackedByUser()).WillByDefault(Return(true));
+            ON_CALL(*this->mockFlightplan, IsTracked()).WillByDefault(Return(true));
+            EXPECT_TRUE(this->assignment.DeleteApiSquawkAllowed(*this->mockFlightplan));
+        }
+
+        TEST_F(SquawkAssignmentTest, DeleteApiSquawkAllowedReturnsTrueIfFlightplanNotTracked)
+        {
+            ON_CALL(*this->mockFlightplan, IsTracked()).WillByDefault(Return(false));
+            EXPECT_TRUE(this->assignment.DeleteApiSquawkAllowed(*this->mockFlightplan));
+        }
     } // namespace Squawk
 } // namespace UKControllerPluginTest

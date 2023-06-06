@@ -1,4 +1,6 @@
 #pragma once
+#include "eventhandler/DrainableEuroscopeThreadEventSink.h"
+#include "eventhandler/EuroscopeThreadEventSink.h"
 #include "eventhandler/EventObserver.h"
 #include "eventhandler/EventBusFactory.h"
 #include "eventhandler/MutableEventBus.h"
@@ -16,22 +18,49 @@ namespace UKControllerPluginUtilsTest {
         std::vector<std::any> observedEvents{};
     };
 
+    class TestEuroscopeThreadEventProcessor
+        : public UKControllerPluginUtils::EventHandler::EuroscopeThreadEventSink,
+          public UKControllerPluginUtils::EventHandler::DrainableEuroscopeThreadEventSink
+    {
+        public:
+        void OnEvent(const std::function<void()>& event) override
+        {
+            event();
+        }
+
+        void Drain() override
+        {
+            // No-op
+        }
+
+        std::vector<std::any> processedEvents{};
+    };
+
     class TestEventBusFactory : public UKControllerPluginUtils::EventHandler::EventBusFactory
     {
         public:
-        TestEventBusFactory() : observer(std::make_shared<TestEventBusObserver>())
+        TestEventBusFactory()
+            : processor(std::make_shared<TestEuroscopeThreadEventProcessor>()),
+              observer(std::make_shared<TestEventBusObserver>())
         {
         }
 
         auto CreateBus() -> std::unique_ptr<UKControllerPluginUtils::EventHandler::EventBus> override
         {
             auto bus = std::unique_ptr<UKControllerPluginUtils::EventHandler::MutableEventBus>(
-                new UKControllerPluginUtils::EventHandler::MutableEventBus);
+                new UKControllerPluginUtils::EventHandler::MutableEventBus(processor));
             bus->SetObserver(observer);
 
             return std::move(bus);
         }
 
+        auto DrainableEventSink()
+            -> std::shared_ptr<UKControllerPluginUtils::EventHandler::DrainableEuroscopeThreadEventSink> override
+        {
+            return processor;
+        }
+
+        std::shared_ptr<TestEuroscopeThreadEventProcessor> processor;
         std::shared_ptr<TestEventBusObserver> observer;
     };
 

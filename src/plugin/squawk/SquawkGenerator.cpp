@@ -1,9 +1,11 @@
 #include "ApiSquawkAllocationHandler.h"
 #include "SquawkAssignment.h"
+#include "SquawkAssignmentDeleteForConspicuityFailedEvent.h"
 #include "SquawkGenerator.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "api/ApiNotFoundException.h"
+#include "eventhandler/EventBus.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
@@ -12,6 +14,7 @@
 #include "flightplan/StoredFlightplan.h"
 #include "flightplan/StoredFlightplanCollection.h"
 #include "helper/HelperFunctions.h"
+#include "log/LoggerFunctions.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Api::ApiException;
@@ -53,6 +56,42 @@ namespace UKControllerPlugin::Squawk {
 
         LogInfo("Assigned circuit squawk to " + flightplan.GetCallsign());
         flightplan.SetSquawk("7010");
+        return true;
+    }
+
+    /**
+     * Removes the API squawk assignment and changes the EuroScope callotion to the provided squawk.
+     */
+    auto SquawkGenerator::DeleteApiSquawkAndSetTo(const std::string& squawk, EuroScopeCFlightPlanInterface& flightplan)
+        -> bool
+    {
+        if (!this->assignmentRules.DeleteApiSquawkAllowed(flightplan)) {
+            LogWarning("Cannot delete api squawk " + flightplan.GetCallsign() + " - not allowed");
+            return false;
+        }
+
+        const auto currentSquawk = flightplan.GetAssignedSquawk();
+        if (!this->StartSquawkUpdate(flightplan, squawk)) {
+            return false;
+        }
+
+        const auto callsign = flightplan.GetCallsign();
+        if (storedFlightplans.HasFlightplanForCallsign(callsign)) {
+            storedFlightplans.GetFlightplanForCallsign(callsign).SetPreviouslyAssignedSquawk(squawk);
+        }
+
+        this->taskRunner->QueueAsynchronousTask([this, callsign, currentSquawk]() {
+            try {
+                this->api.DeleteSquawkAssignment(callsign);
+            } catch (const ApiException& e) {
+                LogWarning("Cannot delete squawk for " + callsign + " - " + e.what());
+                UKControllerPluginUtils::EventHandler::EventBus::Bus()
+                    .OnEvent<SquawkAssignmentDeleteForConspicuityFailedEvent>({callsign, currentSquawk});
+            }
+
+            this->EndSquawkUpdate(callsign);
+        });
+
         return true;
     }
 
@@ -268,14 +307,16 @@ namespace UKControllerPlugin::Squawk {
     /*
         Places a request in progress to prevent duplicate requests
     */
-    auto SquawkGenerator::StartSquawkUpdate(EuroScopeCFlightPlanInterface& flightplan) -> bool
+    auto SquawkGenerator::StartSquawkUpdate(EuroScopeCFlightPlanInterface& flightplan, const std::string& processSquawk)
+        -> bool
     {
         // Lock the requests queue and mark the request as in progress. Set a holding squawk.
         if (!this->squawkRequests.Start(flightplan.GetCallsign())) {
             return false;
         }
 
-        flightplan.SetSquawk(this->PROCESS_SQUAWK);
+        flightplan.SetSquawk(processSquawk);
+
         return true;
     }
 

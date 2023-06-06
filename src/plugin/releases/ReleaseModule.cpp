@@ -22,6 +22,7 @@
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
+#include "tag/TagFunction.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 

@@ -11,7 +11,7 @@ namespace UKControllerPluginUtils::EventHandler {
     {
         const auto index = std::type_index(typeid(T));
         if (!streams.contains(index)) {
-            streams.insert({index, std::any(std::make_shared<EventStream<T>>())});
+            streams.insert({index, std::any(std::make_shared<EventStream<T>>(euroscopeThreadEventProcessor))});
         }
 
         return *std::any_cast<std::shared_ptr<EventStream<T>>>(streams.at(index));

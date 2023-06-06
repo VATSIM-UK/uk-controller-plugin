@@ -22,6 +22,8 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] virtual auto GetAsrData(std::string key) -> std::string = 0;
         [[nodiscard]] virtual auto GetGroundspeedForCallsign(std::string cs) -> int = 0;
         [[nodiscard]] virtual auto PositionOffScreen(EuroScopePlugIn::CPosition pos) -> bool = 0;
+        virtual void ToggleEuroscopeTagFunction(
+            int functionId, const std::string& callsign, const POINT& mousePos, const RECT& tagItemArea) = 0;
         virtual void ToggleTemporaryAltitudePopupList(std::string callsign, POINT mousePos, RECT tagItemArea) = 0;
         virtual void
         TogglePluginTagFunction(std::string callsign, int functionId, POINT mousePos, RECT tagItemArea) = 0;

@@ -49,7 +49,7 @@ namespace UKControllerPluginTest::Notifications {
     TEST_F(NotificationsModuleTest, ItSetsUpTheCallback)
     {
         BootstrapPlugin(container);
-        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackFunction(5000));
+        EXPECT_TRUE(container.pluginFunctionHandlers->HasCallbackByDescription("Notifications menu callback"));
     }
 
     TEST_F(NotificationsModuleTest, ItRegistersForActiveCallsignEvents)

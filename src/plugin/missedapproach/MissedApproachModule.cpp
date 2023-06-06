@@ -28,6 +28,7 @@
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "tag/TagItemCollection.h"
+#include "tag/TagFunction.h"
 #include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Euroscope::CallbackFunction;

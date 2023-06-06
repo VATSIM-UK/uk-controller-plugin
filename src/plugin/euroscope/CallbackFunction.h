@@ -9,6 +9,7 @@ namespace UKControllerPlugin {
         */
         typedef struct CallbackFunction
         {
+            CallbackFunction() = default;
             CallbackFunction(
                 int functionId, std::string description, std::function<void(int, std::string, RECT)> function);
             void operator=(const CallbackFunction& copy);

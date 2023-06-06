@@ -54,7 +54,7 @@ set(test__duplicate
 source_group("test\\duplicate" FILES ${test__duplicate})
 
 set(test__eventhandler
-        eventhandler/EventBusTest.cpp eventhandler/EventStreamTest.cpp)
+        eventhandler/EventBusTest.cpp eventhandler/EventStreamTest.cpp eventhandler/MockEuroscopeThreadEventSink.h eventhandler/EuroscopeThreadEventProcessorTest.cpp)
 source_group("test\\eventhandler" FILES ${test__eventhandler})
 
 set(test__helper

@@ -182,9 +182,7 @@ set(src__euroscope
     "euroscope/AsrEventHandlerInterface.h"
     "euroscope/CallbackFunction.cpp"
     "euroscope/CallbackFunction.h"
-    "euroscope/CompareFunctions.cpp"
-    "euroscope/CompareFunctions.h"
-    "euroscope/EuroScopeCControllerInterface.h"
+        "euroscope/EuroScopeCControllerInterface.h"
     "euroscope/EuroScopeCControllerWrapper.cpp"
     "euroscope/EuroScopeCControllerWrapper.h"
     "euroscope/EuroScopeCFlightPlanInterface.h"
@@ -237,6 +235,10 @@ set(src__euroscope
     euroscope/PluginSettingsProviderCollection.cpp euroscope/PluginSettingsProviderCollection.h
     euroscope/EuroscopeExtractedRouteWrapper.cpp euroscope/EuroscopeExtractedRouteWrapper.h)
 source_group("src\\euroscope" FILES ${src__euroscope})
+
+set(src__eventhandler
+        eventhandler/ProcessEventBusEventsOnTimer.cpp eventhandler/ProcessEventBusEventsOnTimer.h eventhandler/EventBusBootstrap.cpp eventhandler/EventBusBootstrap.h)
+source_group("src\\eventhandler" FILES ${src__eventhandler})
 
 set(src__flightinformationservice
     "flightinformationservice/FlightInformationServiceModule.cpp"
@@ -763,7 +765,7 @@ set(src__radarscreen
     "radarscreen/ScreenControlsBootstrap.h"
     "radarscreen/UKRadarScreen.cpp"
     "radarscreen/UKRadarScreen.h"
-        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h radarscreen/ConfigurableDisplayCallbackFactory.cpp radarscreen/ConfigurableDisplayCallbackFactory.h)
+        radarscreen/RadarRenderableInterface.cpp radarscreen/ConfigurableDisplayInterface.cpp radarscreen/MenuToggleableDisplayInterface.h radarscreen/ToggleDisplayFromMenu.cpp radarscreen/ToggleDisplayFromMenu.h radarscreen/MenuToggleableDisplayFactory.cpp radarscreen/MenuToggleableDisplayFactory.h radarscreen/ConfigurableDisplayCallbackFactory.cpp radarscreen/ConfigurableDisplayCallbackFactory.h euroscope/RadarScreenCallbackFunction.cpp euroscope/RadarScreenCallbackFunction.h)
 source_group("src\\radarscreen" FILES ${src__radarscreen})
 
 set(src__regional
@@ -868,7 +870,7 @@ set(src__squawk
     "squawk/SquawkModule.h"
     "squawk/SquawkRequest.cpp"
     "squawk/SquawkRequest.h"
-)
+        squawk/SquawkAssignmentMenu.cpp squawk/SquawkAssignmentMenu.h squawk/SquawkAssignmentDeleteForConspicuityFailedEvent.h squawk/ResetSquawkOnFailedDelete.cpp squawk/ResetSquawkOnFailedDelete.h squawk/SquawkGeneratorInterface.h squawk/SquawkCodeValid.cpp squawk/SquawkCodeValid.h)
 source_group("src\\squawk" FILES ${src__squawk})
 
 set(src__srd
@@ -905,7 +907,7 @@ set(src__tag
     "tag/TagItemCollection.h"
     "tag/TagItemInterface.h"
     "tag/TagItemInterface.cpp"
-)
+        tag/RadarScreenTagFunction.cpp tag/RadarScreenTagFunction.h)
 source_group("src\\tag" FILES ${src__tag})
 
 set(src__time
@@ -974,6 +976,7 @@ set(ALL_FILES
     ${src__departure}
     ${src__dependency}
     ${src__euroscope}
+    ${src__eventhandler}
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}

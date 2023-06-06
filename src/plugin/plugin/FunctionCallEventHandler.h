@@ -1,13 +1,19 @@
 #pragma once
-#include "euroscope/CallbackFunction.h"
-#include "euroscope/CompareFunctions.h"
-#include "tag/TagFunction.h"
 
-namespace UKControllerPlugin::Euroscope {
-    class EuroScopeCFlightPlanInterface;
-    class EuroScopeCRadarTargetInterface;
-    class EuroscopePluginLoopbackInterface;
-} // namespace UKControllerPlugin::Euroscope
+namespace UKControllerPlugin {
+    namespace Euroscope {
+        struct CallbackFunction;
+        struct RadarScreenCallbackFunction;
+        class EuroScopeCFlightPlanInterface;
+        class EuroScopeCRadarTargetInterface;
+        class EuroscopePluginLoopbackInterface;
+        class EuroscopeRadarLoopbackInterface;
+    } // namespace Euroscope
+    namespace Tag {
+        struct TagFunction;
+        struct RadarScreenTagFunction;
+    } // namespace Tag
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Plugin {
 
@@ -19,6 +25,8 @@ namespace UKControllerPlugin::Plugin {
     class FunctionCallEventHandler
     {
         public:
+        FunctionCallEventHandler();
+        ~FunctionCallEventHandler();
         void CallFunction(
             int functionId,
             const std::string& subject,
@@ -26,36 +34,34 @@ namespace UKControllerPlugin::Plugin {
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
             const POINT& mousePos,
             const RECT& area) const;
-        [[nodiscard]] size_t CountCallbacks() const;
-        [[nodiscard]] size_t CountTagFunctions() const;
-        [[nodiscard]] bool HasCallbackFunction(int id) const;
-        [[nodiscard]] bool HasCallbackByDescription(const std::string& description) const;
-        [[nodiscard]] bool HasTagFunction(int id) const;
-        int ReserveNextDynamicFunctionId();
+        void CallFunction(
+            Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            int functionId,
+            const std::string& subject,
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const POINT& mousePos,
+            const RECT& area) const;
+        [[nodiscard]] auto CountCallbacks() const -> size_t;
+        [[nodiscard]] auto CountRadarScreenCallbacks() const -> size_t;
+        [[nodiscard]] auto CountTagFunctions() const -> size_t;
+        [[nodiscard]] auto CountRadarScreenTagFunctions() const -> size_t;
+        [[nodiscard]] auto HasCallbackFunction(int functionId) const -> bool;
+        [[nodiscard]] auto HasCallbackByDescription(const std::string& description) const -> bool;
+        [[nodiscard]] auto HasRadarScreenCallbackFunction(int functionId) const -> bool;
+        [[nodiscard]] auto HasRadarScreenCallbackByDescription(const std::string& description) const -> bool;
+        [[nodiscard]] auto HasTagFunction(int functionId) const -> bool;
+        [[nodiscard]] auto HasRadarScreenTagFunction(int functionId) const -> bool;
+        auto ReserveNextDynamicFunctionId() -> int;
         void RegisterFunctionCall(const UKControllerPlugin::Euroscope::CallbackFunction& function);
+        void RegisterFunctionCall(const UKControllerPlugin::Euroscope::RadarScreenCallbackFunction& function);
         void RegisterFunctionCall(const UKControllerPlugin::Tag::TagFunction& function);
+        void RegisterFunctionCall(const UKControllerPlugin::Tag::RadarScreenTagFunction& function);
         void RegisterTagFunctionsWithEuroscope(
             UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin) const;
 
         private:
-        /*
-            The next available dynamic function ID. These ids can be used by any function that doesn't
-            need to have the same id every time the plugin runs. For example, these would be perfect for
-            a callback on a popup menu item. These wouldn't be useful for, say, a TAG function
-            - which is probably saved in the settings somewhere.
-        */
-        int nextDynamicFunctionId = 5000;
-
-        /*
-            The first function id that is fixed - will always have one purpose each time the plugin loads.
-        */
-        const int firstFixedId = 9000;
-
-        // The registered functions which have dynamic ids - may be different on each load.
-        std::set<UKControllerPlugin::Euroscope::CallbackFunction, UKControllerPlugin::Euroscope::CompareFunctions>
-            callbackFunctions;
-
-        // The registered functions which have fixed ids - always the same on every load, as defined in the wiki.
-        std::set<UKControllerPlugin::Tag::TagFunction, UKControllerPlugin::Euroscope::CompareFunctions> tagFunctions;
+        struct Impl;
+        std::unique_ptr<Impl> impl;
     };
 } // namespace UKControllerPlugin::Plugin

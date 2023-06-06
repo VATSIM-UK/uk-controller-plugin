@@ -111,14 +111,14 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9005));
-            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Release Type Selected"));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersReleasePointEditingFunctions)
         {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9006));
-            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5001));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Release Point Edited"));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersDialogs)
@@ -140,7 +140,8 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9013));
-            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5002));
+            EXPECT_TRUE(
+                this->container.pluginFunctionHandlers->HasCallbackByDescription("Departure Release Decision Made"));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersForDeparturePushEvents)
@@ -177,7 +178,8 @@ namespace UKControllerPluginTest {
         {
             BootstrapPlugin(this->container, this->plugin, this->dependencyLoader);
             EXPECT_TRUE(this->container.pluginFunctionHandlers->HasTagFunction(9015));
-            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5003));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription(
+                "Departure Release Request Cancelled"));
         }
 
         TEST_F(ReleaseModuleTest, ItRegistersTagItemForDepartureReleaseRequestingController)
