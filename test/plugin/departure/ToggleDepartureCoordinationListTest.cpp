@@ -1,3 +1,4 @@
+#include "collection/Collection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPositionCollection.h"
 #include "departure/DepartureCoordinationList.h"
@@ -19,17 +20,19 @@ namespace UKControllerPluginTest::Departure {
     {
         public:
         ToggleDepartureCoordinationListTest()
-            : messager(mockPlugin), handler(
-                                        mockApi,
-                                        taskRunner,
-                                        mockPlugin,
-                                        controllers,
-                                        activeCallsigns,
-                                        dialogManager,
-                                        windows,
-                                        messager,
-                                        103,
-                                        104),
+            : messager(mockPlugin),
+              handler(
+                  std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>(),
+                  mockApi,
+                  taskRunner,
+                  mockPlugin,
+                  controllers,
+                  activeCallsigns,
+                  dialogManager,
+                  windows,
+                  messager,
+                  103,
+                  104),
               list(std::make_shared<DepartureCoordinationList>(
                   handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
               dialogManager(dialogProvider)

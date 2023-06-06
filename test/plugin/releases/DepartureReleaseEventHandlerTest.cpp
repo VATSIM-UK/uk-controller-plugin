@@ -1,4 +1,5 @@
 #include "api/ApiException.h"
+#include "collection/Collection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
@@ -7,10 +8,12 @@
 #include "releases/DepartureReleaseColours.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
+#include "releases/DepartureReleaseRequestedEvent.h"
 #include "releases/DepartureReleaseRequestView.h"
 #include "time/ParseTimeStrings.h"
 #include "time/SystemClock.h"
 #include "tag/TagData.h"
+#include "test/EventBusTestCase.h"
 
 using testing::_;
 using testing::NiceMock;
@@ -29,13 +32,23 @@ using UKControllerPlugin::Time::TimeNow;
 
 namespace UKControllerPluginTest::Releases {
 
-    class DepartureReleaseEventHandlerTest : public Test
+    class DepartureReleaseEventHandlerTest : public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
         DepartureReleaseEventHandlerTest()
             : dialogManager(dialogProvider), messager(mockPlugin),
               handler(
-                  api, mockTaskRunner, mockPlugin, controllers, activeCallsigns, dialogManager, windows, messager, 3, 4)
+                  std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>(),
+                  api,
+                  mockTaskRunner,
+                  mockPlugin,
+                  controllers,
+                  activeCallsigns,
+                  dialogManager,
+                  windows,
+                  messager,
+                  3,
+                  4)
         {
             request = std::make_shared<DepartureReleaseRequest>(
                 1, "BAW123", 3, 2, std::chrono::system_clock::now() + std::chrono::minutes(5));
@@ -767,6 +780,10 @@ namespace UKControllerPluginTest::Releases {
         EXPECT_EQ(2, release->RequestingController());
         EXPECT_EQ(3, release->TargetController());
         EXPECT_EQ(ParseTimeString("2021-05-12 19:55:00"), release->RequestExpiryTime());
+
+        AssertSingleEventDispatched();
+        AssertFirstEventDispatched<UKControllerPlugin::Releases::DepartureReleaseRequestedEvent>(
+            [release](const auto& event) { EXPECT_EQ(release, event.releaseRequest); });
     }
 
     TEST_F(DepartureReleaseEventHandlerTest, ItDoesntPlaySoundOnRequestIfUserNotActive)

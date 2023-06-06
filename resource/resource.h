@@ -202,6 +202,8 @@
 #define IDC_GEN_SETTINGS_EXPERIMENTAL   1142
 #define IDC_RELEASE_CHANNEL             1143
 #define IDC_API_KEY_STATIC              1144
+#define IDC_                            1145
+#define IDC_RELEASE_CHAT_MESSAGE        1145
 
 // Next default values for new objects
 // 
@@ -209,7 +211,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1145
+#define _APS_NEXT_CONTROL_VALUE         1146
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -135,4 +135,9 @@ namespace UKControllerPlugin::Releases {
     {
         return this->remarks;
     }
+
+    auto DepartureReleaseRequest::CollectionKey() const -> int
+    {
+        return this->id;
+    }
 } // namespace UKControllerPlugin::Releases

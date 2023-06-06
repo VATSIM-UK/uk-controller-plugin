@@ -26,6 +26,7 @@
 #include <codecvt>
 #include <deque>
 #include <Mmsystem.h>
+#include <iterator>
 #include <filesystem>
 #include <fstream>
 #include <memory>
