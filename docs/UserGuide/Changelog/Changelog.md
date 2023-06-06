@@ -1,5 +1,15 @@
 # UK Controller Plugin Changelog
 
+# [5.11.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.10.0...5.11.0) (2023-06-06)
+
+
+### Features
+
+* add manual squawk option ([8158dbc](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8158dbcfd07f9cee1b3f6bdb8645bd116e688c25))
+* allow users to set preference on release messages ([f8e43cf](https://github.com/VATSIM-UK/uk-controller-plugin/commit/f8e43cf120dc1efad62e47292a589cf40eda3bd6))
+* send chat area message for release requested ([5d790d7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5d790d732ef29e3ac44a5a2294e2a2f53b12a262))
+* squawk assignment menu ([43d02a2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/43d02a25e45bfc89f133c4393b98b4994cea3675))
+
 # [5.10.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.9.1...5.10.0) (2023-05-26)
 
 
