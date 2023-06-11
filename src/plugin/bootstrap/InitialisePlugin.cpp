@@ -22,8 +22,7 @@
 #include "dependency/UpdateDependencies.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
-#include "eventhandler/MutableEventBus.h"
-#include "eventhandler/StandardEventBusFactory.h"
+#include "eventhandler/EventBusBootstrap.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
 #include "flightrule/FlightRuleModule.h"
@@ -117,7 +116,7 @@ namespace UKControllerPlugin {
         LogInfo("Plugin shutdown");
 
         // Shutdown the event bus
-        UKControllerPluginUtils::EventHandler::MutableEventBus::Reset();
+        EventHandler::ShutdownEventBus();
 
         ShutdownLogger();
     }
@@ -144,12 +143,11 @@ namespace UKControllerPlugin {
         this->duplicatePlugin = std::make_unique<DuplicatePlugin>();
         this->container = std::make_unique<PersistenceContainer>();
 
-        // Create the event bus
-        UKControllerPluginUtils::EventHandler::MutableEventBus::SetFactory(
-            std::make_shared<UKControllerPluginUtils::EventHandler::StandardEventBusFactory>());
-
-        // Do helpers.
+        // Create some basic helper classes for ES events
         EventHandlerCollectionBootstrap::BoostrapPlugin(*this->container);
+
+        // Create the event bus
+        EventHandler::BootstrapEventBus(*this->container);
 
         // Bootstrap the plugin itself
         UkPluginBootstrap::BootstrapPlugin(*this->container);

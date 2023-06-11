@@ -52,7 +52,7 @@ namespace UKControllerPluginTest {
         TEST_F(SrdModuleTest, BootstrapPluginRegistersConfigureFunction)
         {
             BootstrapPlugin(this->container);
-            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("SRD Search"));
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
         }
 

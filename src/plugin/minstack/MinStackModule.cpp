@@ -3,6 +3,7 @@
 #include "MinStackRenderer.h"
 #include "api/ApiException.h"
 #include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/CallbackFunction.h"
 #include "graphics/GdiplusBrushes.h"
 #include "metar/MetarEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"

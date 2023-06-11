@@ -2,20 +2,27 @@
 #include "CompareEnrouteReleaseTypes.h"
 #include "DepartureReleaseEventHandler.h"
 #include "DepartureReleaseRequestView.h"
+#include "DepartureReleaseRequestedEvent.h"
 #include "EnrouteReleaseEventHandler.h"
 #include "EnrouteReleaseTypesSerializer.h"
 #include "RejectDepartureReleaseDialog.h"
+#include "ReleaseIsTargetedAtUser.h"
 #include "ReleaseModule.h"
 #include "RequestDepartureReleaseDialog.h"
+#include "SendReleaseRequestedChatAreaMessage.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "collection/Collection.h"
 #include "controller/HandoffEventHandlerCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "eventhandler/EventBus.h"
+#include "eventhandler/EventHandlerFlags.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "push/PushEventProcessorCollection.h"
+#include "tag/TagFunction.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
@@ -113,7 +120,9 @@ namespace UKControllerPlugin::Releases {
         // Create the event handler
         const int releaseDecisionCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         const int releaseCancellationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
+        auto releaseCollection = std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>();
         auto departureHandler = std::make_shared<DepartureReleaseEventHandler>(
+            releaseCollection,
             *container.api,
             *container.taskRunner,
             *container.plugin,
@@ -226,6 +235,13 @@ namespace UKControllerPlugin::Releases {
 
         // Add to handlers
         container.timedHandler->RegisterEvent(departureHandler, departureReleaseEventFrequency);
+
+        // Event handlers for displaying chat area messages
+        auto releaseIsTargetedAtUser = std::make_shared<ReleaseIsTargetedAtUser>(container.activeCallsigns);
+        UKControllerPluginUtils::EventHandler::EventBus::Bus().AddHandler<DepartureReleaseRequestedEvent>(
+            std::make_shared<SendReleaseRequestedChatAreaMessage>(
+                releaseIsTargetedAtUser, *container.plugin, *container.pluginUserSettingHandler),
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 
     void

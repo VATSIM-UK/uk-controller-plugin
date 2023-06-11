@@ -1,3 +1,4 @@
+#include "MockEuroscopeThreadEventSink.h"
 #include "eventhandler/EventHandler.h"
 #include "eventhandler/EventStream.h"
 #include "test/EventBusTestCase.h"
@@ -8,6 +9,11 @@ namespace UKControllerPluginUtilsTest::EventHandler {
     class EventStreamTest : public testing::Test
     {
         public:
+        EventStreamTest() : mockProcessor(std::make_shared<MockEuroscopeThreadEventSink>()), stream(mockProcessor)
+        {
+        }
+
+        std::shared_ptr<MockEuroscopeThreadEventSink> mockProcessor;
         EventStream<int> stream;
     };
 
@@ -34,6 +40,18 @@ namespace UKControllerPluginUtilsTest::EventHandler {
     {
         const auto handler = std::make_shared<MockHandler>();
         stream.AddHandler(handler, UKControllerPluginUtils::EventHandler::EventHandlerFlags::Async);
+        stream.OnEvent(123);
+        EXPECT_EQ(123, handler->receivedValue);
+    }
+
+    TEST_F(EventStreamTest, ItProcessesAnEventOnTheEuroscopeThread)
+    {
+        EXPECT_CALL(*mockProcessor, OnEvent(testing::_))
+            .Times(1)
+            .WillOnce(testing::Invoke([](const std::function<void()>& event) { event(); }));
+
+        const auto handler = std::make_shared<MockHandler>();
+        stream.AddHandler(handler, UKControllerPluginUtils::EventHandler::EventHandlerFlags::EuroscopeThread);
         stream.OnEvent(123);
         EXPECT_EQ(123, handler->receivedValue);
     }

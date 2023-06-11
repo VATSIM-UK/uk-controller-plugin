@@ -25,6 +25,11 @@ set(test__api
     api/ResponseTest.cpp api/ApiConfigurationListenerTest.cpp api/SetApiKeyInConfigTest.cpp api/SetApiKeyInSettingsTest.cpp api/ApiKeyRedirectUrlBuilderTest.cpp)
 source_group("test\\api" FILES ${test__api})
 
+set(test__collection
+        
+        collection/CollectionTest.cpp collection/CollectionIteratorTest.cpp)
+source_group("test\\collection" FILES ${test__collection})
+
 set(test__curl
     "curl/CurlRequestTest.cpp"
     "curl/CurlResponseTest.cpp"
@@ -49,7 +54,7 @@ set(test__duplicate
 source_group("test\\duplicate" FILES ${test__duplicate})
 
 set(test__eventhandler
-        eventhandler/EventBusTest.cpp eventhandler/EventStreamTest.cpp)
+        eventhandler/EventBusTest.cpp eventhandler/EventStreamTest.cpp eventhandler/MockEuroscopeThreadEventSink.h eventhandler/EuroscopeThreadEventProcessorTest.cpp)
 source_group("test\\eventhandler" FILES ${test__eventhandler})
 
 set(test__helper
@@ -100,6 +105,7 @@ source_group("test\\update" FILES ${test__update})
 
 set(ALL_FILES
     ${test__api}
+    ${test__collection}
     ${test__curl}
     ${test__data}
     ${test__dialog}

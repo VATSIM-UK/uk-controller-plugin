@@ -22,3 +22,4 @@
 9019 - Acknowledge Prenote Message
 9020 - Trigger Missed Approach
 9021 - Acknowledge Missed Approach
+9022 - Open Squawk Assignment Menu

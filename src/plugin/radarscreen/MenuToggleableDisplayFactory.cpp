@@ -1,7 +1,8 @@
-#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "MenuToggleableDisplayFactory.h"
 #include "ToggleDisplayFromMenu.h"
+#include "euroscope/CallbackFunction.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
 
 namespace UKControllerPlugin::RadarScreen {
 

@@ -112,16 +112,19 @@ source_group("test\\dependency" FILES ${test__dependency})
 set(test__euroscope
     "euroscope/AsrEventHandlerCollectionTest.cpp"
     "euroscope/CallbackFunctionTest.cpp"
-    "euroscope/CompareFunctionsTest.cpp"
-    "euroscope/GeneralSettingsConfigurationBootstrapTest.cpp"
+        "euroscope/GeneralSettingsConfigurationBootstrapTest.cpp"
     "euroscope/GeneralSettingsConfigurationTest.cpp"
     "euroscope/LoadDefaultUserSettingsTest.cpp"
     "euroscope/RadarTargetEventHandlerCollectionTest.cpp"
     "euroscope/RunwayDialogAwareCollectionTest.cpp"
     "euroscope/UserSettingAwareCollectionTest.cpp"
     "euroscope/UserSettingTest.cpp"
-        euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp)
+        euroscope/PluginSettingsProviderCollectionTest.cpp euroscope/PluginUserSettingBootstrapTest.cpp euroscope/RadarScreenCallbackFunctionTest.cpp)
 source_group("test\\euroscope" FILES ${test__euroscope})
+
+set(test__eventhandler
+        eventhandler/ProcessEventBusEventsOnTimerTest.cpp eventhandler/EventBusBootstrapTest.cpp)
+source_group("test\\eventhandler" FILES ${test__eventhandler})
 
 set(test__flightinformationservice
     "flightinformationservice/FlightInformationServiceModuleTest.cpp"
@@ -507,7 +510,7 @@ set(test__releases
     "releases/EnrouteReleaseTypesSerializerTest.cpp"
     "releases/ReleaseModuleTest.cpp"
     releases/ReleaseApprovalRemarksUserMessageTest.cpp
-    releases/ReleaseRejectionRemarksUserMessageTest.cpp handoff/DefaultDepartureHandoffResolverTest.cpp)
+    releases/ReleaseRejectionRemarksUserMessageTest.cpp releases/ReleaseIsTargetedAtUserTest.cpp releases/SendReleaseRequestedChatAreaMessageTest.cpp handoff/DefaultDepartureHandoffResolverTest.cpp)
 source_group("test\\releases" FILES ${test__releases})
 
 set(test__runway
@@ -545,7 +548,7 @@ set(test__squawk
     "squawk/SquawkGeneratorTest.cpp"
     "squawk/SquawkModuleTest.cpp"
     "squawk/SquawkRequestTest.cpp"
-)
+        squawk/ResetSquawkOnFailedDeleteTest.cpp squawk/SquawkAssignmentMenuTest.cpp squawk/SquawkCodeValidTest.cpp)
 source_group("test\\squawk" FILES ${test__squawk})
 
 set(test__srd
@@ -664,7 +667,7 @@ set(ALL_FILES
     ${test__timedevent}
     ${test__timer}
     ${test__wake}
-    $<TARGET_OBJECTS:UKControllerPluginCore> intention/IntentionCodeBootstrapProviderTest.cpp)
+    $<TARGET_OBJECTS:UKControllerPluginCore> intention/IntentionCodeBootstrapProviderTest.cpp tag/RadarScreenTagFunctionTest.cpp)
 
 ################################################################################
 # Target

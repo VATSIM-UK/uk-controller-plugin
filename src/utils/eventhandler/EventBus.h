@@ -1,5 +1,6 @@
 #pragma once
 #include "EventHandlerFlags.h"
+#include "EuroscopeThreadEventSink.h"
 #include <typeindex>
 
 namespace UKControllerPluginUtils::EventHandler {
@@ -14,6 +15,7 @@ namespace UKControllerPluginUtils::EventHandler {
     class EventBus
     {
         public:
+        EventBus(std::shared_ptr<EuroscopeThreadEventSink> euroscopeThreadEventProcessor);
         ~EventBus();
 
         [[nodiscard]] static auto Bus() -> EventBus&;
@@ -42,6 +44,9 @@ namespace UKControllerPluginUtils::EventHandler {
 
         // A factory for event busses
         static std::shared_ptr<EventBusFactory> factory;
+
+        // Euroscope event processor
+        std::shared_ptr<EuroscopeThreadEventSink> euroscopeThreadEventProcessor;
 
         // The event streams
         std::map<std::type_index, std::any> streams;

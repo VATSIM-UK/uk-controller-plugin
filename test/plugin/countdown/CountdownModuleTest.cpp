@@ -87,7 +87,7 @@ namespace UKControllerPluginTest {
         {
             CountdownModule::BootstrapPlugin(this->container);
             EXPECT_EQ(1, this->container.pluginFunctionHandlers->CountCallbacks());
-            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackFunction(5000));
+            EXPECT_TRUE(this->container.pluginFunctionHandlers->HasCallbackByDescription("Countdown Timer Configure"));
         }
 
         TEST_F(CountdownModuleTest, BootstrapPluginAddsDialog)

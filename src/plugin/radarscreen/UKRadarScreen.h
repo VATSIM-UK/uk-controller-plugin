@@ -11,6 +11,9 @@ namespace UKControllerPlugin {
         class PluginSettingsProviderCollection;
         class UserSetting;
     } // namespace Euroscope
+    namespace Plugin {
+        class FunctionCallEventHandler;
+    } // namespace Plugin
     namespace RadarScreen {
         class RadarRenderableCollection;
     } // namespace RadarScreen
@@ -39,7 +42,8 @@ namespace UKControllerPlugin {
             const UKControllerPlugin::RadarScreen::RadarRenderableCollection& renderers,
             UKControllerPlugin::Command::CommandHandlerCollection commandHandlers,
             UKControllerPlugin::Windows::GdiGraphicsInterface& graphics,
-            const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders);
+            const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders,
+            const Plugin::FunctionCallEventHandler& functionHandler);
         ~UKRadarScreen() override;
         UKRadarScreen(const UKRadarScreen&) = delete;
         UKRadarScreen(UKRadarScreen&&) noexcept = delete;
@@ -60,10 +64,13 @@ namespace UKControllerPlugin {
         auto OnCompileCommand(const char* sCommandLine) -> bool override;
         void OnMoveScreenObject(int ObjectType, const char* sObjectId, POINT Pt, RECT Area, bool Released) override;
         void OnRefresh(HDC hdc, int phase) override;
+        void OnFunctionCall(int FunctionId, const char* sItemString, POINT Pt, RECT Area) override;
         auto PositionOffScreen(EuroScopePlugIn::CPosition pos) -> bool override;
         void RegisterScreenObject(int objectType, std::string objectId, RECT location, bool moveable) override;
         void SetKey(std::string key, std::string description, std::string value) override;
         void ToggleTemporaryAltitudePopupList(std::string callsign, POINT mousePos, RECT tagItemArea) override;
+        void ToggleEuroscopeTagFunction(
+            int functionId, const std::string& callsign, const POINT& mousePos, const RECT& tagItemArea) override;
         void TogglePluginTagFunction(std::string callsign, int functionId, POINT mousePos, RECT tagItemArea) override;
         void ToogleMenu(RECT area, std::string title, int numColumns) override;
 
@@ -85,6 +92,9 @@ namespace UKControllerPlugin {
 
         // For handling plugin level settings. See Dtor explanation for why...
         const Euroscope::PluginSettingsProviderCollection& pluginSettingsProviders;
+
+        // For handling callback functions at a radar screen level
+        const Plugin::FunctionCallEventHandler& functionHandler;
 
         // Has OnAsrContentLoaded been called?
         bool asrContentLoaded;

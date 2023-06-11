@@ -2,11 +2,14 @@
 #include "EventHandlerFlags.h"
 
 namespace UKControllerPluginUtils::EventHandler {
+    class EuroscopeThreadEventSink;
     template <class T> class EventHandler;
 
     template <typename T> class EventStream
     {
         public:
+        EventStream(std::shared_ptr<EuroscopeThreadEventSink> euroscopeThreadEventProcessor);
+
         /**
          * Adds a handler to the event stream.
          */
@@ -31,6 +34,10 @@ namespace UKControllerPluginUtils::EventHandler {
         }
 
         private:
+        // Euroscope event processor
+        std::shared_ptr<EuroscopeThreadEventSink> euroscopeThreadEventProcessor;
+
+        // Details about each handler
         std::vector<HandlerData> handlers;
     };
 } // namespace UKControllerPluginUtils::EventHandler

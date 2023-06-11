@@ -67,6 +67,11 @@ set(api
     api/ApiKeyRedirectUrlBuilder.cpp api/ApiKeyRedirectUrlBuilder.h)
 source_group("api" FILES ${api})
 
+set(collection
+        collection/Collection.h
+        collection/Collection.tpp collection/CollectionIterator.h collection/CollectionIterator.tpp)
+source_group("src\\collection" FILES ${collection})
+
 set(curl
     "curl/CurlApi.cpp"
     "curl/CurlApi.h"
@@ -107,7 +112,7 @@ set(eventhandler
         eventhandler/EventBus.h eventhandler/EventBus.cpp
         eventhandler/MutableEventBus.h eventhandler/MutableEventBus.cpp
         eventhandler/EventStream.tpp eventhandler/EventStream.h
-        eventhandler/EventHandlerFlags.h eventhandler/EventBus.tpp eventhandler/EventObserver.h eventhandler/EventBusFactory.h eventhandler/StandardEventBusFactory.cpp eventhandler/StandardEventBusFactory.h)
+        eventhandler/EventHandlerFlags.h eventhandler/EventBus.tpp eventhandler/EventObserver.h eventhandler/EventBusFactory.h eventhandler/StandardEventBusFactory.cpp eventhandler/StandardEventBusFactory.h eventhandler/EuroscopeThreadEventSink.h eventhandler/EuroscopeThreadEventProcessor.cpp eventhandler/EuroscopeThreadEventProcessor.h eventhandler/DrainableEuroscopeThreadEventSink.h)
 source_group("eventhandler" FILES ${eventhandler})
 
 set(helper
@@ -185,6 +190,7 @@ source_group("windows" FILES ${windows})
 
 set(ALL_FILES
     ${api}
+    ${collection}
     ${curl}
     ${data}
     ${dialog}

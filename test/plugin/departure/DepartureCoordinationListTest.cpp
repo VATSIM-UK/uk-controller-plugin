@@ -1,3 +1,4 @@
+#include "collection/Collection.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
@@ -24,6 +25,7 @@ namespace UKControllerPluginTest::Departure {
               list(std::make_shared<DepartureCoordinationList>(
                   handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
               handler(
+                  std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>(),
                   mockApi,
                   taskRunner,
                   mockPlugin,

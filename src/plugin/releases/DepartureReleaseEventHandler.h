@@ -1,4 +1,5 @@
 #pragma once
+#include "collection/PluginCollectionTypesFwd.h"
 #include "push/PushEventProcessorInterface.h"
 #include "releases/CompareDepartureReleases.h"
 #include "tag/TagItemInterface.h"
@@ -44,6 +45,7 @@ namespace UKControllerPlugin {
         {
             public:
             DepartureReleaseEventHandler(
+                const std::shared_ptr<DepartureReleaseRequestCollection> releaseRequests,
                 const Api::ApiInterface& api,
                 TaskManager::TaskRunnerInterface& taskRunner,
                 Euroscope::EuroscopePluginLoopbackInterface& plugin,
@@ -137,7 +139,7 @@ namespace UKControllerPlugin {
             static const int RELEASE_DECISION_MADE_DELETE_AFTER_SECONDS = 90;
 
             // Release requests in progress
-            std::map<int, std::shared_ptr<DepartureReleaseRequest>> releaseRequests;
+            const std::shared_ptr<DepartureReleaseRequestCollection> releaseRequests;
 
             // Controller positions
             const Controller::ControllerPositionCollection& controllers;

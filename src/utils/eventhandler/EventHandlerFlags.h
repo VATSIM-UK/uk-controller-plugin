@@ -5,7 +5,8 @@ namespace UKControllerPluginUtils::EventHandler {
     enum class EventHandlerFlags : unsigned int
     {
         Sync = 1 << 0,
-        Async = 1 << 1
+        Async = 1 << 1,
+        EuroscopeThread = 1 << 2,
     };
 
     DEFINE_ENUM_FLAG_OPERATORS(EventHandlerFlags)

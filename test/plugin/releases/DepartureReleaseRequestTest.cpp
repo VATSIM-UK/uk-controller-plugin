@@ -26,6 +26,11 @@ namespace UKControllerPluginTes::Releases {
         EXPECT_EQ(1, request->Id());
     }
 
+    TEST_F(DepartureReleaseRequestTest, ItUsesIdAsCollectionKey)
+    {
+        EXPECT_EQ(1, request->CollectionKey());
+    }
+
     TEST_F(DepartureReleaseRequestTest, ItHasACallsign)
     {
         EXPECT_EQ("BAW123", request->Callsign());
