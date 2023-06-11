@@ -1,5 +1,5 @@
 #pragma once
-#include "DepartureHandoffResolverInterface.h"
+#include "DepartureHandoffResolutionStrategy.h"
 
 namespace UKControllerPlugin {
     namespace Controller {
@@ -23,16 +23,17 @@ namespace UKControllerPlugin::Handoff {
      * Given a flightplan, resolves the handoff frequency
      * that should be used for the after departure TAG item.
      */
-    class DepartureHandoffResolver : public DepartureHandoffResolverInterface
+    class DefaultDepartureHandoffResolutionStrategy : public DepartureHandoffResolutionStrategy
     {
         public:
-        DepartureHandoffResolver(
+        DefaultDepartureHandoffResolutionStrategy(
             const FlightplanSidHandoffMapper& sidMapper,
             const FlightplanAirfieldHandoffMapper& airfieldMapper,
             const Controller::ActiveCallsignCollection& activeCallsigns);
+        virtual ~DefaultDepartureHandoffResolutionStrategy() = default;
 
         [[nodiscard]] auto Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
-            -> std::shared_ptr<ResolvedHandoff> override;
+            -> std::shared_ptr<const ResolvedHandoff> override;
 
         private:
         [[nodiscard]] auto ResolveController(const HandoffOrder& handoff) const

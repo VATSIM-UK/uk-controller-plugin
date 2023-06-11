@@ -2,14 +2,16 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "euroscope/RunwayDialogAwareCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
-#include "handoff/HandoffCache.h"
+#include "handoff/DepartureHandoffResolvedEvent.h"
 #include "handoff/HandoffModule.h"
+#include "handoff/SendHandoffFrequencyUpdatedIntegrationMessage.h"
 #include "integration/IntegrationServer.h"
 #include "integration/IntegrationPersistenceContainer.h"
+#include "integration/IntegrationDataInitialisers.h"
 #include "tag/TagItemCollection.h"
+#include "test/EventBusTestCase.h"
 
 using ::testing::NiceMock;
-using ::testing::Test;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Euroscope::RunwayDialogAwareCollection;
@@ -21,7 +23,7 @@ using UKControllerPluginTest::Dependency::MockDependencyLoader;
 
 namespace UKControllerPluginTest::Handoff {
 
-    class HandoffModuleTest : public Test
+    class HandoffModuleTest : public UKControllerPluginUtilsTest::EventBusTestCase
     {
         public:
         HandoffModuleTest()
@@ -30,18 +32,21 @@ namespace UKControllerPluginTest::Handoff {
             this->container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             this->container.activeCallsigns = std::make_shared<ActiveCallsignCollection>();
             this->container.runwayDialogEventHandlers = std::make_unique<RunwayDialogAwareCollection>();
-            this->container.integrationModuleContainer =
-                std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr, nullptr);
+            this->container.integrationModuleContainer = std::make_unique<IntegrationPersistenceContainer>(
+                nullptr,
+                nullptr,
+                nullptr,
+                std::make_shared<UKControllerPlugin::Integration::IntegrationDataInitialisers>());
         }
 
         PersistenceContainer container;
         NiceMock<MockDependencyLoader> dependencyLoader;
     };
 
-    TEST_F(HandoffModuleTest, ItRegistersHandoffCacheOnContainer)
+    TEST_F(HandoffModuleTest, ItRegistersHandoffResolverOnContainer)
     {
         BootstrapPlugin(this->container, this->dependencyLoader);
-        ASSERT_EQ(0, this->container.handoffCache->Count());
+        ASSERT_NE(nullptr, this->container.departureHandoffResolver);
     }
 
     TEST_F(HandoffModuleTest, TestItRegistersTagItem)
@@ -67,5 +72,21 @@ namespace UKControllerPluginTest::Handoff {
     {
         BootstrapPlugin(this->container, this->dependencyLoader);
         ASSERT_EQ(1, this->container.runwayDialogEventHandlers->CountHandlers());
+    }
+
+    TEST_F(HandoffModuleTest, TestItRegistersTheIntegrationInitialiser)
+    {
+        BootstrapPlugin(this->container, this->dependencyLoader);
+        ASSERT_EQ(1, this->container.integrationModuleContainer->dataInitialisers->Count());
+    }
+
+    TEST_F(HandoffModuleTest, TestItRegistersTheIntegrationFrequencyUpdatedHandler)
+    {
+        BootstrapPlugin(this->container, this->dependencyLoader);
+        AssertSingleEventHandlerRegistrationForEvent<UKControllerPlugin::Handoff::DepartureHandoffResolvedEvent>();
+        AssertHandlerRegisteredForEvent<
+            UKControllerPlugin::Handoff::SendHandoffFrequencyUpdatedIntegrationMessage,
+            UKControllerPlugin::Handoff::DepartureHandoffResolvedEvent>(
+            UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 } // namespace UKControllerPluginTest::Handoff

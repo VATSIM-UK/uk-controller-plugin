@@ -1,4 +1,4 @@
-#include "ClearCacheOnRunwayDialogSave.h"
+#include "InvalidateHandoffsOnRunwayDialogSave.h"
 #include "DepartureHandoffResolver.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 
@@ -8,7 +8,7 @@ namespace UKControllerPlugin::Handoff {
         std::shared_ptr<DepartureHandoffResolver> resolver, Euroscope::EuroscopePluginLoopbackInterface& plugin)
         : resolver(std::move(resolver)), plugin(plugin)
     {
-        assert(resolver && "Resolver not set in ctor");
+        assert(this->resolver && "Resolver not set in ctor");
     }
 
     /**

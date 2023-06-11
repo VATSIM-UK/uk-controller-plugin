@@ -1,24 +1,24 @@
-#include "handoff/ClearCacheOnRunwayDialogSave.h"
+#include "handoff/InvalidateHandoffsOnRunwayDialogSave.h"
 
-using UKControllerPlugin::Handoff::ClearCacheOnRunwayDialogSave;
+using UKControllerPlugin::Handoff::InvalidateHandoffsOnRunwayDialogSave;
 using UKControllerPlugin::Handoff::ResolvedHandoff;
 
 namespace UKControllerPluginTest::Handoff {
 
-    class ClearCacheOnRunwayDialogSaveTest : public testing::Test
+    class InvalidateHandoffsOnRunwayDialogSaveTest : public testing::Test
     {
         public:
-        ClearCacheOnRunwayDialogSaveTest()
+        InvalidateHandoffsOnRunwayDialogSaveTest()
             : resolver(std::make_shared<testing::NiceMock<MockDepartureHandoffResolver>>()), clear(resolver, plugin)
         {
         }
 
         std::shared_ptr<testing::NiceMock<MockDepartureHandoffResolver>> resolver;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
-        ClearCacheOnRunwayDialogSave clear;
+        InvalidateHandoffsOnRunwayDialogSave clear;
     };
 
-    TEST_F(ClearCacheOnRunwayDialogSaveTest, SavingTheRunwayDialogInvalidatesAndReResolvesFlightplans)
+    TEST_F(InvalidateHandoffsOnRunwayDialogSaveTest, SavingTheRunwayDialogInvalidatesAndReResolvesFlightplans)
     {
         auto fp1 = std::make_shared<Euroscope::MockEuroScopeCFlightPlanInterface>();
         auto rt1 = std::make_shared<Euroscope::MockEuroScopeCRadarTargetInterface>();

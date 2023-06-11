@@ -295,7 +295,7 @@ set(src__handoff
     "handoff/HandoffModule.cpp"
     "handoff/HandoffModule.h"
     controller/HandoffEventHandler.cpp
-    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/HandoffCache.cpp handoff/HandoffCache.h handoff/DepartureHandoffResolver.cpp handoff/DepartureHandoffResolver.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/ClearCacheOnActiveCallsignChanges.cpp handoff/ClearCacheOnActiveCallsignChanges.h handoff/ClearCacheOnRunwayDialogSave.cpp handoff/ClearCacheOnRunwayDialogSave.h)
+    handoff/HandoffOrder.h handoff/HandoffOrder.cpp handoff/FlightplanSidHandoffMapper.cpp handoff/FlightplanSidHandoffMapper.h handoff/DefaultDepartureHandoffResolutionStrategy.cpp handoff/DefaultDepartureHandoffResolutionStrategy.h handoff/FlightplanAirfieldHandoffMapper.cpp handoff/FlightplanAirfieldHandoffMapper.h handoff/InvalidateHandoffsOnActiveCallsignChanges.cpp handoff/InvalidateHandoffsOnActiveCallsignChanges.h handoff/InvalidateHandoffsOnRunwayDialogSave.cpp handoff/InvalidateHandoffsOnRunwayDialogSave.h handoff/DepartureHandoffIntegrationDataInitialiser.cpp handoff/DepartureHandoffIntegrationDataInitialiser.h handoff/DepartureHandoffResolver.h handoff/DepartureHandoffResolvedEvent.h handoff/SendHandoffFrequencyUpdatedIntegrationMessage.cpp handoff/SendHandoffFrequencyUpdatedIntegrationMessage.h)
 source_group("src\\handoff" FILES ${src__handoff})
 
 set(src__headings headings/Heading.h headings/Heading.cpp)
@@ -809,7 +809,7 @@ set(src__releases
     releases/EnrouteRelease.cpp releases/EnrouteReleaseType.cpp
     releases/RejectDepartureReleaseDialog.cpp releases/RejectDepartureReleaseDialog.h
     releases/ReleaseApprovalRemarksUserMessage.cpp releases/ReleaseApprovalRemarksUserMessage.h
-    releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h)
+    releases/ReleaseRejectionRemarksUserMessage.cpp releases/ReleaseRejectionRemarksUserMessage.h handoff/DefaultDepartureHandoffResolver.cpp handoff/DefaultDepartureHandoffResolver.h)
 source_group("src\\releases" FILES ${src__releases})
 
 set(src__runway
@@ -1010,7 +1010,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
-    ${src__wake} prenote/PrenoteMessageEventHandlerCollection.cpp prenote/PrenoteMessageEventHandlerCollection.h)
+    ${src__wake} prenote/PrenoteMessageEventHandlerCollection.cpp prenote/PrenoteMessageEventHandlerCollection.h handoff/DepartureHandoffResolutionStrategy.h)
 
 ################################################################################
 # Target

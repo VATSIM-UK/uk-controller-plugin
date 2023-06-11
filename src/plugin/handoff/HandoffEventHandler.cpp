@@ -1,11 +1,11 @@
 #include "DepartureHandoffResolver.h"
-#include "HandoffCache.h"
 #include "HandoffEventHandler.h"
 #include "HandoffFrequencyUpdatedMessage.h"
 #include "ResolvedHandoff.h"
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
+#include "datablock/DatablockFunctions.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "tag/TagData.h"
 
@@ -19,12 +19,10 @@ using UKControllerPlugin::Tag::TagData;
 
 namespace UKControllerPlugin::Handoff {
 
-    HandoffEventHandler::HandoffEventHandler(
-        std::shared_ptr<DepartureHandoffResolver> resolver,
-        std::shared_ptr<HandoffCache> cache,
-        Integration::OutboundIntegrationEventHandler& outboundEvent)
-        : resolver(std::move(resolver)), cache(std::move(cache)), outboundEvent(outboundEvent)
+    HandoffEventHandler::HandoffEventHandler(std::shared_ptr<DepartureHandoffResolver> resolver)
+        : resolver(std::move(resolver))
     {
+        assert(this->resolver && "Resolver cannot be null");
     }
 
     auto HandoffEventHandler::GetTagItemDescription(int tagItemId) const -> std::string
@@ -34,61 +32,29 @@ namespace UKControllerPlugin::Handoff {
 
     void HandoffEventHandler::SetTagItemData(TagData& tagData)
     {
-        // Try to get the cached item
-        const auto& flightplan = tagData.GetFlightplan();
-        const auto cachedItem = this->cache->Get(flightplan.GetCallsign());
-        if (cachedItem) {
-            tagData.SetItemString(FormatFrequency(cachedItem));
+        const auto handoff = resolver->Resolve(tagData.GetFlightplan());
+        if (!handoff) {
+            LogError("Failed to resolve handoff for " + tagData.GetFlightplan().GetCallsign());
             return;
         }
 
-        // Resolve the handoff and return
-        const auto resolvedHandoff = ResolveHandoffAndCache(flightplan);
-        tagData.SetItemString(FormatFrequency(resolvedHandoff));
-        this->FireHandoffUpdatedEvent(flightplan.GetCallsign());
+        tagData.SetItemString(Datablock::FrequencyStringFromDouble(handoff->resolvedController->GetFrequency()));
     }
 
     void HandoffEventHandler::FlightPlanEvent(
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
     {
-        this->cache->Delete(flightPlan.GetCallsign());
-        static_cast<void>(ResolveHandoffAndCache(flightPlan));
+        resolver->Invalidate(flightPlan);
+        static_cast<void>(resolver->Resolve(flightPlan));
     }
 
     void HandoffEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
     {
-        this->cache->Delete(flightPlan.GetCallsign());
+        resolver->Invalidate(flightPlan);
     }
 
     void HandoffEventHandler::ControllerFlightPlanDataEvent(EuroScopeCFlightPlanInterface& flightPlan, int dataType)
     {
         // No change required here.
-    }
-
-    void HandoffEventHandler::FireHandoffUpdatedEvent(const std::string& callsign)
-    {
-        this->outboundEvent.SendEvent(
-            std::make_shared<HandoffFrequencyUpdatedMessage>(callsign, FormatFrequency(this->cache->Get(callsign))));
-    }
-
-    auto HandoffEventHandler::GetCache() const -> std::shared_ptr<HandoffCache>
-    {
-        return this->cache;
-    }
-
-    auto HandoffEventHandler::FormatFrequency(const std::shared_ptr<ResolvedHandoff>& handoff) -> std::string
-    {
-        char frequencyString[FREQUENCY_BUFFER_LENGTH];                                   // NOLINT
-        sprintf_s(frequencyString, "%.3f", handoff->resolvedController->GetFrequency()); // NOLINT
-        return frequencyString;                                                          // NOLINT
-    }
-
-    auto HandoffEventHandler::ResolveHandoffAndCache(const EuroScopeCFlightPlanInterface& flightplan) const
-        -> std::shared_ptr<ResolvedHandoff>
-    {
-        const auto resolvedHandoff = this->resolver->Resolve(flightplan);
-        this->cache->Add(resolvedHandoff);
-
-        return std::move(resolvedHandoff);
     }
 } // namespace UKControllerPlugin::Handoff

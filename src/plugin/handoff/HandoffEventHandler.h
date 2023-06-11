@@ -15,7 +15,6 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Handoff {
     class DepartureHandoffResolver;
-    class HandoffCache;
     struct ResolvedHandoff;
 
     /*
@@ -24,11 +23,7 @@ namespace UKControllerPlugin::Handoff {
     class HandoffEventHandler : public Tag::TagItemInterface, public Flightplan::FlightPlanEventHandlerInterface
     {
         public:
-        HandoffEventHandler(
-            std::shared_ptr<DepartureHandoffResolver> resolver,
-            std::shared_ptr<HandoffCache> cache,
-            Integration::OutboundIntegrationEventHandler& outboundEvent);
-        [[nodiscard]] auto GetCache() const -> std::shared_ptr<HandoffCache>;
+        HandoffEventHandler(std::shared_ptr<DepartureHandoffResolver> resolver);
 
         // Inherited via TagItemInterface
         [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
@@ -42,21 +37,7 @@ namespace UKControllerPlugin::Handoff {
         void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
 
         private:
-        void FireHandoffUpdatedEvent(const std::string& callsign);
-        [[nodiscard]] static auto FormatFrequency(const std::shared_ptr<ResolvedHandoff>& handoff) -> std::string;
-        [[nodiscard]] auto ResolveHandoffAndCache(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
-            -> std::shared_ptr<ResolvedHandoff>;
-
         // Resolves handoffs
-        const std::shared_ptr<DepartureHandoffResolver> resolver;
-
-        // Caches resolved handoffs
-        const std::shared_ptr<HandoffCache> cache;
-
-        // Allows us to push events to integrations
-        Integration::OutboundIntegrationEventHandler& outboundEvent;
-
-        // How big to make the buffer
-        inline static const int FREQUENCY_BUFFER_LENGTH = 8;
+        std::shared_ptr<DepartureHandoffResolver> resolver;
     };
 } // namespace UKControllerPlugin::Handoff

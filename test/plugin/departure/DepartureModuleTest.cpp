@@ -2,8 +2,8 @@
 #include "departure/AircraftDepartedEvent.h"
 #include "departure/UserShouldClearDepartureDataEvent.h"
 #include "departure/UserShouldClearDepartureDataMonitor.h"
-#include "handoff/HandoffCache.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "mock/MockDepartureHandoffResolver.h"
 #include "timedevent/TimedEventCollection.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "push/PushEventProcessorCollection.h"
@@ -18,6 +18,7 @@
 #include "test/EventBusTestCase.h"
 #include "eventhandler/EventBus.h"
 #include "eventhandler/EventStream.h"
+#include <gmock/gmock-nice-strict.h>
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -53,7 +54,8 @@ namespace UKControllerPluginTest::Departure {
             container.timedHandler = std::make_unique<TimedEventCollection>();
             container.flightplanHandler =
                 std::make_unique<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection>();
-            container.handoffCache = std::make_shared<UKControllerPlugin::Handoff::HandoffCache>();
+            container.departureHandoffResolver =
+                std::make_shared<testing::NiceMock<Handoff::MockDepartureHandoffResolver>>();
             container.airfieldOwnership =
                 std::make_shared<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection>();
         }

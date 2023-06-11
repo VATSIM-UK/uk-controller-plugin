@@ -30,7 +30,7 @@ namespace UKControllerPlugin::Handoff {
      */
     auto
     DefaultDepartureHandoffResolutionStrategy::Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
-        -> std::shared_ptr<ResolvedHandoff>
+        -> std::shared_ptr<const ResolvedHandoff>
     {
         std::shared_ptr<Controller::ControllerPosition> controller = nullptr;
 

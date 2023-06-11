@@ -61,7 +61,7 @@ namespace UKControllerPlugin {
         class FlightRuleCollection;
     } // namespace FlightRules
     namespace Handoff {
-        class HandoffCache;
+        class DepartureHandoffResolver;
     } // namespace Handoff
     namespace HistoryTrail {
         class HistoryTrailRepository;
@@ -199,7 +199,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::Prenote::PrenoteMessageCollection> prenotes;
         std::unique_ptr<UKControllerPlugin::Prenote::PrenoteMessageEventHandlerCollection> prenoteMessageHandlers;
         std::shared_ptr<UKControllerPlugin::Dependency::DependencyLoaderInterface> dependencyLoader;
-        std::shared_ptr<const UKControllerPlugin::Handoff::HandoffCache> handoffCache;
+        std::shared_ptr<UKControllerPlugin::Handoff::DepartureHandoffResolver> departureHandoffResolver;
 
         // Collections of event handlers
         std::unique_ptr<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection> flightplanHandler;

@@ -30,7 +30,8 @@ namespace UKControllerPlugin::Departure {
 
         // Create the user should clear departure data monitor
         EventBus::Bus().AddHandler<AircraftDepartedEvent>(
-            std::make_shared<UserShouldClearDepartureDataMonitor>(container.handoffCache, container.airfieldOwnership),
+            std::make_shared<UserShouldClearDepartureDataMonitor>(
+                container.departureHandoffResolver, container.airfieldOwnership, *container.plugin),
             UKControllerPluginUtils::EventHandler::EventHandlerFlags::Sync);
     }
 

@@ -1,4 +1,4 @@
-#include "ClearCacheOnActiveCallsignChanges.h"
+#include "InvalidateHandoffsOnActiveCallsignChanges.h"
 #include "DepartureHandoffResolver.h"
 #include "ResolvedHandoff.h"
 #include "controller/ActiveCallsign.h"
@@ -8,7 +8,7 @@
 
 namespace UKControllerPlugin::Handoff {
 
-    ClearCacheOnActiveCallsignChanges::ClearCacheOnActiveCallsignChanges(
+    InvalidateHandoffsOnActiveCallsignChanges::InvalidateHandoffsOnActiveCallsignChanges(
         const std::shared_ptr<DepartureHandoffResolver>& resolver, Euroscope::EuroscopePluginLoopbackInterface& plugin)
         : resolver(std::move(resolver)), plugin(plugin)
     {
@@ -19,7 +19,7 @@ namespace UKControllerPlugin::Handoff {
      * When new controllers come online, we need to evict from the cache any controller who preceeds them
      * in the hierarchy.
      */
-    void ClearCacheOnActiveCallsignChanges::ActiveCallsignAdded(const Controller::ActiveCallsign& callsign)
+    void InvalidateHandoffsOnActiveCallsignChanges::ActiveCallsignAdded(const Controller::ActiveCallsign& callsign)
     {
         plugin.ApplyFunctionToAllFlightplans([&callsign, this](const auto& fp, const auto& rt) -> void {
             auto resolvedHandoff = this->resolver->Resolve(*fp);
@@ -37,7 +37,7 @@ namespace UKControllerPlugin::Handoff {
      * If we have a controller that logs off, we only need to evict from the cache instances where
      * this controller is the resolved controller.
      */
-    void ClearCacheOnActiveCallsignChanges::ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign)
+    void InvalidateHandoffsOnActiveCallsignChanges::ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign)
     {
         plugin.ApplyFunctionToAllFlightplans([&callsign, this](const auto& fp, const auto& rt) -> void {
             auto resolvedHandoff = this->resolver->Resolve(*fp);
@@ -53,13 +53,13 @@ namespace UKControllerPlugin::Handoff {
     /**
      * If we lose track of who's online alltogether, time to clear the cache.
      */
-    void ClearCacheOnActiveCallsignChanges::CallsignsFlushed()
+    void InvalidateHandoffsOnActiveCallsignChanges::CallsignsFlushed()
     {
         plugin.ApplyFunctionToAllFlightplans(
             [this](const auto& fp, const auto& rt) -> void { this->resolver->Invalidate(*fp); });
     }
 
-    auto ClearCacheOnActiveCallsignChanges::ShouldInvalidateOnCallsignAdded(
+    auto InvalidateHandoffsOnActiveCallsignChanges::ShouldInvalidateOnCallsignAdded(
         const ResolvedHandoff& handoff, const Controller::ActiveCallsign& callsign) -> bool
     {
         /*

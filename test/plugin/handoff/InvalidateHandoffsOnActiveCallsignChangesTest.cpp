@@ -10,14 +10,13 @@
 using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
-using UKControllerPlugin::Handoff::HandoffCache;
 using UKControllerPlugin::Handoff::ResolvedHandoff;
 
 namespace UKControllerPluginTest::Handoff {
-    class ClearCacheOnActiveCallsignChangesTest : public testing::Test
+    class InvalidateHandoffsOnActiveCallsignChangesTest : public testing::Test
     {
         public:
-        ClearCacheOnActiveCallsignChangesTest()
+        InvalidateHandoffsOnActiveCallsignChangesTest()
             : position1(std::make_shared<ControllerPosition>(
                   1, "LON_S_CTR", 129.420, std::vector<std::string>{}, true, false)),
               position2(std::make_shared<ControllerPosition>(
@@ -49,10 +48,10 @@ namespace UKControllerPluginTest::Handoff {
         ActiveCallsign callsign;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> mockPlugin;
         std::shared_ptr<testing::NiceMock<MockDepartureHandoffResolver>> mockResolver;
-        InvalidateHandoffsOnActiveCallsignChanges changes;
+        UKControllerPlugin::Handoff::InvalidateHandoffsOnActiveCallsignChanges changes;
     };
 
-    TEST_F(ClearCacheOnActiveCallsignChangesTest, FlushingCallsignsInvalidatesAllFlightplans)
+    TEST_F(InvalidateHandoffsOnActiveCallsignChangesTest, FlushingCallsignsInvalidatesAllFlightplans)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
         auto mockRadarTarget1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
@@ -72,7 +71,7 @@ namespace UKControllerPluginTest::Handoff {
         changes.CallsignsFlushed();
     }
 
-    TEST_F(ClearCacheOnActiveCallsignChangesTest, CallsignsLoggingOffEvictOnResolvedControllerMatch)
+    TEST_F(InvalidateHandoffsOnActiveCallsignChangesTest, CallsignsLoggingOffEvictOnResolvedControllerMatch)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
         auto mockRadarTarget1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCRadarTargetInterface>>();
@@ -90,17 +89,23 @@ namespace UKControllerPluginTest::Handoff {
         auto handoffFlightplan3 = std::make_shared<ResolvedHandoff>("BAW789", position2, nullptr, nullptr);
 
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan1))).Times(1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).Times(1);
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1)))
+            .Times(2)
+            .WillRepeatedly(testing::Return(handoffFlightplan1));
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan2))).Times(1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan2))).Times(1);
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan2)))
+            .Times(2)
+            .WillRepeatedly(testing::Return(handoffFlightplan2));
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan3))).Times(0);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan3))).Times(1);
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan3)))
+            .Times(1)
+            .WillOnce(testing::Return(handoffFlightplan3));
 
         changes.ActiveCallsignRemoved(callsign);
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignsLoggingOnInvalidatesAndResolvesIfControllerPreceedsInSidHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
@@ -109,18 +114,19 @@ namespace UKControllerPluginTest::Handoff {
 
         // Make sure we resolve and get the handoff first time
         auto resolvedHandoff = std::make_shared<ResolvedHandoff>("BAW123", position2, hierarchy1, hierarchy2);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).WillOnce(testing::Return(resolvedHandoff));
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1)))
+            .Times(2)
+            .WillRepeatedly(testing::Return(resolvedHandoff));
 
         // Subsequent times, we should invalidate and resolve
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan1))).Times(1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).Times(1);
 
         // Resolved to LON_SC, LON_S comes on and precedes in SID hierarchy
         changes.ActiveCallsignAdded(callsign);
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignsLoggingOnDoesntInvalidateAndResolveIfControllerAfterInSidHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
@@ -139,7 +145,7 @@ namespace UKControllerPluginTest::Handoff {
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignLoggingOnInvalidatesAndResolvesIfControllerPreceedsInAirfieldHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
@@ -148,18 +154,19 @@ namespace UKControllerPluginTest::Handoff {
 
         // Make sure we resolve and get the handoff first time
         auto resolvedHandoff = std::make_shared<ResolvedHandoff>("BAW123", position2, hierarchy3, hierarchy1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).WillOnce(testing::Return(resolvedHandoff));
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1)))
+            .Times(2)
+            .WillRepeatedly(testing::Return(resolvedHandoff));
 
         // Subsequent times, we should invalidate and resolve
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan1))).Times(1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).Times(1);
 
         // Resolve to LON_SC, LON_S comes on and preceeds in hierarchy
         changes.ActiveCallsignAdded(callsign);
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignLoggingOnInvalidatesAndResolvesIfResolvedControllerInAirfieldHierarchyButControllerLoggingOnIsInSidHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
@@ -168,11 +175,12 @@ namespace UKControllerPluginTest::Handoff {
 
         // Make sure we resolve and get the handoff first time
         auto resolvedHandoff = std::make_shared<ResolvedHandoff>("BAW123", position2, hierarchy1, hierarchy4);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).WillOnce(testing::Return(resolvedHandoff));
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1)))
+            .Times(2)
+            .WillRepeatedly(testing::Return(resolvedHandoff));
 
         // Subsequent times, we should invalidate and resolve
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan1))).Times(1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).Times(1);
 
         // Resolve to LON_SC on the airfield hierarchy, LON_S comes on, is not in the airfield hierarchy but is
         // in the SID one, should clear.
@@ -180,7 +188,7 @@ namespace UKControllerPluginTest::Handoff {
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignLoggingOnDoesntInvalidateAndResolveIfControllerAfterInAirfieldHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
@@ -199,7 +207,7 @@ namespace UKControllerPluginTest::Handoff {
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignLoggingOnInvalidatesAndResolvesIfResolvedControllerNotInHierarchyButControllerInSidHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
@@ -208,18 +216,19 @@ namespace UKControllerPluginTest::Handoff {
 
         // Make sure we resolve and get the handoff first time
         auto resolvedHandoff = std::make_shared<ResolvedHandoff>("BAW123", position3, hierarchy1, hierarchy3);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).WillOnce(testing::Return(resolvedHandoff));
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1)))
+            .Times(2)
+            .WillRepeatedly(testing::Return(resolvedHandoff));
 
         // Subsequent times, we should invalidate and resolve
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan1))).Times(1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).Times(1);
 
         // Resolve to unicom, LON_S comes on and is in SID hierarchy
         changes.ActiveCallsignAdded(callsign);
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignLoggingOnInvalidatesAndResolvesIfResolvedControllerNotInHierarchyButControllerInAirfieldHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
@@ -228,18 +237,19 @@ namespace UKControllerPluginTest::Handoff {
 
         // Make sure we resolve and get the handoff first time
         auto resolvedHandoff = std::make_shared<ResolvedHandoff>("BAW123", position3, hierarchy3, hierarchy1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).WillOnce(testing::Return(resolvedHandoff));
+        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1)))
+            .Times(2)
+            .WillRepeatedly(testing::Return(resolvedHandoff));
 
         // Subsequent times, we should invalidate and resolve
         EXPECT_CALL(*mockResolver, Invalidate(testing::Ref(*mockFlightplan1))).Times(1);
-        EXPECT_CALL(*mockResolver, Resolve(testing::Ref(*mockFlightplan1))).Times(1);
 
         // Resolve to unicom, LON_S comes on and is in airfield hierarchy
         changes.ActiveCallsignAdded(callsign);
     }
 
     TEST_F(
-        ClearCacheOnActiveCallsignChangesTest,
+        InvalidateHandoffsOnActiveCallsignChangesTest,
         CallsignLoggingOnDoesntInvalidateAndResolveIfResolvedControllerNotInHierarchyButControllerNotInHierarchy)
     {
         auto mockFlightplan1 = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();

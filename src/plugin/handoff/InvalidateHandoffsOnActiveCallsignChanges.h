@@ -7,7 +7,7 @@ namespace UKControllerPlugin::Euroscope {
 
 namespace UKControllerPlugin::Handoff {
     class DepartureHandoffResolver;
-    class ResolvedHandoff;
+    struct ResolvedHandoff;
 
     class InvalidateHandoffsOnActiveCallsignChanges : public Controller::ActiveCallsignEventHandlerInterface
     {

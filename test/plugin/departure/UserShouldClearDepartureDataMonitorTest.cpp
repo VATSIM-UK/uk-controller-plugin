@@ -2,11 +2,14 @@
 #include "controller/ControllerPosition.h"
 #include "departure/UserShouldClearDepartureDataEvent.h"
 #include "departure/UserShouldClearDepartureDataMonitor.h"
-#include "handoff/HandoffCache.h"
 #include "handoff/ResolvedHandoff.h"
+#include "mock/MockDepartureHandoffResolver.h"
+#include "mock/MockEuroScopeCFlightplanInterface.h"
+#include "mock/MockEuroscopePluginLoopbackInterface.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
 #include "test/EventBusTestCase.h"
+#include <gmock/gmock-nice-strict.h>
 
 namespace UKControllerPluginTest::Departure {
 
@@ -19,22 +22,29 @@ namespace UKControllerPluginTest::Departure {
                   "EGKK_TWR", "Test", position, false)),
               userCallsign(
                   std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>("EGKK_TWR", "Test", position, true)),
-              handoffs(std::make_shared<UKControllerPlugin::Handoff::HandoffCache>()),
+              handoffResolver(std::make_shared<testing::NiceMock<Handoff::MockDepartureHandoffResolver>>()),
               ownership(std::make_shared<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection>()),
-              monitor(handoffs, ownership)
+              monitor(handoffResolver, ownership, plugin)
         {
-            handoffs->Add(std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>(
+            mockFlightplan = std::make_shared<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>>();
+            ON_CALL(*mockFlightplan, GetCallsign()).WillByDefault(testing::Return("BAW123"));
+            ON_CALL(plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(mockFlightplan));
+
+            auto handoff = std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>(
                 "BAW123",
                 std::make_shared<UKControllerPlugin::Controller::ControllerPosition>(
                     -1, "UNICOM", 122.800, std::vector<std::string>{}, true, false),
                 nullptr,
-                nullptr));
+                nullptr);
+            ON_CALL(*handoffResolver, Resolve(testing::Ref(*mockFlightplan))).WillByDefault(testing::Return(handoff));
         }
 
+        std::shared_ptr<testing::NiceMock<Euroscope::MockEuroScopeCFlightPlanInterface>> mockFlightplan;
         UKControllerPlugin::Controller::ControllerPosition position;
         std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsign> callsign;
         std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsign> userCallsign;
-        std::shared_ptr<UKControllerPlugin::Handoff::HandoffCache> handoffs;
+        std::shared_ptr<testing::NiceMock<Handoff::MockDepartureHandoffResolver>> handoffResolver;
+        testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> ownership;
         UKControllerPlugin::Departure::UserShouldClearDepartureDataMonitor monitor;
     };
@@ -141,13 +151,11 @@ namespace UKControllerPluginTest::Departure {
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfTheresNoHandoffPresent)
     {
-        handoffs->Add(
-            std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>("BAW123", nullptr, nullptr, nullptr));
+        ON_CALL(*handoffResolver, Resolve(testing::Ref(*mockFlightplan))).WillByDefault(testing::Return(nullptr));
         std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
         provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
             UKControllerPlugin::Ownership::ServiceType::Tower, userCallsign));
         ownership->SetProvidersForAirfield("EGKK", provisions);
-        handoffs->Delete("BAW123");
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
@@ -156,19 +164,33 @@ namespace UKControllerPluginTest::Departure {
 
     TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfTheHandoffIsNotUnicom)
     {
-        handoffs->Add(
-            std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>("BAW123", nullptr, nullptr, nullptr));
-        std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-        provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-            UKControllerPlugin::Ownership::ServiceType::Tower, userCallsign));
-        ownership->SetProvidersForAirfield("EGKK", provisions);
-        handoffs->Delete("BAW123");
-        handoffs->Add(std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>(
+
+        auto handoff = std::make_shared<UKControllerPlugin::Handoff::ResolvedHandoff>(
             "BAW123",
             std::make_shared<UKControllerPlugin::Controller::ControllerPosition>(
                 1, "LON_S_CTR", 129.420, std::vector<std::string>{}, true, false),
             nullptr,
-            nullptr));
+            nullptr);
+        ON_CALL(*handoffResolver, Resolve(testing::Ref(*mockFlightplan))).WillByDefault(testing::Return(handoff));
+
+        std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
+        provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
+            UKControllerPlugin::Ownership::ServiceType::Tower, userCallsign));
+        ownership->SetProvidersForAirfield("EGKK", provisions);
+
+        monitor.OnEvent({"BAW123", "EGKK"});
+
+        AssertNoEventsDispatched();
+    }
+
+    TEST_F(UserShouldClearDepartureDataMonitorTest, ItDoesntFireEventIfNoFlightplanForcallsign)
+    {
+        ON_CALL(plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(testing::Return(nullptr));
+
+        std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
+        provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
+            UKControllerPlugin::Ownership::ServiceType::Tower, userCallsign));
+        ownership->SetProvidersForAirfield("EGKK", provisions);
 
         monitor.OnEvent({"BAW123", "EGKK"});
 
