@@ -3,8 +3,6 @@
 #include "FirExitPoint.h"
 #include "FirExitPointCollection.h"
 #include "IntentionCodeIntegrationDataInitialiser.h"
-
-#include <utility>
 #include "IntentionCodeMetadata.h"
 #include "IntentionCodeModel.h"
 #include "IntentionCodeUpdatedMessage.h"

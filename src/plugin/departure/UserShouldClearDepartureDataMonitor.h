@@ -3,8 +3,11 @@
 #include "eventhandler/EventHandler.h"
 
 namespace UKControllerPlugin {
+    namespace Euroscope {
+        class EuroscopePluginLoopbackInterface;
+    } // namespace Euroscope
     namespace Handoff {
-        class HandoffCache;
+        class DepartureHandoffResolver;
     } // namespace Handoff
     namespace Ownership {
         class AirfieldServiceProviderCollection;
@@ -18,17 +21,21 @@ namespace UKControllerPlugin::Departure {
     {
         public:
         UserShouldClearDepartureDataMonitor(
-            std::shared_ptr<const Handoff::HandoffCache> handoffs,
-            std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership);
+            std::shared_ptr<Handoff::DepartureHandoffResolver> handoffResolver,
+            std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
+            Euroscope::EuroscopePluginLoopbackInterface& plugin);
         void OnEvent(const Departure::AircraftDepartedEvent& event);
 
         private:
         [[nodiscard]] auto UserIsResponsibleForClearingData(const std::string& airfield) -> bool;
 
         // For getting handoffs
-        std::shared_ptr<const Handoff::HandoffCache> handoffs;
+        std::shared_ptr<Handoff::DepartureHandoffResolver> handoffResolver;
 
         // For getting ownership
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership;
+
+        // For getting flightplans
+        Euroscope::EuroscopePluginLoopbackInterface& plugin;
     };
 } // namespace UKControllerPlugin::Departure

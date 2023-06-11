@@ -71,6 +71,7 @@
 #include "../mock/MockConfigurableDisplay.h"
 #include "../mock/MockConnection.h"
 #include "../mock/MockControllerStatusEventHandlerInterface.h"
+#include "../mock/MockDepartureHandoffResolver.h"
 #include "../mock/MockDependencyLoader.h"
 #include "../mock/MockEuroScopeCControllerInterface.h"
 #include "../mock/MockEuroScopeCFlightplanInterface.h"

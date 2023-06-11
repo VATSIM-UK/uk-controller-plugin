@@ -160,10 +160,9 @@ set(test__handoff
     "handoff/HandoffModuleTest.cpp"
     handoff/FlightplanSidHandoffMapperTest.cpp
     handoff/FlightplanAirfieldHandoffMapperTest.cpp
-    handoff/HandoffCacheTest.cpp
-    handoff/DepartureHandoffResolverTest.cpp
-    handoff/ClearCacheOnActiveCallsignChangesTest.cpp
-    handoff/ClearCacheOnRunwayDialogSaveTest.cpp)
+        handoff/DefaultDepartureHandoffResolutionStrategyTest.cpp
+        handoff/InvalidateHandoffsOnActiveCallsignChangesTest.cpp
+        handoff/InvalidateHandoffsOnRunwayDialogSaveTest.cpp handoff/DepartureHandoffIntegrationDataInitialiserTest.cpp mock/MockDepartureHandoffResolver.cpp mock/MockDepartureHandoffResolver.h handoff/SendHandoffFrequencyUpdatedIntegrationMessageTest.cpp)
 source_group("test\\handoff" FILES ${test__handoff})
 
 set(test__headings
@@ -511,7 +510,7 @@ set(test__releases
     "releases/EnrouteReleaseTypesSerializerTest.cpp"
     "releases/ReleaseModuleTest.cpp"
     releases/ReleaseApprovalRemarksUserMessageTest.cpp
-    releases/ReleaseRejectionRemarksUserMessageTest.cpp releases/ReleaseIsTargetedAtUserTest.cpp releases/SendReleaseRequestedChatAreaMessageTest.cpp)
+    releases/ReleaseRejectionRemarksUserMessageTest.cpp releases/ReleaseIsTargetedAtUserTest.cpp releases/SendReleaseRequestedChatAreaMessageTest.cpp handoff/DefaultDepartureHandoffResolverTest.cpp)
 source_group("test\\releases" FILES ${test__releases})
 
 set(test__runway

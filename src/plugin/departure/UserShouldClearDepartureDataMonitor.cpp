@@ -1,8 +1,9 @@
 #include "UserShouldClearDepartureDataEvent.h"
 #include "UserShouldClearDepartureDataMonitor.h"
 #include "controller/ControllerPosition.h"
+#include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "eventhandler/EventBus.h"
-#include "handoff/HandoffCache.h"
+#include "handoff/DepartureHandoffResolver.h"
 #include "handoff/ResolvedHandoff.h"
 #include "log/LoggerFunctions.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
@@ -13,18 +14,25 @@ using UKControllerPluginUtils::EventHandler::EventBus;
 namespace UKControllerPlugin::Departure {
 
     UserShouldClearDepartureDataMonitor::UserShouldClearDepartureDataMonitor(
-        std::shared_ptr<const Handoff::HandoffCache> handoffs,
-        std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership)
-        : handoffs(std::move(handoffs)), ownership(std::move(ownership))
+        std::shared_ptr<Handoff::DepartureHandoffResolver> handoffResolver,
+        std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
+        Euroscope::EuroscopePluginLoopbackInterface& plugin)
+        : handoffResolver(std::move(handoffResolver)), ownership(std::move(ownership)), plugin(plugin)
     {
-        assert(this->handoffs && "Handoffs not set in ClearInitialAltitudeOnDeparture");
+        assert(this->handoffResolver && "Handoff resolver not set in ClearInitialAltitudeOnDeparture");
         assert(this->ownership && "Ownership not set in ClearInitialAltitudeOnDeparture");
     }
 
     void UserShouldClearDepartureDataMonitor::OnEvent(const Departure::AircraftDepartedEvent& event)
     {
         // Check for a handoff, dont do it if there's a handoff currently present.
-        const auto handoff = handoffs->Get(event.callsign);
+        const auto flightplan = plugin.GetFlightplanForCallsign(event.callsign);
+        if (!flightplan) {
+            LogDebug("Not firing UserShouldClearDepartureDataEvent for " + event.callsign + ", no flightplan found");
+            return;
+        }
+
+        const auto handoff = handoffResolver->Resolve(*flightplan);
         if (!handoff) {
             LogDebug("Not firing UserShouldClearDepartureDataEvent for " + event.callsign + ", no handoff found");
             return;

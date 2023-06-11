@@ -1,55 +1,26 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace Controller {
-        class ActiveCallsign;
-        class ActiveCallsignCollection;
-        class ControllerPosition;
-        class ControllerPositionHierarchy;
-    } // namespace Controller
-    namespace Euroscope {
-        class EuroScopeCFlightPlanInterface;
-    } // namespace Euroscope
-} // namespace UKControllerPlugin
+namespace UKControllerPlugin::Euroscope {
+    class EuroScopeCFlightPlanInterface;
+} // namespace UKControllerPlugin::Euroscope
 
 namespace UKControllerPlugin::Handoff {
-    class FlightplanSidHandoffMapper;
-    class FlightplanAirfieldHandoffMapper;
-    struct HandoffOrder;
     struct ResolvedHandoff;
 
-    /**
-     * Given a flightplan, resolves the handoff frequency
-     * that should be used for the after departure TAG item.
-     */
     class DepartureHandoffResolver
     {
         public:
-        DepartureHandoffResolver(
-            const FlightplanSidHandoffMapper& sidMapper,
-            const FlightplanAirfieldHandoffMapper& airfieldMapper,
-            const Controller::ActiveCallsignCollection& activeCallsigns);
+        virtual ~DepartureHandoffResolver() = default;
 
-        [[nodiscard]] auto Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
-            -> std::shared_ptr<ResolvedHandoff>;
+        /**
+         * Should resolve the handoff for the given flight plan. It should never return null.
+         */
+        [[nodiscard]] virtual auto Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+            -> std::shared_ptr<const ResolvedHandoff> = 0;
 
-        private:
-        [[nodiscard]] auto ResolveController(const HandoffOrder& handoff) const
-            -> std::shared_ptr<Controller::ControllerPosition>;
-
-        // Maps flightplans to sids to handoffs
-        const FlightplanSidHandoffMapper& sidMapper;
-
-        // Maps flightplans to airfields to handoffs
-        const FlightplanAirfieldHandoffMapper& airfieldMapper;
-
-        // All the active controllers
-        const Controller::ActiveCallsignCollection& activeCallsigns;
-
-        // The unicom frequency
-        inline static const double UNICOM_FREQUENCY = 122.800;
-
-        // The unicom controller for default values
-        const std::shared_ptr<Controller::ControllerPosition> unicomController;
+        /**
+         * Should invalidate any caches or data persisted as part of the resolution process.
+         */
+        virtual void Invalidate(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) = 0;
     };
 } // namespace UKControllerPlugin::Handoff

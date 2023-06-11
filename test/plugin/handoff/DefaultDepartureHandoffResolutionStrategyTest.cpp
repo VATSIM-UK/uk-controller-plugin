@@ -3,7 +3,7 @@
 #include "controller/ActiveCallsignCollection.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
-#include "handoff/DepartureHandoffResolver.h"
+#include "handoff/DefaultDepartureHandoffResolutionStrategy.h"
 #include "handoff/FlightplanAirfieldHandoffMapper.h"
 #include "handoff/FlightplanSidHandoffMapper.h"
 #include "handoff/HandoffCollection.h"
@@ -18,7 +18,7 @@ using UKControllerPlugin::Controller::ActiveCallsign;
 using UKControllerPlugin::Controller::ActiveCallsignCollection;
 using UKControllerPlugin::Controller::ControllerPosition;
 using UKControllerPlugin::Controller::ControllerPositionHierarchy;
-using UKControllerPlugin::Handoff::DepartureHandoffResolver;
+using UKControllerPlugin::Handoff::DefaultDepartureHandoffResolutionStrategy;
 using UKControllerPlugin::Handoff::FlightplanAirfieldHandoffMapper;
 using UKControllerPlugin::Handoff::FlightplanSidHandoffMapper;
 using UKControllerPlugin::Handoff::HandoffCollection;
@@ -67,7 +67,7 @@ namespace UKControllerPluginTest::Handoff {
         HandoffCollection handoffs;
         FlightplanSidHandoffMapper sidMapper;
         FlightplanAirfieldHandoffMapper airfieldMapper;
-        DepartureHandoffResolver resolver;
+        DefaultDepartureHandoffResolutionStrategy resolver;
     };
 
     TEST_F(DepartureHandoffResolverTest, ItReturnsUnicomIfNoHandoffFound)
