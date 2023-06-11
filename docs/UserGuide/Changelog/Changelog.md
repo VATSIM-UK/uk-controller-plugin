@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [5.12.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.11.0...5.12.0) (2023-06-11)
+
+
+### Features
+
+* initialiser for handoffs for integrations ([15c909b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/15c909b096979b71a116db502af58fe9f544c889))
+
 # [5.11.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.10.0...5.11.0) (2023-06-06)
 
 
