@@ -1,4 +1,4 @@
-#include "DepartureHandoffResolver.h"
+#include "DefaultDepartureHandoffResolutionStrategy.h"
 #include "FlightplanAirfieldHandoffMapper.h"
 #include "FlightplanSidHandoffMapper.h"
 #include "HandoffOrder.h"
@@ -13,7 +13,7 @@ using UKControllerPlugin::Controller::ControllerPositionHierarchy;
 
 namespace UKControllerPlugin::Handoff {
 
-    DepartureHandoffResolver::DepartureHandoffResolver(
+    DefaultDepartureHandoffResolutionStrategy::DefaultDepartureHandoffResolutionStrategy(
         const FlightplanSidHandoffMapper& sidMapper,
         const FlightplanAirfieldHandoffMapper& airfieldMapper,
         const Controller::ActiveCallsignCollection& activeCallsigns)
@@ -28,7 +28,8 @@ namespace UKControllerPlugin::Handoff {
      * nothing to map to, resolve to unicom anyway... We'll need a flightplan change to be able to attempt
      * it again.
      */
-    auto DepartureHandoffResolver::Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+    auto
+    DefaultDepartureHandoffResolutionStrategy::Resolve(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
         -> std::shared_ptr<ResolvedHandoff>
     {
         std::shared_ptr<Controller::ControllerPosition> controller = nullptr;
@@ -68,7 +69,7 @@ namespace UKControllerPlugin::Handoff {
     /**
      * For a given handoff, resolve it to a particular controller position.
      */
-    auto DepartureHandoffResolver::ResolveController(const HandoffOrder& handoff) const
+    auto DefaultDepartureHandoffResolutionStrategy::ResolveController(const HandoffOrder& handoff) const
         -> std::shared_ptr<Controller::ControllerPosition>
     {
         for (auto& controller : *handoff.order) {

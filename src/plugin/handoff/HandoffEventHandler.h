@@ -44,6 +44,8 @@ namespace UKControllerPlugin::Handoff {
         private:
         void FireHandoffUpdatedEvent(const std::string& callsign);
         [[nodiscard]] static auto FormatFrequency(const std::shared_ptr<ResolvedHandoff>& handoff) -> std::string;
+        [[nodiscard]] auto ResolveHandoffAndCache(const Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
+            -> std::shared_ptr<ResolvedHandoff>;
 
         // Resolves handoffs
         const std::shared_ptr<DepartureHandoffResolver> resolver;

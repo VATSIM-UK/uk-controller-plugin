@@ -187,13 +187,15 @@ namespace UKControllerPluginTest::Handoff {
         EXPECT_EQ(122.800, this->cache->Get("BAW123")->resolvedController->GetFrequency());
     }
 
-    TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanUpdate)
+    TEST_F(HandoffEventHandlerTest, TestItRepopulatesCacheOnFlightplanUpdate)
     {
+        this->AddHandoffOrders();
+        this->activeCallsigns.AddUserCallsign(ActiveCallsign("LON_SC_CTR", "Testy McTestFace", *this->position2, true));
         this->cache->Add(std::make_shared<ResolvedHandoff>("BAW123", position2, nullptr, nullptr));
         this->cache->Add(std::make_shared<ResolvedHandoff>("BAW456", position2, nullptr, nullptr));
         this->handler.FlightPlanEvent(this->mockFlightplan, this->mockRadarTarget);
-        EXPECT_EQ(nullptr, this->cache->Get("BAW123"));
         EXPECT_NE(nullptr, this->cache->Get("BAW456"));
+        EXPECT_EQ(122.800, this->cache->Get("BAW123")->resolvedController->GetFrequency());
     }
 
     TEST_F(HandoffEventHandlerTest, TestItClearsCacheOnFlightplanDisconnect)

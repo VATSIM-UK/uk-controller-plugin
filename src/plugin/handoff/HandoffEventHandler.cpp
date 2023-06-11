@@ -43,8 +43,7 @@ namespace UKControllerPlugin::Handoff {
         }
 
         // Resolve the handoff and return
-        const auto resolvedHandoff = this->resolver->Resolve(flightplan);
-        this->cache->Add(resolvedHandoff);
+        const auto resolvedHandoff = ResolveHandoffAndCache(flightplan);
         tagData.SetItemString(FormatFrequency(resolvedHandoff));
         this->FireHandoffUpdatedEvent(flightplan.GetCallsign());
     }
@@ -53,6 +52,7 @@ namespace UKControllerPlugin::Handoff {
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
     {
         this->cache->Delete(flightPlan.GetCallsign());
+        static_cast<void>(ResolveHandoffAndCache(flightPlan));
     }
 
     void HandoffEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
@@ -81,5 +81,14 @@ namespace UKControllerPlugin::Handoff {
         char frequencyString[FREQUENCY_BUFFER_LENGTH];                                   // NOLINT
         sprintf_s(frequencyString, "%.3f", handoff->resolvedController->GetFrequency()); // NOLINT
         return frequencyString;                                                          // NOLINT
+    }
+
+    auto HandoffEventHandler::ResolveHandoffAndCache(const EuroScopeCFlightPlanInterface& flightplan) const
+        -> std::shared_ptr<ResolvedHandoff>
+    {
+        const auto resolvedHandoff = this->resolver->Resolve(flightplan);
+        this->cache->Add(resolvedHandoff);
+
+        return std::move(resolvedHandoff);
     }
 } // namespace UKControllerPlugin::Handoff
