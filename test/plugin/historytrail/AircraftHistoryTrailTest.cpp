@@ -86,12 +86,11 @@ namespace UKControllerPluginTest::HistoryTrail {
         EXPECT_EQ(2, trail.size());
 
         // First item
-        EXPECT_EQ(1, trail.back().position.m_Latitude);
-        EXPECT_EQ(2, trail.back().position.m_Longitude);
-        EXPECT_EQ(123, trail.back().heading);
+        EXPECT_EQ(1, trail.front().position.m_Latitude);
+        EXPECT_EQ(2, trail.front().position.m_Longitude);
+        EXPECT_EQ(123, trail.front().heading);
 
         // Second item
-        trail.pop_back();
         EXPECT_EQ(3, trail.back().position.m_Latitude);
         EXPECT_EQ(4, trail.back().position.m_Longitude);
         EXPECT_EQ(456, trail.back().heading);
@@ -123,8 +122,8 @@ namespace UKControllerPluginTest::HistoryTrail {
         EXPECT_EQ(history.maxSize, trail.size());
 
         // First item
-        EXPECT_EQ(3, trail.front().position.m_Latitude);
-        EXPECT_EQ(4, trail.front().position.m_Longitude);
-        EXPECT_EQ(456, trail.front().heading);
+        EXPECT_EQ(3, trail.back().position.m_Latitude);
+        EXPECT_EQ(4, trail.back().position.m_Longitude);
+        EXPECT_EQ(456, trail.back().heading);
     }
 } // namespace UKControllerPluginTest::HistoryTrail
