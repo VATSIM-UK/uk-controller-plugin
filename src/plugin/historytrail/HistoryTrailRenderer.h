@@ -158,10 +158,12 @@ namespace UKControllerPlugin {
             const int defaultMaxAltitude = 99999;
 
             private:
-            void DrawDot(Windows::GdiGraphicsInterface& graphics, Gdiplus::Pen& pen, const Gdiplus::RectF& area);
-
-            void FillDot(Windows::GdiGraphicsInterface& graphics, Gdiplus::Brush& brush, const Gdiplus::RectF& area);
-            void DoDot(Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area);
+            [[nodiscard]] auto GetDoDotFunction() const
+                -> std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::RectF&)>;
+            [[nodiscard]] auto GetFillDotFunction() const
+                -> std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::RectF&)>;
+            [[nodiscard]] auto GetDrawDotFunction() const
+                -> std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::RectF&)>;
 
             // Handles dialogs
             const Dialog::DialogManager& dialogManager;
@@ -222,6 +224,9 @@ namespace UKControllerPlugin {
 
             // The dot command for opening the configuration modal.
             const std::string dotCommand = ".ukcp h";
+
+            // Function for drawing the dot - saved as a lambda so we dont have to keep checking the trail type
+            std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::RectF&)> drawDot;
         };
     } // namespace HistoryTrail
 } // namespace UKControllerPlugin

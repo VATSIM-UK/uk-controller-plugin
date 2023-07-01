@@ -57,6 +57,9 @@ namespace UKControllerPlugin {
                 userSetting.GetIntegerEntry(this->maxAltitudeFilterUserSettingKey, this->defaultMaxAltitude);
             this->filledDots = userSetting.GetBooleanEntry(this->dotFillUserSettingKey, false);
             this->rotatedDots = userSetting.GetBooleanEntry(this->dotRotateUserSettingKey, false);
+
+            // Load the dot drawing function
+            this->drawDot = this->GetDrawDotFunction();
         }
 
         /*
@@ -134,51 +137,6 @@ namespace UKControllerPlugin {
         bool HistoryTrailRenderer::GetAntiAliasedTrails(void) const
         {
             return this->antialiasedTrails;
-        }
-
-        /*
-            Draws a single dot to the screen.
-        */
-        void
-        HistoryTrailRenderer::DrawDot(GdiGraphicsInterface& graphics, Gdiplus::Pen& pen, const Gdiplus::RectF& area)
-        {
-            if (this->historyTrailType == this->trailTypeDiamond) {
-                graphics.DrawDiamond(area, pen);
-            } else if (this->historyTrailType == this->trailTypeCircle) {
-                graphics.DrawCircle(area, pen);
-            } else if (this->historyTrailType == this->trailTypeLine) {
-                graphics.DrawLine(
-                    pen,
-                    Gdiplus::PointF{area.GetLeft(), area.GetBottom()},
-                    Gdiplus::PointF{area.GetRight(), area.GetTop()});
-            } else {
-                graphics.DrawRect(area, pen);
-            }
-        }
-
-        /*
-            Fills a single dot to the screen.
-        */
-        void
-        HistoryTrailRenderer::FillDot(GdiGraphicsInterface& graphics, Gdiplus::Brush& brush, const Gdiplus::RectF& area)
-        {
-            if (this->historyTrailType == this->trailTypeDiamond) {
-                graphics.FillDiamond(area, brush);
-            } else if (this->historyTrailType == this->trailTypeCircle) {
-                graphics.FillCircle(area, brush);
-            } else {
-                graphics.FillRect(area, brush);
-            }
-        }
-
-        void HistoryTrailRenderer::DoDot(GdiGraphicsInterface& graphics, const Gdiplus::RectF& area)
-        {
-            // Draw the dot
-            if (this->filledDots && this->historyTrailType != this->trailTypeLine) {
-                this->FillDot(graphics, *this->brush, area);
-            } else {
-                this->DrawDot(graphics, *this->pen, area);
-            }
         }
 
         /*
@@ -372,9 +330,9 @@ namespace UKControllerPlugin {
                             if (this->rotatedDots) {
                                 graphics.Rotated(
                                     static_cast<Gdiplus::REAL>(position->heading),
-                                    [&graphics, &dot, this]() { this->DoDot(graphics, dot); });
+                                    [&graphics, &dot, this]() { this->drawDot(graphics, dot); });
                             } else {
-                                this->DoDot(graphics, dot);
+                                this->drawDot(graphics, dot);
                             }
                         });
 
@@ -404,6 +362,69 @@ namespace UKControllerPlugin {
         */
         void HistoryTrailRenderer::ResetPosition(void)
         {
+        }
+
+        auto HistoryTrailRenderer::GetDoDotFunction() const
+            -> std::function<void(GdiGraphicsInterface&, const Gdiplus::RectF&)>
+        {
+            return this->filledDots && this->historyTrailType != this->trailTypeLine ? this->GetFillDotFunction()
+                                                                                     : this->GetDrawDotFunction();
+        }
+
+        auto HistoryTrailRenderer::GetDrawDotFunction() const
+            -> std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::RectF&)>
+        {
+            // Diamonds
+            if (this->historyTrailType == this->trailTypeDiamond) {
+                return [this](Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area) {
+                    graphics.DrawDiamond(area, *this->pen);
+                };
+            }
+
+            // Circles
+            if (this->historyTrailType == this->trailTypeCircle) {
+                return [this](Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area) {
+                    graphics.DrawCircle(area, *this->pen);
+                };
+            }
+
+            // Lines
+            if (this->historyTrailType == this->trailTypeLine) {
+                return [this](Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area) {
+                    graphics.DrawLine(
+                        *this->pen,
+                        Gdiplus::PointF{area.GetLeft(), area.GetBottom()},
+                        Gdiplus::PointF{area.GetRight(), area.GetTop()});
+                };
+            }
+
+            // Rectangles
+            return [this](Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area) {
+                graphics.DrawRect(area, *this->pen);
+            };
+        }
+
+        auto HistoryTrailRenderer::GetFillDotFunction() const
+            -> std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::RectF&)>
+        {
+            // Diamonds
+            if (this->historyTrailType == this->trailTypeDiamond) {
+                return [this](Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area) {
+                    graphics.FillDiamond(area, *this->brush);
+                };
+            }
+
+            // Circles
+            if (this->historyTrailType == this->trailTypeCircle) {
+                return [this](Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area) {
+                    graphics.FillCircle(area, *this->brush);
+                };
+            }
+
+            // Rects
+            return [this](Windows::GdiGraphicsInterface& graphics, const Gdiplus::RectF& area) {
+                graphics.FillRect(area, *this->brush);
+            };
         }
     } // namespace HistoryTrail
 } // namespace UKControllerPlugin
