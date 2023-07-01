@@ -251,7 +251,6 @@ namespace UKControllerPlugin::HistoryTrail {
 
     void HistoryTrailRenderer::Render(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        auto nowTime = std::chrono::system_clock::now();
         Gdiplus::Color currentColourArgb = *this->startColour;
         this->pen->SetColor(currentColourArgb);
         this->brush->SetColor(currentColourArgb);
@@ -350,10 +349,6 @@ namespace UKControllerPlugin::HistoryTrail {
                 roundNumber++;
             }
         }
-
-        auto renderTimeInMs =
-            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - nowTime).count();
-        LogDebug("HistoryTrailRenderer::Render took " + std::to_string(renderTimeInMs) + " ms");
     }
 
     /*
