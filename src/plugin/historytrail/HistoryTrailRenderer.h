@@ -220,6 +220,9 @@ namespace UKControllerPlugin::HistoryTrail {
         // The altitude at and above which not to display
         int maximumDisplayAltitude;
 
+        // How much we reduce the size of the dots each time if we're on degrading dots
+        Gdiplus::REAL reducePerDot;
+
         // The dot command for opening the configuration modal.
         const std::string dotCommand = ".ukcp h";
 

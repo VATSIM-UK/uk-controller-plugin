@@ -1,42 +1,39 @@
-#include "historytrail/AircraftHistoryTrail.h"
+#include "AircraftHistoryTrail.h"
 
-namespace UKControllerPlugin {
-    namespace HistoryTrail {
+namespace UKControllerPlugin::HistoryTrail {
 
-        AircraftHistoryTrail::AircraftHistoryTrail(std::string callsign)
-        {
-            this->callsign = callsign;
+    AircraftHistoryTrail::AircraftHistoryTrail(std::string callsign) : callsign(std::move(callsign))
+    {
+    }
+
+    /*
+        Adds an item to the history trail. If the queue is already at the maximum size, we remove the oldest
+        item before adding the new one - so the trail will never get bigger than this->maxSize.
+
+        The new item goes to the front, whilst old items are popped off the back.
+    */
+    void AircraftHistoryTrail::AddItem(const HistoryTrailPoint& point)
+    {
+        this->trail.push_back(point);
+
+        if (this->trail.size() > this->maxSize && this->trail.size() > 0) {
+            this->trail.erase(this->trail.cbegin());
         }
+    }
 
-        /*
-            Adds an item to the history trail. If the queue is already at the maximum size, we remove the oldest
-            item before adding the new one - so the trail will never get bigger than this->maxSize.
+    /*
+        Returns the callsign associated with this history trail.
+    */
+    auto AircraftHistoryTrail::GetCallsign() const -> std::string
+    {
+        return this->callsign;
+    }
 
-            The new item goes to the front, whilst old items are popped off the back.
-        */
-        void AircraftHistoryTrail::AddItem(HistoryTrailPoint point)
-        {
-            this->trail.push_front(point);
-
-            if (this->trail.size() > this->maxSize) {
-                this->trail.pop_back();
-            }
-        }
-
-        /*
-            Returns the callsign associated with this history trail.
-        */
-        std::string AircraftHistoryTrail::GetCallsign(void) const
-        {
-            return this->callsign;
-        }
-
-        /*
-            Returns a copy of the current history trail.
-        */
-        const std::deque<HistoryTrailPoint>& AircraftHistoryTrail::GetTrail(void) const
-        {
-            return this->trail;
-        }
-    } // namespace HistoryTrail
-} // namespace UKControllerPlugin
+    /*
+        Returns a copy of the current history trail.
+    */
+    auto AircraftHistoryTrail::GetTrail() const -> const std::vector<HistoryTrailPoint>&
+    {
+        return this->trail;
+    }
+} // namespace UKControllerPlugin::HistoryTrail

@@ -1,62 +1,59 @@
-#include "historytrail/HistoryTrailRepository.h"
-#include "historytrail/AircraftHistoryTrail.h"
-#include "euroscope/EuroScopeCRadarTargetInterface.h"
+#include "AircraftHistoryTrail.h"
+#include "HistoryTrailRepository.h"
 
-namespace UKControllerPlugin {
-    namespace HistoryTrail {
+namespace UKControllerPlugin::HistoryTrail {
 
-        HistoryTrailRepository::HistoryTrailRepository(void)
-        {
+    /*
+        Returns an aircraft in the history trail.
+    */
+    auto HistoryTrailRepository::GetAircraft(const std::string& callsign) -> std::shared_ptr<AircraftHistoryTrail>
+    {
+        if (!this->HasAircraft(callsign)) {
+            return nullptr;
         }
 
-        HistoryTrailRepository::~HistoryTrailRepository(void)
-        {
+        return this->trailMap[callsign];
+    }
+
+    /*
+        Returns whether or not the repository knows about a particular callsign.
+    */
+    auto HistoryTrailRepository::HasAircraft(const std::string& callsign) const -> bool
+    {
+        return this->trailMap.contains(callsign);
+    }
+
+    /*
+        Adds an aircraft to the history trail repository, if it doesn't already
+        exist.
+    */
+    void HistoryTrailRepository::RegisterAircraft(std::shared_ptr<AircraftHistoryTrail> trail)
+    {
+        if (this->HasAircraft(trail->GetCallsign())) {
+            return;
         }
 
-        /*
-            Returns an aircraft in the history trail.
-        */
-        std::shared_ptr<AircraftHistoryTrail> HistoryTrailRepository::GetAircraft(std::string callsign)
-        {
-            if (!this->HasAircraft(callsign)) {
-                return NULL;
-            }
+        // Add to the map and vector.
+        this->trailMap[trail->GetCallsign()] = trail;
+        this->trailData.push_back(trail);
+    }
 
-            return this->trailData[callsign];
+    /*
+        Removes an aircraft from the history trail repository, if known.
+    */
+    void HistoryTrailRepository::UnregisterAircraft(const std::string& callsign)
+    {
+        if (!this->HasAircraft(callsign)) {
+            return;
         }
 
-        /*
-            Returns whether or not the repository knows about a particular callsign.
-        */
-        bool HistoryTrailRepository::HasAircraft(std::string callsign) const
-        {
-            return this->trailData.count(callsign) == 1;
-        }
-
-        /*
-            Adds an aircraft to the history trail repository, if it doesn't already
-            exist.
-        */
-        void HistoryTrailRepository::RegisterAircraft(std::shared_ptr<AircraftHistoryTrail> trail)
-        {
-            if (this->HasAircraft(trail->GetCallsign())) {
-                return;
-            }
-
-            this->trailData[trail->GetCallsign()] = trail;
-        }
-
-        /*
-            Removes an aircraft from the history trail repository, if known.
-        */
-        void HistoryTrailRepository::UnregisterAircraft(std::string callsign)
-        {
-            if (!this->HasAircraft(callsign)) {
-                return;
-            }
-
-            // Remove from the map and destroy the object.
-            this->trailData.erase(callsign);
-        }
-    } // namespace HistoryTrail
-} // namespace UKControllerPlugin
+        // Remove from the map and the vector
+        this->trailMap.erase(callsign);
+        this->trailData.erase(
+            std::remove_if(
+                this->trailData.begin(),
+                this->trailData.end(),
+                [callsign](std::shared_ptr<AircraftHistoryTrail> trail) { return trail->GetCallsign() == callsign; }),
+            this->trailData.end());
+    }
+} // namespace UKControllerPlugin::HistoryTrail

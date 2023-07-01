@@ -56,6 +56,7 @@ namespace UKControllerPlugin::HistoryTrail {
             userSetting.GetIntegerEntry(this->maxAltitudeFilterUserSettingKey, this->defaultMaxAltitude);
         this->filledDots = userSetting.GetBooleanEntry(this->dotFillUserSettingKey, false);
         this->rotatedDots = userSetting.GetBooleanEntry(this->dotRotateUserSettingKey, false);
+        this->reducePerDot = (this->historyTrailDotSizeFloat / this->historyTrailLength) / 2;
 
         // Load the dot drawing function
         this->drawDot = this->GetDrawDotFunction();
@@ -114,6 +115,7 @@ namespace UKControllerPlugin::HistoryTrail {
         this->historyTrailDotSizeFloat = static_cast<float>(this->historyTrailDotSize);
         this->startColour->SetFromCOLORREF(newColour);
         this->alphaPerDot = 255 / this->historyTrailLength;
+        this->reducePerDot = (this->historyTrailDotSizeFloat / this->historyTrailLength) / 2;
 
         // Change the rendering function
         this->drawDot = this->GetDrawDotFunction();
@@ -256,30 +258,28 @@ namespace UKControllerPlugin::HistoryTrail {
         this->brush->SetColor(currentColourArgb);
 
         // Anti aliasing
-        graphics.SetAntialias((this->antialiasedTrails) ? true : false);
+        graphics.SetAntialias((this->antialiasedTrails));
 
         // The dot we are to make.
         Gdiplus::RectF dot;
-
-        // The amount that we'll reduce the history dot by on all sides each time.
-        Gdiplus::REAL reducePerDot = (this->historyTrailDotSizeFloat / this->historyTrailLength) / 2;
 
         int roundNumber;
         // Loop through the history trails.
 
         std::shared_ptr<EuroScopeCRadarTargetInterface> radarTarget;
-        for (HistoryTrailRepository::const_iterator aircraft = this->trails.cbegin(); aircraft != this->trails.cend();
-             ++aircraft) {
+        for (const auto& aircraft : trails.trailData) {
             // Check the radar target exists
-            radarTarget = this->plugin.GetRadarTargetForCallsign(aircraft->second->GetCallsign());
+            const auto& callsign = aircraft->GetCallsign();
+            radarTarget = this->plugin.GetRadarTargetForCallsign(callsign);
             if (!radarTarget) {
                 continue;
             }
 
-            // If they're not going fast enough or are off the screen, don't display the trail.
-            if (radarScreen.GetGroundspeedForCallsign(aircraft->second->GetCallsign()) < this->minimumSpeed ||
-                aircraft->second->GetTrail().empty() ||
-                radarScreen.PositionOffScreen(aircraft->second->GetTrail().begin()->position) ||
+            const auto& trail = aircraft->GetTrail();
+            // If there's one or fewer dots, they're not going fast enough or are off the screen, don't display the
+            // trail.
+            if (trail.size() < 2 || radarScreen.GetGroundspeedForCallsign(callsign) < this->minimumSpeed ||
+                radarScreen.PositionOffScreen(aircraft->GetTrail().begin()->position) ||
                 radarTarget->GetFlightLevel() < this->minimumDisplayAltitude ||
                 radarTarget->GetFlightLevel() > this->maximumDisplayAltitude) {
                 continue;
@@ -295,15 +295,8 @@ namespace UKControllerPlugin::HistoryTrail {
             dot.Width = this->historyTrailDotSizeFloat;
             dot.Height = this->historyTrailDotSizeFloat;
 
-            // Loop through the points and display.
-            for (auto position = aircraft->second->GetTrail().begin(); position != aircraft->second->GetTrail().end();
-                 ++position) {
-
-                // Skip the first dot, that's the aircrafts current position
-                if (position == aircraft->second->GetTrail().begin()) {
-                    continue;
-                }
-
+            // Loop through the points and display. The points are in reverse order, so we need to start at the end.
+            for (auto position = ++trail.rbegin(); position != trail.rend(); ++position) {
                 // Translate to screen location
                 POINT dotCoordinates = radarScreen.ConvertCoordinateToScreenPoint(position->position);
                 graphics.Translated(

@@ -1,29 +1,27 @@
 #pragma once
-#include "historytrail/HistoryTrailPoint.h"
+#include "HistoryTrailPoint.h"
 
-namespace UKControllerPlugin {
-    namespace HistoryTrail {
-        /*
-            Class that encapsulates a standard C++ double-ended queue with a maximum size
-            to provide a list of aircraft positions.
-        */
-        class AircraftHistoryTrail
-        {
-            public:
-            explicit AircraftHistoryTrail(std::string callsign);
-            void AddItem(HistoryTrailPoint point);
-            std::string GetCallsign(void) const;
-            const std::deque<HistoryTrailPoint>& GetTrail(void) const;
+namespace UKControllerPlugin::HistoryTrail {
+    /*
+        Class that encapsulates a standard C++ double-ended queue with a maximum size
+        to provide a list of aircraft positions.
+    */
+    class AircraftHistoryTrail
+    {
+        public:
+        explicit AircraftHistoryTrail(std::string callsign);
+        void AddItem(const HistoryTrailPoint& point);
+        [[nodiscard]] auto GetCallsign() const -> std::string;
+        [[nodiscard]] auto GetTrail(void) const -> const std::vector<HistoryTrailPoint>&;
 
-            // The maximum number of items we can have in the history trail.
-            const unsigned int maxSize = 50;
+        // The maximum number of items we can have in the history trail.
+        const unsigned int maxSize = 50;
 
-            private:
-            // A queue of aircraft positions.
-            std::deque<HistoryTrailPoint> trail;
+        private:
+        // A queue of aircraft positions.
+        std::vector<HistoryTrailPoint> trail;
 
-            // Aircraft callsign corresponding to the history trail
-            std::string callsign;
-        };
-    } // namespace HistoryTrail
-} // namespace UKControllerPlugin
+        // Aircraft callsign corresponding to the history trail
+        std::string callsign;
+    };
+} // namespace UKControllerPlugin::HistoryTrail

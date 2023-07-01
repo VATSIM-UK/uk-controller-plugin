@@ -1,41 +1,43 @@
 #pragma once
 
-namespace UKControllerPlugin {
-    namespace HistoryTrail {
+namespace UKControllerPlugin::HistoryTrail {
 
-        // Pre-declarations in the namespace
-        class AircraftHistoryTrail;
-        // END
+    // Pre-declarations in the namespace
+    class AircraftHistoryTrail;
+    // END
 
-        /*
-            This class stores all the history trails currently in use by the plugin.
-            It provides a public interface that allows other classes to register and unregister
-            aircraft, update aircraft positions and retrieve the trail.
-        */
-        class HistoryTrailRepository
+    /*
+        This class stores all the history trails currently in use by the plugin.
+        It provides a public interface that allows other classes to register and unregister
+        aircraft, update aircraft positions and retrieve the trail.
+    */
+    class HistoryTrailRepository
+    {
+        public:
+        [[nodiscard]] auto GetAircraft(const std::string& callsign) -> std::shared_ptr<AircraftHistoryTrail>;
+        [[nodiscard]] auto HasAircraft(const std::string& callsign) const -> bool;
+        void UnregisterAircraft(const std::string& callsign);
+        void RegisterAircraft(std::shared_ptr<AircraftHistoryTrail>);
+
+        // Public type definitions for a custom iterator over the class.
+        using HistoryTrails = std::vector<std::shared_ptr<AircraftHistoryTrail>>;
+        using const_iterator = HistoryTrails::const_iterator;
+
+        [[nodiscard]] auto cbegin() const -> const_iterator
         {
-            public:
-            HistoryTrailRepository(void);
-            ~HistoryTrailRepository(void);
-            std::shared_ptr<AircraftHistoryTrail> GetAircraft(std::string callsign);
-            bool HasAircraft(std::string callsign) const;
-            void UnregisterAircraft(std::string callsign);
-            void RegisterAircraft(std::shared_ptr<AircraftHistoryTrail>);
+            return trailData.cbegin();
+        }
 
-            // Public type definitions for a custom iterator over the class.
-            typedef std::map<std::string, std::shared_ptr<AircraftHistoryTrail>> HistoryTrails;
-            typedef HistoryTrails::const_iterator const_iterator;
-            const_iterator cbegin(void) const
-            {
-                return trailData.cbegin();
-            }
-            const_iterator cend(void) const
-            {
-                return trailData.cend();
-            }
+        [[nodiscard]] auto cend() const -> const_iterator
+        {
+            return trailData.cend();
+        }
 
-            // Map of callsign to history trail
-            HistoryTrails trailData;
-        };
-    } // namespace HistoryTrail
-} // namespace UKControllerPlugin
+        // Map of callsign to history trail
+        HistoryTrails trailData;
+
+        private:
+        // Unordered map of callsign to trail, for ease of lookup and update.
+        std::unordered_map<std::string, std::shared_ptr<AircraftHistoryTrail>> trailMap;
+    };
+} // namespace UKControllerPlugin::HistoryTrail
