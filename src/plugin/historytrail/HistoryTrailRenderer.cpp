@@ -302,7 +302,7 @@ namespace UKControllerPlugin::HistoryTrail {
                 graphics.Translated(
                     static_cast<Gdiplus::REAL>(dotCoordinates.x),
                     static_cast<Gdiplus::REAL>(dotCoordinates.y),
-                    [&graphics, this, &dot, &roundNumber, &reducePerDot, &position] {
+                    [&graphics, this, &dot, &roundNumber, &position] {
                         // Adjust the dot size and position as required
                         if (this->degradingTrails) {
                             dot.X = -(this->historyTrailDotSizeFloat / 2) + (roundNumber * reducePerDot);
