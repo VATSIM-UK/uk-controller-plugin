@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.12.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.1...5.12.2) (2023-07-09)
+
+
+### Bug Fixes
+
+* history trail dots disappearing ([ca4a892](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ca4a892841d19252838842728da07fb26da902b3))
+
 ## [5.12.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.0...5.12.1) (2023-07-09)
 
 
