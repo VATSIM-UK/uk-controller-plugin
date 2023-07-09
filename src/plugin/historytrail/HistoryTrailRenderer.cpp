@@ -279,7 +279,7 @@ namespace UKControllerPlugin::HistoryTrail {
             // If there's one or fewer dots, they're not going fast enough or are off the screen, don't display the
             // trail.
             if (trail.size() < 2 || radarScreen.GetGroundspeedForCallsign(callsign) < this->minimumSpeed ||
-                radarScreen.PositionOffScreen(aircraft->GetTrail().begin()->position) ||
+                radarScreen.PositionOffScreen(aircraft->GetTrail().rbegin()->position) ||
                 radarTarget->GetFlightLevel() < this->minimumDisplayAltitude ||
                 radarTarget->GetFlightLevel() > this->maximumDisplayAltitude) {
                 continue;
