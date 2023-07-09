@@ -1,5 +1,14 @@
 # UK Controller Plugin Changelog
 
+## [5.12.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.0...5.12.1) (2023-07-09)
+
+
+### Performance Improvements
+
+* iteration performance upgrades ([c9176cd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c9176cda207c202cf6c2c8a3bd3ea8c1e9d72e86))
+* predetermine history trail draw function ([0d87dc5](https://github.com/VATSIM-UK/uk-controller-plugin/commit/0d87dc5d6af056bb6b70631f852ec3f9f9f78be1))
+* remove timing code ([37ef4dd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/37ef4dd773aa5c948112267ea7e9203ede3c5d11))
+
 # [5.12.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.11.0...5.12.0) (2023-06-11)
 
 
