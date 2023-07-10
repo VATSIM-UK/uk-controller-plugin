@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [5.12.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.2...5.12.3) (2023-07-10)
+
+
+### Bug Fixes
+
+* anti aliased history trail dots ([cd66452](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cd66452b2fd70a3a7de0413d82a016994497b1cb))
+* history trail filled dots ([e5d66fd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/e5d66fd45c643d308326d1c80578dda2664dcd6b))
+
 ## [5.12.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.1...5.12.2) (2023-07-09)
 
 
