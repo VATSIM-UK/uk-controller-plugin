@@ -59,7 +59,7 @@ namespace UKControllerPlugin::HistoryTrail {
         this->reducePerDot = (this->historyTrailDotSizeFloat / this->historyTrailLength) / 2;
 
         // Load the dot drawing function
-        this->drawDot = this->GetDrawDotFunction();
+        this->drawDot = this->GetDoDotFunction();
     }
 
     /*
@@ -118,7 +118,7 @@ namespace UKControllerPlugin::HistoryTrail {
         this->reducePerDot = (this->historyTrailDotSizeFloat / this->historyTrailLength) / 2;
 
         // Change the rendering function
-        this->drawDot = this->GetDrawDotFunction();
+        this->drawDot = this->GetDoDotFunction();
     }
 
     /*
