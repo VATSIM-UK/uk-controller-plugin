@@ -258,7 +258,7 @@ namespace UKControllerPlugin::HistoryTrail {
         this->brush->SetColor(currentColourArgb);
 
         // Anti aliasing
-        graphics.SetAntialias((this->antialiasedTrails));
+        graphics.SetAntialias(this->antialiasedTrails);
 
         // The dot we are to make.
         Gdiplus::RectF dot;
