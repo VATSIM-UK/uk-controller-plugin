@@ -59,7 +59,7 @@ namespace UKControllerPlugin::HistoryTrail {
         this->reducePerDot = (this->historyTrailDotSizeFloat / this->historyTrailLength) / 2;
 
         // Load the dot drawing function
-        this->drawDot = this->GetDrawDotFunction();
+        this->drawDot = this->GetDoDotFunction();
     }
 
     /*
@@ -118,7 +118,7 @@ namespace UKControllerPlugin::HistoryTrail {
         this->reducePerDot = (this->historyTrailDotSizeFloat / this->historyTrailLength) / 2;
 
         // Change the rendering function
-        this->drawDot = this->GetDrawDotFunction();
+        this->drawDot = this->GetDoDotFunction();
     }
 
     /*
@@ -257,9 +257,6 @@ namespace UKControllerPlugin::HistoryTrail {
         this->pen->SetColor(currentColourArgb);
         this->brush->SetColor(currentColourArgb);
 
-        // Anti aliasing
-        graphics.SetAntialias((this->antialiasedTrails));
-
         // The dot we are to make.
         Gdiplus::RectF dot;
 
@@ -316,9 +313,11 @@ namespace UKControllerPlugin::HistoryTrail {
 
                         if (this->rotatedDots) {
                             graphics.Rotated(static_cast<Gdiplus::REAL>(position->heading), [&graphics, &dot, this]() {
+                                graphics.SetAntialias(this->antialiasedTrails);
                                 this->drawDot(graphics, dot);
                             });
                         } else {
+                            graphics.SetAntialias(this->antialiasedTrails);
                             this->drawDot(graphics, dot);
                         }
                     });
