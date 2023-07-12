@@ -24,7 +24,7 @@ has changed and also give you credit for your hard work!
 
 ## Commits
 
-- When commiting, try to make commits "atomic". That is, each task or fix in whatever you are doing should
+- When committing, try to make commits "atomic". That is, each task or fix in whatever you are doing should
 become one commit to the repository. This is not only useful for reviewers, but allows you to rollback specific
 parts of your code without loosing everything else.
 - An in-depth guide to atomic commits may be found [here](https://www.freshconsulting.com/atomic-commits/).

@@ -1,6 +1,6 @@
 # Approach Sequencer
 
-One of the big challenges facing controllers, especially during big events, is making the most efficent use of space and
+One of the big challenges facing controllers, especially during big events, is making the most efficient use of space and
 positioning aircraft at optimal intervals on the final approach track. The UK Controller Plugin provides a tool in order
 to aid in approach planning.
 

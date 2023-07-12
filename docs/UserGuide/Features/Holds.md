@@ -69,7 +69,7 @@ The hold display is highly configurable to the situation at hand.
 
 ### Changing which levels are displayed
 
-The default levels displayed on the hold display are derrived from any published holds that may exist at that navaid.
+The default levels displayed on the hold display are derived from any published holds that may exist at that navaid.
 
 The top menu bar provides an options `o` button. Clicking on this allows you to select the minimum and maximum levels to
 display.

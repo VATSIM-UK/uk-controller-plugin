@@ -3,7 +3,7 @@
 Selective Calling (SELCAL) provides a means by which controllers can attract the attention of a particular
 aircraft that they wish to communicate with, without the pilots having to constantly listen for transmissions.
 
-This can be useful in the Oceanic airspace, where aircraft may go hours without receiveing an instruction
+This can be useful in the Oceanic airspace, where aircraft may go hours without receiving an instruction
 from the ground, especially in the modern era of ACARS messages.
 
 ## Where Are SELCAL Codes Set?
