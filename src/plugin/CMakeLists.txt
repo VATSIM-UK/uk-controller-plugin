@@ -1,4 +1,8 @@
 set(PROJECT_NAME UKControllerPluginCore)
+project(UKControllerPluginCore)
+
+### Include ECFMP
+add_subdirectory("${PROJECT_SOURCE_DIR}/../../third_party/ecfmp/src" "third_party/ecfmp")
 
 ################################################################################
 # Source groups
@@ -1155,11 +1159,13 @@ endif()
 ################################################################################
 add_dependencies(${PROJECT_NAME}
     UKControllerPluginUtils
+    ecfmp_sdk
 )
 
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PUBLIC
     UKControllerPluginUtils
+    ecfmp_sdk
 )
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
