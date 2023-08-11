@@ -126,6 +126,13 @@ namespace UKControllerPlugin {
             std::function<void(
                 std::shared_ptr<Euroscope::EuroScopeCFlightPlanInterface>,
                 std::shared_ptr<Euroscope::EuroScopeCRadarTargetInterface>)> function) override;
+        void ApplyFunctionToAllFlightplans(
+            std::function<void(Euroscope::EuroScopeCFlightPlanInterface&, Euroscope::EuroScopeCRadarTargetInterface&)>
+                function) override;
+        void ApplyFunctionToAllFlightplans(
+            std::function<
+                void(const Euroscope::EuroScopeCFlightPlanInterface&, const Euroscope::EuroScopeCRadarTargetInterface&)>
+                function) const override;
         void ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue) override;
         void OnFlightPlanFlightStripPushed(
             EuroScopePlugIn::CFlightPlan flightplan,

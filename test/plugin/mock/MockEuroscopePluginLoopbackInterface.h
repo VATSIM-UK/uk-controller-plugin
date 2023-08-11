@@ -60,6 +60,14 @@ namespace UKControllerPluginTest {
                 std::function<void(
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface>,
                     std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface>)> function) override;
+            void ApplyFunctionToAllFlightplans(
+                std::function<void(
+                    UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
+                    UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&)> function) override;
+            void ApplyFunctionToAllFlightplans(
+                std::function<void(
+                    const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
+                    const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&)> function) const override;
             void ApplyFunctionToAllControllers(
                 std::function<void(std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>)>
                     function) override;

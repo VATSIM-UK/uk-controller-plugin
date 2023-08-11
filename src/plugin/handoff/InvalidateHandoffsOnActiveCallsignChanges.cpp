@@ -4,6 +4,8 @@
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionHierarchy.h"
+#include "euroscope/EuroScopeCFlightPlanInterface.h"
+#include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 
 namespace UKControllerPlugin::Handoff {
@@ -21,16 +23,19 @@ namespace UKControllerPlugin::Handoff {
      */
     void InvalidateHandoffsOnActiveCallsignChanges::ActiveCallsignAdded(const Controller::ActiveCallsign& callsign)
     {
-        plugin.ApplyFunctionToAllFlightplans([&callsign, this](const auto& fp, const auto& rt) -> void {
-            auto resolvedHandoff = this->resolver->Resolve(*fp);
+        plugin.ApplyFunctionToAllFlightplans(
+            [&callsign, this](
+                const Euroscope::EuroScopeCFlightPlanInterface& fp,
+                const Euroscope::EuroScopeCRadarTargetInterface& rt) -> void {
+                auto resolvedHandoff = this->resolver->Resolve(fp);
 
-            if (!ShouldInvalidateOnCallsignAdded(*resolvedHandoff, callsign)) {
-                return;
-            }
+                if (!ShouldInvalidateOnCallsignAdded(*resolvedHandoff, callsign)) {
+                    return;
+                }
 
-            this->resolver->Invalidate(*fp);
-            static_cast<void>(this->resolver->Resolve(*fp));
-        });
+                this->resolver->Invalidate(fp);
+                static_cast<void>(this->resolver->Resolve(fp));
+            });
     }
 
     /**
@@ -39,15 +44,18 @@ namespace UKControllerPlugin::Handoff {
      */
     void InvalidateHandoffsOnActiveCallsignChanges::ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign)
     {
-        plugin.ApplyFunctionToAllFlightplans([&callsign, this](const auto& fp, const auto& rt) -> void {
-            auto resolvedHandoff = this->resolver->Resolve(*fp);
-            if (*resolvedHandoff->resolvedController != callsign.GetNormalisedPosition()) {
-                return;
-            }
+        plugin.ApplyFunctionToAllFlightplans(
+            [&callsign, this](
+                const Euroscope::EuroScopeCFlightPlanInterface& fp,
+                const Euroscope::EuroScopeCRadarTargetInterface& rt) -> void {
+                auto resolvedHandoff = this->resolver->Resolve(fp);
+                if (*resolvedHandoff->resolvedController != callsign.GetNormalisedPosition()) {
+                    return;
+                }
 
-            this->resolver->Invalidate(*fp);
-            static_cast<void>(this->resolver->Resolve(*fp));
-        });
+                this->resolver->Invalidate(fp);
+                static_cast<void>(this->resolver->Resolve(fp));
+            });
     }
 
     /**
@@ -56,7 +64,9 @@ namespace UKControllerPlugin::Handoff {
     void InvalidateHandoffsOnActiveCallsignChanges::CallsignsFlushed()
     {
         plugin.ApplyFunctionToAllFlightplans(
-            [this](const auto& fp, const auto& rt) -> void { this->resolver->Invalidate(*fp); });
+            [this](
+                const Euroscope::EuroScopeCFlightPlanInterface& fp,
+                const Euroscope::EuroScopeCRadarTargetInterface& rt) -> void { this->resolver->Invalidate(fp); });
     }
 
     auto InvalidateHandoffsOnActiveCallsignChanges::ShouldInvalidateOnCallsignAdded(
