@@ -15,6 +15,7 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD0(GetPosition, const EuroScopePlugIn::CPosition(void));
             MOCK_CONST_METHOD0(GetVerticalSpeed, int(void));
             MOCK_METHOD(double, GetHeading, (), (const, override));
+            MOCK_METHOD(EuroScopePlugIn::CRadarTarget&, GetEuroScopeObject, (), (const, override));
         };
     } // namespace Euroscope
 } // namespace UKControllerPluginTest
