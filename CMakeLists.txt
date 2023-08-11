@@ -85,6 +85,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 ################################################################################
 # Sub-projects
 ################################################################################
+add_subdirectory(third_party/ecfmp/src)
 add_subdirectory(src/loader)
 add_subdirectory(src/plugin)
 add_subdirectory(src/updater)

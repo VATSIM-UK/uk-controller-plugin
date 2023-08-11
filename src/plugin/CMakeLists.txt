@@ -1,9 +1,6 @@
 set(PROJECT_NAME UKControllerPluginCore)
 project(UKControllerPluginCore)
 
-### Include ECFMP
-add_subdirectory("${PROJECT_SOURCE_DIR}/../../third_party/ecfmp/src" "third_party/ecfmp")
-
 ################################################################################
 # Source groups
 ################################################################################
@@ -179,6 +176,10 @@ set(src__dependency
     "dependency/UpdateDependencies.h"
 )
 source_group("src\\dependency" FILES ${src__dependency})
+
+set(src__ecfmp
+        
+        ecfmp/ECFMPModuleFactory.cpp ecfmp/ECFMPModuleFactory.h ecfmp/Logger.cpp ecfmp/Logger.h ecfmp/HttpClient.cpp ecfmp/HttpClient.h ecfmp/ECFMPBootstrapProvider.cpp ecfmp/ECFMPBootstrapProvider.h ecfmp/TriggerEcfmpEventLoop.cpp ecfmp/TriggerEcfmpEventLoop.h)
 
 set(src__euroscope
     "euroscope/AsrEventHandlerCollection.cpp"
@@ -979,6 +980,7 @@ set(ALL_FILES
     ${src__datablock}
     ${src__departure}
     ${src__dependency}
+    ${src__ecfmp}
     ${src__euroscope}
     ${src__eventhandler}
     ${src__flightinformationservice}

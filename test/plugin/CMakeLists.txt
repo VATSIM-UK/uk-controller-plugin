@@ -109,6 +109,9 @@ set(test__dependency
 )
 source_group("test\\dependency" FILES ${test__dependency})
 
+set(test__ecfmp ecfmp/HttpClientTest.cpp ecfmp/TriggerEcfmpEventLoopTest.cpp ecfmp/ECFMPModuleFactoryTest.cpp ecfmp/ECFMPBootstrapProviderTest.cpp)
+source_group("test\\ecfmp" FILES ${test__ecfmp})
+
 set(test__euroscope
     "euroscope/AsrEventHandlerCollectionTest.cpp"
     "euroscope/CallbackFunctionTest.cpp"
@@ -621,6 +624,7 @@ set(ALL_FILES
     ${test__datablock}
     ${test__departure}
     ${test__dependency}
+    ${test__ecfmp}
     ${test__euroscope}
     ${test__eventhandler}
     ${test__flightinformationservice}
@@ -798,6 +802,7 @@ add_dependencies(${PROJECT_NAME}
     UKControllerPluginUtils
     gmock
     UKControllerPluginTestingUtils
+    ecfmp_sdk
 )
 
 # Link with other targets.

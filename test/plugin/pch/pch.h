@@ -44,6 +44,10 @@
 // Euroscope
 #include "euroscope/EuroScopePlugIn.h"
 
+// ECFMP
+#include "ecfmp/include/ECFMP/ECFMP.h"
+#include "ecfmp/include/mock/ecfmp-sdk-mock.h"
+
 // Testingutils mocks
 #include "../../testingutils/mock/MockApiInterface.h"
 #include "../../testingutils/mock/MockApiSettingsProvider.h"
