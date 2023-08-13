@@ -30,7 +30,7 @@ namespace UKControllerPlugin::ECFMP {
         void OnEvent(const ::ECFMP::Plugin::FlowMeasureActivatedEvent& event) override;
         void OnEvent(const ::ECFMP::Plugin::FlowMeasureExpiredEvent& event) override;
         void OnEvent(const ::ECFMP::Plugin::FlowMeasureWithdrawnEvent& event) override;
-        auto GetFlowMeasuresForCallsign(const std::string& callsign)
+        auto GetFlowMeasuresForCallsign(const std::string& callsign) const
             -> const std::unordered_set<std::shared_ptr<const ::ECFMP::FlowMeasure::FlowMeasure>>& override;
 
         private:

@@ -129,7 +129,7 @@ namespace UKControllerPlugin::ECFMP {
     }
 
     const std::unordered_set<std::shared_ptr<const ::ECFMP::FlowMeasure::FlowMeasure>>&
-    AircraftFlowMeasureMap::GetFlowMeasuresForCallsign(const std::string& callsign)
+    AircraftFlowMeasureMap::GetFlowMeasuresForCallsign(const std::string& callsign) const
     {
         return impl->callsignFlowMeasureMap.contains(callsign) ? impl->callsignFlowMeasureMap.at(callsign)
                                                                : impl->emptyFlowMeasureSet;
