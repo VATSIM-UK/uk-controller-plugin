@@ -30,6 +30,7 @@
 #define IDD_MISSED_APPROACH_ACKNOWLEDGE 139
 #define IDD_DEPARTURE_RELEASE_REJECT    141
 #define IDD_API_KEY_REPLACE             143
+#define IDD_FLOW_MEASURE_LIST           145
 #define IDC_CHECK_DEGRADING             1001
 #define IDC_CHECK_FADING                1002
 #define IDC_CHECK_AA                    1003
@@ -133,6 +134,7 @@
 #define IDC_DEPARTURE_RELEASE_APPROVE_CALLSIGN 1087
 #define MISSED_APPROACH_DRAW_DURATION   1087
 #define IDC_RELEASE_REJECT_REMARKS      1087
+#define IDC_FLOW_MEASURES_DETAILS       1087
 #define IDC_NOTES_STATIC                1088
 #define IDC_HOLD_PARAMS_MIN_STATIC      1089
 #define IDC_NOTIFICATION_BODY           1089
@@ -140,6 +142,7 @@
 #define IDC_HOLD_MIN_SPIN               1091
 #define IDC_HOLD_MAX                    1092
 #define IDC_HOLD_MAXIMUM                1092
+#define IDC_FLOW_MEASURES_INFO          1092
 #define IDC_SPIN2                       1093
 #define IDC_HOLD_MAX_SPIN               1093
 #define IDC_NOTIFICATION_LINK           1094
@@ -209,7 +212,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        145
+#define _APS_NEXT_RESOURCE_VALUE        147
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1146
 #define _APS_NEXT_SYMED_VALUE           101

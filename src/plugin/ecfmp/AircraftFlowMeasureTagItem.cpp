@@ -2,7 +2,6 @@
 #include "AircraftFlowMeasureMapInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "tag/TagData.h"
-#include <string>
 
 namespace UKControllerPlugin::ECFMP {
 

@@ -109,7 +109,7 @@ set(test__dependency
 )
 source_group("test\\dependency" FILES ${test__dependency})
 
-set(test__ecfmp ecfmp/HttpClientTest.cpp ecfmp/TriggerEcfmpEventLoopTest.cpp ecfmp/ECFMPModuleFactoryTest.cpp ecfmp/ECFMPBootstrapProviderTest.cpp ecfmp/AircraftFlowMeasureMapTest.cpp ecfmp/AircraftFlowMeasureTagItemTest.cpp)
+set(test__ecfmp ecfmp/HttpClientTest.cpp ecfmp/TriggerEcfmpEventLoopTest.cpp ecfmp/ECFMPModuleFactoryTest.cpp ecfmp/ECFMPBootstrapProviderTest.cpp ecfmp/AircraftFlowMeasureMapTest.cpp ecfmp/AircraftFlowMeasureTagItemTest.cpp ecfmp/ListAircraftFlowMeasuresTest.cpp ecfmp/HomeFirsFlowMeasureFilterTest.cpp)
 source_group("test\\ecfmp" FILES ${test__ecfmp})
 
 set(test__euroscope

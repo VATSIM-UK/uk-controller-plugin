@@ -179,7 +179,7 @@ source_group("src\\dependency" FILES ${src__dependency})
 
 set(src__ecfmp
         
-        ecfmp/ECFMPModuleFactory.cpp ecfmp/ECFMPModuleFactory.h ecfmp/Logger.cpp ecfmp/Logger.h ecfmp/HttpClient.cpp ecfmp/HttpClient.h ecfmp/ECFMPBootstrapProvider.cpp ecfmp/ECFMPBootstrapProvider.h ecfmp/TriggerEcfmpEventLoop.cpp ecfmp/TriggerEcfmpEventLoop.h ecfmp/AircraftFlowMeasureMap.cpp ecfmp/AircraftFlowMeasureMap.h ecfmp/AircraftFlowMeasureMapInterface.h ecfmp/AircraftFlowMeasureTagItem.cpp ecfmp/AircraftFlowMeasureTagItem.h)
+        ecfmp/ECFMPModuleFactory.cpp ecfmp/ECFMPModuleFactory.h ecfmp/Logger.cpp ecfmp/Logger.h ecfmp/HttpClient.cpp ecfmp/HttpClient.h ecfmp/ECFMPBootstrapProvider.cpp ecfmp/ECFMPBootstrapProvider.h ecfmp/TriggerEcfmpEventLoop.cpp ecfmp/TriggerEcfmpEventLoop.h ecfmp/AircraftFlowMeasureMap.cpp ecfmp/AircraftFlowMeasureMap.h ecfmp/AircraftFlowMeasureMapInterface.h ecfmp/AircraftFlowMeasureTagItem.cpp ecfmp/AircraftFlowMeasureTagItem.h ecfmp/ListAircraftFlowMeasures.cpp ecfmp/ListAircraftFlowMeasures.h ecfmp/AircraftFlowMeasuresDialog.cpp ecfmp/AircraftFlowMeasuresDialog.h ecfmp/HomeFirsFlowMeasureFilter.cpp ecfmp/HomeFirsFlowMeasureFilter.h)
 
 set(src__euroscope
     "euroscope/AsrEventHandlerCollection.cpp"

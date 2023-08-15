@@ -23,3 +23,4 @@
 9020 - Trigger Missed Approach
 9021 - Acknowledge Missed Approach
 9022 - Open Squawk Assignment Menu
+9023 - Display Relevant ECFMP Flow Measures
