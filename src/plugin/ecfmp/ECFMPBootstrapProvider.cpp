@@ -1,8 +1,10 @@
 #include "AircraftFlowMeasureMap.h"
 #include "AircraftFlowMeasureTagItem.h"
 #include "AircraftFlowMeasuresDialog.h"
+#include "ECFMP/SdkEvents.h"
 #include "ECFMPBootstrapProvider.h"
 #include "ECFMPModuleFactory.h"
+#include "HomeFirsFlowMeasureFilter.h"
 #include "ListAircraftFlowMeasures.h"
 #include "TriggerEcfmpEventLoop.h"
 #include "bootstrap/ModuleFactories.h"
@@ -25,6 +27,15 @@ namespace UKControllerPlugin::ECFMP {
         const auto aircraftFlowMeasureMap = std::make_shared<AircraftFlowMeasureMap>(*container.plugin);
         container.tagHandler->RegisterTagItem(
             131, std::make_shared<AircraftFlowMeasureTagItem>(aircraftFlowMeasureMap));
+
+        // Register the flow measure map for ECFMP events
+        auto flowMeasureFilter = std::make_shared<HomeFirsFlowMeasureFilter>();
+        ecfmpSdk->EventBus().Subscribe<::ECFMP::Plugin::FlowMeasureActivatedEvent>(
+            aircraftFlowMeasureMap, flowMeasureFilter);
+        ecfmpSdk->EventBus().Subscribe<::ECFMP::Plugin::FlowMeasureWithdrawnEvent>(
+            aircraftFlowMeasureMap, flowMeasureFilter);
+        ecfmpSdk->EventBus().Subscribe<::ECFMP::Plugin::FlowMeasureExpiredEvent>(
+            aircraftFlowMeasureMap, flowMeasureFilter);
 
         // Create the dialog for displaying flow measures for an aircraft
         auto ecfmpFlowMeasuresDialog = std::make_shared<AircraftFlowMeasuresDialog>();

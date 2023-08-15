@@ -1,6 +1,8 @@
+#include "bootstrap/ModuleFactories.h"
 #include "dialog/DialogManager.h"
+#include "ecfmp/AircraftFlowMeasureMap.h"
 #include "ecfmp/ECFMPBootstrapProvider.h"
-#include "mock/MockDialogProvider.h"
+#include "ecfmp/ECFMPModuleFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagItemCollection.h"
 #include "test/BootstrapProviderTestCase.h"
@@ -15,6 +17,7 @@ namespace UKControllerPluginTest::ECFMP {
             container.dialogManager = std::make_unique<UKControllerPlugin::Dialog::DialogManager>(mockDialogProvider);
         }
 
+        testing::NiceMock<Curl::MockCurlApi> mockCurlApi;
         testing::NiceMock<Dialog::MockDialogProvider> mockDialogProvider;
         UKControllerPlugin::ECFMP::ECFMPBootstrapProvider provider;
     };
@@ -45,5 +48,41 @@ namespace UKControllerPluginTest::ECFMP {
         RunBootstrapPlugin(provider);
         EXPECT_EQ(1, container.pluginFunctionHandlers->CountTagFunctions());
         EXPECT_EQ(1, container.pluginFunctionHandlers->HasTagFunction(9023));
+    }
+
+    TEST_F(ECFMPBootstrapProviderTest, ItRegistersTheFlowMeasureMapForECFMPActivatedEvents)
+    {
+        RunBootstrapPlugin(provider);
+        auto hasListener = container.moduleFactories->ECFMP()
+                               .Sdk(mockCurlApi)
+                               ->EventBus()
+                               .HasListenerOfType<
+                                   UKControllerPlugin::ECFMP::AircraftFlowMeasureMap,
+                                   ::ECFMP::Plugin::FlowMeasureActivatedEvent>();
+        EXPECT_TRUE(hasListener);
+    }
+
+    TEST_F(ECFMPBootstrapProviderTest, ItRegistersTheFlowMeasureMapForECFMPWithdrawnEvents)
+    {
+        RunBootstrapPlugin(provider);
+        auto hasListener = container.moduleFactories->ECFMP()
+                               .Sdk(mockCurlApi)
+                               ->EventBus()
+                               .HasListenerOfType<
+                                   UKControllerPlugin::ECFMP::AircraftFlowMeasureMap,
+                                   ::ECFMP::Plugin::FlowMeasureWithdrawnEvent>();
+        EXPECT_TRUE(hasListener);
+    }
+
+    TEST_F(ECFMPBootstrapProviderTest, ItRegistersTheFlowMeasureMapForECFMPExpiredEvents)
+    {
+        RunBootstrapPlugin(provider);
+        auto hasListener = container.moduleFactories->ECFMP()
+                               .Sdk(mockCurlApi)
+                               ->EventBus()
+                               .HasListenerOfType<
+                                   UKControllerPlugin::ECFMP::AircraftFlowMeasureMap,
+                                   ::ECFMP::Plugin::FlowMeasureExpiredEvent>();
+        EXPECT_TRUE(hasListener);
     }
 } // namespace UKControllerPluginTest::ECFMP
