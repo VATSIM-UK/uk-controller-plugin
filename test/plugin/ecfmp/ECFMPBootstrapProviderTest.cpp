@@ -3,6 +3,7 @@
 #include "ecfmp/AircraftFlowMeasureMap.h"
 #include "ecfmp/ECFMPBootstrapProvider.h"
 #include "ecfmp/ECFMPModuleFactory.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagItemCollection.h"
 #include "test/BootstrapProviderTestCase.h"
@@ -15,6 +16,8 @@ namespace UKControllerPluginTest::ECFMP {
         ECFMPBootstrapProviderTest()
         {
             container.dialogManager = std::make_unique<UKControllerPlugin::Dialog::DialogManager>(mockDialogProvider);
+            container.flightplanHandler =
+                std::make_unique<UKControllerPlugin::Flightplan::FlightPlanEventHandlerCollection>();
         }
 
         testing::NiceMock<Curl::MockCurlApi> mockCurlApi;
@@ -84,5 +87,11 @@ namespace UKControllerPluginTest::ECFMP {
                                    UKControllerPlugin::ECFMP::AircraftFlowMeasureMap,
                                    ::ECFMP::Plugin::FlowMeasureExpiredEvent>();
         EXPECT_TRUE(hasListener);
+    }
+
+    TEST_F(ECFMPBootstrapProviderTest, ItRegistersTheFlowMeasureMapForFlightplanEvents)
+    {
+        RunBootstrapPlugin(provider);
+        EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
     }
 } // namespace UKControllerPluginTest::ECFMP

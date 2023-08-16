@@ -10,6 +10,7 @@
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogManager.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "tag/TagFunction.h"
 #include "tag/TagItemCollection.h"
@@ -36,6 +37,9 @@ namespace UKControllerPlugin::ECFMP {
             aircraftFlowMeasureMap, flowMeasureFilter);
         ecfmpSdk->EventBus().Subscribe<::ECFMP::Plugin::FlowMeasureExpiredEvent>(
             aircraftFlowMeasureMap, flowMeasureFilter);
+
+        // Register the flow measure filter for flight plan events
+        container.flightplanHandler->RegisterHandler(aircraftFlowMeasureMap);
 
         // Create the dialog for displaying flow measures for an aircraft
         auto ecfmpFlowMeasuresDialog = std::make_shared<AircraftFlowMeasuresDialog>();
