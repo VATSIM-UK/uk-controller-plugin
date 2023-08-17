@@ -1,4 +1,5 @@
 #include "HomeFirsFlowMeasureFilter.h"
+#include <algorithm>
 
 namespace UKControllerPlugin::ECFMP {
 
@@ -30,8 +31,11 @@ namespace UKControllerPlugin::ECFMP {
     auto HomeFirsFlowMeasureFilter::IsNotifiedToHomeFirs(const ::ECFMP::FlowMeasure::FlowMeasure& measure) -> bool
     {
         const auto notifiedRegions = measure.NotifiedFlightInformationRegions();
-        return std::find_if(notifiedRegions.cbegin(), notifiedRegions.cend(), ([](const auto& region) {
-                                return region->Identifier() == "EGTT" || region->Identifier() == "EGPX";
-                            })) != notifiedRegions.cend();
+
+        // XXXX is the identifier used in ECFMP for the global / catch all FIR
+        return std::any_of(notifiedRegions.cbegin(), notifiedRegions.cend(), ([](const auto& region) {
+                               return region->Identifier() == "EGTT" || region->Identifier() == "EGPX" ||
+                                      region->Identifier() == "XXXX";
+                           }));
     }
 } // namespace UKControllerPlugin::ECFMP

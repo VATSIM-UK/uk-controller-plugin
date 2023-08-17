@@ -52,13 +52,19 @@ namespace UKControllerPluginTest::ECFMP {
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureActivatedEvent{measure}));
     }
 
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnActivatedEventIfIsGlobal)
+    {
+        const auto measure = GetMeasure({"LFFF", "XXXX"});
+        EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureActivatedEvent{measure}));
+    }
+
     TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnActivatedEventIfIsScottishAndLondon)
     {
         const auto measure = GetMeasure({"EGTT", "LFFF", "EGPX"});
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureActivatedEvent{measure}));
     }
 
-    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnActivatedEventIfIsNotScottishOrLondon)
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnActivatedEventIfIsNotScottishOrLondonOrGlobal)
     {
         const auto measure = GetMeasure({"EDDM", "LFFF", "EURW"});
         EXPECT_FALSE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureActivatedEvent{measure}));
@@ -76,13 +82,19 @@ namespace UKControllerPluginTest::ECFMP {
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureWithdrawnEvent{measure}));
     }
 
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnWithdrawnEventIfIsGlobal)
+    {
+        const auto measure = GetMeasure({"LFFF", "XXXX"});
+        EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureWithdrawnEvent{measure}));
+    }
+
     TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnWithdrawnEventIfIsScottishAndLondon)
     {
         const auto measure = GetMeasure({"EGTT", "LFFF", "EGPX"});
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureWithdrawnEvent{measure}));
     }
 
-    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnWithdrawnEventIfIsNotScottishOrLondon)
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnWithdrawnEventIfIsNotScottishOrLondonOrGlobal)
     {
         const auto measure = GetMeasure({"EDDM", "LFFF", "EURW"});
         EXPECT_FALSE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureWithdrawnEvent{measure}));
@@ -100,13 +112,19 @@ namespace UKControllerPluginTest::ECFMP {
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureExpiredEvent{measure}));
     }
 
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnExpiredEventIfIsGlobal)
+    {
+        const auto measure = GetMeasure({"LFFF", "XXXX"});
+        EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureExpiredEvent{measure}));
+    }
+
     TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnExpiredEventIfIsScottishAndLondon)
     {
         const auto measure = GetMeasure({"EGTT", "LFFF", "EGPX"});
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureExpiredEvent{measure}));
     }
 
-    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnExpiredEventIfIsNotScottishOrLondon)
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnExpiredEventIfIsNotScottishOrLondonOrGlobal)
     {
         const auto measure = GetMeasure({"EDDM", "LFFF", "EURW"});
         EXPECT_FALSE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureExpiredEvent{measure}));
@@ -124,13 +142,19 @@ namespace UKControllerPluginTest::ECFMP {
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureNotifiedEvent{measure}));
     }
 
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnNotifiedEventIfIsGlobal)
+    {
+        const auto measure = GetMeasure({"LFFF", "XXXX"});
+        EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureNotifiedEvent{measure}));
+    }
+
     TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnNotifiedEventIfIsScottishAndLondon)
     {
         const auto measure = GetMeasure({"EGTT", "LFFF", "EGPX"});
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureNotifiedEvent{measure}));
     }
 
-    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnNotifiedEventIfIsNotScottishOrLondon)
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnNotifiedEventIfIsNotScottishOrLondonOrGlobal)
     {
         const auto measure = GetMeasure({"EDDM", "LFFF", "EURW"});
         EXPECT_FALSE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureNotifiedEvent{measure}));
@@ -148,13 +172,19 @@ namespace UKControllerPluginTest::ECFMP {
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureReissuedEvent{measure}));
     }
 
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnReissuedEventIfIsGlobal)
+    {
+        const auto measure = GetMeasure({"LFFF", "XXXX"});
+        EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureReissuedEvent{measure}));
+    }
+
     TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsTrueOnReissuedEventIfIsScottishAndLondon)
     {
         const auto measure = GetMeasure({"EGTT", "LFFF", "EGPX"});
         EXPECT_TRUE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureReissuedEvent{measure}));
     }
 
-    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnReissuedEventIfIsNotScottishOrLondon)
+    TEST_F(HomeFirsFlowMeasureFilterTest, ShouldProcessReturnsFalseOnReissuedEventIfIsNotScottishOrLondonOrGlobal)
     {
         const auto measure = GetMeasure({"EDDM", "LFFF", "EURW"});
         EXPECT_FALSE(filter.ShouldProcess(::ECFMP::Plugin::FlowMeasureReissuedEvent{measure}));
