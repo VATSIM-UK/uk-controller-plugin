@@ -1,9 +1,8 @@
 #pragma once
-#include <string>
-#include <unordered_set>
 #include "ECFMP/SdkEvents.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "AircraftFlowMeasureMapInterface.h"
+#include "controller/ActiveCallsignEventHandlerInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 
@@ -16,7 +15,8 @@ namespace UKControllerPlugin::ECFMP {
                                    public ::ECFMP::EventBus::EventListener<::ECFMP::Plugin::FlowMeasureExpiredEvent>,
                                    public ::ECFMP::EventBus::EventListener<::ECFMP::Plugin::FlowMeasureWithdrawnEvent>,
                                    public Flightplan::FlightPlanEventHandlerInterface,
-                                   public AircraftFlowMeasureMapInterface
+                                   public AircraftFlowMeasureMapInterface,
+                                   public Controller::ActiveCallsignEventHandlerInterface
     {
         public:
         AircraftFlowMeasureMap(Euroscope::EuroscopePluginLoopbackInterface& plugin);
@@ -26,6 +26,8 @@ namespace UKControllerPlugin::ECFMP {
             UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface& radarTarget) override;
         void
         FlightPlanDisconnectEvent(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightPlan) override;
+        void ActiveCallsignAdded(const Controller::ActiveCallsign& callsign) override;
+        void ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign) override;
         void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
         void OnEvent(const ::ECFMP::Plugin::FlowMeasureActivatedEvent& event) override;
         void OnEvent(const ::ECFMP::Plugin::FlowMeasureExpiredEvent& event) override;

@@ -4,9 +4,14 @@ namespace ECFMP::Plugin {
     class Sdk;
 } // namespace ECFMP::Plugin
 
-namespace UKControllerPlugin::Curl {
-    class CurlInterface;
-} // namespace UKControllerPlugin::Curl
+namespace UKControllerPlugin {
+    namespace Controller {
+        class ActiveCallsignCollection;
+    } // namespace Controller
+    namespace Curl {
+        class CurlInterface;
+    } // namespace Curl
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::ECFMP {
 
@@ -18,7 +23,8 @@ namespace UKControllerPlugin::ECFMP {
         public:
         ECFMPModuleFactory();
         ~ECFMPModuleFactory();
-        [[nodiscard]] auto Sdk(Curl::CurlInterface& curl) -> std::shared_ptr<::ECFMP::Plugin::Sdk>;
+        [[nodiscard]] auto Sdk(Curl::CurlInterface& curl, const Controller::ActiveCallsignCollection& callsigns)
+            -> std::shared_ptr<::ECFMP::Plugin::Sdk>;
 
         private:
         struct Impl;

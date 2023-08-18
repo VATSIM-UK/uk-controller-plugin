@@ -1,6 +1,7 @@
 #include "AircraftFlowMeasureMap.h"
 #include "AircraftFlowMeasureTagItem.h"
 #include "AircraftFlowMeasuresDialog.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "ECFMP/SdkEvents.h"
 #include "ECFMPBootstrapProvider.h"
 #include "ECFMPModuleFactory.h"
@@ -21,7 +22,7 @@ namespace UKControllerPlugin::ECFMP {
     void ECFMPBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
     {
         // Event to trigger ECFMP event loop every second
-        const auto ecfmpSdk = container.moduleFactories->ECFMP().Sdk(*container.curl);
+        const auto ecfmpSdk = container.moduleFactories->ECFMP().Sdk(*container.curl, *container.activeCallsigns);
         container.timedHandler->RegisterEvent(std::make_shared<TriggerECFMPEventLoop>(ecfmpSdk), 1);
 
         // Tag item to display flow measure for a given aircraft
@@ -38,8 +39,9 @@ namespace UKControllerPlugin::ECFMP {
         ecfmpSdk->EventBus().Subscribe<::ECFMP::Plugin::FlowMeasureExpiredEvent>(
             aircraftFlowMeasureMap, flowMeasureFilter);
 
-        // Register the flow measure filter for flight plan events
+        // Register the flow measure filter for flight plan and active callsign events
         container.flightplanHandler->RegisterHandler(aircraftFlowMeasureMap);
+        container.activeCallsigns->AddHandler(aircraftFlowMeasureMap);
 
         // Create the dialog for displaying flow measures for an aircraft
         auto ecfmpFlowMeasuresDialog = std::make_shared<AircraftFlowMeasuresDialog>();

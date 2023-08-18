@@ -1,10 +1,10 @@
+#include "controller/ActiveCallsign.h"
+#include "controller/ControllerPosition.h"
 #include "ecfmp/AircraftFlowMeasureMap.h"
 #include "ECFMP/SdkEvents.h"
 #include "mock/FlowMeasureMock.h"
 #include "mock/MockEuroScopeCRadarTargetInterface.h"
 #include "mock/MockEuroscopePluginLoopbackInterface.h"
-#include <euroscope/EuroScopePlugIn.h>
-#include <gmock/gmock-nice-strict.h>
 
 namespace UKControllerPluginTest::ECFMP {
     class AircraftFlowMeasureMapTest : public testing::Test
@@ -252,5 +252,139 @@ namespace UKControllerPluginTest::ECFMP {
     TEST_F(AircraftFlowMeasureMapTest, ItHandlesUnknownCallsignsWhenGettingMeasures)
     {
         EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW999").size());
+    }
+
+    TEST_F(AircraftFlowMeasureMapTest, ActiveCallsignAddedClearsMapIfIsUserCallsign)
+    {
+        UKControllerPlugin::Controller::ControllerPosition position(1, "EGKK_GND", 121.800, {"EGKK"}, true, false);
+        UKControllerPlugin::Controller::ActiveCallsign callsign("EGGD_TWR", "Testy McTestface", position, true);
+
+        // Flightplan 1 will be applicable to the measure, flightplan 2, not so
+        EXPECT_CALL(*mockFlowMeasure1, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(false));
+
+        EXPECT_CALL(*mockFlowMeasure2, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(true));
+
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure1});
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure2});
+
+        // Check that flightplan 1 has both measures, but flightplan 2 has only the second
+        EXPECT_EQ(2, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure1, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(mockFlowMeasure2, *(++map.GetFlowMeasuresForCallsign("BAW123").begin()));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
+
+        // Trigger callsign event
+        map.ActiveCallsignAdded(callsign);
+
+        // Check that everything is gone
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
+    }
+
+    TEST_F(AircraftFlowMeasureMapTest, ActiveCallsignAddedDoesntClearMapIfIsNotUserCallsign)
+    {
+        UKControllerPlugin::Controller::ControllerPosition position(1, "EGKK_GND", 121.800, {"EGKK"}, true, false);
+        UKControllerPlugin::Controller::ActiveCallsign callsign("EGGD_TWR", "Testy McTestface", position, false);
+
+        // Flightplan 1 will be applicable to the measure, flightplan 2, not so
+        EXPECT_CALL(*mockFlowMeasure1, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(false));
+
+        EXPECT_CALL(*mockFlowMeasure2, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(true));
+
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure1});
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure2});
+
+        // Check that flightplan 1 has both measures, but flightplan 2 has only the second
+        EXPECT_EQ(2, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure1, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(mockFlowMeasure2, *(++map.GetFlowMeasuresForCallsign("BAW123").begin()));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
+
+        // Trigger callsign event
+        map.ActiveCallsignAdded(callsign);
+
+        // Check that everything is still there
+        EXPECT_EQ(2, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure1, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(mockFlowMeasure2, *(++map.GetFlowMeasuresForCallsign("BAW123").begin()));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
+    }
+
+    TEST_F(AircraftFlowMeasureMapTest, ActiveCallsignRemovedClearsMapIfIsUserCallsign)
+    {
+        UKControllerPlugin::Controller::ControllerPosition position(1, "EGKK_GND", 121.800, {"EGKK"}, true, false);
+        UKControllerPlugin::Controller::ActiveCallsign callsign("EGGD_TWR", "Testy McTestface", position, true);
+
+        // Flightplan 1 will be applicable to the measure, flightplan 2, not so
+        EXPECT_CALL(*mockFlowMeasure1, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(false));
+
+        EXPECT_CALL(*mockFlowMeasure2, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(true));
+
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure1});
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure2});
+
+        // Check that flightplan 1 has both measures, but flightplan 2 has only the second
+        EXPECT_EQ(2, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure1, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(mockFlowMeasure2, *(++map.GetFlowMeasuresForCallsign("BAW123").begin()));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
+
+        // Trigger callsign event
+        map.ActiveCallsignRemoved(callsign);
+
+        // Check that everything is gone
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
+    }
+
+    TEST_F(AircraftFlowMeasureMapTest, ActiveCallsignRemovedDoesntClearMapIfIsNotUserCallsign)
+    {
+        UKControllerPlugin::Controller::ControllerPosition position(1, "EGKK_GND", 121.800, {"EGKK"}, true, false);
+        UKControllerPlugin::Controller::ActiveCallsign callsign("EGGD_TWR", "Testy McTestface", position, false);
+
+        // Flightplan 1 will be applicable to the measure, flightplan 2, not so
+        EXPECT_CALL(*mockFlowMeasure1, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(false));
+
+        EXPECT_CALL(*mockFlowMeasure2, ApplicableToAircraft(testing::_, testing::_))
+            .WillOnce(testing::Return(true))
+            .WillOnce(testing::Return(true));
+
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure1});
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure2});
+
+        // Check that flightplan 1 has both measures, but flightplan 2 has only the second
+        EXPECT_EQ(2, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure1, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(mockFlowMeasure2, *(++map.GetFlowMeasuresForCallsign("BAW123").begin()));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
+
+        // Trigger callsign event
+        map.ActiveCallsignRemoved(callsign);
+
+        // Check that everything is still there
+        EXPECT_EQ(2, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure1, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(mockFlowMeasure2, *(++map.GetFlowMeasuresForCallsign("BAW123").begin()));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
     }
 } // namespace UKControllerPluginTest::ECFMP

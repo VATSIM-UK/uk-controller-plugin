@@ -1,3 +1,5 @@
+#include "ControllerFlowMeasureRelevance.h"
+#include "ECFMPCustomMeasureFilterWrapper.h"
 #include "ECFMPModuleFactory.h"
 #include "HttpClient.h"
 #include "Logger.h"
@@ -6,12 +8,15 @@ namespace UKControllerPlugin::ECFMP {
 
     struct ECFMPModuleFactory::Impl
     {
-        [[nodiscard]] auto MakeSdk(Curl::CurlInterface& curl) -> std::shared_ptr<::ECFMP::Plugin::Sdk>
+        [[nodiscard]] auto MakeSdk(Curl::CurlInterface& curl, const Controller::ActiveCallsignCollection& callsigns)
+            -> std::shared_ptr<::ECFMP::Plugin::Sdk>
         {
             if (!sdk) {
                 sdk = ::ECFMP::Plugin::SdkFactory::Build()
                           .WithLogger(std::make_unique<Logger>())
                           .WithHttpClient(std::make_unique<HttpClient>(curl))
+                          .WithCustomFlowMeasureFilter(std::make_shared<ECFMPCustomMeasureFilterWrapper>(
+                              std::make_shared<ControllerFlowMeasureRelevance>(callsigns)))
                           .Instance();
             }
 
@@ -32,8 +37,9 @@ namespace UKControllerPlugin::ECFMP {
         impl->sdk->Destroy();
     };
 
-    auto ECFMPModuleFactory::Sdk(Curl::CurlInterface& curl) -> std::shared_ptr<::ECFMP::Plugin::Sdk>
+    auto ECFMPModuleFactory::Sdk(Curl::CurlInterface& curl, const Controller::ActiveCallsignCollection& callsigns)
+        -> std::shared_ptr<::ECFMP::Plugin::Sdk>
     {
-        return impl->MakeSdk(curl);
+        return impl->MakeSdk(curl, callsigns);
     }
 } // namespace UKControllerPlugin::ECFMP

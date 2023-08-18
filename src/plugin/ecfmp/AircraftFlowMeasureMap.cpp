@@ -1,4 +1,5 @@
 #include "AircraftFlowMeasureMap.h"
+#include "controller/ActiveCallsign.h"
 #include "ECFMP/flowmeasure/FlowMeasure.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
@@ -80,6 +81,13 @@ namespace UKControllerPlugin::ECFMP {
             }
         }
 
+        void ClearMaps()
+        {
+            flowMeasureIdMap.clear();
+            callsignFlowMeasureMap.clear();
+            flowMeasureCallsignMap.clear();
+        }
+
         // The plugin, used to map over flightplans
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
@@ -139,5 +147,25 @@ namespace UKControllerPlugin::ECFMP {
         Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType)
     {
         // No-op
+    }
+
+    void AircraftFlowMeasureMap::ActiveCallsignAdded(const Controller::ActiveCallsign& callsign)
+    {
+        // Only interested in user callsigns
+        if (!callsign.GetIsUser()) {
+            return;
+        }
+
+        impl->ClearMaps();
+    }
+
+    void AircraftFlowMeasureMap::ActiveCallsignRemoved(const Controller::ActiveCallsign& callsign)
+    {
+        // Only interested in user callsigns
+        if (!callsign.GetIsUser()) {
+            return;
+        }
+
+        impl->ClearMaps();
     }
 } // namespace UKControllerPlugin::ECFMP

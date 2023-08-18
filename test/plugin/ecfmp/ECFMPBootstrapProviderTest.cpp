@@ -1,4 +1,5 @@
 #include "bootstrap/ModuleFactories.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "dialog/DialogManager.h"
 #include "ecfmp/AircraftFlowMeasureMap.h"
 #include "ecfmp/ECFMPBootstrapProvider.h"
@@ -21,6 +22,7 @@ namespace UKControllerPluginTest::ECFMP {
         }
 
         testing::NiceMock<Curl::MockCurlApi> mockCurlApi;
+        UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
         testing::NiceMock<Dialog::MockDialogProvider> mockDialogProvider;
         UKControllerPlugin::ECFMP::ECFMPBootstrapProvider provider;
     };
@@ -57,7 +59,7 @@ namespace UKControllerPluginTest::ECFMP {
     {
         RunBootstrapPlugin(provider);
         auto hasListener = container.moduleFactories->ECFMP()
-                               .Sdk(mockCurlApi)
+                               .Sdk(mockCurlApi, activeCallsigns)
                                ->EventBus()
                                .HasListenerOfType<
                                    UKControllerPlugin::ECFMP::AircraftFlowMeasureMap,
@@ -69,7 +71,7 @@ namespace UKControllerPluginTest::ECFMP {
     {
         RunBootstrapPlugin(provider);
         auto hasListener = container.moduleFactories->ECFMP()
-                               .Sdk(mockCurlApi)
+                               .Sdk(mockCurlApi, activeCallsigns)
                                ->EventBus()
                                .HasListenerOfType<
                                    UKControllerPlugin::ECFMP::AircraftFlowMeasureMap,
@@ -81,7 +83,7 @@ namespace UKControllerPluginTest::ECFMP {
     {
         RunBootstrapPlugin(provider);
         auto hasListener = container.moduleFactories->ECFMP()
-                               .Sdk(mockCurlApi)
+                               .Sdk(mockCurlApi, activeCallsigns)
                                ->EventBus()
                                .HasListenerOfType<
                                    UKControllerPlugin::ECFMP::AircraftFlowMeasureMap,
@@ -93,5 +95,11 @@ namespace UKControllerPluginTest::ECFMP {
     {
         RunBootstrapPlugin(provider);
         EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+    }
+
+    TEST_F(ECFMPBootstrapProviderTest, ItRegistersTheFlowMeasureMapForActiveCallsignEvents)
+    {
+        RunBootstrapPlugin(provider);
+        EXPECT_EQ(1, container.activeCallsigns->CountHandlers());
     }
 } // namespace UKControllerPluginTest::ECFMP
