@@ -12,8 +12,7 @@ namespace UKControllerPlugin {
             CallbackFunction() = default;
             CallbackFunction(
                 int functionId, std::string description, std::function<void(int, std::string, RECT)> function);
-            CallbackFunction(const CallbackFunction& copy)
-            void operator=(const CallbackFunction& copy);
+            CallbackFunction(const CallbackFunction& copy) void operator=(const CallbackFunction& copy);
             bool operator==(const CallbackFunction& compare) const;
 
             int functionId;
