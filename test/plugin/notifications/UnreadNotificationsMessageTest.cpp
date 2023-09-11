@@ -55,7 +55,7 @@ namespace UKControllerPluginTest {
         {
             EXPECT_EQ(
                 "You have 2 unread notifications relevant to the position you are controlling. " +
-                "You can view notifications from the OP menu.",
+                    "You can view notifications from the OP menu.",
                 message.MessageString());
         }
 
@@ -64,7 +64,7 @@ namespace UKControllerPluginTest {
             UnreadNotificationsMessage messageSingle(1);
             EXPECT_EQ(
                 "You have 1 unread notification relevant to the position you are controlling. " +
-                "You can view notifications from the OP menu.",
+                    "You can view notifications from the OP menu.",
                 messageSingle.MessageString());
         }
     } // namespace Notifications
