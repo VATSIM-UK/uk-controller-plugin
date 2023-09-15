@@ -16,6 +16,7 @@ namespace UKControllerPlugin::Euroscope {
             std::string description,
             std::function<void(int, EuroscopeRadarLoopbackInterface&, const std::string&, const POINT&, const RECT&)>
                 function);
+        RadarScreenCallbackFunction(const RadarScreenCallbackFunction& copy);
         void operator=(const RadarScreenCallbackFunction& copy);
         bool operator==(const RadarScreenCallbackFunction& compare) const;
 

@@ -11,6 +11,13 @@ namespace UKControllerPlugin::Euroscope {
     {
     }
 
+    RadarScreenCallbackFunction::RadarScreenCallbackFunction(const RadarScreenCallbackFunction& copy)
+    {
+        this->functionId = copy.functionId;
+        this->description = copy.description;
+        this->function = copy.function;
+    }
+
     /*
         Assignment operator
     */

@@ -21,7 +21,7 @@ namespace UKControllerPlugin {
         {
             std::string inflection = numberUnread == 1 ? "notification" : "notifications";
             return "You have " + std::to_string(this->numberUnread) + " unread " + inflection +
-                   " relevant to the position you are controlling.";
+                   " relevant to the position you are controlling. You can view " + "notifications from the OP menu.";
         }
 
         /*

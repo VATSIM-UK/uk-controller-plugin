@@ -105,18 +105,10 @@ namespace UKControllerPluginTest {
                 "link");
             repository->Add(std::move(notification3));
 
-            EXPECT_CALL(
-                this->mockPlugin,
-                ChatAreaMessage(
-                    _,
-                    _,
-                    "You have 1 unread notification relevant to the position you are controlling.",
-                    _,
-                    _,
-                    _,
-                    _,
-                    _))
-                .Times(1);
+            std::string expectedMessage =
+                "You have 1 unread notification relevant to the position you are controlling. ";
+            expectedMessage += "You can view notifications from the OP menu.";
+            EXPECT_CALL(this->mockPlugin, ChatAreaMessage(_, _, expectedMessage, _, _, _, _, _)).Times(1);
 
             this->handler->ActiveCallsignAdded(this->callsign);
         }

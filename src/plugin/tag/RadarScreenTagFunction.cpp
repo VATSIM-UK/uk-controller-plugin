@@ -27,6 +27,16 @@ namespace UKControllerPlugin::Tag {
     }
 
     /*
+        Copy constructor
+    */
+    RadarScreenTagFunction::RadarScreenTagFunction(const RadarScreenTagFunction& copy)
+    {
+        this->functionId = copy.functionId;
+        this->description = copy.description;
+        this->function = copy.function;
+    }
+
+    /*
         Assignment operator
     */
     void RadarScreenTagFunction::operator=(const RadarScreenTagFunction& copy)

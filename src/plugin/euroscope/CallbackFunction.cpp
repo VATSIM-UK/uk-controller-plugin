@@ -9,6 +9,13 @@ namespace UKControllerPlugin {
         {
         }
 
+        CallbackFunction::CallbackFunction(const CallbackFunction& copy)
+        {
+            this->functionId = copy.functionId;
+            this->description = copy.description;
+            this->function = copy.function;
+        }
+
         /*
             Assignment operator
         */
