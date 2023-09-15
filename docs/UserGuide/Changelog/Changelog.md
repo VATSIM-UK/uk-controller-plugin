@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [5.12.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.3...5.12.4) (2023-09-15)
+
+
+### Bug Fixes
+
+* copy constructor ([eb12c25](https://github.com/VATSIM-UK/uk-controller-plugin/commit/eb12c258b93f9b4aa9e4c144aab411ac43583ed1))
+* explicit copy constructors for tag functions ([0c32d66](https://github.com/VATSIM-UK/uk-controller-plugin/commit/0c32d663370991bfcc3e6fd1b718cb0d85791540))
+
 ## [5.12.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.2...5.12.3) (2023-07-10)
 
 
