@@ -26,6 +26,7 @@ namespace UKControllerPlugin {
                     UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&,
                     std::string context,
                     const POINT& mousePos)> function);
+            TagFunction(const TagFunction& copy);
             void operator=(const UKControllerPlugin::Tag::TagFunction& copy);
             bool operator==(const TagFunction& compare) const;
 

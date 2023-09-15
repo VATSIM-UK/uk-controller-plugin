@@ -24,6 +24,13 @@ namespace UKControllerPlugin {
         {
         }
 
+        TagFunction::TagFunction(const TagFunction& copy)
+        {
+            this->functionId = copy.functionId;
+            this->description = copy.description;
+            this->function = copy.function;
+        }
+
         /*
             Assignment operator
         */

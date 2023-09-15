@@ -26,6 +26,7 @@ namespace UKControllerPlugin::Tag {
                 std::string context,
                 const POINT& mousePos,
                 const RECT& area)> function);
+        RadarScreenTagFunction(const RadarScreenTagFunction& copy);
         void operator=(const RadarScreenTagFunction& copy);
         bool operator==(const RadarScreenTagFunction& compare) const;
 
