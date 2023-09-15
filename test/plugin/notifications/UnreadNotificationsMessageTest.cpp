@@ -53,19 +53,19 @@ namespace UKControllerPluginTest {
 
         TEST_F(UnreadNotificationsMessageTest, ItHasAMessageForMultipleNotifications)
         {
-            EXPECT_EQ(
-                "You have 2 unread notifications relevant to the position you are controlling. " +
-                    "You can view notifications from the OP menu.",
-                message.MessageString());
+            std::string expectedMessage =
+                "You have 2 unread notifications relevant to the position you are controlling. ";
+            expectedMessage += "You can view notifications from the OP menu.";
+            EXPECT_EQ(expectedMessage, message.MessageString());
         }
 
         TEST_F(UnreadNotificationsMessageTest, ItHasAMessageForSingleNotifications)
         {
+            std::string expectedMessage =
+                "You have 1 unread notification relevant to the position you are controlling. ";
+            expectedMessage += "You can view notifications from the OP menu.";
             UnreadNotificationsMessage messageSingle(1);
-            EXPECT_EQ(
-                "You have 1 unread notification relevant to the position you are controlling. " +
-                    "You can view notifications from the OP menu.",
-                messageSingle.MessageString());
+            EXPECT_EQ(expectedMessage, messageSingle.MessageString());
         }
     } // namespace Notifications
 } // namespace UKControllerPluginTest
