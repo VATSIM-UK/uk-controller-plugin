@@ -1,5 +1,21 @@
 # UK Controller Plugin Changelog
 
+# [5.13.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.4...5.13.0) (2023-09-16)
+
+
+### Bug Fixes
+
+* register flow measures for flightplan events ([7700c43](https://github.com/VATSIM-UK/uk-controller-plugin/commit/7700c43c0f04e5d215a5f40239a8fac0069c15e7))
+
+
+### Features
+
+* consider flow measures for the global fir ([d826c14](https://github.com/VATSIM-UK/uk-controller-plugin/commit/d826c14f48df40b13c040c04d678c30521fc5385))
+* ECFMP relevant flow measure tag item ([a46ea25](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a46ea25b2747e94eb8dd4d8d6df577ab6f0b8637))
+* limit flow measures to those relevant to controller ([0c5e84b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/0c5e84bf6f5746bc9d25f0e5b58289d61dc7d5cb))
+* listing ecfmp flow measures ([a5d04ac](https://github.com/VATSIM-UK/uk-controller-plugin/commit/a5d04acd08d746afa2d3bbddf987e2703dbf1fce))
+* mapping flightplans to flow measures ([90b0e73](https://github.com/VATSIM-UK/uk-controller-plugin/commit/90b0e731b70246cfd97eb1e7bfbacc8fe5a9a2cb))
+
 ## [5.12.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.3...5.12.4) (2023-09-15)
 
 
