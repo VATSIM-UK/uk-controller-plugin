@@ -43,5 +43,10 @@ namespace UKControllerPlugin {
         {
             return this->originalData.GetTrackHeading();
         }
+
+        auto EuroScopeCRadarTargetWrapper::GetEuroScopeObject() const -> EuroScopePlugIn::CRadarTarget&
+        {
+            return this->originalData;
+        }
     } // namespace Euroscope
 } // namespace UKControllerPlugin

@@ -44,12 +44,12 @@ namespace UKControllerPlugin::Euroscope {
         void SetClearedAltitude(int cleared) override;
         void SetHeading(int heading) override;
         void SetSquawk(std::string squawk) override;
-        EuroScopePlugIn::CFlightPlan GetEuroScopeObject() const override;
+        EuroScopePlugIn::CFlightPlan& GetEuroScopeObject() const override;
         [[nodiscard]] auto GetRemarks() const -> std::string override;
 
         private:
         // The original data that we're wrapping.
-        EuroScopePlugIn::CFlightPlan originalData;
+        mutable EuroScopePlugIn::CFlightPlan originalData;
 
         // The value ES passes as cleared altitude when none is set.
         const int euroScopeNoControllerClearedAltitude = 0;

@@ -1,16 +1,19 @@
 #include "BootstrapProviderTestCase.h"
-#include "bootstrap/ModuleBootstrap.h"
 #include "aircraft/CallsignSelectionListFactory.h"
+#include "bootstrap/ModuleBootstrap.h"
+#include "controller/ActiveCallsignCollection.h"
 #include "list/PopupListFactory.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
 #include "tag/TagItemCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using UKControllerPlugin::Aircraft::CallsignSelectionListFactory;
 using UKControllerPlugin::Bootstrap::ModuleBootstrap;
 using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Tag::TagItemCollection;
+using UKControllerPlugin::TimedEvent::TimedEventCollection;
 
 namespace UKControllerPluginTest {
 
@@ -41,6 +44,8 @@ namespace UKControllerPluginTest {
         container.callsignSelectionListFactory =
             std::make_unique<CallsignSelectionListFactory>(*container.popupListFactory);
         container.tagHandler = std::make_unique<TagItemCollection>();
+        container.timedHandler = std::make_unique<TimedEventCollection>();
+        container.activeCallsigns = std::make_unique<UKControllerPlugin::Controller::ActiveCallsignCollection>();
         return container;
     }
 } // namespace UKControllerPluginTest

@@ -552,6 +552,62 @@ namespace UKControllerPlugin {
         } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
     }
 
+    void UKPlugin::ApplyFunctionToAllFlightplans(
+        std::function<void(EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&)> function)
+    {
+        EuroScopePlugIn::CFlightPlan current = this->FlightPlanSelectFirst();
+
+        // If there's nothing, stop
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            return;
+        }
+
+        // Loop through all visible flightplans
+        do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
+            EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelect(current.GetCallsign());
+
+            if (!rt.IsValid()) {
+                continue;
+            }
+
+            auto flightplanWrapper = EuroScopeCFlightPlanWrapper(current);
+            auto radarTargetWrapper = EuroScopeCRadarTargetWrapper(rt);
+            function(flightplanWrapper, radarTargetWrapper);
+
+        } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
+    }
+
+    void UKPlugin::ApplyFunctionToAllFlightplans(
+        std::function<void(const EuroScopeCFlightPlanInterface&, const EuroScopeCRadarTargetInterface&)> function) const
+    {
+        EuroScopePlugIn::CFlightPlan current = this->FlightPlanSelectFirst();
+
+        // If there's nothing, stop
+        if (!current.IsValid() || strcmp(current.GetCallsign(), "") == 0) {
+            return;
+        }
+
+        // Loop through all visible flightplans
+        do {
+            if (!current.IsValid()) {
+                continue;
+            }
+
+            EuroScopePlugIn::CRadarTarget rt = this->RadarTargetSelect(current.GetCallsign());
+
+            if (!rt.IsValid()) {
+                continue;
+            }
+
+            function(EuroScopeCFlightPlanWrapper(current), EuroScopeCRadarTargetWrapper(rt));
+
+        } while (strcmp((current = this->FlightPlanSelectNext(current)).GetCallsign(), "") != 0);
+    }
+
     void UKPlugin::ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue)
     {
         OpenPopupEdit(editArea, callbackId, initialValue.c_str());

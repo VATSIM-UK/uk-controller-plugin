@@ -1,5 +1,6 @@
 #include "ModuleFactories.h"
 #include "approach/ApproachModuleFactory.h"
+#include "ecfmp/ECFMPModuleFactory.h"
 #include "intention/IntentionCodeModuleFactory.h"
 
 namespace UKControllerPlugin::Bootstrap {
@@ -23,5 +24,14 @@ namespace UKControllerPlugin::Bootstrap {
         }
 
         return *intentionCode;
+    }
+
+    auto ModuleFactories::ECFMP() -> ECFMP::ECFMPModuleFactory&
+    {
+        if (!ecfmp) {
+            ecfmp = std::make_unique<ECFMP::ECFMPModuleFactory>();
+        }
+
+        return *ecfmp;
     }
 } // namespace UKControllerPlugin::Bootstrap

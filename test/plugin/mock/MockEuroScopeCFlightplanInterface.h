@@ -46,7 +46,7 @@ namespace UKControllerPluginTest {
             MOCK_METHOD1(SetClearedAltitude, void(int));
             MOCK_METHOD1(SetHeading, void(int));
             MOCK_METHOD1(SetSquawk, void(std::string));
-            MOCK_CONST_METHOD0(GetEuroScopeObject, EuroScopePlugIn::CFlightPlan(void));
+            MOCK_CONST_METHOD0(GetEuroScopeObject, EuroScopePlugIn::CFlightPlan&(void));
         };
     } // namespace Euroscope
 } // namespace UKControllerPluginTest

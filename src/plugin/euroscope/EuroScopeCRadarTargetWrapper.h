@@ -13,9 +13,10 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] auto GetGroundSpeed() const -> int override;
         [[nodiscard]] auto GetVerticalSpeed() const -> int override;
         [[nodiscard]] auto GetHeading() const -> double override;
+        [[nodiscard]] auto GetEuroScopeObject() const -> EuroScopePlugIn::CRadarTarget& override;
 
         private:
         // The original object from EuroScope
-        EuroScopePlugIn::CRadarTarget originalData;
+        mutable EuroScopePlugIn::CRadarTarget originalData;
     };
 } // namespace UKControllerPlugin::Euroscope

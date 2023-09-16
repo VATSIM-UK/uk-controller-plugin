@@ -109,6 +109,9 @@ set(test__dependency
 )
 source_group("test\\dependency" FILES ${test__dependency})
 
+set(test__ecfmp ecfmp/HttpClientTest.cpp ecfmp/TriggerEcfmpEventLoopTest.cpp ecfmp/ECFMPModuleFactoryTest.cpp ecfmp/ECFMPBootstrapProviderTest.cpp ecfmp/AircraftFlowMeasureMapTest.cpp ecfmp/AircraftFlowMeasureTagItemTest.cpp ecfmp/ListAircraftFlowMeasuresTest.cpp ecfmp/HomeFirsFlowMeasureFilterTest.cpp ecfmp/ControllerFlowMeasureRelevanceTest.cpp)
+source_group("test\\ecfmp" FILES ${test__ecfmp})
+
 set(test__euroscope
     "euroscope/AsrEventHandlerCollectionTest.cpp"
     "euroscope/CallbackFunctionTest.cpp"
@@ -621,6 +624,7 @@ set(ALL_FILES
     ${test__datablock}
     ${test__departure}
     ${test__dependency}
+    ${test__ecfmp}
     ${test__euroscope}
     ${test__eventhandler}
     ${test__flightinformationservice}
@@ -798,6 +802,7 @@ add_dependencies(${PROJECT_NAME}
     UKControllerPluginUtils
     gmock
     UKControllerPluginTestingUtils
+    ecfmp_sdk
 )
 
 # Link with other targets.
@@ -841,4 +846,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES
 
 target_link_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/lib/test"
+)
+
+# Post-build copy the EuroScope binary
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/EuroScopePlugInDll.dll" "${PROJECT_BINARY_DIR}/bin/EuroScopePlugInDll.dll"
+    COMMENT "Copied EuroScope shared library to ${PROJECT_BINARY_DIR}/bin/EuroScopePlugInDll.dll"
 )

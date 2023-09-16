@@ -16,3 +16,6 @@
 [submodule "third_party/cpp-httplib"]
 	path = third_party/cpp-httplib
 	url = git@github.com:yhirose/cpp-httplib.git
+[submodule "third_party/ecfmp"]
+	path = third_party/ecfmp
+	url = git@github.com:ECFMP/plugin.git

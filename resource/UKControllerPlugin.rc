@@ -359,6 +359,15 @@ BEGIN
     LTEXT           "Please go to your web browser and log in to the UK Controller Plugin page. This window will close automatically once your API key has been received. If you are unable to find the page, you can click the button below to re-open it.",IDC_API_KEY_STATIC,7,7,249,89
 END
 
+IDD_FLOW_MEASURE_LIST DIALOGEX 0, 0, 367, 297
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,310,276,50,14
+    EDITTEXT        IDC_FLOW_MEASURES_INFO,7,7,353,264,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -497,6 +506,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 120
     END
+
+    IDD_FLOW_MEASURE_LIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 360
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 290
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -582,6 +599,11 @@ BEGIN
 END
 
 IDD_API_KEY_REPLACE AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_FLOW_MEASURE_LIST AFX_DIALOG_LAYOUT
 BEGIN
     0
 END

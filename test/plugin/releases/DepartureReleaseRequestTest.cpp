@@ -6,7 +6,7 @@ using UKControllerPlugin::Releases::DepartureReleaseRequest;
 using UKControllerPlugin::Time::SetTestNow;
 using UKControllerPlugin::Time::TimeNow;
 
-namespace UKControllerPluginTes::Releases {
+namespace UKControllerPluginTest::Releases {
 
     class DepartureReleaseRequestTest : public Test
     {
@@ -191,4 +191,4 @@ namespace UKControllerPluginTes::Releases {
     {
         EXPECT_EQ(TimeNow(), request->CreatedAt());
     }
-} // namespace UKControllerPluginTes::Releases
+} // namespace UKControllerPluginTest::Releases

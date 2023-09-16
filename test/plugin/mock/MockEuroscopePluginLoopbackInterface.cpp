@@ -29,6 +29,34 @@ namespace UKControllerPluginTest::Euroscope {
         }
     };
 
+    void MockEuroscopePluginLoopbackInterface::ApplyFunctionToAllFlightplans(
+        std::function<void(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
+            UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&)> function)
+    {
+        if (this->expectFlightplanLoopNoFire) {
+            throw std::logic_error("Was not expecting the flightplan loop");
+        }
+
+        for (auto it = this->allFpRtPairs.cbegin(); it != this->allFpRtPairs.cend(); ++it) {
+            function(*it->fp, *it->rt);
+        }
+    };
+
+    void MockEuroscopePluginLoopbackInterface::ApplyFunctionToAllFlightplans(
+        std::function<void(
+            const UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface&,
+            const UKControllerPlugin::Euroscope::EuroScopeCRadarTargetInterface&)> function) const
+    {
+        if (this->expectFlightplanLoopNoFire) {
+            throw std::logic_error("Was not expecting the flightplan loop");
+        }
+
+        for (auto it = this->allFpRtPairs.cbegin(); it != this->allFpRtPairs.cend(); ++it) {
+            function(*it->fp, *it->rt);
+        }
+    };
+
     void MockEuroscopePluginLoopbackInterface::ApplyFunctionToAllControllers(
         std::function<void(std::shared_ptr<UKControllerPlugin::Euroscope::EuroScopeCControllerInterface>)> function)
     {

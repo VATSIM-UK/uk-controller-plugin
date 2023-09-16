@@ -49,6 +49,11 @@ namespace UKControllerPlugin {
                 std::function<void(
                     std::shared_ptr<EuroScopeCFlightPlanInterface>, std::shared_ptr<EuroScopeCRadarTargetInterface>)>
                     function) = 0;
+            virtual void ApplyFunctionToAllFlightplans(
+                std::function<void(EuroScopeCFlightPlanInterface&, EuroScopeCRadarTargetInterface&)> function) = 0;
+            virtual void ApplyFunctionToAllFlightplans(
+                std::function<void(const EuroScopeCFlightPlanInterface&, const EuroScopeCRadarTargetInterface&)>
+                    function) const = 0;
             virtual void ApplyFunctionToAllControllers(
                 std::function<void(std::shared_ptr<EuroScopeCControllerInterface>)> function) = 0;
             virtual void ShowTextEditPopup(RECT editArea, int callbackId, std::string initialValue) = 0;
