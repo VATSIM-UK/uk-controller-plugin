@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.13.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.0...5.13.1) (2023-09-21)
+
+
+### Bug Fixes
+
+* flow measures not showing as active ([12cdebd](https://github.com/VATSIM-UK/uk-controller-plugin/commit/12cdebd8958810d080661435ca9a82b9afe91577))
+
 # [5.13.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.12.4...5.13.0) (2023-09-16)
 
 
