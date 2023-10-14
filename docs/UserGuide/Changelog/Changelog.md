@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.13.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.1...5.13.2) (2023-10-14)
+
+
+### Bug Fixes
+
+* ecfmp lags ([cf4d5b3](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cf4d5b3afabc9c8fc55d6301e73d8aa63266de52)), closes [#542](https://github.com/VATSIM-UK/uk-controller-plugin/issues/542)
+
 ## [5.13.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.0...5.13.1) (2023-09-21)
 
 
