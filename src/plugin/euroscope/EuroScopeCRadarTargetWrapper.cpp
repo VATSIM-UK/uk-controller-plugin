@@ -20,6 +20,11 @@ namespace UKControllerPlugin {
             return this->originalData.GetPosition().GetFlightLevel();
         }
 
+        int EuroScopeCRadarTargetWrapper::GetAltitude(void) const
+        {
+            return this->originalData.GetPosition().GetPressureAltitude();
+        }
+
         const EuroScopePlugIn::CPosition EuroScopeCRadarTargetWrapper::GetPosition(void) const
         {
             return this->originalData.GetPosition().GetPosition();

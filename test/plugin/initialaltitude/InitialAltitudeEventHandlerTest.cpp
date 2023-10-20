@@ -169,7 +169,11 @@ namespace UKControllerPluginTest {
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTooHigh)
         {
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE + 1));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE - 1));
+            EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
+                .Times(1)
+                .WillOnce(Return(MAX_DISTANCE_FROM_ORIGIN - 1));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE + 1));
 
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
@@ -177,13 +181,15 @@ namespace UKControllerPluginTest {
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfExactlyAtSeaLevel)
         {
             EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(0));
+            EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin()).Times(0);
 
             handler.FlightPlanEvent(mockFlightPlan, mockRadarTarget);
         }
 
         TEST_F(InitialAltitudeEventHandlerTest, FlightPlanEventDoesNotAssignIfTooFarFromOrigin)
         {
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin())
                 .Times(2)
@@ -207,7 +213,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockRadarTarget, GetGroundSpeed()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_SPEED + 1));
 
@@ -218,7 +225,8 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin()).Times(2).WillOnce(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(true));
 
@@ -233,7 +241,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
 
@@ -248,7 +257,8 @@ namespace UKControllerPluginTest {
         {
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin()).Times(2).WillOnce(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
 
@@ -280,7 +290,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
 
@@ -301,7 +312,8 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(mockFlightPlan, GetDistanceFromOrigin()).Times(2).WillOnce(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
 
@@ -330,7 +342,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
 
@@ -359,7 +372,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
 
@@ -397,7 +411,8 @@ namespace UKControllerPluginTest {
                 .Times(2)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(1).WillOnce(Return(false));
 
@@ -435,7 +450,8 @@ namespace UKControllerPluginTest {
                 .Times(4)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(4).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(2).WillRepeatedly(Return(false));
 
@@ -479,7 +495,8 @@ namespace UKControllerPluginTest {
                 .Times(4)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(4).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(2).WillRepeatedly(Return(false));
 
@@ -520,6 +537,8 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
+            ON_CALL(this->mockRadarTarget, GetAltitude()).WillByDefault(Return(500));
+
             EXPECT_CALL(mockFlightPlan, HasControllerClearedAltitude()).Times(0);
 
             EXPECT_CALL(mockFlightPlan, IsSimulated()).Times(0);
@@ -546,6 +565,8 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
+            ON_CALL(this->mockRadarTarget, GetAltitude()).WillByDefault(Return(500));
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000)).Times(1);
 
             handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
@@ -567,6 +588,8 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
 
+            ON_CALL(this->mockRadarTarget, GetAltitude()).WillByDefault(Return(500));
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(6000)).Times(1);
 
             handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
@@ -586,6 +609,8 @@ namespace UKControllerPluginTest {
 
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(0));
 
+            ON_CALL(this->mockRadarTarget, GetAltitude()).WillByDefault(Return(500));
+
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
 
             handler.RecycleInitialAltitude(this->mockFlightPlan, this->mockRadarTarget, "", POINT());
@@ -604,6 +629,8 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(11));
 
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
+            ON_CALL(this->mockRadarTarget, GetAltitude()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
 
@@ -625,6 +652,8 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
 
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
+            ON_CALL(this->mockRadarTarget, GetAltitude()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
 
@@ -648,6 +677,8 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockFlightPlan, GetDistanceFromOrigin()).WillByDefault(Return(5));
 
             ON_CALL(this->mockRadarTarget, GetFlightLevel()).WillByDefault(Return(500));
+
+            ON_CALL(this->mockRadarTarget, GetAltitude()).WillByDefault(Return(500));
 
             EXPECT_CALL(this->mockFlightPlan, SetClearedAltitude(_)).Times(0);
 
@@ -691,9 +722,8 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*mockRadarTargetPointer, GetGroundSpeed()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_SPEED));
 
-            EXPECT_CALL(*mockRadarTargetPointer, GetFlightLevel())
-                .Times(2)
-                .WillRepeatedly(Return(MAX_ASSIGNMENT_SPEED));
+            ON_CALL(*this->mockRadarTargetPointer, GetFlightLevel()).WillByDefault(Return(MAX_ASSIGNMENT_ALTITUDE - 1));
+            ON_CALL(*this->mockRadarTargetPointer, GetAltitude()).WillByDefault(Return(MAX_ASSIGNMENT_ALTITUDE - 1));
 
             handler.ActiveCallsignAdded(userCallsign);
         }
@@ -745,9 +775,8 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(*mockRadarTargetPointer, GetGroundSpeed()).Times(1).WillOnce(Return(MAX_ASSIGNMENT_SPEED));
 
-            EXPECT_CALL(*mockRadarTargetPointer, GetFlightLevel())
-                .Times(2)
-                .WillRepeatedly(Return(MAX_ASSIGNMENT_SPEED));
+            ON_CALL(*this->mockRadarTargetPointer, GetFlightLevel()).WillByDefault(Return(MAX_ASSIGNMENT_ALTITUDE - 1));
+            ON_CALL(*this->mockRadarTargetPointer, GetAltitude()).WillByDefault(Return(MAX_ASSIGNMENT_ALTITUDE - 1));
 
             handler.TimedEventTrigger();
         }

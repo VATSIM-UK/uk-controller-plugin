@@ -9,6 +9,7 @@ namespace UKControllerPlugin::Euroscope {
         explicit EuroScopeCRadarTargetWrapper(EuroScopePlugIn::CRadarTarget originalData);
         [[nodiscard]] auto GetCallsign() const -> const std::string override;
         [[nodiscard]] auto GetFlightLevel() const -> int override;
+        [[nodiscard]] auto GetAltitude() const -> int override;
         [[nodiscard]] auto GetPosition() const -> const EuroScopePlugIn::CPosition override;
         [[nodiscard]] auto GetGroundSpeed() const -> int override;
         [[nodiscard]] auto GetVerticalSpeed() const -> int override;
