@@ -463,8 +463,8 @@ namespace UKControllerPluginTest {
                 .Times(4)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
-            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(2).WillOnce(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading()).Times(2).WillRepeatedly(Return(false));
 
@@ -506,7 +506,8 @@ namespace UKControllerPluginTest {
                 .Times(4)
                 .WillRepeatedly(Return(MAX_DISTANCE_FROM_ORIGIN));
 
-            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(4).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetFlightLevel()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
+            EXPECT_CALL(mockRadarTarget, GetAltitude()).Times(2).WillRepeatedly(Return(MAX_ASSIGNMENT_ALTITUDE));
 
             EXPECT_CALL(mockFlightPlan, HasControllerAssignedHeading()).Times(2).WillRepeatedly(Return(false));
 
