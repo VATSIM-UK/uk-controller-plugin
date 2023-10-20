@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [5.13.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.2...5.13.3) (2023-10-20)
+
+
+### Bug Fixes
+
+* initial altitudes not assigning in low pressure conditions ([3ecc4ee](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3ecc4ee61d594d45e17cbc05c00ea1ddc58c5bbb)), closes [#544](https://github.com/VATSIM-UK/uk-controller-plugin/issues/544)
+* initial headings not assigning in low pressure conditions ([56fa3a2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/56fa3a2da4de105e116143eb527eec12dd572a29)), closes [#545](https://github.com/VATSIM-UK/uk-controller-plugin/issues/545)
+
 ## [5.13.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.1...5.13.2) (2023-10-14)
 
 
