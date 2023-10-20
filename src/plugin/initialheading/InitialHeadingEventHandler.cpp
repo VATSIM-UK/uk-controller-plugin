@@ -159,8 +159,7 @@ namespace UKControllerPlugin::InitialHeading {
     auto InitialHeadingEventHandler::MeetsAssignmentConditions(
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget) const -> bool
     {
-        return IsNotOutOfRange(flightPlan, radarTarget) &&
-               radarTarget.GetFlightLevel() <= this->assignmentMaxAltitude &&
+        return IsNotOutOfRange(flightPlan, radarTarget) && radarTarget.GetAltitude() <= this->assignmentMaxAltitude &&
                flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
                radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed && !flightPlan.HasControllerAssignedHeading() &&
                !flightPlan.IsTracked() && !flightPlan.IsSimulated() &&
