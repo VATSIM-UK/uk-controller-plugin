@@ -156,8 +156,7 @@ namespace UKControllerPlugin::InitialAltitude {
     auto InitialAltitudeEventHandler::MeetsAssignmentConditions(
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget) const -> bool
     {
-        return IsNotOutOfRange(flightPlan, radarTarget) &&
-               radarTarget.GetFlightLevel() <= this->assignmentMaxAltitude &&
+        return IsNotOutOfRange(flightPlan, radarTarget) && radarTarget.GetAltitude() <= this->assignmentMaxAltitude &&
                flightPlan.GetDistanceFromOrigin() <= this->assignmentMaxDistanceFromOrigin &&
                radarTarget.GetGroundSpeed() <= this->assignmentMaxSpeed && !flightPlan.HasControllerClearedAltitude() &&
                !flightPlan.IsTracked() && !flightPlan.IsSimulated() &&
