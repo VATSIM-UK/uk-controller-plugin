@@ -58,6 +58,9 @@ namespace UKControllerPlugin::ECFMP {
             // Add the flow measure to the map by id
             flowMeasureIdMap.emplace(measure->Id(), measure);
 
+            // Initialise the flow measure's callsign map
+            flowMeasureCallsignMap.emplace(measure, std::unordered_set<std::string>());
+
             // Check each of the flightplans and see if it applies to them
             plugin.ApplyFunctionToAllFlightplans([&measure, this](
                                                      const Euroscope::EuroScopeCFlightPlanInterface& flightplan,
