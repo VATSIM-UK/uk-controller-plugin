@@ -125,6 +125,30 @@ namespace UKControllerPluginTest::ECFMP {
         EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
     }
 
+    TEST_F(AircraftFlowMeasureMapTest, FlowMeasuresWithdrawingHandlesNoCallsignsAssociatedWithMeasure)
+    {
+        // Flightplan 1 will be applicable to the measure, flightplan 2, not so
+        EXPECT_CALL(*mockFlowMeasure1, ApplicableToAircraft(testing::_, testing::_))
+            .WillRepeatedly(testing::Return(false));
+
+        EXPECT_CALL(*mockFlowMeasure2, ApplicableToAircraft(testing::_, testing::_))
+            .WillRepeatedly(testing::Return(false));
+
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure1});
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure2});
+
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
+
+        // Withdraw the measures
+        EXPECT_NO_THROW(map.OnEvent(::ECFMP::Plugin::FlowMeasureWithdrawnEvent{mockFlowMeasure1}));
+        EXPECT_NO_THROW(map.OnEvent(::ECFMP::Plugin::FlowMeasureWithdrawnEvent{mockFlowMeasure2}));
+
+        // Check that flightplan 1 now has just the second measure, but flightplan 2 has only the second
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
+    }
+
     TEST_F(AircraftFlowMeasureMapTest, FlowMeasuresExpiringRemoveThemFromAircraftsActiveFlowMeasures)
     {
         // Flightplan 1 will be applicable to the measure, flightplan 2, not so
@@ -182,6 +206,30 @@ namespace UKControllerPluginTest::ECFMP {
         map.OnEvent(::ECFMP::Plugin::FlowMeasureExpiredEvent{mockFlowMeasure2});
 
         // Check that no flightplan has any measures
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
+    }
+
+    TEST_F(AircraftFlowMeasureMapTest, FlowMeasuresExpiringHandlesNoCallsignsAssociatedWithMeasure)
+    {
+        // Flightplan 1 will be applicable to the measure, flightplan 2, not so
+        EXPECT_CALL(*mockFlowMeasure1, ApplicableToAircraft(testing::_, testing::_))
+            .WillRepeatedly(testing::Return(false));
+
+        EXPECT_CALL(*mockFlowMeasure2, ApplicableToAircraft(testing::_, testing::_))
+            .WillRepeatedly(testing::Return(false));
+
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure1});
+        map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure2});
+
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
+
+        // Withdraw the measures
+        EXPECT_NO_THROW(map.OnEvent(::ECFMP::Plugin::FlowMeasureExpiredEvent{mockFlowMeasure1}));
+        EXPECT_NO_THROW(map.OnEvent(::ECFMP::Plugin::FlowMeasureExpiredEvent{mockFlowMeasure2}));
+
+        // Check that flightplan 1 now has just the second measure, but flightplan 2 has only the second
         EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW123").size());
         EXPECT_EQ(0, map.GetFlowMeasuresForCallsign("BAW456").size());
     }
