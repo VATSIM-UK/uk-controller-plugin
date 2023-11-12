@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.13.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.3...5.13.4) (2023-11-12)
+
+
+### Bug Fixes
+
+* ecfmp throws exception when flow measure has no aircraft ([fc6b238](https://github.com/VATSIM-UK/uk-controller-plugin/commit/fc6b23806ac1db2b2ea308061fb109518349ae69)), closes [#547](https://github.com/VATSIM-UK/uk-controller-plugin/issues/547) [#538](https://github.com/VATSIM-UK/uk-controller-plugin/issues/538)
+
 ## [5.13.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.2...5.13.3) (2023-10-20)
 
 
