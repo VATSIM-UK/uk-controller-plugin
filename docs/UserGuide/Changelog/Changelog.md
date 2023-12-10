@@ -1,5 +1,13 @@
 # UK Controller Plugin Changelog
 
+## [5.13.5](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.4...5.13.5) (2023-12-10)
+
+
+### Bug Fixes
+
+* log fatal exceptions ([ddf77a2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/ddf77a2d42f5251af04ae2b18501e12458ed6ec8))
+* remove red herring log entry from integrations ([037adc6](https://github.com/VATSIM-UK/uk-controller-plugin/commit/037adc6a95c7be452b1277703fb8a79264cc53eb))
+
 ## [5.13.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.3...5.13.4) (2023-11-12)
 
 
