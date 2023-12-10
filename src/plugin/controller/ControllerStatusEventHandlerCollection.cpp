@@ -18,7 +18,14 @@ namespace UKControllerPlugin {
                      this->eventHandlers.begin();
                  it != this->eventHandlers.end();
                  ++it) {
-                (*it)->ControllerUpdateEvent(controller);
+                try {
+                    (*it)->ControllerUpdateEvent(controller);
+                } catch (const std::exception& exception) {
+                    LogFatalExceptionAndRethrow(
+                        "ControllerStatusEventHandlerCollection::ControllerUpdateEvent",
+                        std::string(typeid(*it).name()),
+                        exception);
+                }
             }
         }
 
@@ -32,7 +39,14 @@ namespace UKControllerPlugin {
                      this->eventHandlers.begin();
                  it != this->eventHandlers.end();
                  ++it) {
-                (*it)->ControllerDisconnectEvent(controller);
+                try {
+                    (*it)->ControllerDisconnectEvent(controller);
+                } catch (const std::exception& exception) {
+                    LogFatalExceptionAndRethrow(
+                        "ControllerStatusEventHandlerCollection::ControllerDisconnectEvent",
+                        std::string(typeid(*it).name()),
+                        exception);
+                }
             }
         }
 
@@ -59,7 +73,14 @@ namespace UKControllerPlugin {
                      this->eventHandlers.begin();
                  it != this->eventHandlers.end();
                  ++it) {
-                (*it)->SelfDisconnectEvent();
+                try {
+                    (*it)->SelfDisconnectEvent();
+                } catch (const std::exception& exception) {
+                    LogFatalExceptionAndRethrow(
+                        "ControllerStatusEventHandlerCollection::SelfDisconnectEvent",
+                        std::string(typeid(*it).name()),
+                        exception);
+                }
             }
         }
     } // namespace Controller

@@ -25,7 +25,14 @@ namespace UKControllerPlugin {
                      this->handlerList.cbegin();
                  it != this->handlerList.cend();
                  ++it) {
-                (*it)->RadarTargetPositionUpdateEvent(radarTarget);
+                try {
+                    (*it)->RadarTargetPositionUpdateEvent(radarTarget);
+                } catch (const std::exception& exception) {
+                    LogFatalExceptionAndRethrow(
+                        "RadarTargetEventHandlerCollection::RadarTargetEvent",
+                        std::string(typeid(*it).name()),
+                        exception);
+                }
             }
         }
 

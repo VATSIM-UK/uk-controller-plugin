@@ -57,13 +57,25 @@ namespace UKControllerPlugin::Plugin {
     {
         auto callbackFunction = this->impl->callbackFunctions.find(functionId);
         if (callbackFunction != this->impl->callbackFunctions.cend()) {
-            callbackFunction->second.function(functionId, subject, area);
+            try {
+                callbackFunction->second.function(functionId, subject, area);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "FunctionCallEventHandler::CallFunction::Plugin::Callback",
+                    callbackFunction->second.description,
+                    e);
+            }
             return;
         }
 
         auto tagFunction = this->impl->tagFunctions.find(functionId);
         if (tagFunction != this->impl->tagFunctions.cend()) {
-            tagFunction->second.function(flightplan, radarTarget, subject, mousePos);
+            try {
+                tagFunction->second.function(flightplan, radarTarget, subject, mousePos);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "FunctionCallEventHandler::CallFunction::Plugin::Tag", tagFunction->second.description, e);
+            }
             return;
         }
     }
@@ -79,13 +91,25 @@ namespace UKControllerPlugin::Plugin {
     {
         auto tagFunction = this->impl->radarScreenTagFunctions.find(functionId);
         if (tagFunction != this->impl->radarScreenTagFunctions.cend()) {
-            tagFunction->second.function(radarScreen, flightplan, radarTarget, subject, mousePos, area);
+            try {
+                tagFunction->second.function(radarScreen, flightplan, radarTarget, subject, mousePos, area);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "FunctionCallEventHandler::CallFunction::RadarScreen::Tag", tagFunction->second.description, e);
+            }
             return;
         }
 
         auto callbackFunction = this->impl->radarScreenCallbacks.find(functionId);
         if (callbackFunction != this->impl->radarScreenCallbacks.cend()) {
-            callbackFunction->second.function(functionId, radarScreen, subject, mousePos, area);
+            try {
+                callbackFunction->second.function(functionId, radarScreen, subject, mousePos, area);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "FunctionCallEventHandler::CallFunction::RadarScreen::Callback",
+                    callbackFunction->second.description,
+                    e);
+            }
             return;
         }
     }

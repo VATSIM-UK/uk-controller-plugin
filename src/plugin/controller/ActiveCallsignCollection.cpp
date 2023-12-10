@@ -24,7 +24,11 @@ namespace UKControllerPlugin::Controller {
             this->activePositions[controller.GetNormalisedPosition().GetCallsign()].insert(controllerPtr).first;
 
         for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
-            (*it)->ActiveCallsignAdded(controller);
+            try {
+                (*it)->ActiveCallsignAdded(controller);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow("ActiveCallsignCollection::AddCallsign", typeid(*it).name(), e);
+            }
         }
     }
 
@@ -48,7 +52,11 @@ namespace UKControllerPlugin::Controller {
         this->userActive = true;
 
         for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
-            (*it)->ActiveCallsignAdded(controller);
+            try {
+                (*it)->ActiveCallsignAdded(controller);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow("ActiveCallsignCollection::AddUserCallsign", typeid(*it).name(), e);
+            }
         }
     }
 
@@ -69,7 +77,11 @@ namespace UKControllerPlugin::Controller {
         this->activePositions.clear();
         this->userActive = false;
         for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
-            (*it)->CallsignsFlushed();
+            try {
+                (*it)->CallsignsFlushed();
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow("ActiveCallsignCollection::Flush", typeid(*it).name(), e);
+            }
         }
     }
 
@@ -151,7 +163,11 @@ namespace UKControllerPlugin::Controller {
         this->activeCallsigns.erase(callsign);
 
         for (auto it = this->handlers.cbegin(); it != this->handlers.cend(); ++it) {
-            (*it)->ActiveCallsignRemoved(controller);
+            try {
+                (*it)->ActiveCallsignRemoved(controller);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow("ActiveCallsignCollection::RemoveCallsign", typeid(*it).name(), e);
+            }
         }
     }
 

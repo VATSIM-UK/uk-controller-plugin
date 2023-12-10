@@ -19,7 +19,12 @@ namespace UKControllerPlugin::Metar {
     void MetarEventHandlerCollection::UpdatedMetarEvent(const ParsedMetar& metar) const
     {
         for (const auto& handler : this->handlers) {
-            handler->MetarUpdated(metar);
+            try {
+                handler->MetarUpdated(metar);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "MetarEventHandlerCollection::UpdatedMetarEvent", typeid(handler).name(), e);
+            }
         }
     }
 

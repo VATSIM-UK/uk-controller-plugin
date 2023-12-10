@@ -28,7 +28,14 @@ namespace UKControllerPlugin {
                      this->handlerList.cbegin();
                  it != this->handlerList.cend();
                  ++it) {
-                (*it)->FlightPlanEvent(flightPlan, radarTarget);
+                try {
+                    (*it)->FlightPlanEvent(flightPlan, radarTarget);
+                } catch (const std::exception& exception) {
+                    LogFatalExceptionAndRethrow(
+                        "FlightPlanEventHandlerCollection::FlightPlanEvent",
+                        std::string(typeid(*it).name()),
+                        exception);
+                }
             }
         }
 
@@ -40,7 +47,14 @@ namespace UKControllerPlugin {
                      this->handlerList.cbegin();
                  it != this->handlerList.cend();
                  ++it) {
-                (*it)->ControllerFlightPlanDataEvent(flightPlan, dataType);
+                try {
+                    (*it)->ControllerFlightPlanDataEvent(flightPlan, dataType);
+                } catch (const std::exception& exception) {
+                    LogFatalExceptionAndRethrow(
+                        "FlightPlanEventHandlerCollection::ControllerFlightPlanDataEvent",
+                        std::string(typeid(*it).name()),
+                        exception);
+                }
             }
         }
 
@@ -52,7 +66,14 @@ namespace UKControllerPlugin {
                      this->handlerList.cbegin();
                  it != this->handlerList.cend();
                  ++it) {
-                (*it)->FlightPlanDisconnectEvent(flightPlan);
+                try {
+                    (*it)->FlightPlanDisconnectEvent(flightPlan);
+                } catch (const std::exception& exception) {
+                    LogFatalExceptionAndRethrow(
+                        "FlightPlanEventHandlerCollection::FlightPlanDisconnectEvent",
+                        std::string(typeid(*it).name()),
+                        exception);
+                }
             }
         }
 

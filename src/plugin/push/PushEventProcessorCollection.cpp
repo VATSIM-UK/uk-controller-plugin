@@ -90,7 +90,16 @@ namespace UKControllerPlugin {
                     }
 
                     calledProcessors.insert(*it);
-                    (*it)->ProcessPushEvent(message);
+
+                    try {
+                        (*it)->ProcessPushEvent(message);
+                    } catch (const std::exception& e) {
+                        LogFatalExceptionAndRethrow(
+                            "PushEventProcessorCollection::ProcessEvent::ByChannel::" + message.channel +
+                                "::" + message.event,
+                            typeid(*it).name(),
+                            e);
+                    }
                 }
             }
 
@@ -103,7 +112,16 @@ namespace UKControllerPlugin {
                     }
 
                     calledProcessors.insert(*it);
-                    (*it)->ProcessPushEvent(message);
+
+                    try {
+                        (*it)->ProcessPushEvent(message);
+                    } catch (const std::exception& e) {
+                        LogFatalExceptionAndRethrow(
+                            "PushEventProcessorCollection::ProcessEvent::ByEvent::" + message.channel +
+                                "::" + message.event,
+                            typeid(*it).name(),
+                            e);
+                    }
                 }
             }
 
@@ -114,7 +132,14 @@ namespace UKControllerPlugin {
                 }
 
                 calledProcessors.insert(*it);
-                (*it)->ProcessPushEvent(message);
+                try {
+                    (*it)->ProcessPushEvent(message);
+                } catch (const std::exception& e) {
+                    LogFatalExceptionAndRethrow(
+                        "PushEventProcessorCollection::ProcessEvent::All::" + message.channel + "::" + message.event,
+                        typeid(*it).name(),
+                        e);
+                }
             }
         }
 
@@ -124,7 +149,12 @@ namespace UKControllerPlugin {
         void PushEventProcessorCollection::PluginEventsSynced() const
         {
             for (auto it = this->allEventProcessors.cbegin(); it != this->allEventProcessors.cend(); ++it) {
-                (*it)->PluginEventsSynced();
+                try {
+                    (*it)->PluginEventsSynced();
+                } catch (const std::exception& e) {
+                    LogFatalExceptionAndRethrow(
+                        "PushEventProcessorCollection::PluginEventsSynced", typeid(*it).name(), e);
+                }
             }
         }
     } // namespace Push

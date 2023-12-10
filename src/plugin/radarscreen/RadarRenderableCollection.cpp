@@ -72,8 +72,15 @@ namespace UKControllerPlugin {
             POINT mousePos,
             RECT itemArea) const
         {
-            this->allRenderers.at(this->screenObjectMap.at(objectId))
-                ->LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
+            try {
+                this->allRenderers.at(this->screenObjectMap.at(objectId))
+                    ->LeftClick(radarScreen, objectId, objectDescription, mousePos, itemArea);
+            } catch (std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "RadarRenderableCollection::LeftClickScreenObject::" + std::to_string(objectId),
+                    typeid(this->allRenderers.at(this->screenObjectMap.at(objectId))).name(),
+                    e);
+            }
         }
 
         /*
@@ -81,7 +88,14 @@ namespace UKControllerPlugin {
         */
         void RadarRenderableCollection::MoveScreenObject(int objectId, std::string objectDes, RECT position) const
         {
-            this->allRenderers.at(this->screenObjectMap.at(objectId))->Move(position, objectDes);
+            try {
+                this->allRenderers.at(this->screenObjectMap.at(objectId))->Move(position, objectDes);
+            } catch (std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "RadarRenderableCollection::MoveScreenObject::" + std::to_string(objectId),
+                    typeid(this->allRenderers.at(this->screenObjectMap.at(objectId))).name(),
+                    e);
+            }
         }
 
         /*
@@ -168,8 +182,15 @@ namespace UKControllerPlugin {
             std::string objectDescription,
             UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const
         {
-            this->allRenderers.at(this->screenObjectMap.at(objectId))
-                ->RightClick(objectId, objectDescription, radarScreen);
+            try {
+                this->allRenderers.at(this->screenObjectMap.at(objectId))
+                    ->RightClick(objectId, objectDescription, radarScreen);
+            } catch (std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "RadarRenderableCollection::RightClickScreenObject::" + std::to_string(objectId),
+                    typeid(this->allRenderers.at(this->screenObjectMap.at(objectId))).name(),
+                    e);
+            }
         }
 
         /*
@@ -182,7 +203,12 @@ namespace UKControllerPlugin {
         {
             for (std::vector<int>::const_iterator it = group.cbegin(); it != group.cend(); ++it) {
                 if (this->allRenderers.at(*it)->IsVisible()) {
-                    this->allRenderers.at(*it)->Render(graphics, radarScreen);
+                    try {
+                        this->allRenderers.at(*it)->Render(graphics, radarScreen);
+                    } catch (std::exception& e) {
+                        LogFatalExceptionAndRethrow(
+                            "RadarRenderableCollection::RenderGroup", typeid(this->allRenderers.at(*it)).name(), e);
+                    }
                 }
             }
         }
@@ -196,7 +222,12 @@ namespace UKControllerPlugin {
                      this->allRenderers.cbegin();
                  it != this->allRenderers.cend();
                  ++it) {
-                it->second->ResetPosition();
+                try {
+                    it->second->ResetPosition();
+                } catch (std::exception& e) {
+                    LogFatalExceptionAndRethrow(
+                        "RadarRenderableCollection::ResetPosition", typeid(it->second).name(), e);
+                }
             }
         }
     } // namespace RadarScreen

@@ -21,12 +21,24 @@ namespace UKControllerPluginUtils::EventHandler {
     {
         for (const auto& handler : this->handlers) {
             if ((handler.flags & EventHandlerFlags::Sync) == EventHandlerFlags::Sync) {
-                handler.handler->OnEvent(event);
+                try {
+                    handler.handler->OnEvent(event);
+                } catch (const std::exception& e) {
+                    LogFatalExceptionAndRethrow(
+                        "EventStream::OnEvent::Sync::" + std::string(typeid(T).name()), typeid(handler).name(), e);
+                }
                 continue;
             }
 
             if ((handler.flags & EventHandlerFlags::Async) == EventHandlerFlags::Async) {
-                Async([event, handler]() { handler.handler->OnEvent(event); });
+                Async([event, handler]() {
+                    try {
+                        handler.handler->OnEvent(event);
+                    } catch (const std::exception& e) {
+                        LogFatalExceptionAndRethrow(
+                            "EventStream::OnEvent::Async::" + std::string(typeid(T).name()), typeid(handler).name(), e);
+                    }
+                });
                 continue;
             }
 

@@ -429,7 +429,11 @@ namespace UKControllerPlugin {
         TagData tagData(
             flightplanWrapper, radarTargetWrapper, ItemCode, dataAvailable, sItemString, pColorCode, pRGB, pFontSize);
 
-        this->tagEvents.TagItemUpdate(tagData);
+        try {
+            this->tagEvents.TagItemUpdate(tagData);
+        } catch (const std::exception& e) {
+            LogFatalExceptionAndRethrow("UKPlugin::OnGetTagItem::" + std::to_string(ItemCode), e);
+        }
     }
 
     /*
