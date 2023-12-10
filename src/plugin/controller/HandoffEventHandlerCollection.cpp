@@ -31,7 +31,12 @@ namespace UKControllerPlugin {
             EuroScopeCControllerInterface& targetController) const
         {
             for (auto it = this->eventHandlers.begin(); it != this->eventHandlers.end(); ++it) {
-                (*it)->HandoffInitiated(flightplan, transferringController, targetController);
+                try {
+                    (*it)->HandoffInitiated(flightplan, transferringController, targetController);
+                } catch (const std::exception& e) {
+                    LogFatalExceptionAndRethrow(
+                        "HandoffEventHandlerCollection::HandoffInitiated", typeid(*it).name(), e);
+                }
             }
         }
     } // namespace Controller

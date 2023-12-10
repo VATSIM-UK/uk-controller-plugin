@@ -12,28 +12,48 @@ namespace UKControllerPlugin::Prenote {
     void PrenoteMessageEventHandlerCollection::NewMessage(const PrenoteMessage& message) const
     {
         for (const auto& handler : handlers) {
-            handler->NewMessage(message);
+            try {
+                handler->NewMessage(message);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "PrenoteMessageEventHandlerCollection::NewMessage", typeid(handler).name(), e);
+            }
         }
     }
 
     void PrenoteMessageEventHandlerCollection::MessageCancelled(const PrenoteMessage& message) const
     {
         for (const auto& handler : handlers) {
-            handler->MessageCancelled(message);
+            try {
+                handler->MessageCancelled(message);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "PrenoteMessageEventHandlerCollection::MessageCancelled", typeid(handler).name(), e);
+            }
         }
     }
 
     void PrenoteMessageEventHandlerCollection::MessageAcknowledged(const PrenoteMessage& message) const
     {
         for (const auto& handler : handlers) {
-            handler->MessageAcknowledged(message);
+            try {
+                handler->MessageAcknowledged(message);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "PrenoteMessageEventHandlerCollection::MessageAcknowledged", typeid(handler).name(), e);
+            }
         }
     }
 
     void PrenoteMessageEventHandlerCollection::MessageTimeout(const PrenoteMessage& message) const
     {
         for (const auto& handler : handlers) {
-            handler->MessageTimeout(message);
+            try {
+                handler->MessageTimeout(message);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "PrenoteMessageEventHandlerCollection::MessageTimeout", typeid(handler).name(), e);
+            }
         }
     }
 

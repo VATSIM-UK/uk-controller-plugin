@@ -30,8 +30,12 @@ namespace UKControllerPlugin {
             for (std::vector<std::shared_ptr<CommandHandlerInterface>>::const_iterator it = this->handlers.cbegin();
                  it != this->handlers.cend();
                  ++it) {
-                if ((*it)->ProcessCommand(command)) {
-                    return true;
+                try {
+                    if ((*it)->ProcessCommand(command)) {
+                        return true;
+                    }
+                } catch (const std::exception& e) {
+                    LogFatalExceptionAndRethrow("CommandHandlerCollection::ProcessCommand", typeid(*it).name(), e);
                 }
             }
 

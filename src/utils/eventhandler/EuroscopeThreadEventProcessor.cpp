@@ -28,7 +28,11 @@ namespace UKControllerPluginUtils::EventHandler {
     {
         auto guard = std::lock_guard(this->impl->mutex);
         while (!this->impl->eventQueue.empty()) {
-            this->impl->eventQueue.front()();
+            try {
+                this->impl->eventQueue.front()();
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow("EuroscopeThreadEventProcessor::Drain", e);
+            }
             this->impl->eventQueue.pop();
         }
     }

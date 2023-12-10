@@ -19,7 +19,12 @@ namespace UKControllerPlugin::IntentionCode {
     IntentionCodeEventHandlerCollection::IntentionCodeUpdated(const AircraftIntentionCode& aircraftIntentionCode) const
     {
         for (const auto& handler : eventHandlers) {
-            handler->IntentionCodeUpdated(aircraftIntentionCode);
+            try {
+                handler->IntentionCodeUpdated(aircraftIntentionCode);
+            } catch (const std::exception& e) {
+                LogFatalExceptionAndRethrow(
+                    "IntentionCodeEventHandlerCollection::IntentionCodeUpdated", typeid(handler).name(), e);
+            }
         }
     }
 } // namespace UKControllerPlugin::IntentionCode

@@ -46,3 +46,17 @@ void ShutdownLogger(void)
     spdlog::drop_all();
     logger.reset();
 }
+
+void LogFatalExceptionAndRethrow(const std::string& source, const std::exception& exception)
+{
+    logger->critical(
+        "Critical exception of type " + std::string(typeid(exception).name()) + " at " + source + ": " +
+        exception.what());
+    throw;
+}
+
+void LogFatalExceptionAndRethrow(
+    const std::string& source, const std::string& subsource, const std::exception& exception)
+{
+    LogFatalExceptionAndRethrow(source + "::" + subsource, exception);
+}

@@ -46,7 +46,12 @@ namespace UKControllerPlugin {
                     for (std::vector<std::shared_ptr<AbstractTimedEvent>>::const_iterator itVector = events.cbegin();
                          itVector != events.cend();
                          ++itVector) {
-                        (*itVector)->TimedEventTrigger();
+                        try {
+                            (*itVector)->TimedEventTrigger();
+                        } catch (const std::exception& e) {
+                            LogFatalExceptionAndRethrow(
+                                "TimedEventCollection::Tick", std::string(typeid(*itVector).name()), e);
+                        }
                     }
                 }
             }
