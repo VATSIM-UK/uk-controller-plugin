@@ -77,6 +77,12 @@ namespace UKControllerPluginTest {
         return *this;
     }
 
+    ApiResponseExpectation& ApiExpectation::WillReturnCreated()
+    {
+        this->responseCode = HttpStatusCode::Created;
+        return *this;
+    }
+
     ApiResponseExpectation& ApiExpectation::WillReturnOk()
     {
         this->responseCode = HttpStatusCode::Ok;

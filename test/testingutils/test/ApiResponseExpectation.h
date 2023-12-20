@@ -7,6 +7,7 @@ namespace UKControllerPluginTest {
     class ApiResponseExpectation
     {
         public:
+        virtual auto WillReturnCreated() -> ApiResponseExpectation& = 0;
         virtual auto WillReturnOk() -> ApiResponseExpectation& = 0;
         virtual auto WillReturnServerError() -> ApiResponseExpectation& = 0;
         virtual auto WillReturnForbidden() -> ApiResponseExpectation& = 0;
