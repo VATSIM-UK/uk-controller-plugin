@@ -1,5 +1,17 @@
 # UK Controller Plugin Changelog
 
+# [5.14.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.5...5.14.0) (2023-12-20)
+
+
+### Bug Fixes
+
+* curl requests not sending bodies ([57dd53c](https://github.com/VATSIM-UK/uk-controller-plugin/commit/57dd53ceeb6c552b84a1ec778bdda2cc88f232a0))
+
+
+### Features
+
+* api stand auto assignments ([7c1efbf](https://github.com/VATSIM-UK/uk-controller-plugin/commit/7c1efbf604566c57728f9c02eb2b445c17b2ecbe))
+
 ## [5.13.5](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.4...5.13.5) (2023-12-10)
 
 
