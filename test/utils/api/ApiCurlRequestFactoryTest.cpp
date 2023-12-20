@@ -38,4 +38,19 @@ namespace UKControllerPluginUtilsTest::Api {
 
         EXPECT_EQ(expectedRequest, request);
     }
+
+    TEST_F(ApiCurlRequestFactoryTest, ItBuildsRequestsWithABody)
+    {
+        const auto body = nlohmann::json{{"test", "test"}};
+        auto request = requestFactory.BuildCurlRequest(
+            ApiRequestData("test", UKControllerPluginUtils::Http::HttpMethod::Post(), body));
+
+        CurlRequest expectedRequest("https://ukcp.vatsim.uk/api/test", CurlRequest::METHOD_POST);
+        expectedRequest.AddHeader("Authorization", "Bearer key");
+        expectedRequest.AddHeader("Accept", "application/json");
+        expectedRequest.AddHeader("Content-Type", "application/json");
+        expectedRequest.SetBody(body.dump());
+
+        EXPECT_EQ(expectedRequest, request);
+    }
 } // namespace UKControllerPluginUtilsTest::Api

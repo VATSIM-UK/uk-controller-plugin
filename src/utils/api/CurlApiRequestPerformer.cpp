@@ -20,8 +20,16 @@ namespace UKControllerPluginUtils::Api {
 
     auto CurlApiRequestPerformer::Perform(const ApiRequestData& data) -> Response
     {
+        const auto request = requestFactory.BuildCurlRequest(data);
+        LogDebug(
+            "CurlApiRequestPerformer: Performing cURL request with method " + std::string(data.Method()) + " to " +
+            data.Uri() + " with body " + data.Body().dump());
+
         auto curlResponse = curl.MakeCurlRequest(requestFactory.BuildCurlRequest(data));
         if (!ResponseSuccessful(curlResponse)) {
+            LogDebug(
+                "CurlApiRequestPerformer: Failed cURL request, status was: " +
+                std::to_string(curlResponse.GetStatusCode()) + " response body was " + curlResponse.GetResponse());
             throw ApiRequestException(data.Uri(), static_cast<HttpStatusCode>(curlResponse.GetStatusCode()), false);
         }
 

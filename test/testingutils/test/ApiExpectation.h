@@ -35,6 +35,7 @@ namespace UKControllerPluginTest {
         auto Delete() -> ApiUriExpectation& override;
         auto WithBody(const nlohmann::json& body) -> ApiResponseExpectation& override;
         auto WithoutBody() -> ApiResponseExpectation& override;
+        auto WillReturnCreated() -> ApiResponseExpectation& override;
         auto WillReturnOk() -> ApiResponseExpectation& override;
         auto WillReturnServerError() -> ApiResponseExpectation& override;
         auto WillReturnForbidden() -> ApiResponseExpectation& override;

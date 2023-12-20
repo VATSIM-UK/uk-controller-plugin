@@ -15,6 +15,9 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
+    namespace Ownership {
+        class AirfieldServiceProviderCollection;
+    } // namespace Ownership
     namespace TaskManager {
         class TaskRunnerInterface;
     } // namespace TaskManager
@@ -36,6 +39,7 @@ namespace UKControllerPlugin::Stands {
             TaskManager::TaskRunnerInterface& taskRunner,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             Integration::OutboundIntegrationEventHandler& integrationEventHandler,
+            std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
             std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
             int standSelectedCallbackId);
         [[nodiscard]] auto ActionsToProcess() const -> std::vector<Integration::MessageType> override;
@@ -91,6 +95,13 @@ namespace UKControllerPlugin::Stands {
 
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
+        [[nodiscard]] auto
+        AssignStandInApi(const std::string& callsign, const std::string& airfield, const std::string& identifier)
+            -> std::string;
+        void RequestStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan);
+        void RequestDepartureStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan);
+        void RequestArrivalStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan);
+        void DoApiStandRequest(const std::string& callsign, const nlohmann::json data);
         void UnassignStandForAircraft(const std::string& callsign);
         [[nodiscard]] auto AssignmentMessageValid(const nlohmann::json& message) const -> bool;
         auto CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool;
@@ -98,7 +109,7 @@ namespace UKControllerPlugin::Stands {
         auto
         GetAirfieldForStandAssignment(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
             -> std::string;
-        auto LockStandMap() -> std::lock_guard<std::mutex>;
+        auto LockStandMap() -> std::lock_guard<std::recursive_mutex>;
 
         // The last airfield that was used to populate the stand menu, used when we receive the callback
         std::string lastAirfieldUsed;
@@ -119,16 +130,22 @@ namespace UKControllerPlugin::Stands {
         std::map<std::string, int> standAssignments;
 
         // Locks the stand assignments map to prevent concurrent edits
-        std::mutex mapMutex;
+        std::recursive_mutex mapMutex;
 
         // Allows us to send events to our integrations
         Integration::OutboundIntegrationEventHandler& integrationEventHandler;
+
+        // The ownership of airfields
+        std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership;
 
         // The id for the callback when a stand is selected
         const int standSelectedCallbackId;
 
         // Max distance from departure airport to decide whether we show departure or arrival airport stands
         const int maxDistanceFromDepartureAirport = 7;
+
+        // The menu item to display for "auto" stand
+        const std::string autoStandMenuItem = "AUTO";
 
         // The menu item to display for no assigned stand
         const std::string noStandMenuItem = "--";
@@ -138,5 +155,8 @@ namespace UKControllerPlugin::Stands {
 
         // Annotation box 4
         const int annotationIndex = 3;
+
+        // Max distance from origin to do departure stands
+        const double maxDistanceForDepartureStands = 3.5;
     };
 } // namespace UKControllerPlugin::Stands
