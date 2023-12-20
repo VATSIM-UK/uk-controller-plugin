@@ -3,10 +3,13 @@
 #include "StandUnassignedMessage.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
+#include "api/ApiRequestFactory.h"
+#include "api/ApiRequestException.h"
 #include "euroscope/EuroScopeCControllerInterface.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "tag/TagData.h"
 #include "task/TaskRunnerInterface.h"
 
@@ -27,11 +30,14 @@ namespace UKControllerPlugin::Stands {
         TaskRunnerInterface& taskRunner,
         EuroscopePluginLoopbackInterface& plugin,
         Integration::OutboundIntegrationEventHandler& integrationEventHandler,
+        std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
         std::set<Stand, CompareStands> stands,
         int standSelectedCallbackId)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
-          integrationEventHandler(integrationEventHandler), standSelectedCallbackId(standSelectedCallbackId)
+          integrationEventHandler(integrationEventHandler), ownership(ownership),
+          standSelectedCallbackId(standSelectedCallbackId)
     {
+        assert(this->ownership != nullptr && "Ownership must not be null");
     }
 
     /*
@@ -84,29 +90,42 @@ namespace UKControllerPlugin::Stands {
                 }
             });
         } else {
-            // Find the requested stand
-            auto stand = std::find_if(
-                this->stands.cbegin(), this->stands.cend(), [airfield, identifier](const Stand& stand) -> bool {
-                    return stand.identifier == identifier && stand.airfieldCode == airfield;
-                });
-
-            if (stand == this->stands.cend()) {
-                LogInfo("Tried to assign a non-existant stand");
-                return "Tried to assign a non-existant stand";
+            if (identifier != this->autoStandMenuItem) {
+                return this->AssignStandInApi(callsign, airfield, identifier);
             }
 
-            // Assign that stand
-            this->AssignStandToAircraft(callsign, *stand);
-
-            int standId = stand->id;
-            this->taskRunner.QueueAsynchronousTask([this, standId, callsign]() {
-                try {
-                    this->api.AssignStandToAircraft(callsign, standId);
-                } catch (ApiException&) {
-                    LogError("Failed to create stand assignment for " + callsign);
-                }
-            });
+            this->RequestStandFromApi(*aircraft);
         }
+
+        return "";
+    }
+
+    auto StandEventHandler::AssignStandInApi(
+        const std::string& callsign, const std::string& airfield, const std::string& identifier) -> std::string
+    {
+        // Find the requested stand
+        auto stand = std::find_if(
+            this->stands.cbegin(), this->stands.cend(), [airfield, identifier](const Stand& stand) -> bool {
+                return stand.identifier == identifier && stand.airfieldCode == airfield;
+            });
+
+        if (stand == this->stands.cend()) {
+            LogInfo("Tried to assign a non-existant stand");
+            return "Tried to assign a non-existant stand";
+        }
+
+        // Assign that stand
+        this->AssignStandToAircraft(callsign, *stand);
+
+        int standId = stand->id;
+        auto callsignForRequest = callsign;
+        this->taskRunner.QueueAsynchronousTask([this, standId, callsignForRequest]() {
+            try {
+                this->api.AssignStandToAircraft(callsignForRequest, standId);
+            } catch (ApiException&) {
+                LogError("Failed to create stand assignment for " + callsignForRequest);
+            }
+        });
 
         return "";
     }
@@ -156,6 +175,12 @@ namespace UKControllerPlugin::Stands {
             menuItem.firstValue = stand->identifier;
             this->plugin.AddItemToPopupList(menuItem);
         }
+
+        // Add the penultimate item, "AUTO" in a fixed position
+        menuItem.firstValue = this->autoStandMenuItem;
+        menuItem.secondValue = "Automatic";
+        menuItem.fixedPosition = true;
+        this->plugin.AddItemToPopupList(menuItem);
 
         // Add the final item, no stand, in a fixed position
         menuItem.firstValue = this->noStandMenuItem;
@@ -416,7 +441,7 @@ namespace UKControllerPlugin::Stands {
         return {{PushEventSubscription::SUB_TYPE_CHANNEL, "private-stand-assignments"}};
     }
 
-    auto StandEventHandler::LockStandMap() -> std::lock_guard<std::mutex>
+    auto StandEventHandler::LockStandMap() -> std::lock_guard<std::recursive_mutex>
     {
         return std::lock_guard(this->mapMutex);
     }
@@ -502,4 +527,85 @@ namespace UKControllerPlugin::Stands {
             success();
         }
     }
+
+    void StandEventHandler::RequestStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    {
+        // If EuroScope wont tell us where they are, do nothing.
+        if (flightplan.GetDistanceFromOrigin() == 0.0) {
+            return;
+        }
+
+        // If they're close to departure and we're providing delivery, assign a stand
+        if (flightplan.GetDistanceFromOrigin() < this->maxDistanceForDepartureStands &&
+            this->ownership->DeliveryControlProvidedByUser(flightplan.GetOrigin())) {
+            this->RequestDepartureStandFromApi(flightplan);
+        }
+
+        // Otherwise, assume they're close to arrival
+        if (!this->ownership->DeliveryControlProvidedByUser(flightplan.GetDestination())) {
+            return;
+        }
+
+        this->RequestArrivalStandFromApi(flightplan);
+    }
+    void StandEventHandler::RequestDepartureStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    {
+        const auto radarTarget = this->plugin.GetRadarTargetForCallsign(flightplan.GetCallsign());
+        if (!radarTarget) {
+            return;
+        }
+
+        this->DoApiStandRequest(
+            flightplan.GetCallsign(),
+            {
+                {"callsign", flightplan.GetCallsign()},
+                {"departure_airfield", flightplan.GetOrigin()},
+                {"assignment_type", "departure"},
+                {"latitude", radarTarget->GetPosition().m_Latitude},
+                {"longitude", radarTarget->GetPosition().m_Longitude},
+            });
+    }
+
+    void StandEventHandler::RequestArrivalStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    {
+        this->DoApiStandRequest(
+            flightplan.GetCallsign(),
+            {{"callsign", flightplan.GetCallsign()},
+             {"departure_airfield", flightplan.GetOrigin()},
+             {"arrival_airfield", flightplan.GetDestination()},
+             {"assignment_type", "arrival"},
+             {"aircraft_type", flightplan.GetAircraftType()}});
+    }
+
+    void StandEventHandler::DoApiStandRequest(const std::string& callsign, const nlohmann::json data)
+    {
+        LogDebug("Requesting stand assignment from API: " + data.dump());
+        const std::string requestCallsign = callsign;
+        ApiRequest()
+            .Post("stand/assignment/requestauto", data)
+            .Then([this, requestCallsign](const UKControllerPluginUtils::Api::Response& response) {
+                auto lock = this->LockStandMap();
+
+                const auto& data = response.Data();
+                if (!data.contains("stand_id") || !data.at("stand_id").is_number_integer()) {
+                    LogWarning("Invalid stand assignment response " + data.dump());
+                    return;
+                }
+
+                const auto standId = data.at("stand_id").get<int>();
+                if (!this->stands.contains(standId)) {
+                    LogWarning("Invalid stand assignment response, bad id " + data.dump());
+                    return;
+                }
+
+                const auto& stand = this->stands.find(standId);
+                LogInfo("API generated stand assignment " + std::to_string(standId) + " for " + requestCallsign);
+
+                this->AssignStandToAircraft(requestCallsign, *stand);
+            })
+            .Catch([requestCallsign](const UKControllerPluginUtils::Api::ApiRequestException& exception) {
+                LogError("Failed to request stand assignment for " + requestCallsign + ": " + exception.what());
+            });
+    }
+
 } // namespace UKControllerPlugin::Stands

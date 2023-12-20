@@ -5,6 +5,7 @@
 #include "integration/InboundIntegrationMessageHandler.h"
 #include "integration/IntegrationPersistenceContainer.h"
 #include "integration/IntegrationServer.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "push/PushEventProcessorCollection.h"
 #include "stands/StandModule.h"
@@ -41,6 +42,8 @@ namespace UKControllerPluginTest::Stands {
                 std::make_unique<IntegrationPersistenceContainer>(nullptr, nullptr, nullptr, nullptr);
             container.integrationModuleContainer->inboundMessageHandler =
                 std::make_shared<InboundIntegrationMessageHandler>(nullptr);
+            container.airfieldOwnership =
+                std::make_shared<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection>();
 
             nlohmann::json gatwick = nlohmann::json::array();
             gatwick.push_back({

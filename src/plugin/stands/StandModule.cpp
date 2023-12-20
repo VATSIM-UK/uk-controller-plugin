@@ -40,6 +40,7 @@ namespace UKControllerPlugin::Stands {
             *container.taskRunner,
             *container.plugin,
             *container.integrationModuleContainer->outboundMessageHandler,
+            container.airfieldOwnership,
             stands,
             standSelectedCallbackId);
 
