@@ -136,4 +136,29 @@ namespace UKControllerPluginTest::Headings {
     {
         EXPECT_FALSE(225.0 >= Heading::W);
     }
+
+    TEST_F(HeadingTest, ItDoesntTruncateHeadingLessThan360)
+    {
+        EXPECT_EQ(45, UKControllerPlugin::Headings::TruncateHeading(45));
+    }
+
+    TEST_F(HeadingTest, ItTruncatesHeadingGreaterThan360)
+    {
+        EXPECT_EQ(45, UKControllerPlugin::Headings::TruncateHeading(405));
+    }
+
+    TEST_F(HeadingTest, ItTruncatesHeadingEqualTo360)
+    {
+        EXPECT_EQ(0, UKControllerPlugin::Headings::TruncateHeading(360));
+    }
+
+    TEST_F(HeadingTest, ItCalculatesPerpendicularHeadingWithNoTruncate)
+    {
+        EXPECT_EQ(90, UKControllerPlugin::Headings::PerpendicularHeading(0));
+    }
+
+    TEST_F(HeadingTest, ItCalculatesPerpendicularHeadingWithTruncate)
+    {
+        EXPECT_EQ(90, UKControllerPlugin::Headings::PerpendicularHeading(360));
+    }
 } // namespace UKControllerPluginTest::Headings

@@ -25,4 +25,14 @@ namespace UKControllerPlugin::Headings {
     {
         return first == static_cast<unsigned int>(second);
     }
+
+    [[nodiscard]] auto TruncateHeading(unsigned int heading) -> unsigned int
+    {
+        return heading % 360;
+    }
+
+    [[nodiscard]] auto PerpendicularHeading(unsigned int heading) -> unsigned int
+    {
+        return TruncateHeading(heading + 90);
+    }
 } // namespace UKControllerPlugin::Headings

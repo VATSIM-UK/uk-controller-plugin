@@ -26,4 +26,7 @@ namespace UKControllerPlugin::Headings {
     auto operator<(double first, Heading second) -> bool;
     auto operator>=(double first, Heading second) -> bool;
     auto operator==(unsigned int first, Heading second) -> bool;
+
+    [[nodiscard]] auto TruncateHeading(unsigned int heading) -> unsigned int;
+    [[nodiscard]] auto PerpendicularHeading(unsigned int heading) -> unsigned int;
 } // namespace UKControllerPlugin::Headings
