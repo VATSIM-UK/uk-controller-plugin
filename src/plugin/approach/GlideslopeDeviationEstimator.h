@@ -10,6 +10,7 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Approach {
+    // Struct representing glideslope deviation
     struct GlideslopeDeviation
     {
         int deviation;
