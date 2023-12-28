@@ -54,11 +54,9 @@ namespace UKControllerPlugin::Approach {
             return;
         }
 
-        // Set the tag colour based on the deviation
+        // Set the tag colour to red if we're massively out
         if (deviation.deviation > 300) {
             tagData.SetTagColour(RGB(255, 87, 51));
-        } else {
-            tagData.SetTagColour(RGB(2, 48, 32));
         }
 
         // If we're massively out, abbreviate the string
