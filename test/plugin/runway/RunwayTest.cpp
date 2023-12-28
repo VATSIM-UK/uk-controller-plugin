@@ -6,7 +6,7 @@ namespace UKControllerPluginTest::Runway {
     class RunwayTest : public testing::Test
     {
         public:
-        RunwayTest() : runway(1, 2, "27L", 123, GetPosition(), 196, 3.0)
+        RunwayTest() : runway(1, 2, "EGKK", "27L", 123, GetPosition(), 196, 3.0)
         {
         }
 

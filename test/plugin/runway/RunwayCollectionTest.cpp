@@ -9,9 +9,9 @@ namespace UKControllerPluginTest::Runway {
     {
         public:
         RunwayCollectionTest()
-            : runway1(std::make_shared<class Runway>(1, 2, "05", 50, GetPosition(), 196, 3.0)),
-              runway2(std::make_shared<class Runway>(2, 2, "27L", 270, GetPosition(), 196, 3.0)),
-              runway3(std::make_shared<class Runway>(3, 3, "27L", 275, GetPosition(), 196, 3.0))
+            : runway1(std::make_shared<class Runway>(1, 2, "EGKK", "05", 50, GetPosition(), 196, 3.0)),
+              runway2(std::make_shared<class Runway>(2, 2, "EGKK", "27L", 270, GetPosition(), 196, 3.0)),
+              runway3(std::make_shared<class Runway>(3, 3, "EGLL", "27L", 275, GetPosition(), 196, 3.0))
         {
         }
 

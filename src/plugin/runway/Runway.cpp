@@ -8,13 +8,13 @@ namespace UKControllerPlugin::Runway {
     Runway::Runway(
         int id,
         int airfieldId,
+        std::string airfieldIdentifier,
         std::string identifier,
         int heading,
         EuroScopePlugIn::CPosition threshold,
         int thresholdElevation,
         double glideslopeAngle)
-        // TODO: Remove hard-coded airfield identifier
-        : id(id), airfieldId(airfieldId), airfieldIdentifier("EGKK"), identifier(std::move(identifier)),
+        : id(id), airfieldId(airfieldId), airfieldIdentifier(airfieldIdentifier), identifier(std::move(identifier)),
           heading(heading), headingRadians(Geometry::DegreesToRadians(heading)),
           perpendicularHeading(Headings::PerpendicularHeading(heading)),
           perpendicularHeadingRadians(Geometry::DegreesToRadians(perpendicularHeading)),

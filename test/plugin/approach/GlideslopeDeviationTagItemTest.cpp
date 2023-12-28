@@ -27,7 +27,7 @@ namespace UKControllerPluginTest::Approach {
             EuroScopePlugIn::CPosition pos;
             pos.m_Latitude = 51.150675;
             pos.m_Longitude = -0.171925;
-            runways->Add(std::make_shared<UKControllerPlugin::Runway::Runway>(1, 1, "26L", 257, pos, 196, 3.0));
+            runways->Add(std::make_shared<UKControllerPlugin::Runway::Runway>(1, 1, "EGKK", "26L", 257, pos, 196, 3.0));
 
             // Flightplan
             ON_CALL(mockFlightplan, GetCallsign()).WillByDefault(testing::Return("BAW123"));

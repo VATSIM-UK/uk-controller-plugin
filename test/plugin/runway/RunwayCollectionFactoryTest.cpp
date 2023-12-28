@@ -1,3 +1,6 @@
+#include "airfield/AirfieldCollection.h"
+#include "airfield/AirfieldModel.h"
+#include "controller/ControllerPositionHierarchy.h"
 #include "runway/Runway.h"
 #include "runway/RunwayCollection.h"
 #include "runway/RunwayCollectionFactory.h"
@@ -9,6 +12,12 @@ namespace UKControllerPluginTest::Runway {
     class RunwayCollectionFactoryTest : public testing::Test
     {
         public:
+        RunwayCollectionFactoryTest()
+        {
+            airfields.AddAirfield(std::make_shared<UKControllerPlugin::Airfield::AirfieldModel>(2, "EGKK", nullptr));
+            airfields.AddAirfield(std::make_shared<UKControllerPlugin::Airfield::AirfieldModel>(3, "EGLL", nullptr));
+        }
+
         static auto
         MakeRunway(const nlohmann::json& overridingData = nlohmann::json::object(), const std::string& keyToRemove = "")
             -> const nlohmann::json
@@ -30,96 +39,104 @@ namespace UKControllerPluginTest::Runway {
 
             return runway;
         };
+
+        UKControllerPlugin::Airfield::AirfieldCollection airfields;
     };
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsValid)
     {
-        EXPECT_TRUE(RunwayValid(MakeRunway()));
+        EXPECT_TRUE(RunwayValid(MakeRunway(), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsValidIntegerThreshold)
     {
-        EXPECT_TRUE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_latitude", 1}, {"threshold_longitude", 2}})));
+        EXPECT_TRUE(
+            RunwayValid(MakeRunway(nlohmann::json{{"threshold_latitude", 1}, {"threshold_longitude", 2}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfIdMissing)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "id")));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "id"), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfIdNotInteger)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"id", "abc"}})));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"id", "abc"}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfAirfieldIdMissing)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "airfield_id")));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "airfield_id"), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfAirfieldIdNotInteger)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"airfield_id", "abc"}})));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"airfield_id", "abc"}}), airfields));
+    }
+
+    TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfAirfieldIdNotValidAirfield)
+    {
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"airfield_id", 55}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIdentifierMissing)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "identifier")));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "identifier"), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfIdentifierNotString)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"identifier", 123}})));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"identifier", 123}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdLatitudeMissing)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "threshold_latitude")));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "threshold_latitude"), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdLatitudeNotANumber)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_latitude", "abc"}})));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_latitude", "abc"}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdLongitudeMissing)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "threshold_longitude")));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "threshold_longitude"), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdLongitudeNotANumber)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_longitude", "abc"}})));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_longitude", "abc"}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdElevationMissing)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "threshold_elevation")));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "threshold_elevation"), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdElevationNotAnInteger)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_elevation", 1.5}})));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_elevation", 1.5}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfGlideslopeAngleMissing)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "glideslope_angle")));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "glideslope_angle"), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdElevationNotANumber)
     {
-        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"glideslope_angle", "abc"}})));
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"glideslope_angle", "abc"}}), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfNotAnObject)
     {
-        EXPECT_FALSE(RunwayValid(nlohmann::json::array()));
+        EXPECT_FALSE(RunwayValid(nlohmann::json::array(), airfields));
     }
 
     TEST_F(RunwayCollectionFactoryTest, ItReturnsEmptyCollectionIfDependencyNotArray)
     {
-        EXPECT_EQ(0, BuildRunwayCollection(nlohmann::json::object())->Count());
+        EXPECT_EQ(0, BuildRunwayCollection(nlohmann::json::object(), airfields)->Count());
     }
 
     TEST_F(RunwayCollectionFactoryTest, ItReturnsACollection)
@@ -144,12 +161,13 @@ namespace UKControllerPluginTest::Runway {
             {"threshold_elevation", 202},
             {"glideslope_angle", 3.1}});
 
-        auto collection = BuildRunwayCollection(dependency);
+        auto collection = BuildRunwayCollection(dependency, airfields);
         EXPECT_EQ(2, collection->Count());
 
         auto runway1 = collection->GetById(1);
         EXPECT_EQ(1, runway1->Id());
         EXPECT_EQ(2, runway1->AirfieldId());
+        EXPECT_EQ("EGKK", runway1->AirfieldIdentifier());
         EXPECT_EQ("27L", runway1->Identifier());
         EXPECT_EQ(123, runway1->Heading());
         EXPECT_FLOAT_EQ(1.2, runway1->Threshold().m_Latitude);
@@ -160,6 +178,7 @@ namespace UKControllerPluginTest::Runway {
         auto runway2 = collection->GetById(2);
         EXPECT_EQ(2, runway2->Id());
         EXPECT_EQ(3, runway2->AirfieldId());
+        EXPECT_EQ("EGLL", runway2->AirfieldIdentifier());
         EXPECT_EQ("04", runway2->Identifier());
         EXPECT_EQ(234, runway2->Heading());
         EXPECT_FLOAT_EQ(3.4, runway2->Threshold().m_Latitude);
@@ -190,6 +209,6 @@ namespace UKControllerPluginTest::Runway {
             {"threshold_elevation", 201},
             {"glideslope_angle", 3.0}});
 
-        EXPECT_EQ(0, BuildRunwayCollection(nlohmann::json::object())->Count());
+        EXPECT_EQ(0, BuildRunwayCollection(nlohmann::json::object(), airfields)->Count());
     }
 } // namespace UKControllerPluginTest::Runway
