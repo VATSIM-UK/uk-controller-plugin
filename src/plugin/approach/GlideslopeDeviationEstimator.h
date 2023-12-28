@@ -22,7 +22,7 @@ namespace UKControllerPlugin::Approach {
     {
         public:
         [nodiscard] auto CalculateGlideslopeDeviation(
-            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget, const Runway::Runway& runway) const
-            -> GlideslopeDeviation;
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
+            const Runway::Runway& runway) const -> GlideslopeDeviation;
     };
 } // namespace UKControllerPlugin::Approach
