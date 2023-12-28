@@ -1,5 +1,17 @@
 # UK Controller Plugin Changelog
 
+# [5.15.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.14.0...5.15.0) (2023-12-28)
+
+
+### Bug Fixes
+
+* change colour for strong deviation ([c41e96a](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c41e96a11906331c686b9746bcaa92ea5f1e5b95))
+
+
+### Features
+
+* glideslope drift tag item ([3b5f774](https://github.com/VATSIM-UK/uk-controller-plugin/commit/3b5f774b3524d29c93c647c2a04817b03b8b765c))
+
 # [5.14.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.13.5...5.14.0) (2023-12-20)
 
 
