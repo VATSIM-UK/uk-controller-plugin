@@ -7,13 +7,22 @@ namespace UKControllerPlugin::Runway {
     class Runway
     {
         public:
-        Runway(int id, int airfieldId, std::string identifier, int heading, EuroScopePlugIn::CPosition threshold);
+        Runway(
+            int id,
+            int airfieldId,
+            std::string identifier,
+            int heading,
+            EuroScopePlugIn::CPosition threshold,
+            int thresholdElevation,
+            double glideslopeAngle);
         [[nodiscard]] auto Id() const -> int;
         [[nodiscard]] auto AirfieldId() const -> int;
         [[nodiscard]] auto AirfieldIdentifier() const -> const std::string&;
         [[nodiscard]] auto Identifier() const -> const std::string&;
         [[nodiscard]] auto Heading() const -> int;
         [[nodiscard]] auto Threshold() const -> const EuroScopePlugIn::CPosition&;
+        [[nodiscard]] auto ThresholdElevation() const -> int;
+        [[nodiscard]] auto GlideslopeAngle() const -> double;
         [[nodiscard]] auto GlideslopeAltitudeAtDistance(const double distanceInNauticalMiles) const -> int;
         [[nodiscard]] auto RunwayHeadingLineSlope() const -> double;
         [[nodiscard]] auto RunwayPerpendicularHeadingLineSlope() const -> double;
@@ -57,6 +66,9 @@ namespace UKControllerPlugin::Runway {
 
         // The elevation of the runway threshold
         int thresholdElevation;
+
+        // The glideslope angle in degrees
+        double glideslopeAngle;
 
         // The glideslope angle (in radians)
         double glideslopeAngleRadians;

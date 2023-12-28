@@ -27,7 +27,7 @@ namespace UKControllerPluginTest::Approach {
             EuroScopePlugIn::CPosition pos;
             pos.m_Latitude = 51.150675;
             pos.m_Longitude = -0.171925;
-            runways->Add(std::make_shared<UKControllerPlugin::Runway::Runway>(1, 1, "26L", 257, pos));
+            runways->Add(std::make_shared<UKControllerPlugin::Runway::Runway>(1, 1, "26L", 257, pos, 196, 3.0));
 
             // Flightplan
             ON_CALL(mockFlightplan, GetCallsign()).WillByDefault(testing::Return("BAW123"));
@@ -91,7 +91,7 @@ namespace UKControllerPluginTest::Approach {
         glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("-448", tagData.GetItemString());
-        EXPECT_EQ(RGB(255, 87, 51), tagData.GetTagColour());
+        EXPECT_EQ(RGB(2, 48, 32), tagData.GetTagColour());
     }
 
     TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataSlightlyBelow)
@@ -121,7 +121,7 @@ namespace UKControllerPluginTest::Approach {
         glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("<1k", tagData.GetItemString());
-        EXPECT_EQ(RGB(255, 87, 51), tagData.GetTagColour());
+        EXPECT_EQ(RGB(2, 48, 32), tagData.GetTagColour());
     }
 
     TEST_F(GlideslopeDeviationTagItemTest, ItDoesntSetTagItemDataIfRunwayNotFound)

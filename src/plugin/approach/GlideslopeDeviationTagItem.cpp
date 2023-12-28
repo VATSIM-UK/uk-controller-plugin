@@ -55,10 +55,10 @@ namespace UKControllerPlugin::Approach {
         }
 
         // Set the tag colour based on the deviation
-        if (std::abs(deviation.deviation) < 300) {
-            tagData.SetTagColour(RGB(2, 48, 32));
-        } else {
+        if (deviation.deviation > 300) {
             tagData.SetTagColour(RGB(255, 87, 51));
+        } else {
+            tagData.SetTagColour(RGB(2, 48, 32));
         }
 
         // If we're massively out, abbreviate the string

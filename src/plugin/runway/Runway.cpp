@@ -5,9 +5,14 @@
 
 namespace UKControllerPlugin::Runway {
 
-    Runway::Runway(int id, int airfieldId, std::string identifier, int heading, EuroScopePlugIn::CPosition threshold)
-        // TODO: Remove hard-coded threshold elevation
-        // TODO: remove hard-coded glideslope angle
+    Runway::Runway(
+        int id,
+        int airfieldId,
+        std::string identifier,
+        int heading,
+        EuroScopePlugIn::CPosition threshold,
+        int thresholdElevation,
+        double glideslopeAngle)
         // TODO: Remove hard-coded airfield identifier
         : id(id), airfieldId(airfieldId), airfieldIdentifier("EGKK"), identifier(std::move(identifier)),
           heading(heading), headingRadians(Geometry::DegreesToRadians(heading)),
@@ -15,7 +20,8 @@ namespace UKControllerPlugin::Runway {
           perpendicularHeadingRadians(Geometry::DegreesToRadians(perpendicularHeading)),
           runwayHeadingLineSlope(Geometry::Slope(headingRadians)),
           runwayPerpendicularHeadingLineSlope(Geometry::Slope(perpendicularHeadingRadians)), threshold(threshold),
-          thresholdElevation(196), glideslopeAngleRadians(Geometry::DegreesToRadians(3))
+          thresholdElevation(thresholdElevation), glideslopeAngle(glideslopeAngle),
+          glideslopeAngleRadians(Geometry::DegreesToRadians(glideslopeAngle))
     {
     }
 
@@ -62,5 +68,15 @@ namespace UKControllerPlugin::Runway {
     auto Runway::RunwayPerpendicularHeadingLineSlope() const -> double
     {
         return runwayPerpendicularHeadingLineSlope;
+    }
+
+    auto Runway::ThresholdElevation() const -> int
+    {
+        return thresholdElevation;
+    }
+
+    auto Runway::GlideslopeAngle() const -> double
+    {
+        return glideslopeAngle;
     }
 } // namespace UKControllerPlugin::Runway

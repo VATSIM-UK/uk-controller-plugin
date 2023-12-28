@@ -5,7 +5,7 @@ namespace UKControllerPluginTest::Approach {
     class GlideslopeDeviationEstimatorTest : public ::testing::Test
     {
         public:
-        GlideslopeDeviationEstimatorTest() : runway(1, 1, "26L", 257, RunwayPosition())
+        GlideslopeDeviationEstimatorTest() : runway(1, 1, "26L", 257, RunwayPosition(), 196, 3.0)
         {
         }
 

@@ -20,7 +20,8 @@ namespace UKControllerPluginTest::Runway {
                 {"heading", 123},
                 {"threshold_latitude", 1.2},
                 {"threshold_longitude", 3.4},
-            };
+                {"threshold_elevation", 201},
+                {"glideslope_angle", 3.0}};
             runway.update(overridingData);
 
             if (!keyToRemove.empty()) {
@@ -91,6 +92,26 @@ namespace UKControllerPluginTest::Runway {
         EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_longitude", "abc"}})));
     }
 
+    TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdElevationMissing)
+    {
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "threshold_elevation")));
+    }
+
+    TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdElevationNotAnInteger)
+    {
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"threshold_elevation", 1.5}})));
+    }
+
+    TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfGlideslopeAngleMissing)
+    {
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json::object(), "glideslope_angle")));
+    }
+
+    TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfThresholdElevationNotANumber)
+    {
+        EXPECT_FALSE(RunwayValid(MakeRunway(nlohmann::json{{"glideslope_angle", "abc"}})));
+    }
+
     TEST_F(RunwayCollectionFactoryTest, RunwayIsInvalidIfNotAnObject)
     {
         EXPECT_FALSE(RunwayValid(nlohmann::json::array()));
@@ -111,7 +132,8 @@ namespace UKControllerPluginTest::Runway {
             {"heading", 123},
             {"threshold_latitude", 1.2},
             {"threshold_longitude", 3.4},
-        });
+            {"threshold_elevation", 201},
+            {"glideslope_angle", 3.0}});
         dependency.push_back(nlohmann::json{
             {"id", 2},
             {"airfield_id", 3},
@@ -119,7 +141,8 @@ namespace UKControllerPluginTest::Runway {
             {"heading", 234},
             {"threshold_latitude", 3.4},
             {"threshold_longitude", 4.5},
-        });
+            {"threshold_elevation", 202},
+            {"glideslope_angle", 3.1}});
 
         auto collection = BuildRunwayCollection(dependency);
         EXPECT_EQ(2, collection->Count());
@@ -131,6 +154,8 @@ namespace UKControllerPluginTest::Runway {
         EXPECT_EQ(123, runway1->Heading());
         EXPECT_FLOAT_EQ(1.2, runway1->Threshold().m_Latitude);
         EXPECT_FLOAT_EQ(3.4, runway1->Threshold().m_Longitude);
+        EXPECT_EQ(201, runway1->ThresholdElevation());
+        EXPECT_FLOAT_EQ(3.0, runway1->GlideslopeAngle());
 
         auto runway2 = collection->GetById(2);
         EXPECT_EQ(2, runway2->Id());
@@ -139,6 +164,8 @@ namespace UKControllerPluginTest::Runway {
         EXPECT_EQ(234, runway2->Heading());
         EXPECT_FLOAT_EQ(3.4, runway2->Threshold().m_Latitude);
         EXPECT_FLOAT_EQ(4.5, runway2->Threshold().m_Longitude);
+        EXPECT_EQ(202, runway2->ThresholdElevation());
+        EXPECT_DOUBLE_EQ(3.1, runway2->GlideslopeAngle());
     }
 
     TEST_F(RunwayCollectionFactoryTest, ItIgnoresInvalidRunways)
@@ -151,7 +178,8 @@ namespace UKControllerPluginTest::Runway {
             {"heading", 123},
             {"threshold_latitude", 1.2},
             {"threshold_longitude", 3.4},
-        });
+            {"threshold_elevation", 201},
+            {"glideslope_angle", 3.0}});
         dependency.push_back(nlohmann::json{
             {"id", 2},
             {"airfield_id", 3},
@@ -159,7 +187,8 @@ namespace UKControllerPluginTest::Runway {
             {"heading", 234},
             {"threshold_latitude", "abc"}, // Invalid
             {"threshold_longitude", 4.5},
-        });
+            {"threshold_elevation", 201},
+            {"glideslope_angle", 3.0}});
 
         EXPECT_EQ(0, BuildRunwayCollection(nlohmann::json::object())->Count());
     }

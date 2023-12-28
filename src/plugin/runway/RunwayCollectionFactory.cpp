@@ -26,7 +26,9 @@ namespace UKControllerPlugin::Runway {
                 runway.at("airfield_id").get<int>(),
                 runway.at("identifier").get<std::string>(),
                 runway.at("heading").get<int>(),
-                std::move(threshold)));
+                std::move(threshold),
+                runway.at("threshold_elevation").get<int>(),
+                runway.at("glideslope_angle").get<double>()));
         }
 
         LogInfo("Loaded " + std::to_string(collection->Count()) + " runways");
@@ -40,6 +42,8 @@ namespace UKControllerPlugin::Runway {
                runway.contains("identifier") && runway.at("identifier").is_string() && runway.contains("heading") &&
                runway.at("heading").is_number_integer() && runway.contains("threshold_latitude") &&
                runway.at("threshold_latitude").is_number() && runway.contains("threshold_longitude") &&
-               runway.at("threshold_longitude").is_number();
+               runway.at("threshold_longitude").is_number() && runway.contains("threshold_elevation") &&
+               runway.at("threshold_elevation").is_number_integer() && runway.contains("glideslope_angle") &&
+               runway.at("glideslope_angle").is_number();
     }
 } // namespace UKControllerPlugin::Runway
