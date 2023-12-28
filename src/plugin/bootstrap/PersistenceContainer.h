@@ -260,7 +260,7 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Wake::WakeCategoryMapperCollection> wakeCategoryMappers;
         std::shared_ptr<UKControllerPlugin::Hold::PublishedHoldCollection> publishedHolds;
         std::unique_ptr<UKControllerPlugin::FlightRules::FlightRuleCollection> flightRules;
-        std::unique_ptr<UKControllerPlugin::Runway::RunwayCollection> runwayCollection;
+        std::shared_ptr<UKControllerPlugin::Runway::RunwayCollection> runwayCollection;
 
         // Push events
         std::shared_ptr<Push::PushEventProcessorCollection> pushEventProcessors;

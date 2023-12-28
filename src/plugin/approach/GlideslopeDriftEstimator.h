@@ -10,11 +10,18 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Approach {
+    struct GlideslopeDrift
+    {
+        int drift;
+        double perpendicularDistanceFromLocaliser;
+        double localiserRange;
+    };
 
     class GlideslopeDriftEstimator
     {
         public:
         [nodiscard] auto CalculateGlideslopeDrift(
-            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget, const Runway::Runway& runway) -> int;
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget, const Runway::Runway& runway) const
+            -> GlideslopeDrift;
     };
 } // namespace UKControllerPlugin::Approach

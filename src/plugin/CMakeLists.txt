@@ -57,7 +57,9 @@ set(src__approach
         approach/ToggleApproachSequencerDisplay.cpp approach/ToggleApproachSequencerDisplay.h
         approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h approach/TargetSelectorList.cpp approach/TargetSelectorList.h approach/ApproachSpacingCalculator.cpp approach/ApproachSpacingCalculator.h approach/ApproachSequencerOptions.cpp approach/ApproachSequencerOptions.h approach/AirfieldApproachOptions.h approach/ApproachSequencerOptionsLoader.cpp approach/ApproachSequencerOptionsLoader.h approach/AirfieldTargetSelectorList.cpp approach/AirfieldTargetSelectorList.h approach/ApproachSequencerDistanceOptions.cpp approach/ApproachSequencerDistanceOptions.h approach/RemoveLandedAircraft.cpp approach/RemoveLandedAircraft.h approach/ApproachFlightplanEventHandler.cpp approach/ApproachFlightplanEventHandler.h
         approach/GlideslopeDriftEstimator.h
-        approach/GlideslopeDriftEstimator.cpp)
+        approach/GlideslopeDriftEstimator.cpp
+        approach/GlideslopeDriftTagItem.cpp
+        approach/GlideslopeDriftTagItem.h)
 source_group("src\\approach" FILES ${src__approach})
 
 set(src__bootstrap
@@ -287,6 +289,7 @@ set(src__geometry
         geometry/Line.cpp geometry/Line.h geometry/DistanceRadiusToScreenRadius.cpp geometry/DistanceRadiusToScreenRadius.h geometry/MeasurementUnitType.h geometry/MeasurementUnitFactory.cpp geometry/MeasurementUnitFactory.h geometry/Measurement.cpp geometry/Measurement.h geometry/MeasurementUnit.cpp geometry/MeasurementUnit.h
         geometry/Angle.cpp
         geometry/Angle.h
+        geometry/Length.h
 )
 source_group("src\\geometry" FILES ${src__geometry})
 

@@ -34,6 +34,7 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD0(GetAssignedSquawk, std::string(void));
             MOCK_CONST_METHOD0(GetRemarks, std::string());
             MOCK_CONST_METHOD0(GetDepartureRunway, std::string());
+            MOCK_CONST_METHOD0(GetArrivalRunway, std::string());
             MOCK_CONST_METHOD0(HasControllerClearedAltitude, bool(void));
             MOCK_CONST_METHOD0(HasControllerAssignedHeading, bool(void));
             MOCK_CONST_METHOD0(HasAssignedSquawk, bool(void));

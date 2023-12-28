@@ -9,6 +9,8 @@
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSequencerOptionsLoader.h"
 #include "ApproachSpacingRingRenderer.h"
+#include "GlideslopeDriftEstimator.h"
+#include "GlideslopeDriftTagItem.h"
 #include "RemoveLandedAircraft.h"
 #include "SequencerAirfieldSelector.h"
 #include "TargetSelectorList.h"
@@ -22,6 +24,7 @@
 #include "list/PopupListFactory.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
 namespace UKControllerPlugin::Approach {
@@ -38,6 +41,12 @@ namespace UKControllerPlugin::Approach {
 
         container.flightplanHandler->RegisterHandler(
             std::make_shared<ApproachFlightplanEventHandler>(container.moduleFactories->Approach().Sequencer()));
+
+        // Add the drift tag item
+        const auto driftEstimator = std::make_shared<GlideslopeDriftEstimator>();
+
+        container.tagHandler->RegisterTagItem(
+            DRIFT_TAG_ITEM_ID, std::make_shared<GlideslopeDriftTagItem>(driftEstimator, container.runwayCollection));
     }
 
     void ApproachBootstrapProvider::BootstrapRadarScreen(

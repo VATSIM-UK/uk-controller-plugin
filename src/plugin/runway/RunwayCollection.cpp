@@ -11,6 +11,8 @@ namespace UKControllerPlugin::Runway {
         }
 
         runways[runway->Id()] = runway;
+        runwaysByAirfieldIdAndIdentifier[runway->AirfieldId()][runway->Identifier()] = runway;
+        runwaysByAirfieldAndIdentifier[runway->AirfieldIdentifier()][runway->Identifier()] = runway;
     }
 
     auto RunwayCollection::Count() const -> size_t
@@ -26,12 +28,28 @@ namespace UKControllerPlugin::Runway {
     auto RunwayCollection::GetByAirfieldAndIdentifier(int airfieldId, const std::string& identifier) const
         -> std::shared_ptr<class Runway>
     {
-        auto runway = std::find_if(
-            runways.begin(),
-            runways.end(),
-            [&airfieldId, &identifier](std::pair<int, const std::shared_ptr<class Runway>&> runway) -> bool {
-                return runway.second->AirfieldId() == airfieldId && runway.second->Identifier() == identifier;
-            });
-        return runway != runways.cend() ? runway->second : nullptr;
+        if (runwaysByAirfieldIdAndIdentifier.count(airfieldId) == 0) {
+            return nullptr;
+        }
+
+        if (runwaysByAirfieldIdAndIdentifier.at(airfieldId).count(identifier) == 0) {
+            return nullptr;
+        }
+
+        return runwaysByAirfieldIdAndIdentifier.at(airfieldId).at(identifier);
+    }
+
+    auto RunwayCollection::GetByAirfieldAndIdentifier(const std::string& airfield, const std::string& identifier) const
+        -> std::shared_ptr<class Runway>
+    {
+        if (runwaysByAirfieldAndIdentifier.count(airfield) == 0) {
+            return nullptr;
+        }
+
+        if (runwaysByAirfieldAndIdentifier.at(airfield).count(identifier) == 0) {
+            return nullptr;
+        }
+
+        return runwaysByAirfieldAndIdentifier.at(airfield).at(identifier);
     }
 } // namespace UKControllerPlugin::Runway

@@ -101,4 +101,31 @@ namespace UKControllerPluginTest::Runway {
 
         EXPECT_EQ(nullptr, collection.GetByAirfieldAndIdentifier(2, "27R"));
     }
+
+    TEST_F(RunwayCollectionTest, ItFetchesARunwayByIdentifierAndAirfildIdentifier)
+    {
+        collection.Add(runway1);
+        collection.Add(runway2);
+        collection.Add(runway3);
+
+        EXPECT_EQ(runway1, collection.GetByAirfieldAndIdentifier("EGKK", "05"));
+    }
+
+    TEST_F(RunwayCollectionTest, ItReturnsNullptrIfAirfieldIdentifierDoesntMatch)
+    {
+        collection.Add(runway1);
+        collection.Add(runway2);
+        collection.Add(runway3);
+
+        EXPECT_EQ(nullptr, collection.GetByAirfieldAndIdentifier("EGLL", "05"));
+    }
+
+    TEST_F(RunwayCollectionTest, ItReturnsNullptrIfIdentifierDoesntMatchWhenUsingAirfieldIdentifier)
+    {
+        collection.Add(runway1);
+        collection.Add(runway2);
+        collection.Add(runway3);
+
+        EXPECT_EQ(nullptr, collection.GetByAirfieldAndIdentifier("EGKK", "27R"));
+    }
 } // namespace UKControllerPluginTest::Runway

@@ -10,6 +10,7 @@ namespace UKControllerPlugin::Runway {
         Runway(int id, int airfieldId, std::string identifier, int heading, EuroScopePlugIn::CPosition threshold);
         [[nodiscard]] auto Id() const -> int;
         [[nodiscard]] auto AirfieldId() const -> int;
+        [[nodiscard]] auto AirfieldIdentifier() const -> const std::string&;
         [[nodiscard]] auto Identifier() const -> const std::string&;
         [[nodiscard]] auto Heading() const -> int;
         [[nodiscard]] auto Threshold() const -> const EuroScopePlugIn::CPosition&;
@@ -26,6 +27,9 @@ namespace UKControllerPlugin::Runway {
 
         // The id of the airfield that this runway is at
         int airfieldId;
+
+        // The identifier of the airfield that this runway is at
+        std::string airfieldIdentifier;
 
         // The identifier of the runway - e.g 27L
         std::string identifier;

@@ -14,5 +14,8 @@ namespace UKControllerPlugin::Approach {
             RadarScreen::ConfigurableDisplayCollection& configurables,
             Euroscope::AsrEventHandlerCollection& asrHandlers,
             const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory) override;
+
+        private:
+        const int DRIFT_TAG_ITEM_ID = 132;
     };
 } // namespace UKControllerPlugin::Approach

@@ -3,6 +3,8 @@
 #include "euroscope/PluginSettingsProviderCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "runway/RunwayCollection.h"
+#include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 #include "wake/WakeCategoryMapperCollection.h"
 
@@ -26,6 +28,7 @@ namespace UKControllerPluginTest::Approach {
             container.flightplanHandler = std::make_unique<FlightPlanEventHandlerCollection>();
             container.pluginSettingsProviders =
                 std::make_unique<PluginSettingsProviderCollection>(*container.pluginUserSettingHandler);
+            container.runwayCollection = std::make_shared<UKControllerPlugin::Runway::RunwayCollection>();
         }
 
         ApproachBootstrapProvider provider;
@@ -48,6 +51,13 @@ namespace UKControllerPluginTest::Approach {
     {
         this->RunBootstrapPlugin(provider);
         EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
+    }
+
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersTheDriftTagItem)
+    {
+        this->RunBootstrapPlugin(provider);
+        EXPECT_EQ(1, container.tagHandler->CountHandlers());
+        EXPECT_TRUE(container.tagHandler->HasHandlerForItemId(132));
     }
 
     TEST_F(ApproachBootstrapProviderTest, ItRegistersTheRenderers)

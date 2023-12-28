@@ -5,7 +5,8 @@
 namespace UKControllerPlugin::Approach {
 
     auto GlideslopeDriftEstimator::CalculateGlideslopeDrift(
-        const Euroscope::EuroScopeCRadarTargetInterface& radarTarget, const Runway::Runway& runway) -> int
+        const Euroscope::EuroScopeCRadarTargetInterface& radarTarget, const Runway::Runway& runway) const
+        -> GlideslopeDrift
     {
         // Calculate the slope of each line
         const auto runwaySlope = runway.RunwayHeadingLineSlope();
@@ -21,7 +22,9 @@ namespace UKControllerPlugin::Approach {
             runwaySlope * (intersection.m_Latitude - runway.Threshold().m_Latitude) + runway.Threshold().m_Longitude;
         const auto distance = runway.Threshold().DistanceTo(intersection);
 
-        // Calculate the difference between the glideslope altitude and the aircraft altitude
-        return runway.GlideslopeAltitudeAtDistance(distance) - radarTarget.GetAltitude();
+        return {
+            .drift = radarTarget.GetAltitude() - runway.GlideslopeAltitudeAtDistance(distance),
+            .perpendicularDistanceFromLocaliser = radarTarget.GetPosition().DistanceTo(intersection),
+            .localiserRange = distance};
     }
 } // namespace UKControllerPlugin::Approach

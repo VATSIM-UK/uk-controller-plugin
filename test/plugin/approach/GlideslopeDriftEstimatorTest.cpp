@@ -32,6 +32,8 @@ namespace UKControllerPluginTest::Approach {
         ON_CALL(radarTarget, GetAltitude()).WillByDefault(testing::Return(2000));
 
         const auto result = glideslopeDriftEstimator.CalculateGlideslopeDrift(radarTarget, runway);
-        ASSERT_DOUBLE_EQ(result, 448);
+        EXPECT_DOUBLE_EQ(-448, result.drift);
+        EXPECT_NEAR(0.9515431, result.perpendicularDistanceFromLocaliser, 0.001);
+        EXPECT_NEAR(7.0799, result.localiserRange, 0.001);
     }
 } // namespace UKControllerPluginTest::Approach

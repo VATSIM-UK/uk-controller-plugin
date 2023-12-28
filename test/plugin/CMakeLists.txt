@@ -37,7 +37,8 @@ set(test__approach
         approach/ApproachSequencerDisplayAsrLoaderTest.cpp
         approach/ToggleApproachSequencerDisplayTest.cpp
         approach/SequencerAirfieldSelectorTest.cpp approach/ApproachModuleFactoryTest.cpp approach/AircraftSelectionProviderTest.cpp approach/TargetSelectorListTest.cpp wake/ApproachSpacingCalculatorTest.cpp approach/ApproachSequencerOptionsTest.cpp approach/ApproachSequencerOptionsLoaderTest.cpp approach/AirfieldTargetSelectorListTest.cpp approach/ApproachSequencerDistanceOptionsTest.cpp approach/AirfieldMinimumSeparationSelectorListTest.cpp approach/RemoveLandedAircraftTest.cpp approach/ApproachFlightplanEventHandlerTest.cpp
-        approach/GlideslopeDriftEstimatorTest.cpp)
+        approach/GlideslopeDriftEstimatorTest.cpp
+        approach/GlideslopeDriftTagItemTest.cpp)
 source_group("test\\approach" FILES ${test__approach})
 
 set(test__bootstrap
@@ -154,7 +155,8 @@ source_group("test\\flightrule" FILES ${test__flightrule})
 
 set(test__geometry
         geometry/LineTest.cpp geometry/DistanceRadiusToScreenRadiusTest.cpp geometry/MeasurementUnitFactoryTest.cpp
-        geometry/AngleTest.cpp)
+        geometry/AngleTest.cpp
+        geometry/LengthTest.cpp)
 source_group("test\\geometry" FILES ${test__geometry})
 
 set(test__handoff

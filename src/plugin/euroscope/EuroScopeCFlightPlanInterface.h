@@ -51,5 +51,6 @@ namespace UKControllerPlugin::Euroscope {
         [[nodiscard]] virtual EuroScopePlugIn::CFlightPlan& GetEuroScopeObject() const = 0;
         [[nodiscard]] virtual auto GetRemarks() const -> std::string = 0;
         [[nodiscard]] virtual auto GetDepartureRunway() const -> std::string = 0;
+        [[nodiscard]] virtual auto GetArrivalRunway() const -> std::string = 0;
     };
 } // namespace UKControllerPlugin::Euroscope
