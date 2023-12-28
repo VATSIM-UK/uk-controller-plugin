@@ -30,3 +30,4 @@ dynamically to the plugin.
 - [Electronic Prenotes](PrenoteMessages.md)
 - [SELCAL Parsing](Selcal.md)
 - [Approach Sequencing](ApproachSequencer.md)
+- [Glideslope Deviation](GlideslopeDeviation.md)
