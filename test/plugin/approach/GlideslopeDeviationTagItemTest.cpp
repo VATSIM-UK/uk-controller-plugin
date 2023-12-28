@@ -71,7 +71,7 @@ namespace UKControllerPluginTest::Approach {
         glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("+448", tagData.GetItemString());
-        EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+        EXPECT_EQ(RGB(255, 87, 51), tagData.GetTagColour());
     }
 
     TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataSlightlyAbove)
@@ -91,7 +91,7 @@ namespace UKControllerPluginTest::Approach {
         glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("-448", tagData.GetItemString());
-        EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+        EXPECT_EQ(RGB(255, 87, 51), tagData.GetTagColour());
     }
 
     TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataSlightlyBelow)
@@ -111,7 +111,7 @@ namespace UKControllerPluginTest::Approach {
         glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ(">1k", tagData.GetItemString());
-        EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+        EXPECT_EQ(RGB(255, 87, 51), tagData.GetTagColour());
     }
 
     TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataOver1000FeetBelowGlideslope)
@@ -121,7 +121,7 @@ namespace UKControllerPluginTest::Approach {
         glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("<1k", tagData.GetItemString());
-        EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
+        EXPECT_EQ(RGB(255, 87, 51), tagData.GetTagColour());
     }
 
     TEST_F(GlideslopeDeviationTagItemTest, ItDoesntSetTagItemDataIfRunwayNotFound)
