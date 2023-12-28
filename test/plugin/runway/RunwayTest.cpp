@@ -6,7 +6,7 @@ namespace UKControllerPluginTest::Runway {
     class RunwayTest : public testing::Test
     {
         public:
-        RunwayTest() : runway(1, 2, "27L", 123, GetPosition())
+        RunwayTest() : runway(1, 2, "EGKK", "27L", 123, GetPosition(), 196, 3.0)
         {
         }
 
@@ -46,5 +46,34 @@ namespace UKControllerPluginTest::Runway {
     {
         EXPECT_EQ(3, runway.Threshold().m_Latitude);
         EXPECT_EQ(4, runway.Threshold().m_Longitude);
+    }
+
+    TEST_F(RunwayTest, ItCalculatesGlideslopeAltitudeAtDistance)
+    {
+        // At the threshold
+        EXPECT_EQ(196, runway.GlideslopeAltitudeAtDistance(0));
+
+        // 6.95 nm (8 miles)
+        EXPECT_EQ(2407, runway.GlideslopeAltitudeAtDistance(6.95));
+    }
+
+    TEST_F(RunwayTest, ItHasAThresholdElevation)
+    {
+        EXPECT_EQ(196, runway.ThresholdElevation());
+    }
+
+    TEST_F(RunwayTest, ItHasAGlideslopeAngle)
+    {
+        EXPECT_DOUBLE_EQ(3, runway.GlideslopeAngle());
+    }
+
+    TEST_F(RunwayTest, ItCalculatesRunwayHeadingLineSlope)
+    {
+        EXPECT_DOUBLE_EQ(-1.5398649638145827, runway.RunwayHeadingLineSlope());
+    }
+
+    TEST_F(RunwayTest, ItCalculatesRunwayPerpendicularHeadingLineSlope)
+    {
+        EXPECT_DOUBLE_EQ(0.64940759319751062, runway.RunwayPerpendicularHeadingLineSlope());
     }
 } // namespace UKControllerPluginTest::Runway

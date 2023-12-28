@@ -29,7 +29,7 @@ namespace UKControllerPluginTest::Sid {
             EuroScopePlugIn::CPosition threshold;
             threshold.m_Latitude = 1;
             threshold.m_Latitude = 2;
-            this->runways.Add(std::make_shared<class Runway>(2, 2, "27L", 123, threshold));
+            this->runways.Add(std::make_shared<class Runway>(2, 2, "EGLL", "27L", 123, threshold, 196, 3.0));
             this->sids.AddSid(std::make_shared<StandardInstrumentDeparture>(1, 1, "TEST1A", 1, 2, 3));
             this->sids.AddSid(std::make_shared<StandardInstrumentDeparture>(2, 2, "TEST1B", 3, 4, 5));
 

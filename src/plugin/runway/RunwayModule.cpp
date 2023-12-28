@@ -9,7 +9,7 @@ namespace UKControllerPlugin::Runway {
     void
     BootstrapPlugin(Bootstrap::PersistenceContainer& container, Dependency::DependencyLoaderInterface& dependencyLoader)
     {
-        container.runwayCollection =
-            BuildRunwayCollection(dependencyLoader.LoadDependency("DEPENDENCY_RUNWAYS", nlohmann::json::array()));
+        container.runwayCollection = BuildRunwayCollection(
+            dependencyLoader.LoadDependency("DEPENDENCY_RUNWAYS", nlohmann::json::array()), *container.airfields);
     }
 } // namespace UKControllerPlugin::Runway

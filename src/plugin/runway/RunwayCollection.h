@@ -1,5 +1,4 @@
 #pragma once
-
 #include "RunwayCollectionFactory.h"
 
 namespace UKControllerPlugin::Runway {
@@ -16,9 +15,15 @@ namespace UKControllerPlugin::Runway {
         [[nodiscard]] auto GetById(int id) const -> std::shared_ptr<class Runway>;
         [[nodiscard]] auto GetByAirfieldAndIdentifier(int airfieldId, const std::string& identifier) const
             -> std::shared_ptr<class Runway>;
+        [[nodiscard]] auto GetByAirfieldAndIdentifier(const std::string& airfield, const std::string& identifier) const
+            -> std::shared_ptr<class Runway>;
 
         private:
         // All the runways
         std::map<int, std::shared_ptr<class Runway>> runways;
+        std::unordered_map<int, std::unordered_map<std::string, std::shared_ptr<class Runway>>>
+            runwaysByAirfieldIdAndIdentifier;
+        std::unordered_map<std::string, std::unordered_map<std::string, std::shared_ptr<class Runway>>>
+            runwaysByAirfieldAndIdentifier;
     };
 } // namespace UKControllerPlugin::Runway

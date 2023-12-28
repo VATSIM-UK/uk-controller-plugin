@@ -9,6 +9,8 @@
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSequencerOptionsLoader.h"
 #include "ApproachSpacingRingRenderer.h"
+#include "GlideslopeDeviationEstimator.h"
+#include "GlideslopeDeviationTagItem.h"
 #include "RemoveLandedAircraft.h"
 #include "SequencerAirfieldSelector.h"
 #include "TargetSelectorList.h"
@@ -22,6 +24,7 @@
 #include "list/PopupListFactory.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
 
 namespace UKControllerPlugin::Approach {
@@ -38,6 +41,13 @@ namespace UKControllerPlugin::Approach {
 
         container.flightplanHandler->RegisterHandler(
             std::make_shared<ApproachFlightplanEventHandler>(container.moduleFactories->Approach().Sequencer()));
+
+        // Add the deviation tag item
+        const auto deviationEstimator = std::make_shared<GlideslopeDeviationEstimator>();
+
+        container.tagHandler->RegisterTagItem(
+            GLIDESLOPE_DEVIATION_TAG_ITEM_ID,
+            std::make_shared<GlideslopeDeviationTagItem>(deviationEstimator, container.runwayCollection));
     }
 
     void ApproachBootstrapProvider::BootstrapRadarScreen(

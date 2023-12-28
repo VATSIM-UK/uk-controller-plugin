@@ -30,4 +30,5 @@
 128 - SELCAL Code
 129 - SELCAL Code With Separator
 130 - Missed Approach Indicator
-131 - Relevant ECFMP Flow Measures 
+131 - Relevant ECFMP Flow Measures
+132 - Glideslope Deviation
