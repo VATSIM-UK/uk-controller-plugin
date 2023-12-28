@@ -53,7 +53,7 @@ namespace UKControllerPluginTest::Approach {
         EXPECT_EQ(1, container.flightplanHandler->CountHandlers());
     }
 
-    TEST_F(ApproachBootstrapProviderTest, ItRegistersTheDriftTagItem)
+    TEST_F(ApproachBootstrapProviderTest, ItRegistersTheGlideslopeDeviationTagItem)
     {
         this->RunBootstrapPlugin(provider);
         EXPECT_EQ(1, container.tagHandler->CountHandlers());

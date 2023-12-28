@@ -9,20 +9,20 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Approach {
 
-    class GlideslopeDriftEstimator;
+    class GlideslopeDeviationEstimator;
 
-    class GlideslopeDriftTagItem : public Tag::TagItemInterface
+    class GlideslopeDeviationTagItem : public Tag::TagItemInterface
     {
         public:
-        GlideslopeDriftTagItem(
-            std::shared_ptr<const GlideslopeDriftEstimator> glideslopeDriftEstimator,
+        GlideslopeDeviationTagItem(
+            std::shared_ptr<const GlideslopeDeviationEstimator> glideslopeDeviationEstimator,
             std::shared_ptr<const Runway::RunwayCollection> runways);
         auto GetTagItemDescription(int tagItemId) const -> std::string override;
         void SetTagItemData(Tag::TagData& tagData) override;
 
         private:
-        // The glideslope drift estimator
-        std::shared_ptr<const GlideslopeDriftEstimator> glideslopeDriftEstimator;
+        // The glideslope deviation estimator
+        std::shared_ptr<const GlideslopeDeviationEstimator> glideslopeDeviationEstimator;
 
         // The runways
         std::shared_ptr<const Runway::RunwayCollection> runways;

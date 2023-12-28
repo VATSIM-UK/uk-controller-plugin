@@ -1,14 +1,14 @@
-#include "approach/GlideslopeDriftEstimator.h"
-#include "approach/GlideslopeDriftTagItem.h"
+#include "approach/GlideslopeDeviationEstimator.h"
+#include "approach/GlideslopeDeviationTagItem.h"
 #include "runway/Runway.h"
 #include "runway/RunwayCollection.h"
 #include "tag/TagData.h"
 
 namespace UKControllerPluginTest::Approach {
-    class GlideslopeDriftTagItemTest : public testing::Test
+    class GlideslopeDeviationTagItemTest : public testing::Test
     {
         public:
-        GlideslopeDriftTagItemTest()
+        GlideslopeDeviationTagItemTest()
             : tagData(
                   mockFlightplan,
                   mockRadarTarget,
@@ -19,8 +19,9 @@ namespace UKControllerPluginTest::Approach {
                   &tagColour,
                   &fontSize),
               runways(std::make_shared<UKControllerPlugin::Runway::RunwayCollection>()),
-              glideslopeDriftEstimator(std::make_shared<UKControllerPlugin::Approach::GlideslopeDriftEstimator>()),
-              glideslopeDriftTagItem(glideslopeDriftEstimator, runways)
+              glideslopeDeviationEstimator(
+                  std::make_shared<UKControllerPlugin::Approach::GlideslopeDeviationEstimator>()),
+              glideslopeDeviationTagItem(glideslopeDeviationEstimator, runways)
         {
             // Add a runway to the collection, based on Gatwick's 26L
             EuroScopePlugIn::CPosition pos;
@@ -49,91 +50,91 @@ namespace UKControllerPluginTest::Approach {
         UKControllerPlugin::Tag::TagData tagData;
 
         std::shared_ptr<UKControllerPlugin::Runway::RunwayCollection> runways;
-        std::shared_ptr<UKControllerPlugin::Approach::GlideslopeDriftEstimator> glideslopeDriftEstimator;
-        UKControllerPlugin::Approach::GlideslopeDriftTagItem glideslopeDriftTagItem;
+        std::shared_ptr<UKControllerPlugin::Approach::GlideslopeDeviationEstimator> glideslopeDeviationEstimator;
+        UKControllerPlugin::Approach::GlideslopeDeviationTagItem glideslopeDeviationTagItem;
     };
 
-    TEST_F(GlideslopeDriftTagItemTest, ItHasATagItemDescription)
+    TEST_F(GlideslopeDeviationTagItemTest, ItHasATagItemDescription)
     {
-        EXPECT_EQ("Glideslope Deviation", glideslopeDriftTagItem.GetTagItemDescription(132));
+        EXPECT_EQ("Glideslope Deviation", glideslopeDeviationTagItem.GetTagItemDescription(132));
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItThrowsExceptionIfAskedAboutInvalidTagItem)
+    TEST_F(GlideslopeDeviationTagItemTest, ItThrowsExceptionIfAskedAboutInvalidTagItem)
     {
-        EXPECT_THROW(glideslopeDriftTagItem.GetTagItemDescription(0), std::invalid_argument);
+        EXPECT_THROW(glideslopeDeviationTagItem.GetTagItemDescription(0), std::invalid_argument);
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItSetsTagItemDataWellAboveGlideslope)
+    TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataWellAboveGlideslope)
     {
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2896));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("+448", tagData.GetItemString());
         EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItSetsTagItemDataSlightlyAbove)
+    TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataSlightlyAbove)
     {
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2496));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("+48", tagData.GetItemString());
         EXPECT_EQ(RGB(2, 48, 32), tagData.GetTagColour());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItSetsTagItemDataWellBelowGlideslope)
+    TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataWellBelowGlideslope)
     {
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2000));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("-448", tagData.GetItemString());
         EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItSetsTagItemDataSlightlyBelow)
+    TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataSlightlyBelow)
     {
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2400));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("-48", tagData.GetItemString());
         EXPECT_EQ(RGB(2, 48, 32), tagData.GetTagColour());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItSetsTagItemDataOver1000FeetAboveGlideslope)
+    TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataOver1000FeetAboveGlideslope)
     {
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(5000));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ(">1k", tagData.GetItemString());
         EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItSetsTagItemDataOver1000FeetBelowGlideslope)
+    TEST_F(GlideslopeDeviationTagItemTest, ItSetsTagItemDataOver1000FeetBelowGlideslope)
     {
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(500));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("<1k", tagData.GetItemString());
         EXPECT_EQ(RGB(255, 0, 0), tagData.GetTagColour());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItDoesntSetTagItemDataIfRunwayNotFound)
+    TEST_F(GlideslopeDeviationTagItemTest, ItDoesntSetTagItemDataIfRunwayNotFound)
     {
         ON_CALL(mockFlightplan, GetDestination()).WillByDefault(testing::Return("EGSS"));
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2000));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("Foooooo", tagData.GetItemString());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItDoesntSetTagItemDataIfUpwindOfRunway)
+    TEST_F(GlideslopeDeviationTagItemTest, ItDoesntSetTagItemDataIfUpwindOfRunway)
     {
         EuroScopePlugIn::CPosition aircraftPosition;
         aircraftPosition.m_Latitude = 51.06744;
@@ -141,12 +142,12 @@ namespace UKControllerPluginTest::Approach {
         ON_CALL(mockRadarTarget, GetPosition()).WillByDefault(testing::Return(aircraftPosition));
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2000));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("Foooooo", tagData.GetItemString());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItDoesntSetTagItemDataIfMoreThan15MilesFromLocaliser)
+    TEST_F(GlideslopeDeviationTagItemTest, ItDoesntSetTagItemDataIfMoreThan15MilesFromLocaliser)
     {
         EuroScopePlugIn::CPosition aircraftPosition;
         aircraftPosition.m_Latitude = 51.17575;
@@ -154,12 +155,12 @@ namespace UKControllerPluginTest::Approach {
         ON_CALL(mockRadarTarget, GetPosition()).WillByDefault(testing::Return(aircraftPosition));
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2000));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("Foooooo", tagData.GetItemString());
     }
 
-    TEST_F(GlideslopeDriftTagItemTest, ItDoesntSetTagItemDataIfMoreThan25MilesOut)
+    TEST_F(GlideslopeDeviationTagItemTest, ItDoesntSetTagItemDataIfMoreThan25MilesOut)
     {
         EuroScopePlugIn::CPosition aircraftPosition;
         aircraftPosition.m_Latitude = 54.22613;
@@ -167,7 +168,7 @@ namespace UKControllerPluginTest::Approach {
         ON_CALL(mockRadarTarget, GetPosition()).WillByDefault(testing::Return(aircraftPosition));
         ON_CALL(mockRadarTarget, GetAltitude()).WillByDefault(testing::Return(2000));
 
-        glideslopeDriftTagItem.SetTagItemData(tagData);
+        glideslopeDeviationTagItem.SetTagItemData(tagData);
 
         EXPECT_EQ("Foooooo", tagData.GetItemString());
     }

@@ -1,12 +1,12 @@
-#include "GlideslopeDriftEstimator.h"
+#include "GlideslopeDeviationEstimator.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "runway/Runway.h"
 
 namespace UKControllerPlugin::Approach {
 
-    auto GlideslopeDriftEstimator::CalculateGlideslopeDrift(
+    auto GlideslopeDeviationEstimator::CalculateGlideslopeDeviation(
         const Euroscope::EuroScopeCRadarTargetInterface& radarTarget, const Runway::Runway& runway) const
-        -> GlideslopeDrift
+        -> GlideslopeDeviation
     {
         // Calculate the slope of each line
         const auto runwaySlope = runway.RunwayHeadingLineSlope();
@@ -23,7 +23,7 @@ namespace UKControllerPlugin::Approach {
         const auto distance = runway.Threshold().DistanceTo(intersection);
 
         return {
-            .drift = radarTarget.GetAltitude() - runway.GlideslopeAltitudeAtDistance(distance),
+            .deviation = radarTarget.GetAltitude() - runway.GlideslopeAltitudeAtDistance(distance),
             .perpendicularDistanceFromLocaliser = radarTarget.GetPosition().DistanceTo(intersection),
             .localiserRange = distance};
     }

@@ -56,10 +56,10 @@ set(src__approach
         approach/ApproachSequencerDisplayAsrLoader.cpp approach/ApproachSequencerDisplayAsrLoader.h
         approach/ToggleApproachSequencerDisplay.cpp approach/ToggleApproachSequencerDisplay.h
         approach/SequencerAirfieldSelector.cpp approach/SequencerAirfieldSelector.h approach/AircraftSelectionProvider.cpp approach/AircraftSelectionProvider.h approach/TargetSelectorList.cpp approach/TargetSelectorList.h approach/ApproachSpacingCalculator.cpp approach/ApproachSpacingCalculator.h approach/ApproachSequencerOptions.cpp approach/ApproachSequencerOptions.h approach/AirfieldApproachOptions.h approach/ApproachSequencerOptionsLoader.cpp approach/ApproachSequencerOptionsLoader.h approach/AirfieldTargetSelectorList.cpp approach/AirfieldTargetSelectorList.h approach/ApproachSequencerDistanceOptions.cpp approach/ApproachSequencerDistanceOptions.h approach/RemoveLandedAircraft.cpp approach/RemoveLandedAircraft.h approach/ApproachFlightplanEventHandler.cpp approach/ApproachFlightplanEventHandler.h
-        approach/GlideslopeDriftEstimator.h
-        approach/GlideslopeDriftEstimator.cpp
-        approach/GlideslopeDriftTagItem.cpp
-        approach/GlideslopeDriftTagItem.h)
+        approach/GlideslopeDeviationEstimator.h
+        approach/GlideslopeDeviationEstimator.cpp
+        approach/GlideslopeDeviationTagItem.cpp
+        approach/GlideslopeDeviationTagItem.h)
 source_group("src\\approach" FILES ${src__approach})
 
 set(src__bootstrap

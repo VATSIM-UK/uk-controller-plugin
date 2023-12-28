@@ -1,5 +1,5 @@
-#include "GlideslopeDriftEstimator.h"
-#include "GlideslopeDriftTagItem.h"
+#include "GlideslopeDeviationEstimator.h"
+#include "GlideslopeDeviationTagItem.h"
 #include "euroscope/EuroScopeCFlightPlanInterface.h"
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "runway/Runway.h"
@@ -7,16 +7,16 @@
 #include "tag/TagData.h"
 
 namespace UKControllerPlugin::Approach {
-    GlideslopeDriftTagItem::GlideslopeDriftTagItem(
-        std::shared_ptr<const GlideslopeDriftEstimator> glideslopeDriftEstimator,
+    GlideslopeDeviationTagItem::GlideslopeDeviationTagItem(
+        std::shared_ptr<const GlideslopeDeviationEstimator> glideslopeDeviationEstimator,
         std::shared_ptr<const Runway::RunwayCollection> runways)
-        : glideslopeDriftEstimator(glideslopeDriftEstimator), runways(runways)
+        : glideslopeDeviationEstimator(glideslopeDeviationEstimator), runways(runways)
     {
-        assert(this->glideslopeDriftEstimator != nullptr && "Glideslope drift estimator cannot be null");
+        assert(this->glideslopeDeviationEstimator != nullptr && "Glideslope deviation estimator cannot be null");
         assert(this->runways != nullptr && "Runways cannot be null");
     }
 
-    std::string GlideslopeDriftTagItem::GetTagItemDescription(int tagItemId) const
+    std::string GlideslopeDeviationTagItem::GetTagItemDescription(int tagItemId) const
     {
         switch (tagItemId) {
         case 132:
@@ -26,7 +26,7 @@ namespace UKControllerPlugin::Approach {
         }
     }
 
-    void GlideslopeDriftTagItem::SetTagItemData(Tag::TagData& tagData)
+    void GlideslopeDeviationTagItem::SetTagItemData(Tag::TagData& tagData)
     {
         const auto& flightplan = tagData.GetFlightplan();
 
@@ -43,34 +43,35 @@ namespace UKControllerPlugin::Approach {
             return;
         }
 
-        // Calculate the drift and make sure we're somewhat close
-        const auto drift = glideslopeDriftEstimator->CalculateGlideslopeDrift(tagData.GetRadarTarget(), *runway);
-        if (drift.perpendicularDistanceFromLocaliser > 15) {
+        // Calculate the deviation and make sure we're somewhat close
+        const auto deviation =
+            glideslopeDeviationEstimator->CalculateGlideslopeDeviation(tagData.GetRadarTarget(), *runway);
+        if (deviation.perpendicularDistanceFromLocaliser > 15) {
             return;
         }
 
-        if (drift.localiserRange > 25) {
+        if (deviation.localiserRange > 25) {
             return;
         }
 
-        // Set the tag colour based on the drift
-        if (std::abs(drift.drift) < 300) {
+        // Set the tag colour based on the deviation
+        if (std::abs(deviation.deviation) < 300) {
             tagData.SetTagColour(RGB(2, 48, 32));
         } else {
             tagData.SetTagColour(RGB(255, 0, 0));
         }
 
         // If we're massively out, abbreviate the string
-        if (drift.drift > 999) {
+        if (deviation.deviation > 999) {
             tagData.SetItemString(">1k");
             return;
-        } else if (drift.drift < -999) {
+        } else if (deviation.deviation < -999) {
             tagData.SetItemString("<1k");
             return;
         }
 
         // Set the tag item string
-        const auto driftSign = drift.drift >= 0 ? "+" : "";
-        tagData.SetItemString(driftSign + std::to_string(drift.drift));
+        const auto deviationSign = deviation.deviation >= 0 ? "+" : "";
+        tagData.SetItemString(deviationSign + std::to_string(deviation.deviation));
     }
 } // namespace UKControllerPlugin::Approach

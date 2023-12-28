@@ -16,6 +16,6 @@ namespace UKControllerPlugin::Approach {
             const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory) override;
 
         private:
-        const int DRIFT_TAG_ITEM_ID = 132;
+        const int GLIDESLOPE_DEVIATION_TAG_ITEM_ID = 132;
     };
 } // namespace UKControllerPlugin::Approach
