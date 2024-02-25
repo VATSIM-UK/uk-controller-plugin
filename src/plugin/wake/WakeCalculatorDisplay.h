@@ -34,6 +34,7 @@ namespace UKControllerPlugin::Wake {
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             int screenObjectId);
         [[nodiscard]] auto IsVisible() const -> bool override;
+        [[nodiscard]] auto IsCollapsed() const -> bool;
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
             int objectId,
@@ -91,9 +92,6 @@ namespace UKControllerPlugin::Wake {
         // For getting flightplans
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
-        // The screen object id for click
-        const int screenObjectId;
-
         // The titlebar
         std::shared_ptr<Components::TitleBar> titleBar;
 
@@ -137,8 +135,13 @@ namespace UKControllerPlugin::Wake {
         const std::string ASR_DESCRIPTION_X_POS = "Wake Calculator X Position";
         const std::string ASR_KEY_Y_POS = "wakeCalculatorYPosition";
         const std::string ASR_DESCRIPTION_Y_POS = "Wake Calculator Y Position";
+        const std::string ASR_KEY_COLLAPSED = "wakeCalculatorCollapsed";
+        const std::string ASR_DESCRIPTION_COLLAPSED = "Wake Calculator Collapsed";
 
         // Visibility
         bool visible = false;
+
+        // Content collapsed
+        bool contentCollapsed = false;
     };
 } // namespace UKControllerPlugin::Wake

@@ -45,6 +45,15 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_FALSE(display.IsVisible());
     }
 
+    TEST_F(WakeCalculatorDisplayTest, ItCanBeCollapsedByClickButton)
+    {
+        EXPECT_FALSE(display.IsCollapsed());
+        display.LeftClick(radarScreen, 1, "collapseButton", {1, 2}, {});
+        EXPECT_TRUE(display.IsCollapsed());
+        display.LeftClick(radarScreen, 1, "collapseButton", {1, 2}, {});
+        EXPECT_FALSE(display.IsCollapsed());
+    }
+
     TEST_F(WakeCalculatorDisplayTest, ItHasADefaultPosition)
     {
         const auto position = display.Position();
@@ -71,7 +80,7 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsPosition)
     {
-        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(1).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(2).WillRepeatedly(testing::Return(""));
 
         EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorXPosition")).Times(1).WillOnce(testing::Return("250"));
 
@@ -85,7 +94,7 @@ namespace UKControllerPluginTest::Wake {
 
     TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsVisibility)
     {
-        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(2).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
 
         EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorVisibility")).Times(1).WillOnce(testing::Return("1"));
 
@@ -93,10 +102,20 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_TRUE(display.IsVisible());
     }
 
+    TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsCollapsed)
+    {
+        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
+
+        EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorCollapsed")).Times(1).WillOnce(testing::Return("1"));
+
+        display.AsrLoadedEvent(userSettings);
+        EXPECT_TRUE(display.IsCollapsed());
+    }
+
     TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsDefaultPosition)
     {
         display.Move({300, 400, 500, 600}, "");
-        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(1).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(2).WillRepeatedly(testing::Return(""));
         EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorXPosition")).Times(1).WillOnce(testing::Return(""));
         EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorYPosition")).Times(1).WillOnce(testing::Return(""));
 
@@ -109,11 +128,21 @@ namespace UKControllerPluginTest::Wake {
     TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsDefaultVisibility)
     {
         display.Toggle();
-        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(2).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
         EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorVisibility")).Times(1).WillOnce(testing::Return(""));
 
         display.AsrLoadedEvent(userSettings);
         EXPECT_FALSE(display.IsVisible());
+    }
+
+    TEST_F(WakeCalculatorDisplayTest, AsrLoadingLoadsDefaultCollapsed)
+    {
+        display.Toggle();
+        EXPECT_CALL(mockAsrProvider, GetKey(testing::_)).Times(3).WillRepeatedly(testing::Return(""));
+        EXPECT_CALL(mockAsrProvider, GetKey("wakeCalculatorCollapsed")).Times(1).WillOnce(testing::Return(""));
+
+        display.AsrLoadedEvent(userSettings);
+        EXPECT_FALSE(display.IsCollapsed());
     }
 
     TEST_F(WakeCalculatorDisplayTest, AsrClosingSavesFields)
@@ -123,6 +152,7 @@ namespace UKControllerPluginTest::Wake {
         EXPECT_CALL(mockAsrProvider, SetKey("wakeCalculatorVisibility", "Wake Calculator Visibility", "1")).Times(1);
         EXPECT_CALL(mockAsrProvider, SetKey("wakeCalculatorXPosition", "Wake Calculator X Position", "300")).Times(1);
         EXPECT_CALL(mockAsrProvider, SetKey("wakeCalculatorYPosition", "Wake Calculator Y Position", "400")).Times(1);
+        EXPECT_CALL(mockAsrProvider, SetKey("wakeCalculatorCollapsed", "Wake Calculator Collapsed", "0")).Times(1);
 
         display.AsrClosingEvent(userSettings);
     }
