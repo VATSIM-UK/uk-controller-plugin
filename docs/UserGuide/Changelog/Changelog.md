@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+# [5.16.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.15.0...5.16.0) (2024-02-25)
+
+
+### Features
+
+* make wake calculator collapsible ([88869ac](https://github.com/VATSIM-UK/uk-controller-plugin/commit/88869ac1e211741b5b2fd2b9345ea779619f9d01))
+
 # [5.15.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.14.0...5.15.0) (2023-12-28)
 
 
