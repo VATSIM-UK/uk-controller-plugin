@@ -6,7 +6,7 @@
 #include "WakeCalculatorOptions.h"
 #include "WakeIntervalFormatter.h"
 #include "components/ClickableArea.h"
-#include "components/TitleBar.h"
+#include "components/CollapsibleWindowTitleBar.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
@@ -27,11 +27,11 @@ namespace UKControllerPlugin::Wake {
         int screenObjectId)
         : options(std::move(options)), leadCallsignSelector(std::move(leadCallsignSelector)),
           followCallsignSelector(std::move(followCallsignSelector)), wakeSchemeSelector(std::move(wakeSchemeSelector)),
-          plugin(plugin), screenObjectId(screenObjectId),
-          titleBar(Components::TitleBar::Create(L"Wake Turbulence Calculator", TitleBarArea())
-                       ->WithDrag(this->screenObjectId)
-                       ->WithDefaultBackgroundBrush()
-                       ->WithDefaultTextBrush()),
+          plugin(plugin), titleBar(Components::CollapsibleWindowTitleBar::Create(
+                              L"Wake Turbulence Calculator",
+                              TitleBarArea(),
+                              [this]() -> bool { return this->contentCollapsed; },
+                              screenObjectId)),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
           textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR)),
           resultBrush(std::make_shared<Gdiplus::SolidBrush>(RESULT_COLOUR)),
@@ -86,6 +86,11 @@ namespace UKControllerPlugin::Wake {
             options->FollowingAircraft("");
             return;
         }
+
+        if (objectDescription == "collapseButton") {
+            this->contentCollapsed = !this->contentCollapsed;
+            return;
+        }
     }
 
     void WakeCalculatorDisplay::Move(RECT position, std::string objectDescription)
@@ -138,14 +143,19 @@ namespace UKControllerPlugin::Wake {
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
         graphics.Translated(windowPosition.x, windowPosition.y, [&graphics, &radarScreen, this]() {
-            graphics.FillRect(this->contentArea, *backgroundBrush);
-            this->RenderScheme(graphics, radarScreen);
-            this->RenderIntermediate(graphics, radarScreen);
-            this->RenderMode(graphics, radarScreen);
-            this->RenderLead(graphics, radarScreen);
-            this->RenderFollowing(graphics, radarScreen);
-            this->RenderDividingLine(graphics);
-            this->RenderSeparationRequirement(graphics);
+            // Draw the content if not collapsed
+            if (!this->contentCollapsed) {
+                graphics.FillRect(this->contentArea, *backgroundBrush);
+                this->RenderScheme(graphics, radarScreen);
+                this->RenderIntermediate(graphics, radarScreen);
+                this->RenderMode(graphics, radarScreen);
+                this->RenderLead(graphics, radarScreen);
+                this->RenderFollowing(graphics, radarScreen);
+                this->RenderDividingLine(graphics);
+                this->RenderSeparationRequirement(graphics);
+            }
+
+            // Do title bar, so it's always on top.
             titleBar->Draw(graphics, radarScreen);
         });
     }
@@ -164,6 +174,7 @@ namespace UKControllerPlugin::Wake {
              0},
             "");
         this->visible = userSetting.GetBooleanEntry(ASR_KEY_VISIBILITY, false);
+        this->contentCollapsed = userSetting.GetBooleanEntry(ASR_KEY_COLLAPSED, false);
     }
 
     void WakeCalculatorDisplay::AsrClosingEvent(Euroscope::UserSetting& userSetting)
@@ -171,6 +182,7 @@ namespace UKControllerPlugin::Wake {
         userSetting.Save(ASR_KEY_X_POS, ASR_DESCRIPTION_X_POS, windowPosition.x);
         userSetting.Save(ASR_KEY_Y_POS, ASR_DESCRIPTION_Y_POS, windowPosition.y);
         userSetting.Save(ASR_KEY_VISIBILITY, ASR_DESCRIPTION_VISIBILITY, visible);
+        userSetting.Save(ASR_KEY_COLLAPSED, ASR_DESCRIPTION_COLLAPSED, contentCollapsed);
     }
 
     auto WakeCalculatorDisplay::TitleBarArea() -> Gdiplus::Rect
@@ -360,5 +372,10 @@ namespace UKControllerPlugin::Wake {
     void WakeCalculatorDisplay::Toggle()
     {
         this->visible = !this->visible;
+    }
+
+    auto WakeCalculatorDisplay::IsCollapsed() const -> bool
+    {
+        return this->contentCollapsed;
     }
 } // namespace UKControllerPlugin::Wake
