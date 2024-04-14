@@ -14,7 +14,7 @@ namespace UKControllerPlugin::IntentionCode {
     nlohmann::json IntentionCodeUpdatedMessage::GetMessageData() const
     {
         return nlohmann::json{
-            {"callsign", "\xFF" + this->callsign},
+            {"callsign", this->callsign},
             {"exit_point", this->exitPoint},
             {"code", this->code},
         };
