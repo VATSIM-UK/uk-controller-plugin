@@ -7,14 +7,14 @@ namespace UKControllerPluginUtils::Log {
 
     struct ApiLogger::Impl
     {
-        [[nodiscard]]
-        auto CreatePayloadNoMetadata(const std::string& type, const std::string& message) const -> nlohmann::json
+        [[nodiscard]] auto CreatePayloadNoMetadata(const std::string& type, const std::string& message) const
+            -> nlohmann::json
         {
             return {{"type", type}, {"message", message}, {"metadata", PluginVersionMetadata().dump()}};
         }
 
-        [[nodiscard]]
-        auto CreatePayload(const std::string& type, const std::string& message, const nlohmann::json& metadata) const
+        [[nodiscard]] auto
+        CreatePayload(const std::string& type, const std::string& message, const nlohmann::json& metadata) const
             -> nlohmann::json
         {
             auto metadataWithVersion = PluginVersionMetadata();
