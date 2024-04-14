@@ -28,7 +28,7 @@ namespace UKControllerPlugin::Integration {
 
                 const auto metadata = nlohmann::json{
                     {"json_without_strict",
-                     message->ToJson().dump(-1, ' ', false, nlohmann::json::error_handler_t::ignore)},
+                     message->ToJson().dump(-1, ' ', false, nlohmann::json::error_handler_t::replace)},
                     {"exception", exception.what()}};
 
                 ApiLogger().Log("INTEGRATION_INVALID_JSON", "Failed to log integration message", metadata);
