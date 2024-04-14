@@ -17,5 +17,8 @@ namespace UKControllerPlugin::Integration {
 
         private:
         const std::shared_ptr<IntegrationClientManager> clientManager;
+
+        // Array to ensure we only log the same message type once
+        mutable std::set<std::string> apiLoggedTypes;
     };
 } // namespace UKControllerPlugin::Integration

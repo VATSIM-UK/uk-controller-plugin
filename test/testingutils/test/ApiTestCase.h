@@ -1,5 +1,8 @@
 #pragma once
 #include "ApiMethodExpectation.h"
+#include "ApiUriExpectation.h"
+#include "ApiRequestExpectation.h"
+#include "ApiResponseExpectation.h"
 
 namespace UKControllerPluginUtils::Api {
     class ApiFactory;
@@ -24,8 +27,8 @@ namespace UKControllerPluginTest {
         [[nodiscard]] auto DontExpectApiRequest() -> std::shared_ptr<ApiMethodExpectation>;
         void ExpectNoApiRequests();
         void AwaitApiCallCompletion();
-        [[nodiscard]] auto SettingsProvider()
-            -> testing::NiceMock<UKControllerPluginUtilsTest::Api::MockApiSettingsProvider>&;
+        [[nodiscard]] auto
+        SettingsProvider() -> testing::NiceMock<UKControllerPluginUtilsTest::Api::MockApiSettingsProvider>&;
 
         private:
         std::shared_ptr<UKControllerPluginUtils::Api::ApiSettings> settings;

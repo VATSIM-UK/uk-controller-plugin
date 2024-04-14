@@ -69,6 +69,7 @@ source_group("test\\http" FILES ${test__http})
 
 set(test__log
     "log/LoggerBootstrapTest.cpp"
+        log/ApiLoggerTest.cpp
 )
 source_group("test\\log" FILES ${test__log})
 

@@ -10,6 +10,7 @@
 #include "curl/CurlApi.h"
 #include "eventhandler/EventBus.h"
 #include "eventhandler/EventHandlerFlags.h"
+#include "log/ApiLogger.h"
 #include "setting/SettingRepository.h"
 #include "setting/JsonFileSettingProvider.h"
 
@@ -42,6 +43,10 @@ namespace UKControllerPluginUtils::Api {
             EventHandler::EventHandlerFlags::Async);
 
         SetApiRequestFactory(factory);
+
+        // Create an API logger here and set globally
+        SetApiLoggerInstance(std::make_shared<Log::ApiLogger>());
+
         return factory;
     }
 
