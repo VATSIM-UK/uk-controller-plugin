@@ -1,5 +1,6 @@
 #include "log/ApiLogger.h"
 #include "test/ApiTestCase.h"
+#include "update/PluginVersion.h"
 
 namespace UKControllerPluginUtilsTest::Api {
     class ApiLoggerTest : public UKControllerPluginTest::ApiTestCase
@@ -9,13 +10,16 @@ namespace UKControllerPluginUtilsTest::Api {
         {
         }
 
+        const nlohmann::json expectedPluginVersionMetadata = {
+            {"plugin_version", UKControllerPlugin::Plugin::PluginVersion::version}};
+
         UKControllerPluginUtils::Log::ApiLogger logger;
     };
 
     TEST_F(ApiLoggerTest, ItLogsSync)
     {
         const nlohmann::json expectedPayload = {
-            {"type", "type"}, {"message", "message"}, {"plugin_version", "#VERSION_STRING#"}};
+            {"type", "type"}, {"message", "message"}, {"metadata", expectedPluginVersionMetadata.dump()}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.Log("type", "message");
@@ -23,12 +27,10 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiLoggerTest, ItLogsSyncWithMetadata)
     {
-        const nlohmann::json metadata = {{"key", "value"}};
+        nlohmann::json metadata = {{"key", "value"}};
+        metadata.update(expectedPluginVersionMetadata);
         const nlohmann::json expectedPayload = {
-            {"type", "type"},
-            {"message", "message"},
-            {"metadata", metadata.dump()},
-            {"plugin_version", "#VERSION_STRING#"}};
+            {"type", "type"}, {"message", "message"}, {"metadata", metadata.dump()}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.Log("type", "message", metadata);
@@ -37,7 +39,7 @@ namespace UKControllerPluginUtilsTest::Api {
     TEST_F(ApiLoggerTest, ItLogsAsync)
     {
         const nlohmann::json expectedPayload = {
-            {"type", "type"}, {"message", "message"}, {"plugin_version", "#VERSION_STRING#"}};
+            {"type", "type"}, {"message", "message"}, {"metadata", expectedPluginVersionMetadata.dump()}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.LogAsync("type", "message");
@@ -45,12 +47,10 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiLoggerTest, ItLogsAsyncWithMetadata)
     {
-        const nlohmann::json metadata = {{"key", "value"}};
+        nlohmann::json metadata = {{"key", "value"}};
+        metadata.update(expectedPluginVersionMetadata);
         const nlohmann::json expectedPayload = {
-            {"type", "type"},
-            {"message", "message"},
-            {"metadata", metadata.dump()},
-            {"plugin_version", "#VERSION_STRING#"}};
+            {"type", "type"}, {"message", "message"}, {"metadata", metadata.dump()}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.LogAsync("type", "message", metadata);
