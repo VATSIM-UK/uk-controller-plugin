@@ -14,7 +14,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiLoggerTest, ItLogsSync)
     {
-        const nlohmann::json expectedPayload = {{"type", "type"}, {"message", "message"}};
+        const nlohmann::json expectedPayload = {{"type", "type"}, {"message", "message"}, {"plugin_version", "#VERSION_STRING#"}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.Log("type", "message");
@@ -24,7 +24,7 @@ namespace UKControllerPluginUtilsTest::Api {
     {
         const nlohmann::json metadata = {{"key", "value"}};
         const nlohmann::json expectedPayload = {
-            {"type", "type"}, {"message", "message"}, {"metadata", metadata.dump()}};
+            {"type", "type"}, {"message", "message"}, {"metadata", metadata.dump()}, {"plugin_version", "#VERSION_STRING#"}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.Log("type", "message", metadata);
@@ -32,7 +32,7 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiLoggerTest, ItLogsAsync)
     {
-        const nlohmann::json expectedPayload = {{"type", "type"}, {"message", "message"}};
+        const nlohmann::json expectedPayload = {{"type", "type"}, {"message", "message"}, {"plugin_version", "#VERSION_STRING#"}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.LogAsync("type", "message");
@@ -42,7 +42,7 @@ namespace UKControllerPluginUtilsTest::Api {
     {
         const nlohmann::json metadata = {{"key", "value"}};
         const nlohmann::json expectedPayload = {
-            {"type", "type"}, {"message", "message"}, {"metadata", metadata.dump()}};
+            {"type", "type"}, {"message", "message"}, {"metadata", metadata.dump()}, {"plugin_version", "#VERSION_STRING#"}};
 
         this->ExpectApiRequest()->Post().To("plugin/logs").WithBody(expectedPayload).WillReturnCreated();
         logger.LogAsync("type", "message", metadata);
