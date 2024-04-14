@@ -7,15 +7,14 @@ namespace UKControllerPluginUtils::Log {
 
     struct ApiLogger::Impl
     {
-        [[nodiscard]] auto CreatePayloadNoMetadata(const std::string& type, const std::string& message) const
-            -> nlohmann::json
+        [[nodiscard]] auto
+        CreatePayloadNoMetadata(const std::string& type, const std::string& message) const -> nlohmann::json
         {
             return {{"type", type}, {"message", message}, {"metadata", PluginVersionMetadata().dump()}};
         }
 
-        [[nodiscard]] auto
-        CreatePayload(const std::string& type, const std::string& message, const nlohmann::json& metadata) const
-            -> nlohmann::json
+        [[nodiscard]] auto CreatePayload(
+            const std::string& type, const std::string& message, const nlohmann::json& metadata) const -> nlohmann::json
         {
             auto metadataWithVersion = PluginVersionMetadata();
             metadataWithVersion.update(metadata);
@@ -31,6 +30,15 @@ namespace UKControllerPluginUtils::Log {
         {
             ApiRequest()
                 .Post("plugin/logs", data)
+                .Then([](const UKControllerPluginUtils::Api::Response& response) {
+                    const auto data = response.Data();
+                    if (!data.is_object() || !data.contains("id") || !data["id"].is_string()) {
+                        LogError("Failed to send log to API, response was not as expected");
+                        return;
+                    }
+
+                    LogInfo("Log sent to API with ID " + data["id"].get<std::string>());
+                })
                 .Catch([](const Api::ApiRequestException& exception) {
                     LogError(
                         "Failed to send log to API, status code was " +

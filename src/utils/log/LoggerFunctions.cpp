@@ -58,7 +58,6 @@ void LogFatalExceptionAndRethrow(const std::string& source, const std::exception
 
     try {
         ApiLogger().Log("FATAL_EXCEPTION", exceptionMessage);
-        throw;
     } catch (const std::exception& e) {
         LogCritical("Exception caught in LogFatalExceptionAndRethrow: " + std::string(e.what()));
     }
