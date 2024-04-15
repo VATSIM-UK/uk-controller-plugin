@@ -1,5 +1,8 @@
 #pragma once
 #include "ApiMethodExpectation.h"
+#include "ApiUriExpectation.h"
+#include "ApiRequestExpectation.h"
+#include "ApiResponseExpectation.h"
 
 namespace UKControllerPluginUtils::Api {
     class ApiFactory;

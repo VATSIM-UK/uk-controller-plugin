@@ -132,6 +132,9 @@ set(log
     "log/LoggerBootstrap.h"
     "log/LoggerFunctions.cpp"
     "log/LoggerFunctions.h"
+        log/ApiLogger.cpp
+        log/ApiLogger.h
+        log/ApiLoggerInterface.h
 )
 source_group("log" FILES ${log})
 
