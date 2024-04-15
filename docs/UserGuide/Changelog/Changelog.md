@@ -1,5 +1,18 @@
 # UK Controller Plugin Changelog
 
+# [5.17.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.16.0...5.17.0) (2024-04-15)
+
+
+### Bug Fixes
+
+* log plugin log id ([b199bd9](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b199bd99b43ead23d4de819451da27d0c6ef79a2))
+* remove testing code ([9576373](https://github.com/VATSIM-UK/uk-controller-plugin/commit/957637362bcc09f0e9993be50a11f47af7c34f12))
+
+
+### Features
+
+* log fatal exceptions to the api ([cd500c0](https://github.com/VATSIM-UK/uk-controller-plugin/commit/cd500c03676b2db7b8bbe4c134e5df2ba12f630e))
+
 # [5.16.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.15.0...5.16.0) (2024-02-25)
 
 
