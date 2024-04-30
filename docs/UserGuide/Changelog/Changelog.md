@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.17.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.0...5.17.1) (2024-04-30)
+
+
+### Bug Fixes
+
+* change user create api key path ([1cfacd2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/1cfacd21636239614d39621103899032129d950d))
+
 # [5.17.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.16.0...5.17.0) (2024-04-15)
 
 
