@@ -131,19 +131,19 @@ jobs:
 
       # Upload artifacts
       - name: Upload Core Binary As Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UKControllerPluginCore.dll
           path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Upload Updater Binary As Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UKControllerPluginUpdater.dll
           path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Upload Loader Binary As Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UKControllerPlugin.dll
           path: ".\\build\\bin\\UKControllerPlugin.dll"
