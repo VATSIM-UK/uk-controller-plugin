@@ -118,7 +118,7 @@ jobs:
       # Do Srclinting
       - name: Get Changed Files (Src)
         id: changed-files-src
-        uses: Ana06/get-changed-files@v2.0.0
+        uses: Ana06/get-changed-files@v2.3.0
         with:
           filter: |
             src/**/*.cpp
@@ -166,7 +166,7 @@ jobs:
 
       - name: Get All Changed Files
         id: changed-files
-        uses: Ana06/get-changed-files@v2.0.0
+        uses: Ana06/get-changed-files@v2.3.0
         with:
           filter: |
             src/**/*.cpp
