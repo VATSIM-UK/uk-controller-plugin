@@ -1139,7 +1139,6 @@ if(MSVC)
         /sdl;
         /W4;
         /WX;
-        -Wno-vla-cxx-extension;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         /Zm200;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}

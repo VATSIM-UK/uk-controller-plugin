@@ -102,7 +102,6 @@ if(MSVC)
         /std:c++20;
         /W4;
         /WX;
-        -Wno-cast-function-type-mismatch;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )
