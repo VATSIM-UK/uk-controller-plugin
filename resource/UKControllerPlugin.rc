@@ -48,17 +48,17 @@ END
 // WAVE
 //
 
-IDR_WAVE1               WAVE                    ".\\sound\\beep.wav"
+IDR_WAVE1               WAVE                    "sound/beep.wav"
 
-WAVE_DEP_RLS_ACCEPT     WAVE                    ".\\sound\\departure_release_accepted.wav"
+WAVE_DEP_RLS_ACCEPT     WAVE                    "sound/departure_release_accepted.wav"
 
-WAVE_DEP_RLS_REJ        WAVE                    ".\\sound\\departure_release_rejected.wav"
+WAVE_DEP_RLS_REJ        WAVE                    "sound/departure_release_rejected.wav"
 
-WAVE_DEP_RLS_REQ        WAVE                    ".\\sound\\departure_release_requested.wav"
+WAVE_DEP_RLS_REQ        WAVE                    "sound/departure_release_requested.wav"
 
-WAVE_NEW_PRENOTE        WAVE                    "sound\\new_prenote.wav"
+WAVE_NEW_PRENOTE        WAVE                    "sound/new_prenote.wav"
 
-WAVE_MISSED_APPROACH    WAVE                    "sound\\missedapproach.wav"
+WAVE_MISSED_APPROACH    WAVE                    "sound/missedapproach.wav"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -614,7 +614,7 @@ END
 // RT_MANIFEST
 //
 
-2                       RT_MANIFEST             "..\\src\\plugin\\plugin.manifest"
+2                       RT_MANIFEST             "../src/plugin/plugin.manifest"
 
 #endif    // English (United Kingdom) resources
 /////////////////////////////////////////////////////////////////////////////
