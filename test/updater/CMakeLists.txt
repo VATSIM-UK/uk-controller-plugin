@@ -107,6 +107,7 @@ if(MSVC)
         /std:c++20;
         /W4;
         /WX;
+        -Wno-cast-function-type-mismatch;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )
     target_link_options(${PROJECT_NAME} PRIVATE

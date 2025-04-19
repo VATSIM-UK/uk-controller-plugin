@@ -775,6 +775,7 @@ if(MSVC)
         /sdl;
         /W4;
         /WX;
+        -Wno-vla-cxx-extension;
         -ftime-trace;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
