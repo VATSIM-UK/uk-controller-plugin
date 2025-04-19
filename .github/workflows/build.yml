@@ -83,7 +83,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
@@ -212,7 +212,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
