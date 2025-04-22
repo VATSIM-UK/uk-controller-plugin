@@ -146,10 +146,10 @@ namespace UKControllerPlugin::IntentionCode {
                 std::move(metadata)));
         }
 
-        // Add full airfield icao fallback
+        // Add blank as fallback
         collection->Add(std::make_shared<IntentionCodeModel>(
             -1,
-            std::make_unique<FullAirfieldIdentifier>(),
+            std::make_unique<SingleCode>(""),
             std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
             std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)));
 
