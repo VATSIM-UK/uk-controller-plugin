@@ -23,6 +23,7 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
 #include "eventhandler/EventBusBootstrap.h"
+#include "filestatus/FileStatusModule.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
 #include "flightrule/FlightRuleModule.h"
@@ -167,6 +168,9 @@ namespace UKControllerPlugin {
             LoggerBootstrap::Bootstrap(*this->container->windows, L"plugin");
             LogInfo("Plugin loaded as primary instance");
         }
+
+        LogInfo("Checking UKCPa is up to date");
+        UKControllerPlugin::FileStatus::FileStatusModule::BootstrapPlugin(*this->container);
 
         // User messager
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
