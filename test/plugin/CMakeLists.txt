@@ -825,7 +825,7 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "libcurl_a_debug"
     ">"
     "$<$<CONFIG:Release>:"
-        "EuroScopePluginDll;"
+        "EuroScopePlugInDll;"
         "libcurl_a"
     ">"
     "gdiplus;"
