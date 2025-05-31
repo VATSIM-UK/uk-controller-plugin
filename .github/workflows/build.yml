@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout Code and Submodules
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
@@ -36,7 +36,7 @@ jobs:
       # cURL
       - name: Cache cURL
         id: cache-curl
-        uses: actions/cache@v2.1.3
+        uses: actions/cache@v4
         with:
           path: "C:\\hostedtoolcache\\windows\\libcurl"
           key: "ukcp-curl-build"
@@ -65,7 +65,7 @@ jobs:
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
 
@@ -74,7 +74,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Load Yarn Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -83,7 +83,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
@@ -118,7 +118,7 @@ jobs:
       # Do Srclinting
       - name: Get Changed Files (Src)
         id: changed-files-src
-        uses: Ana06/get-changed-files@v2.0.0
+        uses: Ana06/get-changed-files@v2.3.0
         with:
           filter: |
             src/**/*.cpp
@@ -131,19 +131,19 @@ jobs:
 
       # Upload artifacts
       - name: Upload Core Binary As Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UKControllerPluginCore.dll
           path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Upload Updater Binary As Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UKControllerPluginUpdater.dll
           path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Upload Loader Binary As Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: UKControllerPlugin.dll
           path: ".\\build\\bin\\UKControllerPlugin.dll"
@@ -156,7 +156,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
@@ -166,7 +166,7 @@ jobs:
 
       - name: Get All Changed Files
         id: changed-files
-        uses: Ana06/get-changed-files@v2.0.0
+        uses: Ana06/get-changed-files@v2.3.0
         with:
           filter: |
             src/**/*.cpp
@@ -188,13 +188,13 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: '16'
 
@@ -203,7 +203,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Load Yarn Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -212,7 +212,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
@@ -223,19 +223,19 @@ jobs:
 
       # Download build artifacts
       - name: Download Core Binary
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: UKControllerPluginCore.dll
           path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Download Updater Binary
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: UKControllerPluginUpdater.dll
           path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Download Loader Binary
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: UKControllerPlugin.dll
           path: ".\\build\\bin\\UKControllerPlugin.dll"
