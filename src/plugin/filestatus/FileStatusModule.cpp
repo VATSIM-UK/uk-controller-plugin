@@ -12,7 +12,7 @@
 namespace UKControllerPlugin::FileStatus {
 
     const std::string PACK_VERSION_URL = "http://docs.vatsim.uk/General/Software%20Downloads/Files/pack_version.txt";
-    const std::string PACK_VERSION_PATH = "./UK/Data/Plugin/Sector/pack_version.txt"; // local
+    const std::string PACK_VERSION_PATH = "./UK/Data/Sector/pack_version.txt"; // local
     const std::string SECTOR_FILE_DOWNLOADER_PATH = "./UK/Data/Sector/VATUK_SectorFileProviderDescriptor.txt";
     const std::string SECTOR_FILE_DOWNLOADER_LINK =
         "http://docs.vatsim.uk/General/Software%20Downloads/Files/VATUK_Euroscope_files.txt";
