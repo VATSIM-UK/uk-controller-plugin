@@ -2,7 +2,7 @@
 
 namespace UKControllerPlugin::Datablock {
 
-    int FREQUENCY_BUFFER_LENGTH = 8;
+    const int FREQUENCY_BUFFER_LENGTH = 8;
     const std::regex flightLevelRegex("^(?:FL)?(\\d{2,3})$|^(\\d{4,5})$");
 
     int ConvertAltitudeToFlightLevel(int altitude)
