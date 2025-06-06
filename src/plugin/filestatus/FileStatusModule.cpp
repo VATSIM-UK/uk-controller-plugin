@@ -17,7 +17,7 @@ namespace UKControllerPlugin::FileStatus {
     const std::string SECTOR_FILE_DOWNLOADER_LINK =
         "http://docs.vatsim.uk/General/Software%20Downloads/Files/VATUK_Euroscope_files.txt";
 
-    std::string FetchGithubVersion(UKControllerPlugin::Curl::CurlInterface& curl)
+    std::string FetchPackVersion(UKControllerPlugin::Curl::CurlInterface& curl)
     {
         try {
             UKControllerPlugin::Curl::CurlRequest request(
@@ -69,7 +69,7 @@ namespace UKControllerPlugin::FileStatus {
             std::string versionContent = buffer.str();
             versionFile.close();
 
-            std::string githubVersion = FetchGithubVersion(*container.curl);
+            std::string githubVersion = FetchPackVersion(*container.curl);
             if (githubVersion.empty()) {
                 LogError("Could not fetch pack sha");
                 return;
