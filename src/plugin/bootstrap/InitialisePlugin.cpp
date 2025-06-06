@@ -169,7 +169,8 @@ namespace UKControllerPlugin {
             LogInfo("Plugin loaded as primary instance");
         }
 
-        LogInfo("Checking UKCPa is up to date");
+        LogInfo("Checking UK Controller Pack is up to date");
+
         UKControllerPlugin::FileStatus::FileStatusModule::BootstrapPlugin(*this->container);
 
         // User messager
