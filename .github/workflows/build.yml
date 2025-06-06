@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: windows-2025
+    runs-on: windows-2019
     concurrency:
       group: ukcp-build-${{ github.ref }}
       cancel-in-progress: true
@@ -108,7 +108,7 @@ jobs:
       # Run the build and tests
       - name: Run Ninja Build
         working-directory: build
-        run: ninja
+        run: ninja -j 2
 
       - name: Run Tests
         working-directory: build
