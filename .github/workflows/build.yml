@@ -27,11 +27,6 @@ jobs:
         with:
           arch: x86
 
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2.0.7
-        with:
-          version: 17.0.6
-
       - name: Check Clang Version
         run: clang-cl --version
 
@@ -110,7 +105,7 @@ jobs:
       # Run the build and tests
       - name: Run Ninja Build
         working-directory: build
-        run: ninja -v
+        run: ninja -v -j 1
 
       - name: Run Tests
         working-directory: build
