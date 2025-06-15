@@ -91,6 +91,31 @@ namespace UKControllerPlugin {
                 }
             }
 
+            // Colour Palette
+            auto selectedColourPalette = this->userSettings.GetStringEntry(
+                GeneralSettingsEntries::colourPaletteSettingsKey, DEFAULT_COLOUR_PALETTE);
+
+            if (this->colourPaletteMap.count(selectedColourPalette) == 0) {
+                selectedColourPalette = DEFAULT_COLOUR_PALETTE;
+            }
+
+            for (const auto& palette : this->colourPaletteMap) {
+                const auto paletteName = palette.second.c_str();
+                int insertIndex = SendDlgItemMessage(
+                    hwnd, IDC_COLOUR_PALETTE, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(paletteName));
+
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_COLOUR_PALETTE,
+                    CB_SETITEMDATA,
+                    insertIndex,
+                    reinterpret_cast<LPARAM>(palette.first.c_str()));
+
+                if (palette.first == selectedColourPalette) {
+                    SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_SETCURSEL, insertIndex, NULL);
+                }
+            }
+
             return TRUE;
         }
 
@@ -152,6 +177,18 @@ namespace UKControllerPlugin {
                 SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETITEMDATA, selectedReleaseChannelIndex, 0));
 
             this->settings.UpdateSetting("release_channel", selectedChannel);
+
+            // Colour Palette
+            const auto selectedColourPaletteIndex = SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETCURSEL, 0, 0);
+
+            const std::string selectedColourPalette = reinterpret_cast<const char*>(
+                SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETITEMDATA, selectedColourPaletteIndex, 0));
+
+            this->userSettings.Save(
+                GeneralSettingsEntries::colourPaletteSettingsKey,
+                GeneralSettingsEntries::colourPaletteSettingsDescription,
+                selectedColourPalette);
+            
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }
 

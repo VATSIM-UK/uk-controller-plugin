@@ -38,7 +38,17 @@ namespace UKControllerPlugin::Euroscope {
             {"beta", L"Beta"},
         };
 
+        const std::map<std::string, std::wstring> colourPaletteMap{
+            {"default", L"Default"},
+            {"node", L"NODE"},
+            {"nerc", L"NERC"},
+            {"nova", L"NOVA"},
+            {"itec", L"iTEC"},
+        };
+
         const std::string DEFAULT_RELEASE_CHANNEL = "stable";
+
+        const std::string DEFAULT_COLOUR_PALETTE = "default";
 
         // A place where user settings are retrieved and stored
         UKControllerPlugin::Euroscope::UserSetting& userSettings;
