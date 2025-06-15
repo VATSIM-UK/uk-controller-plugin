@@ -294,6 +294,10 @@ set(src__geometry
 source_group("src\\geometry" FILES ${src__geometry})
 
 set(src__graphics
+    "graphics/ColourPaletteDefinitions.cpp"
+    "graphics/ColourPaletteDefinitions.h"
+    "graphics/ColourPaletteConfiguration.cpp"
+    "graphics/ColourPaletteConfiguration.h"
     "graphics/GdiGraphicsInterface.h"
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
