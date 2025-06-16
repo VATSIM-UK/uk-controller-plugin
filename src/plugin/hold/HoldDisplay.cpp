@@ -17,6 +17,7 @@
 #include "geometry/Measurement.h"
 #include "geometry/MeasurementUnit.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "graphics/GlobalColours.h"
 #include "list/PopupListInterface.h"
 #include "navaids/Navaid.h"
 
@@ -28,6 +29,7 @@ using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Hold::HoldManager;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
+using UKControllerPlugin::Graphics::GlobalColours;
 
 namespace UKControllerPlugin {
     namespace Hold {
@@ -41,12 +43,12 @@ namespace UKControllerPlugin {
             : navaid(navaid), publishedHolds(publishedHoldCollection.GetForFix(navaid.identifier)),
               holdManager(holdManager), plugin(plugin), dialogManager(dialogManager),
               publishedHoldCollection(publishedHoldCollection), addAircraftSelector(addAircraftSelector),
-              titleBarTextBrush(Gdiplus::Color(227, 227, 227)), titleBarBrush(Gdiplus::Color(130, 50, 154)),
-              dataBrush(Gdiplus::Color(7, 237, 7)), clearedLevelBrush(Gdiplus::Color(246, 181, 4)),
-              blockedLevelBrush(Gdiplus::Color(123, 125, 123)), borderPen(Gdiplus::Color(215, 215, 215), 1.5f),
-              sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f), verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
-              verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f), exitButtonBrush(Gdiplus::Color(0, 0, 0)),
-              backgroundBrush(Gdiplus::Color(58, 57, 58)), fontFamily(L"EuroScope"),
+              titleBarTextBrush(UKControllerPlugin::Graphics::DefaultText), titleBarBrush(UKControllerPlugin::Graphics::Headers),
+              dataBrush(Gdiplus::Color(7, 237, 7)), clearedLevelBrush(UKControllerPlugin::Graphics::HighlightedText),
+              blockedLevelBrush(Gdiplus::Color(123, 125, 123)), borderPen(UKControllerPlugin::Graphics::Border, 1.5f),
+              sameLevelBoxPen(Gdiplus::Color(7, 237, 7), 1.5f), verticalSpeedAscentPen(UKControllerPlugin::Graphics::DefaultText, 2.5f),
+              verticalSpeedDescentPen(UKControllerPlugin::Graphics::DefaultText, 2.5f), exitButtonBrush(Gdiplus::Color(0, 0, 0)),
+              backgroundBrush(UKControllerPlugin::Graphics::Background), fontFamily(L"EuroScope"),
               font(&fontFamily, 12, Gdiplus::FontStyleBold, Gdiplus::UnitPixel),
               plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
               stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip), dataStartHeight(0),

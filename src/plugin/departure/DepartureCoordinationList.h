@@ -1,6 +1,7 @@
 #pragma once
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
+#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Controller {
@@ -87,9 +88,9 @@ namespace UKControllerPlugin::Departure {
         const Gdiplus::Rect destColumnHeader{395, 5, 40, 25};
 
         // Some colours
-        const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
-        const Gdiplus::Color TITLE_BAR_BASE_COLOUR = Gdiplus::Color(130, 50, 154);
-        const Gdiplus::Color TITLE_BAR_FLASH_COLOUR = Gdiplus::Color(179, 3, 0);
+        const Gdiplus::Color OFF_WHITE_COLOUR = UKControllerPlugin::Graphics::DefaultText;
+        const Gdiplus::Color TITLE_BAR_BASE_COLOUR = UKControllerPlugin::Graphics::Headers;
+        const Gdiplus::Color TITLE_BAR_FLASH_COLOUR = UKControllerPlugin::Graphics::HighlightedHeaders;
 
         // Brushes
         const Gdiplus::SolidBrush textBrush;
@@ -104,7 +105,7 @@ namespace UKControllerPlugin::Departure {
         bool contentCollapsed;
 
         // Height of title bar
-        const int titleBarHeight = 20;
+        const int titleBarHeight = 15;
 
         // Width of title bar
         const int titleBarWidth = 435;

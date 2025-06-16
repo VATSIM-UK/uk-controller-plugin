@@ -73,7 +73,6 @@ namespace UKControllerPlugin {
             RegionalPressureManager& regionalPressureManager,
             RadarRenderableCollection& radarRender,
             ConfigurableDisplayCollection& configurableDisplays,
-            const GdiplusBrushes& brushes,
             AsrEventHandlerCollection& userSettingHandlers,
             const DialogManager& dialogManager)
         {
@@ -86,7 +85,6 @@ namespace UKControllerPlugin {
                 radarRender.ReserveScreenObjectIdentifier(rendererId),
                 radarRender.ReserveScreenObjectIdentifier(rendererId),
                 configureFunctionId,
-                brushes,
                 dialogManager));
 
             // Add to the handlers.

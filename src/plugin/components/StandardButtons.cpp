@@ -1,5 +1,6 @@
 #include "StandardButtons.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin::Components {
 
@@ -13,7 +14,7 @@ namespace UKControllerPlugin::Components {
     Gdiplus::Point collapsePoints[3] = {Gdiplus::Point(0, -5), Gdiplus::Point(5, 5), Gdiplus::Point(-5, 5)};
 
     // The standard button sizing
-    Gdiplus::REAL buttonSize(10);
+    Gdiplus::REAL buttonSize(15);
 
     /*
      * Draws a standard X-shaped close button of the specified colour.
@@ -40,7 +41,7 @@ namespace UKControllerPlugin::Components {
 
     std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> CloseButton()
     {
-        return CloseButton(Gdiplus::Color(227, 227, 227));
+        return CloseButton(UKControllerPlugin::Graphics::DefaultText);
     }
 
     /*
@@ -74,7 +75,7 @@ namespace UKControllerPlugin::Components {
     std::function<void(Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect&)>
     CollapseButton(std::function<bool()> stateFunction)
     {
-        return CollapseButton(Gdiplus::Color(227, 227, 227), stateFunction);
+        return CollapseButton(UKControllerPlugin::Graphics::DefaultText, stateFunction);
     }
 
     void ScalePen(const std::shared_ptr<Gdiplus::Pen>& pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY)

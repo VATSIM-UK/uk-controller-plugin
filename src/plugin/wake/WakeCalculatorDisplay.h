@@ -2,6 +2,7 @@
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "radarscreen/MenuToggleableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
+#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Components {
@@ -75,7 +76,7 @@ namespace UKControllerPlugin::Wake {
         POINT windowPosition = DEFAULT_WINDOW_POSITION;
 
         inline static const int WINDOW_WIDTH = 350;
-        inline static const int TITLE_BAR_HEIGHT = 20;
+        inline static const int TITLE_BAR_HEIGHT = 15;
         inline static const int CONTENT_HEIGHT = 150;
         inline static const int TEXT_INSET = 5;
 
@@ -96,9 +97,9 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<Components::TitleBar> titleBar;
 
         // Pens and brushes
-        const Gdiplus::Color BACKGROUND_COLOUR = Gdiplus::Color(64, 64, 64);
-        const Gdiplus::Color TEXT_COLOUR = Gdiplus::Color(225, 225, 225);
-        const Gdiplus::Color RESULT_COLOUR = Gdiplus::Color(55, 249, 1);
+        const Gdiplus::Color BACKGROUND_COLOUR = UKControllerPlugin::Graphics::Background;
+        const Gdiplus::Color TEXT_COLOUR = UKControllerPlugin::Graphics::DefaultText;
+        const Gdiplus::Color RESULT_COLOUR = UKControllerPlugin::Graphics::HighlightedText;
         std::shared_ptr<Gdiplus::Brush> backgroundBrush;
         std::shared_ptr<Gdiplus::Brush> textBrush;
         std::shared_ptr<Gdiplus::Brush> resultBrush;

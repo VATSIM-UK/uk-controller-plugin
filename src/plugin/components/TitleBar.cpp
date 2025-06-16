@@ -2,6 +2,7 @@
 #include "TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin::Components {
     TitleBar::~TitleBar() = default;
@@ -76,16 +77,16 @@ namespace UKControllerPlugin::Components {
 
     std::shared_ptr<TitleBar> TitleBar::WithDefaultBackgroundBrush()
     {
-        return this->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(130, 50, 154)));
+        return this->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::Headers));
     }
 
     std::shared_ptr<TitleBar> TitleBar::WithDefaultTextBrush()
     {
-        return this->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(227, 227, 227)));
+        return this->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::DefaultText));
     }
 
     std::shared_ptr<TitleBar> TitleBar::WithDefaultBorder()
     {
-        return this->WithBorder(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255)));
+        return this->WithBorder(std::make_shared<Gdiplus::Pen>(UKControllerPlugin::Graphics::Border));
     }
 } // namespace UKControllerPlugin::Components
