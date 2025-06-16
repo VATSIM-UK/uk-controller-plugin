@@ -68,7 +68,7 @@ namespace UKControllerPlugin::Approach {
 
         // Dimensions
         inline static const int WINDOW_WIDTH = 435;
-        inline static const int TITLE_BAR_HEIGHT = 20;
+        inline static const int TITLE_BAR_HEIGHT = 15;
         inline static const int INSETS = 5;
 
         // Clickspot
