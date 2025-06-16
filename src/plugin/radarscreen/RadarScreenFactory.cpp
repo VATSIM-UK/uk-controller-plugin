@@ -83,7 +83,6 @@ namespace UKControllerPlugin::RadarScreen {
             *persistence.minStack,
             renderers,
             configurableDisplays,
-            *persistence.brushes,
             userSettingHandlers,
             *persistence.dialogManager);
 
@@ -92,7 +91,6 @@ namespace UKControllerPlugin::RadarScreen {
             *persistence.regionalPressureManager,
             renderers,
             configurableDisplays,
-            *persistence.brushes,
             userSettingHandlers,
             *persistence.dialogManager);
 
@@ -102,7 +100,6 @@ namespace UKControllerPlugin::RadarScreen {
             persistence.timerConfigurationManager,
             renderers,
             configurableDisplays,
-            *persistence.brushes,
             userSettingHandlers);
 
         Hold::BootstrapRadarScreen(

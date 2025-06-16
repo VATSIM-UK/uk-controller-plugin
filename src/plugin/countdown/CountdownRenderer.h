@@ -3,6 +3,7 @@
 #include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
+#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -39,8 +40,7 @@ namespace UKControllerPlugin::Countdown {
             int functionsClickspotId,
             int timeDisplayClickspotId,
             int closeClickspotId,
-            int toogleCallbackFunctionId,
-            const UKControllerPlugin::Windows::GdiplusBrushes& brushes);
+            int toogleCallbackFunctionId);
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
@@ -94,8 +94,24 @@ namespace UKControllerPlugin::Countdown {
         // The countdown module that we're rendering
         UKControllerPlugin::Countdown::CountdownTimer& countdownModule;
 
-        // A set of brushes to use for rendering.
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
+        // Colour Brushes 
+        const std::unique_ptr<const Gdiplus::Brush> currentBackground =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::Background);
+
+        const std::unique_ptr<const Gdiplus::Pen> currentBorder  =
+            std::make_unique<Gdiplus::Pen>(UKControllerPlugin::Graphics::Border);
+
+        const std::unique_ptr<const Gdiplus::Brush> currentText  =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::DefaultText);
+        
+        const std::unique_ptr<const Gdiplus::Brush> currentGreenTimer  =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::TimerGreen);
+
+        const std::unique_ptr<const Gdiplus::Brush> currentYellowTimer  =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::TimerYellow);
+
+        const std::unique_ptr<const Gdiplus::Brush> currentRedTimer  =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::TimerRed);
 
         // Handles the timer configurations
         const UKControllerPlugin::Countdown::TimerConfigurationManager& configManager;

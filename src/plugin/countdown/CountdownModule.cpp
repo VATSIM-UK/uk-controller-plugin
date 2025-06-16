@@ -85,7 +85,6 @@ namespace UKControllerPlugin::Countdown {
         const std::shared_ptr<TimerConfigurationManager>& configManager,
         RadarRenderableCollection& radarRender,
         ConfigurableDisplayCollection& configurableDisplays,
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
         AsrEventHandlerCollection& userSettingHandlers)
     {
         // Create the renderer and get the ids for screen objects
@@ -97,8 +96,7 @@ namespace UKControllerPlugin::Countdown {
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             radarRender.ReserveScreenObjectIdentifier(rendererId),
-            configureFunctionId,
-            brushes));
+            configureFunctionId));
 
         // Add to the relevant handlers
         radarRender.RegisterRenderer(rendererId, renderer, radarRender.beforeTags);

@@ -5,6 +5,7 @@
 #include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
+#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -37,7 +38,6 @@ namespace UKControllerPlugin::MinStack {
             int menuBarClickspotId,
             int mslClickspotId,
             int toggleCallbackFunctionId,
-            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             const UKControllerPlugin::Dialog::DialogManager& dialogManager);
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
@@ -108,8 +108,21 @@ namespace UKControllerPlugin::MinStack {
         // The rectangle to render for the hide clickspot
         Gdiplus::Rect hideSpotRender;
 
-        // Brushes
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
+        // Colour Brushes 
+        const std::unique_ptr<const Gdiplus::Brush> currentBackground =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::Background);
+
+        const std::unique_ptr<const Gdiplus::Brush> currentHeaders =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::Headers);
+
+        const std::unique_ptr<const Gdiplus::Pen> currentBorder  =
+            std::make_unique<Gdiplus::Pen>(UKControllerPlugin::Graphics::Border);
+
+        const std::unique_ptr<const Gdiplus::Brush> currentText  =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::DefaultText);
+
+        const std::unique_ptr<const Gdiplus::Brush> currentAcknowledge  =
+            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::HighlightedAircraftText);
 
         // The configuration for the renderer
         UKControllerPlugin::MinStack::MinStackRendererConfiguration config;
@@ -133,7 +146,7 @@ namespace UKControllerPlugin::MinStack {
         const int leftColumnWidth = 75;
 
         // Width of the right column
-        const int rowHeight = 20;
+        const int rowHeight = 15;
 
         // Width of the hide clickspot
         const int hideClickspotWidth = 25;
