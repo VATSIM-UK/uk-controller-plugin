@@ -2,6 +2,18 @@
 
 namespace UKControllerPlugin {
     namespace Graphics {
+        // DEFAULT
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultBackground = Gdiplus::Color(58, 57, 58);           // rgb(58, 57, 58)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultBorder = Gdiplus::Color(215, 215, 215);            // rgb(215, 215, 215)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultHeaders = Gdiplus::Color(130, 50, 154);            // rgb(130, 50, 154)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultHighlightedHeaders = Gdiplus::Color(255, 153, 255); // rgb(255, 153, 255)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultText = Gdiplus::Color(227, 227, 227);              // rgb(227, 227, 227)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultHighlightedText = Gdiplus::Color(255, 255, 0);     // rgb(255, 255, 0)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultMainAircraftText = Gdiplus::Color(7, 237, 7);  // rgb(7, 237, 7)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultHighlightedAircraftText = Gdiplus::Color(246, 181, 4); // rgb(246, 181, 4)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultTimerGreen = Gdiplus::Color(0, 255, 0);          // rgb(0, 255, 0)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultTimerYellow = Gdiplus::Color(255, 255, 0);       // rgb(255, 255, 0)
+        const Gdiplus::Color ColourPaletteDefinitions::DefaultTimerRed = Gdiplus::Color(255, 0, 0);            // rgb(255, 0, 0)
 
         // NODE
         const Gdiplus::Color ColourPaletteDefinitions::NodeBackground = Gdiplus::Color(0, 0, 0);           // #000000

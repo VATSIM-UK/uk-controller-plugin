@@ -8,6 +8,20 @@ namespace UKControllerPlugin {
         */
         struct ColourPaletteDefinitions
         {
+            // DEFAULT
+            static const Gdiplus::Color DefaultBackground;
+            static const Gdiplus::Color DefaultBorder;
+            static const Gdiplus::Color DefaultHeaders;
+            static const Gdiplus::Color DefaultHighlightedHeaders;
+            static const Gdiplus::Color DefaultText;
+            static const Gdiplus::Color DefaultHighlightedText;
+            static const Gdiplus::Color DefaultMainAircraftText;
+            static const Gdiplus::Color DefaultHighlightedAircraftText;
+            static const Gdiplus::Color DefaultTimerGreen;
+            static const Gdiplus::Color DefaultTimerYellow;
+            static const Gdiplus::Color DefaultTimerRed;
+
+
             // NODE
             static const Gdiplus::Color NodeBackground;                // #000000
             static const Gdiplus::Color NodeBorder;                    // #ffffff
