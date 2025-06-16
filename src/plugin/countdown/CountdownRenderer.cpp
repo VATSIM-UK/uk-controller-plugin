@@ -18,9 +18,8 @@ namespace UKControllerPlugin::Countdown {
         int functionsClickspotId,
         int timeDisplayClickspotId,
         int closeClickspotId,
-        int toogleCallbackFunctionId,
-        const GdiplusBrushes& brushes)
-        : countdownModule(countdownModule), brushes(brushes), configManager(configManager),
+        int toogleCallbackFunctionId)
+        : countdownModule(countdownModule), configManager(configManager),
           functionsClickspotId(functionsClickspotId), timeDisplayClickspotId(timeDisplayClickspotId),
           closeClickspotId(closeClickspotId), toggleCallbackFunctionId(toogleCallbackFunctionId)
     {
@@ -164,18 +163,18 @@ namespace UKControllerPlugin::Countdown {
     {
         // Colour the text depending on how long is left, if we get 0, that means timer is up.
         if (secondsRemaining == 0) {
-            return *this->brushes.whiteBrush;
+            return *currentText;
         }
 
         if (secondsRemaining > WARNING_SECONDS) {
-            return *this->brushes.greenBrush;
+            return *currentGreenTimer;
         }
 
         if (secondsRemaining > CRITICAL_SECONDS) {
-            return *this->brushes.yellowBrush;
+            return *currentYellowTimer;
         }
 
-        return *this->brushes.redBrush;
+        return *currentRedTimer;
     }
 
     /*
@@ -240,10 +239,10 @@ namespace UKControllerPlugin::Countdown {
                 continue;
             }
 
-            graphics.FillRect(this->timerButtonAreas[it->timerId], *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawRect(this->timerButtonAreas[it->timerId], *this->brushes.blackPen);
+            graphics.FillRect(this->timerButtonAreas[it->timerId], *currentBackground);
+            graphics.DrawRect(this->timerButtonAreas[it->timerId], *currentBorder);
             graphics.DrawString(
-                std::to_wstring(it->timerDuration), this->timerButtonAreas[it->timerId], *this->brushes.whiteBrush);
+                std::to_wstring(it->timerDuration), this->timerButtonAreas[it->timerId], *currentText);
             radarScreen.RegisterScreenObject(
                 this->functionsClickspotId,
                 "timer" + std::to_string(it->timerId) + "Toggle",
@@ -260,20 +259,20 @@ namespace UKControllerPlugin::Countdown {
                 this->timeDisplayArea.bottom,
                 this->timeDisplayArea.right,
                 this->timeDisplayArea.bottom + this->rowHeight};
-            graphics.FillRect(spaceToFill, *this->brushes.euroscopeBackgroundBrush);
-            graphics.DrawRect(spaceToFill, *this->brushes.blackPen);
+            graphics.FillRect(spaceToFill, *currentBackground);
+            graphics.DrawRect(spaceToFill, *currentBorder);
         }
 
         // The close clickspot
-        graphics.FillRect(this->closeClickspotDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawRect(this->closeClickspotDisplayArea, *this->brushes.blackPen);
-        graphics.DrawString(L"X", this->closeClickspotDisplayArea, *this->brushes.whiteBrush);
+        graphics.FillRect(this->closeClickspotDisplayArea, *currentBackground);
+        graphics.DrawRect(this->closeClickspotDisplayArea, *currentBorder);
+        graphics.DrawString(L"X", this->closeClickspotDisplayArea, *currentText);
         radarScreen.RegisterScreenObject(this->closeClickspotId, "", this->closeClickspotDisplayArea, false);
 
         // The reset button.
-        graphics.FillRect(this->resetDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawRect(this->resetDisplayArea, *this->brushes.blackPen);
-        graphics.DrawString(L"R", this->resetDisplayArea, *this->brushes.whiteBrush);
+        graphics.FillRect(this->resetDisplayArea, *currentBackground);
+        graphics.DrawRect(this->resetDisplayArea, *currentBorder);
+        graphics.DrawString(L"R", this->resetDisplayArea, *currentText);
         radarScreen.RegisterScreenObject(this->functionsClickspotId, "R", this->resetDisplayArea, false);
     }
 
@@ -284,8 +283,8 @@ namespace UKControllerPlugin::Countdown {
     CountdownRenderer::RenderTimeDisplay(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
     {
         // The time display
-        graphics.FillRect(this->timeDisplayArea, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawRect(this->timeDisplayArea, *this->brushes.blackPen);
+        graphics.FillRect(this->timeDisplayArea, *currentBackground);
+        graphics.DrawRect(this->timeDisplayArea, *currentBorder);
         radarScreen.RegisterScreenObject(this->timeDisplayClickspotId, "", this->timeDisplayArea, true);
 
         // Get the seconds remaining from the Countdown class and use that to draw the time to the screen.
