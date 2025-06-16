@@ -4,11 +4,13 @@
 #include "UserSetting.h"
 #include "dialog/DialogCallArgument.h"
 #include "setting/SettingRepository.h"
+#include "graphics/GlobalColours.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+
 
 namespace UKControllerPlugin {
     namespace Euroscope {
