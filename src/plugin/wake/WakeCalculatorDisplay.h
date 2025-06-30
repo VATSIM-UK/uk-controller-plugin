@@ -2,7 +2,6 @@
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "radarscreen/MenuToggleableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
-#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Components {
@@ -15,6 +14,10 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
+    namespace Windows {
+        class GdiGraphicsInterface;
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Wake {
@@ -33,6 +36,7 @@ namespace UKControllerPlugin::Wake {
             std::shared_ptr<List::PopupListInterface> followCallsignSelector,
             std::shared_ptr<List::PopupListInterface> wakeSchemeSelector,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             int screenObjectId);
         [[nodiscard]] auto IsVisible() const -> bool override;
         [[nodiscard]] auto IsCollapsed() const -> bool;
@@ -97,13 +101,7 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<Components::TitleBar> titleBar;
 
         // Pens and brushes
-        const Gdiplus::Color BACKGROUND_COLOUR = UKControllerPlugin::Graphics::Background;
-        const Gdiplus::Color TEXT_COLOUR = UKControllerPlugin::Graphics::DefaultText;
-        const Gdiplus::Color RESULT_COLOUR = UKControllerPlugin::Graphics::HighlightedText;
-        std::shared_ptr<Gdiplus::Brush> backgroundBrush;
-        std::shared_ptr<Gdiplus::Brush> textBrush;
-        std::shared_ptr<Gdiplus::Brush> resultBrush;
-        std::shared_ptr<Gdiplus::Pen> dividingLinePen;
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
         // Drawing rects
         Gdiplus::Rect contentArea;

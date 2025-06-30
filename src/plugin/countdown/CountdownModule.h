@@ -40,6 +40,7 @@ namespace UKControllerPlugin::Countdown {
             const std::shared_ptr<UKControllerPlugin::Countdown::TimerConfigurationManager>& configManager,
             UKControllerPlugin::RadarScreen::RadarRenderableCollection& radarRender,
             UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& screenControls,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             UKControllerPlugin::Euroscope::AsrEventHandlerCollection& userSettingHandler);
 
         static void LoadDefaultUserSettings(UKControllerPlugin::Euroscope::UserSetting& userSetting);

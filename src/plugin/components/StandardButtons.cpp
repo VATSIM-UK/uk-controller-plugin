@@ -1,6 +1,5 @@
 #include "StandardButtons.h"
 #include "graphics/GdiGraphicsInterface.h"
-#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin::Components {
 
@@ -41,7 +40,7 @@ namespace UKControllerPlugin::Components {
 
     std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> CloseButton()
     {
-        return CloseButton(UKControllerPlugin::Graphics::DefaultText);
+        return CloseButton(Gdiplus::Color(227, 227, 227));
     }
 
     /*
@@ -75,7 +74,7 @@ namespace UKControllerPlugin::Components {
     std::function<void(Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect&)>
     CollapseButton(std::function<bool()> stateFunction)
     {
-        return CollapseButton(UKControllerPlugin::Graphics::DefaultText, stateFunction);
+        return CollapseButton(Gdiplus::Color(227, 227, 227), stateFunction);
     }
 
     void ScalePen(const std::shared_ptr<Gdiplus::Pen>& pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY)

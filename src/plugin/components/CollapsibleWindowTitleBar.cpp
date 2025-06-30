@@ -38,4 +38,12 @@ namespace UKControllerPlugin::Components {
         this->closeButton->Draw(graphics, radarScreen);
         this->collapseButton->Draw(graphics, radarScreen);
     }
+
+    void CollapsibleWindowTitleBar::DrawTheme(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen, const Windows::GdiplusBrushes& brushes) const
+    {
+        TitleBar::DrawTheme(graphics, radarScreen, brushes);
+        this->closeButton->Draw(graphics, radarScreen);
+        this->collapseButton->Draw(graphics, radarScreen);
+    }
 } // namespace UKControllerPlugin::Components

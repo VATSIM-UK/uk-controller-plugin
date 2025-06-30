@@ -14,6 +14,7 @@ namespace UKControllerPlugin {
         const Gdiplus::Color ColourPaletteDefinitions::DefaultTimerGreen = Gdiplus::Color(0, 255, 0);          // rgb(0, 255, 0)
         const Gdiplus::Color ColourPaletteDefinitions::DefaultTimerYellow = Gdiplus::Color(255, 255, 0);       // rgb(255, 255, 0)
         const Gdiplus::Color ColourPaletteDefinitions::DefaultTimerRed = Gdiplus::Color(255, 0, 0);            // rgb(255, 0, 0)
+        //rgb(123, 125, 123)
 
         // NODE
         const Gdiplus::Color ColourPaletteDefinitions::NodeBackground = Gdiplus::Color(0, 0, 0);           // #000000

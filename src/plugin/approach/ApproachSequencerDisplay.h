@@ -1,6 +1,5 @@
 #pragma once
 #include "radarscreen/RadarRenderableInterface.h"
-#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Components {
@@ -13,6 +12,9 @@ namespace UKControllerPlugin {
     namespace List {
         class PopupListInterface;
     } // namespace List
+    namespace Windows {
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Approach {
@@ -38,6 +40,7 @@ namespace UKControllerPlugin::Approach {
             std::shared_ptr<List::PopupListInterface> airfieldTargetSelector,
             std::shared_ptr<List::PopupListInterface> airfieldSeparationSelector,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             int screenObjectId);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(
@@ -106,6 +109,9 @@ namespace UKControllerPlugin::Approach {
 
         // The plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
+        
+        // Pens and brushes
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
         // The screen object id
         int screenObjectId;
@@ -139,10 +145,5 @@ namespace UKControllerPlugin::Approach {
         std::shared_ptr<Components::ClickableArea> airfieldTargetClickspot;
         std::shared_ptr<Components::ClickableArea> airfieldSeparationClickspot;
 
-        const Gdiplus::Color BACKGROUND_COLOUR = UKControllerPlugin::Graphics::Background;
-        const Gdiplus::Color TEXT_COLOUR = UKControllerPlugin::Graphics::DefaultText;
-        std::shared_ptr<Gdiplus::Brush> backgroundBrush;
-        std::shared_ptr<Gdiplus::Brush> textBrush;
-        std::shared_ptr<Gdiplus::Pen> dividingPen;
     };
 } // namespace UKControllerPlugin::Approach

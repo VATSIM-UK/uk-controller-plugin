@@ -35,6 +35,7 @@
 #include "tag/TagFunction.h"
 #include "timedevent/TimedEventCollection.h"
 #include "windows/WinApiInterface.h"
+#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Api::ApiInterface;
@@ -57,6 +58,7 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagFunction;
 using UKControllerPlugin::Windows::WinApiInterface;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::Hold {
 
@@ -138,7 +140,8 @@ namespace UKControllerPlugin::Hold {
             *container.navaids,
             *container.publishedHolds,
             *container.dialogManager,
-            *container.callsignSelectionListFactory);
+            *container.callsignSelectionListFactory,
+            *container.brushes);
 
         // Command to assign holds
         container.commandHandlers->RegisterHandler(
@@ -190,6 +193,7 @@ namespace UKControllerPlugin::Hold {
         RadarRenderableCollection& radarRenderables,
         AsrEventHandlerCollection& asrEvents,
         CommandHandlerCollection& commandHandlers,
+        const GdiplusBrushes& brushes,
         const PersistenceContainer& container)
     {
         // Display manager

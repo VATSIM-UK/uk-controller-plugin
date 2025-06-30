@@ -70,6 +70,7 @@ namespace UKControllerPlugin::MinStack {
         MinStackManager& minStackManager,
         RadarRenderableCollection& radarRender,
         ConfigurableDisplayCollection& configurableDisplays,
+        const GdiplusBrushes& brushes,
         AsrEventHandlerCollection& userSettingHandlers,
         const DialogManager& dialogManager)
     {
@@ -82,6 +83,7 @@ namespace UKControllerPlugin::MinStack {
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             configureFunctionId,
+            brushes,
             dialogManager));
 
         // Add to the handlers.
