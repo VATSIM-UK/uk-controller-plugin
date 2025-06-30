@@ -1,7 +1,6 @@
 #pragma once
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
-#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Controller {
@@ -24,6 +23,10 @@ namespace UKControllerPlugin {
         class DepartureReleaseRequest;
         class DepartureReleaseEventHandler;
     } // namespace Releases
+    namespace Windows {
+        class GdiGraphicsInterface;
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Departure {
@@ -42,6 +45,7 @@ namespace UKControllerPlugin::Departure {
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Controller::ControllerPositionCollection& controllers,
             const Controller::ActiveCallsignCollection& activeCallsigns,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             int screenObjectId);
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -73,6 +77,9 @@ namespace UKControllerPlugin::Departure {
         // Contains all the prenote messages
         Prenote::PrenoteMessageCollection& prenotes;
 
+        // Pens and brushes
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
+
         // Provides interface with the plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
@@ -86,14 +93,6 @@ namespace UKControllerPlugin::Departure {
         const Gdiplus::Rect airportColumnHeader{270, 5, 40, 25};
         const Gdiplus::Rect sidColumnHeader{320, 5, 65, 25};
         const Gdiplus::Rect destColumnHeader{395, 5, 40, 25};
-
-        // Some colours
-        const Gdiplus::Color OFF_WHITE_COLOUR = UKControllerPlugin::Graphics::DefaultText;
-        const Gdiplus::Color TITLE_BAR_BASE_COLOUR = UKControllerPlugin::Graphics::Headers;
-        const Gdiplus::Color TITLE_BAR_FLASH_COLOUR = UKControllerPlugin::Graphics::HighlightedHeaders;
-
-        // Brushes
-        const Gdiplus::SolidBrush textBrush;
 
         // Clickspot identifier
         const int screenObjectId;

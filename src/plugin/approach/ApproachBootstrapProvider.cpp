@@ -26,6 +26,9 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
+#include "graphics/GdiplusBrushes.h"
+
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::Approach {
 
@@ -92,6 +95,7 @@ namespace UKControllerPlugin::Approach {
                         container.moduleFactories->Approach().SequencerOptions(), displayOptions),
                     "Toggle sequencer airfield separation selector"),
                 *container.plugin,
+                *container.brushes,
                 sequencerScreenObjectId),
             RadarScreen::RadarRenderableCollection::beforeTags);
 

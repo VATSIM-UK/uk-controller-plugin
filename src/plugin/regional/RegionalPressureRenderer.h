@@ -5,7 +5,6 @@
 #include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
-#include "graphics/GlobalColours.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -36,6 +35,7 @@ namespace UKControllerPlugin::Regional {
             int menuBarClickspotId,
             int rpsClickspotId,
             int toggleCallbackFunctionId,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             const UKControllerPlugin::Dialog::DialogManager& dialogManager);
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
@@ -88,21 +88,8 @@ namespace UKControllerPlugin::Regional {
         // The rectangle to render for the hide clickspot
         Gdiplus::Rect hideSpotRender;
 
-        // Colour Brushes 
-        const std::unique_ptr<const Gdiplus::Brush> currentBackground =
-            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::Background);
-
-        const std::unique_ptr<const Gdiplus::Brush> currentHeaders =
-            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::Headers);
-
-        const std::unique_ptr<const Gdiplus::Pen> currentBorder  =
-            std::make_unique<Gdiplus::Pen>(UKControllerPlugin::Graphics::Border);
-
-        const std::unique_ptr<const Gdiplus::Brush> currentText  =
-            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::DefaultText);
-
-        const std::unique_ptr<const Gdiplus::Brush> currentAcknowledge  =
-            std::make_unique<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::HighlightedAircraftText);
+        // Brushes
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
         // The configuration for the renderer
         UKControllerPlugin::Regional::RegionalPressureRendererConfiguration config;

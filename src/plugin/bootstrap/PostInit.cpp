@@ -8,11 +8,9 @@
 #include "plugin/UKPlugin.h"
 #include "tag/TagItemCollection.h"
 #include "update/PluginVersion.h"
-#include "graphics/GlobalColours.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Plugin::PluginVersion;
-using UKControllerPlugin::Graphics::GlobalColours;
 
 namespace UKControllerPlugin::Bootstrap {
 
@@ -28,7 +26,6 @@ namespace UKControllerPlugin::Bootstrap {
         ukPlugin.PostInit();
         UKControllerPlugin::Euroscope::LoadDefaultUserSettings(*container.pluginUserSettingHandler);
         UKControllerPlugin::Countdown::CountdownModule::LoadDefaultUserSettings(*container.pluginUserSettingHandler);
-        UKControllerPlugin::Graphics::GlobalColours::LoadDefaultUserSettings(*container.pluginUserSettingHandler);
         container.userSettingHandlers->UserSettingsUpdateEvent(*container.pluginUserSettingHandler);
         container.pluginSettingsProviders->Load();
 

@@ -20,6 +20,9 @@ namespace UKControllerPlugin {
     namespace MinStack {
         class MinStackManager;
     } // namespace MinStack
+    namespace Windows {
+        struct GdiplusBrushes;
+    } // namespace Windows
     namespace Curl {
         class CurlInterface;
     } // namespace Curl
@@ -49,6 +52,7 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::MinStack::MinStackManager& minStackManager,
                 UKControllerPlugin::RadarScreen::RadarRenderableCollection& radarRender,
                 UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurableDisplays,
+                const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
                 UKControllerPlugin::Euroscope::AsrEventHandlerCollection& userSettingHandlers,
                 const UKControllerPlugin::Dialog::DialogManager& dialogManager);
         };

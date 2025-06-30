@@ -4,12 +4,15 @@
 #include "UserSetting.h"
 #include "dialog/DialogCallArgument.h"
 #include "setting/SettingRepository.h"
-#include "graphics/GlobalColours.h"
+#include "graphics/ThemingModule.h"
+#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Graphics::ThemingModule;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 
 namespace UKControllerPlugin {
@@ -18,13 +21,14 @@ namespace UKControllerPlugin {
         GeneralSettingsDialog::GeneralSettingsDialog(
             UserSetting& userSettings,
             const UserSettingAwareCollection& userSettingsHandlers,
-            Setting::SettingRepository& settings)
-            : userSettings(userSettings), userSettingsHandlers(userSettingsHandlers), settings(settings)
+            Setting::SettingRepository& settings,
+            GdiplusBrushes& brushes)
+            : userSettings(userSettings), brushes(brushes), userSettingsHandlers(userSettingsHandlers), settings(settings)
         {
         }
 
         GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog& newObject)
-            : userSettings(newObject.userSettings), userSettingsHandlers(newObject.userSettingsHandlers),
+            : userSettings(newObject.userSettings), brushes(newObject.brushes), userSettingsHandlers(newObject.userSettingsHandlers),
               settings(newObject.settings)
         {
         }
@@ -190,6 +194,8 @@ namespace UKControllerPlugin {
                 GeneralSettingsEntries::colourPaletteSettingsKey,
                 GeneralSettingsEntries::colourPaletteSettingsDescription,
                 selectedColourPalette);
+
+            ThemingModule::ApplyTheme(selectedColourPalette, this->brushes);
             
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }

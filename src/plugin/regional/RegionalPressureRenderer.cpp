@@ -22,8 +22,9 @@ namespace UKControllerPlugin::Regional {
         int menuBarClickspotId,
         int rpsClickspotId,
         int toggleCallbackFunctionId,
+        const GdiplusBrushes& brushes,
         const UKControllerPlugin::Dialog::DialogManager& dialogManager)
-        : manager(manager), dialogManager(dialogManager), hideClickspotId(closeClickspotId),
+        : brushes(brushes), manager(manager), dialogManager(dialogManager), hideClickspotId(closeClickspotId),
           menuBarClickspotId(menuBarClickspotId), rpsClickspotId(rpsClickspotId),
           toggleCallbackFunctionId(toggleCallbackFunctionId)
     {
@@ -210,17 +211,17 @@ namespace UKControllerPlugin::Regional {
             const RegionalPressure& pressureData = this->manager.GetRegionalPressure(it->key);
 
             // Draw the TMA title and rectangles
-            graphics.FillRect(asr, *currentBackground);
-            graphics.DrawRect(asr, *currentBorder);
+            graphics.FillRect(asr, Gdiplus::SolidBrush(this->brushes.background));
+            graphics.DrawRect(asr, Gdiplus::Pen(this->brushes.border));
 
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(it->key)),
                 asr,
-                pressureData.IsAcknowledged() ? *currentAcknowledge : *currentText);
+                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge) : Gdiplus::SolidBrush(this->brushes.text));
 
             // Draw the RPS itself and associated rectangles
-            graphics.FillRect(rps, *currentBackground);
-            graphics.DrawRect(rps, *currentBorder);
+            graphics.FillRect(rps, Gdiplus::SolidBrush(this->brushes.background));
+            graphics.DrawRect(rps, Gdiplus::Pen(this->brushes.border));
 
             std::string rpsString;
             if (pressureData == this->manager.invalidPressure) {
@@ -234,7 +235,7 @@ namespace UKControllerPlugin::Regional {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(rpsString),
                 rps,
-                pressureData.IsAcknowledged() ? *currentAcknowledge : *currentText);
+                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge) : Gdiplus::SolidBrush(this->brushes.text));
 
             // Add the clickable area.
             radarScreen.RegisterScreenObject(
@@ -260,7 +261,7 @@ namespace UKControllerPlugin::Regional {
             this->topBarArea.top,
             LEFT_COLUMN_WIDTH + HIDE_CLICKSPOT_WIDTH,
             1 + ((numRegionalPressures)*ROW_HEIGHT)};
-        graphics.DrawRect(area, *currentBorder);
+        graphics.DrawRect(area, Gdiplus::Pen(this->brushes.border));
     }
 
     /*
@@ -270,15 +271,15 @@ namespace UKControllerPlugin::Regional {
     RegionalPressureRenderer::RenderTopBar(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
     {
         // The title bar - the draggable bit
-        graphics.DrawRect(this->topBarRender, *currentBorder);
-        graphics.FillRect(this->topBarRender, *currentHeaders);
-        graphics.DrawString(L"ASR", this->topBarRender, *currentText);
+        graphics.DrawRect(this->topBarRender, Gdiplus::Pen(this->brushes.border));
+        graphics.FillRect(this->topBarRender, Gdiplus::SolidBrush(this->brushes.header));
+        graphics.DrawString(L"ASR", this->topBarRender, Gdiplus::SolidBrush(this->brushes.text));
         radarScreen.RegisterScreenObject(this->menuBarClickspotId, "", this->topBarArea, true);
 
         // The toggle button - no draggable
-        graphics.DrawRect(this->hideSpotRender, *currentBorder);
-        graphics.FillRect(this->hideSpotRender, *currentHeaders);
-        graphics.DrawString(L"X", this->hideSpotRender, *currentText);
+        graphics.DrawRect(this->hideSpotRender, Gdiplus::Pen(this->brushes.border));
+        graphics.FillRect(this->hideSpotRender, Gdiplus::SolidBrush(this->brushes.header));
+        graphics.DrawString(L"X", this->hideSpotRender, Gdiplus::SolidBrush(this->brushes.text));
         radarScreen.RegisterScreenObject(this->hideClickspotId, "", this->hideClickspotArea, false);
     }
 
