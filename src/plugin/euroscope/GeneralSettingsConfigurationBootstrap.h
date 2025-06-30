@@ -22,6 +22,7 @@ namespace UKControllerPlugin {
     } // namespace Setting
     namespace Windows {
         class WinApiInterface;
+        struct GdiplusBrushes;
     } // namespace Windows
 } // namespace UKControllerPlugin
 
@@ -39,11 +40,13 @@ namespace UKControllerPlugin {
                 UKControllerPlugin::Euroscope::UserSetting& userSettings,
                 UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers,
                 Setting::SettingRepository& settings,
-                Windows::WinApiInterface& windows);
+                Windows::WinApiInterface& windows,
+                Windows::GdiplusBrushes& brushes);
 
             static void BootstrapRadarScreen(
                 UKControllerPlugin::Plugin::FunctionCallEventHandler& functionCalls,
                 UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurableDisplays,
+                const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
                 UKControllerPlugin::Command::CommandHandlerCollection& commandHandlers,
                 const UKControllerPlugin::Dialog::DialogManager& dialogManager);
         };

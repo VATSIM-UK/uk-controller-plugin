@@ -1,6 +1,12 @@
 #pragma once
 #include "bootstrap/BootstrapProviderInterface.h"
 
+namespace UKControllerPlugin {
+    namespace Windows {
+        struct GdiplusBrushes;
+    } // namespace Windows
+}
+
 namespace UKControllerPlugin::Approach {
     class ApproachBootstrapProvider : public Bootstrap::BootstrapProviderInterface
     {

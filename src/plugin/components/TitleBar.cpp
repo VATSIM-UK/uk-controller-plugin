@@ -2,7 +2,7 @@
 #include "TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
-#include "graphics/GlobalColours.h"
+#include "graphics/GdiplusBrushes.h"
 
 namespace UKControllerPlugin::Components {
     TitleBar::~TitleBar() = default;
@@ -71,22 +71,35 @@ namespace UKControllerPlugin::Components {
         }
     }
 
+    void TitleBar::DrawTheme(
+        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen, const Windows::GdiplusBrushes& brushes) const
+    {
+        // Use theme brushes instead of instance brushes
+        graphics.FillRect(this->area, Gdiplus::SolidBrush(brushes.header));
+        graphics.DrawString(this->title, this->area, Gdiplus::SolidBrush(brushes.text));
+        graphics.DrawRect(this->area, Gdiplus::Pen(brushes.border));
+
+        if (this->clickableArea != nullptr) {
+            this->clickableArea->Apply(graphics, radarScreen);
+        }
+    }
+
     TitleBar::TitleBar(std::wstring title, Gdiplus::Rect area) : title(std::move(title)), area(area)
     {
     }
 
     std::shared_ptr<TitleBar> TitleBar::WithDefaultBackgroundBrush()
     {
-        return this->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::Headers));
+        return this->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(130, 50, 154)));
     }
 
     std::shared_ptr<TitleBar> TitleBar::WithDefaultTextBrush()
     {
-        return this->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(UKControllerPlugin::Graphics::DefaultText));
+        return this->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(227, 227, 227)));
     }
 
     std::shared_ptr<TitleBar> TitleBar::WithDefaultBorder()
     {
-        return this->WithBorder(std::make_shared<Gdiplus::Pen>(UKControllerPlugin::Graphics::Border));
+        return this->WithBorder(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255)));
     }
 } // namespace UKControllerPlugin::Components
