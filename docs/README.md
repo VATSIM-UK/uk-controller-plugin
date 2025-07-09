@@ -24,6 +24,7 @@ There are two build configurations available:
 Compiling may be achieved by:
 
 - Running CMake followed by nmake - see the workflow file for GitHub Actions.
+	- This can be done most easily by using the provided Dockerfile - see the [instructions](CONTAINER_BUILD.md).
 - Using your favourite IDE (e.g. Visual Studio / CLion) to build the project.
 
 ### Running Tests
