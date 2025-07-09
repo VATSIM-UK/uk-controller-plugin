@@ -1,4 +1,4 @@
-name: Build (cross-win32)
+name: Build (Ubuntu)
 
 on:
     pull_request:
@@ -6,7 +6,7 @@ on:
 
 jobs:
     build:
-        name: Build (Cross Win32)
+        name: Build plugin for Windows (using xwin on Ubuntu)
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code and Submodules
@@ -44,6 +44,22 @@ jobs:
                   ln -s $(which llvm-mt-18) mt
                   chmod u+x cc lib link rc
                   printf 'set(CMAKE_SYSTEM_NAME Windows)\nset(CMAKE_AR           "/opt/xwin/bin/lib")\nset(CMAKE_C_COMPILER   "/opt/xwin/bin/cc")\nset(CMAKE_CXX_COMPILER "/opt/xwin/bin/cc")\nset(CMAKE_LINKER       "/opt/xwin/bin/link")\nset(CMAKE_MT           "/opt/xwin/bin/mt")\nset(CMAKE_RC_COMPILER  "/opt/xwin/bin/rc")\n' > xwin.cmake
+
+            - name: Ensure xwin toolchain binary names
+              run: |
+                  # Symlink clang-cl-18, lld-link-18, llvm-rc-18 to their actual locations if needed
+                  if ! command -v clang-cl-18 >/dev/null 2>&1 && command -v clang-cl >/dev/null 2>&1; then
+                    sudo ln -sf $(command -v clang-cl) /usr/local/bin/clang-cl-18
+                  fi
+                  if ! command -v lld-link-18 >/dev/null 2>&1 && command -v lld-link >/dev/null 2>&1; then
+                    sudo ln -sf $(command -v lld-link) /usr/local/bin/lld-link-18
+                  fi
+                  if ! command -v llvm-rc-18 >/dev/null 2>&1 && command -v llvm-rc >/dev/null 2>&1; then
+                    sudo ln -sf $(command -v llvm-rc) /usr/local/bin/llvm-rc-18
+                  fi
+                  if ! command -v llvm-mt-18 >/dev/null 2>&1 && command -v llvm-mt >/dev/null 2>&1; then
+                    sudo ln -sf $(command -v llvm-mt) /usr/local/bin/llvm-mt-18
+                  fi
 
             - name: Build cURL (cross)
               run: |
