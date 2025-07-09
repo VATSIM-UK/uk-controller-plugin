@@ -34,13 +34,17 @@ jobs:
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder
 
+            - name: Clean build directory (DEBUG)
+              run: |
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "rm -rf build"
+
             - name: Run CMake
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
 
             - name: Run Ninja Build
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v -j2" --memory=6g
 
             - name: Run tests
               run: |
