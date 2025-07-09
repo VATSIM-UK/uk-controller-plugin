@@ -86,6 +86,7 @@ jobs:
                   CFLAGS: -m32
                   CXX: clang++
                   CXXFLAGS: -m32
+                  CURL_INCLUDEDIR: /usr/local/include
               run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -Bbuild
 
             - name: Run Ninja Build
