@@ -1,4 +1,9 @@
 #pragma once
+#include <memory>
+#include <string>
+#include <functional>
+#include <windows.h>
+#include <gdiplus.h>
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -6,6 +11,7 @@ namespace UKControllerPlugin {
     } // namespace Euroscope
     namespace Windows {
         class GdiGraphicsInterface;
+        struct GdiplusBrushes;
     } // namespace Windows
 } // namespace UKControllerPlugin
 
@@ -30,6 +36,7 @@ namespace UKControllerPlugin::Components {
         std::shared_ptr<TitleBar> WithTitle(std::wstring title);
         virtual void
         Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const;
+        virtual void DrawTheme(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen, const Windows::GdiplusBrushes& brushes) const;
 
         protected:
         TitleBar(std::wstring title, Gdiplus::Rect area);

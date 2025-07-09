@@ -13,7 +13,7 @@ namespace UKControllerPlugin::Components {
     Gdiplus::Point collapsePoints[3] = {Gdiplus::Point(0, -5), Gdiplus::Point(5, 5), Gdiplus::Point(-5, 5)};
 
     // The standard button sizing
-    Gdiplus::REAL buttonSize(10);
+    Gdiplus::REAL buttonSize(15);
 
     /*
      * Draws a standard X-shaped close button of the specified colour.

@@ -21,6 +21,7 @@ namespace UKControllerPlugin {
     } // namespace Navaids
     namespace Windows {
         class GdiGraphicsInterface;
+        struct GdiplusBrushes;
     } // namespace Windows
 } // namespace UKControllerPlugin
 
@@ -42,6 +43,7 @@ namespace UKControllerPlugin {
                 const Navaids::Navaid& navaid,
                 const PublishedHoldCollection& publishedHoldCollection,
                 const Dialog::DialogManager& dialogManager,
+                const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
                 std::shared_ptr<List::PopupListInterface> addAircraftSelector);
             void ButtonClicked(std::string button);
             void ButtonRightClicked(const std::string& button);
@@ -171,17 +173,19 @@ namespace UKControllerPlugin {
             std::shared_ptr<List::PopupListInterface> addAircraftSelector;
 
             // Brushes
-            const Gdiplus::SolidBrush titleBarTextBrush;
-            const Gdiplus::SolidBrush titleBarBrush;
-            const Gdiplus::SolidBrush dataBrush;
-            const Gdiplus::SolidBrush clearedLevelBrush;
-            const Gdiplus::SolidBrush blockedLevelBrush;
-            const Gdiplus::Pen borderPen;
-            const Gdiplus::Pen sameLevelBoxPen;
+            // const Gdiplus::SolidBrush titleBarTextBrush;
+            // const Gdiplus::SolidBrush titleBarBrush;
+            // const Gdiplus::SolidBrush dataBrush;
+            // const Gdiplus::SolidBrush clearedLevelBrush;
+            // const Gdiplus::SolidBrush blockedLevelBrush;
+            // const Gdiplus::Pen borderPen;
+            // const Gdiplus::Pen sameLevelBoxPen;
             Gdiplus::Pen verticalSpeedAscentPen;
             Gdiplus::Pen verticalSpeedDescentPen;
-            const Gdiplus::SolidBrush exitButtonBrush;
-            const Gdiplus::SolidBrush backgroundBrush;
+            // const Gdiplus::SolidBrush exitButtonBrush;
+            // const Gdiplus::SolidBrush backgroundBrush;
+
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
             // Fonts
             const Gdiplus::FontFamily fontFamily;

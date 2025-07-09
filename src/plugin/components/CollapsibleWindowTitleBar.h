@@ -15,6 +15,7 @@ namespace UKControllerPlugin::Components {
         Create(std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId);
         void Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
             const override;
+        void DrawTheme(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen, const Windows::GdiplusBrushes& brushes) const override;
 
         protected:
         CollapsibleWindowTitleBar(
