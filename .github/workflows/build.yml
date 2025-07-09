@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: windows-2019
+    runs-on: windows-2022
     concurrency:
       group: ukcp-build-${{ github.ref }}
       cancel-in-progress: true
@@ -29,9 +29,6 @@ jobs:
 
       - name: Check Clang Version
         run: clang-cl --version
-
-      - name: Setup Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
 
       # cURL
       - name: Cache cURL
@@ -108,7 +105,7 @@ jobs:
       # Run the build and tests
       - name: Run Ninja Build
         working-directory: build
-        run: ninja
+        run: ninja -v -j 1
 
       - name: Run Tests
         working-directory: build
