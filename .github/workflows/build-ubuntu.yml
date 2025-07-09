@@ -34,9 +34,13 @@ jobs:
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder
 
-            - name: Build plugin
+            - name: Run CMake
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
+
+            - name: Run Ninja Build
+              working-directory: build
+              run: ninja
 
             - name: Run tests
               run: |
