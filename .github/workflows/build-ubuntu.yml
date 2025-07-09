@@ -31,8 +31,8 @@ jobs:
 
             - name: Run the build using the built image
               run: |
-                  docker run -it ukcp-builder
+                  docker run ukcp-builder
 
             - name: Build plugin
               run: |
-                  docker run -it ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -G Ninja -B build"
+                  docker run ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -G Ninja -B build"
