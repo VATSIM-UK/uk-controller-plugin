@@ -28,6 +28,7 @@ jobs:
 
             - name: Build docker image
               run: |
+                  export DOCKER_BUILDKIT=1
                   docker build --cache-from=type=local,src=/tmp/.buildx-cache \
                                --cache-to=type=local,dest=/tmp/.buildx-cache \
                                -t ukcp-builder .
