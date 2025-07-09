@@ -9,9 +9,6 @@ jobs:
         name: Build plugin for Windows (using docker)
         runs-on: ubuntu-latest
         steps:
-            - name: Force submodules to use HTTPS instead of SSH
-              run: git config --global url."https://github.com/".insteadOf "git@github.com:"
-
             - name: Checkout repository
               uses: actions/checkout@v4
               with:
@@ -26,6 +23,7 @@ jobs:
             - name: Build the Docker image
               uses: docker/build-push-action@v6
               with:
+                  context: .
                   push: false
                   tags: ukcp-builder:latest
                   cache-from: type=gha
