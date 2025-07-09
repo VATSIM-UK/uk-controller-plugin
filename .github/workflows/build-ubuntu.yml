@@ -43,9 +43,30 @@ jobs:
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
 
             - name: Run Ninja Build
+              timeout-minutes: 60
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v -j2" --memory=6g
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v -j1 -d keepdepfile -d explain"
 
             - name: Run tests
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cd build && ctest -C Release --output-on-failure --no-tests=error"
+
+            - name: List build directory after Ninja (debug)
+              if: always()
+              run: |
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ls -lhR"
+
+            - name: Show disk usage (debug)
+              if: always()
+              run: |
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "df -h && du -sh ./*"
+
+            - name: Show running processes (debug)
+              if: always()
+              run: |
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ps auxf"
+
+            - name: Show memory usage (debug)
+              if: always()
+              run: |
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "free -m"
