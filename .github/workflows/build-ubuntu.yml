@@ -6,144 +6,36 @@ on:
 
 jobs:
     build:
-        name: Build plugin for Windows (using xwin on Ubuntu)
+        name: Build plugin for Windows (using docker)
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout Code and Submodules
+            - name: Checkout repository
               uses: actions/checkout@v4
               with:
                   submodules: recursive
 
-            - name: Install Dependencies
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y \
-                      build-essential cmake cppcheck gdb ninja-build valgrind \
-                      clang-18 clang-tools-18 lld-18 llvm-18 \
-                      curl zip unzip
-
-            - name: Setup xwin and Windows Toolchain
-              run: |
-                  wget https://github.com/Jake-Shadle/xwin/releases/download/0.6.5/xwin-0.6.5-x86_64-unknown-linux-musl.tar.gz -O /tmp/xwin.tar.gz
-                  tar -xf /tmp/xwin.tar.gz -C /tmp
-                  sudo mv /tmp/xwin-*/xwin /usr/local/bin/
-                  xwin --accept-license --arch x86 \
-                      --crt-version 14.29.16.11 --sdk-version 10.0.20348 \
-                      splat --output /opt/xwin --include-debug-libs
-
-            - name: Setup xwin toolchain scripts
-              run: |
-                  wget https://gist.githubusercontent.com/19wintersp/084cd0d4810a25c11559107491525655/raw/31fce25c66837af5538857f1624ff7acb409d7a9/insensitive.c -O /tmp/insensitive.c
-                  mkdir -p /opt/xwin/bin
-                  cd /opt/xwin/bin
-                  cc -O0 -std=c2x -fPIC -shared -o libinsensitive.so /tmp/insensitive.c
-                  printf '#!/bin/env bash\nLD_PRELOAD=/opt/xwin/bin/libinsensitive.so \\n    clang-cl-18 \\n        -Wno-microsoft --target=i686-pc-windows-msvc /EHa /arch:SSE \\n        /imsvc /opt/xwin/crt/include      /imsvc /opt/xwin/sdk/include/shared \\n        /imsvc /opt/xwin/sdk/include/ucrt /imsvc /opt/xwin/sdk/include/um \\n        "$@"\n' > cc
-                  printf '#!/bin/env bash\nLD_PRELOAD= \\n    lld-link-18 /lib \\n        /libpath:/opt/xwin/crt/lib/x86      /libpath:/opt/xwin/sdk/lib/shared/x86 \\n        /libpath:/opt/xwin/sdk/lib/ucrt/x86 /libpath:/opt/xwin/sdk/lib/um/x86 \\n        "$@"\n' > lib
-                  printf '#!/bin/env bash\nLD_PRELOAD=/opt/xwin/bin/libinsensitive.so \\n    lld-link-18 \\n        /libpath:/opt/xwin/crt/lib/x86      /libpath:/opt/xwin/sdk/lib/shared/x86 \\n        /libpath:/opt/xwin/sdk/lib/ucrt/x86 /libpath:/opt/xwin/sdk/lib/um/x86 \\n        "$@"\n' > link
-                  printf '#!/bin/env bash\nLD_PRELOAD=/opt/xwin/bin/libinsensitive.so \\n    llvm-rc-18 \\n        /I /opt/xwin/crt/include      /I /opt/xwin/sdk/include/shared \\n        /I /opt/xwin/sdk/include/ucrt /I /opt/xwin/sdk/include/um \\n        "$@"\n' > rc
-                  ln -s $(which llvm-mt-18) mt
-                  chmod u+x cc lib link rc
-                  printf 'set(CMAKE_SYSTEM_NAME Windows)\nset(CMAKE_AR           "/opt/xwin/bin/lib")\nset(CMAKE_C_COMPILER   "/opt/xwin/bin/cc")\nset(CMAKE_CXX_COMPILER "/opt/xwin/bin/cc")\nset(CMAKE_LINKER       "/opt/xwin/bin/link")\nset(CMAKE_MT           "/opt/xwin/bin/mt")\nset(CMAKE_RC_COMPILER  "/opt/xwin/bin/rc")\n' > xwin.cmake
-
-            - name: Ensure xwin toolchain binary names
-              run: |
-                  # Symlink clang-cl-18, lld-link-18, llvm-rc-18 to their actual locations if needed
-                  if ! command -v clang-cl-18 >/dev/null 2>&1 && command -v clang-cl >/dev/null 2>&1; then
-                    sudo ln -sf $(command -v clang-cl) /usr/local/bin/clang-cl-18
-                  fi
-                  if ! command -v lld-link-18 >/dev/null 2>&1 && command -v lld-link >/dev/null 2>&1; then
-                    sudo ln -sf $(command -v lld-link) /usr/local/bin/lld-link-18
-                  fi
-                  if ! command -v llvm-rc-18 >/dev/null 2>&1 && command -v llvm-rc >/dev/null 2>&1; then
-                    sudo ln -sf $(command -v llvm-rc) /usr/local/bin/llvm-rc-18
-                  fi
-                  if ! command -v llvm-mt-18 >/dev/null 2>&1 && command -v llvm-mt >/dev/null 2>&1; then
-                    sudo ln -sf $(command -v llvm-mt) /usr/local/bin/llvm-mt-18
-                  fi
-
-            - name: Build cURL (cross)
-              run: |
-                  wget https://curl.se/download/curl-7.62.0.tar.gz -O /tmp/curl.tar.gz
-                  tar -xf /tmp/curl.tar.gz -C /tmp
-                  mv /tmp/curl-* /opt/curl
-                  cd /opt/curl
-                  sed -ie "s/\\xa9/(c)/g" lib/libcurl.rc src/curl.rc # curl/curl#7765
-                  cmake --fresh \
-                      -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=/opt/xwin/bin/xwin.cmake \
-                      -DBUILD_CURL_EXE=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
-                      -DCURL_CA_PATH=none -DCURL_USE_LIBPSL=OFF \
-                      -G Ninja -B build
-                  ninja -C build
-                  cd build/lib
-                  cp libcurl_imp.lib libcurl_a.lib
-                  cp libcurl_imp.lib libcurl_a_debug.lib
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
+            - name: Cache Docker layers
+              id: cache-docker
+              uses: actions/cache@v3
               with:
-                  node-version: "16"
-
-            - name: Get Yarn Cache Directory
-              id: yarn-cache-dir-path
-              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-            - name: Load Yarn Cache
-              uses: actions/cache@v4
-              id: yarn-cache
-              with:
-                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  path: /tmp/.buildx-cache
+                  key: ${{ runner.os }}-docker-${{ hashFiles('Dockerfile') }}
                   restore-keys: |
-                      ${{ runner.os }}-yarn-
+                      ${{ runner.os }}-docker-
 
-            - name: Load Cached Node Modules
-              uses: actions/cache@v4
-              with:
-                  path: "**/node_modules"
-                  key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
 
-            - name: Install Assets
-              run: yarn
-
-            - name: Setup Build Version
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              run: bash .github/workflows/plugin_version.sh
-
-            - name: Run CMake (cross)
-              env:
-                  CURL_INCLUDEDIR: /opt/curl/include
-                  CURL_LIBRARYDIR: /opt/curl/build/lib
-                  CURL_DEBUG_LIBRARYDIR: /opt/curl/build/lib
+            - name: Build docker image
               run: |
-                  cmake -DCMAKE_BUILD_TYPE=Release \
-                        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-                        -DCMAKE_TOOLCHAIN_FILE=/opt/xwin/bin/xwin.cmake \
-                        -G Ninja -Bbuild
+                  docker build --cache-from=type=local,src=/tmp/.buildx-cache \
+                               --cache-to=type=local,dest=/tmp/.buildx-cache \
+                               -t ukcp-builder .
 
-            - name: Run Ninja Build
-              working-directory: build
-              run: ninja
-
-            - name: Run Tests
-              working-directory: build
+            - name: Run the build using the built image
               run: |
-                  ctest -C Release --output-on-failure --no-tests=error
+                  docker run -it ukcp-builder
 
-            - name: Upload Core Binary As Artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: UKControllerPluginCore.dll
-                  path: "./build/bin/UKControllerPluginCore.dll"
-
-            - name: Upload Updater Binary As Artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: UKControllerPluginUpdater.dll
-                  path: "./build/bin/UKControllerPluginUpdater.dll"
-
-            - name: Upload Loader Binary As Artifact
-              uses: actions/upload-artifact@v4
-              with:
-                  name: UKControllerPlugin.dll
-                  path: "./build/bin/UKControllerPlugin.dll"
+            - name: Build plugin
+              run: |
+                  docker run -it ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -G Ninja -B build"
