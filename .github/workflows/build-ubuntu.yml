@@ -37,3 +37,7 @@ jobs:
             - name: Build plugin
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
+
+            - name: Run tests
+              run: |
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cd build && ctest -C Release --output-on-failure --no-tests=error"
