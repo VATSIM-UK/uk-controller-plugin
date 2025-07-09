@@ -1,0 +1,87 @@
+name: Build (ubuntu)
+
+on:
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Code and Submodules
+              uses: actions/checkout@v4
+              with:
+                  submodules: recursive
+
+            - name: Install Dependencies
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y clang ninja-build cmake curl zip unzip
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "16"
+
+            - name: Get Yarn Cache Directory
+              id: yarn-cache-dir-path
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+            - name: Load Yarn Cache
+              uses: actions/cache@v4
+              id: yarn-cache
+              with:
+                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Load Cached Node Modules
+              uses: actions/cache@v4
+              with:
+                  path: "**/node_modules"
+                  key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+
+            - name: Install Assets
+              run: yarn
+
+            - name: Setup Build Version
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: bash .github/workflows/plugin_version.sh
+
+            - name: Run CMake
+              env:
+                  CC: clang
+                  CFLAGS: -m32
+                  CXX: clang++
+                  CXXFLAGS: -m32
+              run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -Bbuild
+
+            - name: Run Ninja Build
+              working-directory: build
+              run: ninja
+
+            - name: Run Tests
+              working-directory: build
+              run: |
+                  ctest -C Release --output-on-failure --no-tests=error
+
+            - name: Upload Core Binary As Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: UKControllerPluginCore.so
+                  path: "./build/bin/UKControllerPluginCore.so"
+
+            - name: Upload Updater Binary As Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: UKControllerPluginUpdater.so
+                  path: "./build/bin/UKControllerPluginUpdater.so"
+
+            - name: Upload Loader Binary As Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: UKControllerPlugin.so
+                  path: "./build/bin/UKControllerPlugin.so"
