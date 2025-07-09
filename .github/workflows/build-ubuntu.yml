@@ -17,7 +17,36 @@ jobs:
             - name: Install Dependencies
               run: |
                   sudo apt-get update
-                  sudo apt-get install -y clang ninja-build cmake curl zip unzip
+                  sudo apt-get install -y \
+                      build-essential cmake cppcheck gdb ninja-build valgrind \
+                      clang-18 clang-tools-18 lld-18 llvm-18 \
+                      gcc-multilib g++-multilib curl zip unzip
+                  sudo ln -sf /usr/bin/clang-18 /usr/local/bin/clang
+                  sudo ln -sf /usr/bin/clang++-18 /usr/local/bin/clang++
+                  sudo ln -sf /usr/bin/clang-cl-18 /usr/local/bin/clang-cl
+                  sudo ln -sf /usr/bin/lld-18 /usr/local/bin/lld
+                  sudo ln -sf /usr/bin/llvm-rc-18 /usr/local/bin/llvm-rc
+                  sudo ln -sf /usr/bin/llvm-mt-18 /usr/local/bin/llvm-mt
+
+            - name: Setup xwin and Windows Toolchain
+              run: |
+                  wget https://github.com/Jake-Shadle/xwin/releases/download/0.6.5/xwin-0.6.5-x86_64-unknown-linux-musl.tar.gz -O /tmp/xwin.tar.gz
+                  tar -xf /tmp/xwin.tar.gz -C /tmp
+                  sudo mv /tmp/xwin-*/xwin /usr/local/bin/
+                  xwin --accept-license --arch x86 \
+                      --crt-version 14.29.16.11 --sdk-version 10.0.20348 \
+                      splat --output /opt/xwin --include-debug-libs
+
+            - name: Build cURL
+              run: |
+                  wget https://curl.se/download/curl-7.62.0.tar.gz -O /tmp/curl.tar.gz
+                  tar -xf /tmp/curl.tar.gz -C /tmp
+                  mv /tmp/curl-* /opt/curl
+                  cd /opt/curl
+                  cmake --fresh -DCMAKE_BUILD_TYPE=Release -G Ninja -B build
+                  ninja -C build
+                  sudo cp -r build/lib/* /usr/local/lib/
+                  sudo cp -r include/* /usr/local/include/
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
