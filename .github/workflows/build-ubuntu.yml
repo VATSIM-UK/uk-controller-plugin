@@ -45,7 +45,7 @@ jobs:
             - name: Run Ninja Build
               timeout-minutes: 60
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v -j1"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v"
 
             - name: Run tests
               run: |
