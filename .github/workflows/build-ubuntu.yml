@@ -34,7 +34,7 @@ jobs:
             - name: Run CMake
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
-                    /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -G Ninja -B build"
+                    /bin/bash -c "mkdir -p build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -G Ninja -B build"
 
             - name: Run Ninja Build
               timeout-minutes: 60
