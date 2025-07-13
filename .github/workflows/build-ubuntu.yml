@@ -8,6 +8,7 @@ jobs:
     build:
         name: Build plugin for Windows (using docker)
         runs-on: ubuntu-latest
+
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -30,43 +31,55 @@ jobs:
                   cache-to: type=gha,mode=max
                   load: true
 
-            - name: Run the build using the built image
-              run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder
-
             - name: Clean build directory (DEBUG)
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "rm -rf build"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
+                    /bin/bash -c "rm -rf build"
 
             - name: Run CMake
               run: |
-                docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build -DCMAKE_CXX_FLAGS=\"/Zm150 -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON -DCMAKE_JOB_POOLS=compile=2,link=1\""
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
+                    /bin/bash -c "\
+                      cmake \
+                        -DCMAKE_BUILD_TYPE=Release \
+                        -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN \
+                        -DCMAKE_NINJA_FORCE_RESPONSE_FILE=ON \
+                        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON \
+                        -DCMAKE_CXX_FLAGS='/Zm150' \
+                        -G Ninja \
+                        -B build"
 
             - name: Run Ninja Build
               timeout-minutes: 60
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v "
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
+                    /bin/bash -c "ninja -v -j 1"
 
             - name: Run tests
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cd build && ctest -C Release --output-on-failure --no-tests=error"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
+                    /bin/bash -c 'cd build && ctest -C Release --output-on-failure --no-tests=error'
 
             - name: List build directory after Ninja (debug)
               if: always()
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ls -lhR"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
+                    /bin/bash -c "ls -lhR"
 
             - name: Show disk usage (debug)
               if: always()
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "df -h && du -sh ./*"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
+                    /bin/bash -c "df -h && du -sh ./*"
 
             - name: Show running processes (debug)
               if: always()
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ps auxf"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
+                    /bin/bash -c "ps auxf"
 
             - name: Show memory usage (debug)
               if: always()
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "free -m"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
+                    /bin/bash -c "free -m"
