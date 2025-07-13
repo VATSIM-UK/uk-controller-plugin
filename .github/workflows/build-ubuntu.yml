@@ -31,55 +31,18 @@ jobs:
                   cache-to: type=gha,mode=max
                   load: true
 
-            - name: Clean build directory (DEBUG)
-              run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
-                    /bin/bash -c "rm -rf build"
-
             - name: Run CMake
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
-                    /bin/bash -c "\
-                      cmake \
-                        -DCMAKE_BUILD_TYPE=Release \
-                        -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN \
-                        -DCMAKE_NINJA_FORCE_RESPONSE_FILE=ON \
-                        -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON \
-                        -DCMAKE_CXX_FLAGS='/Zm150 -Wno-tautological-constant-out-of-range-compare' \
-                        -G Ninja \
-                        -B build"
+                    /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -G Ninja -B build"
 
             - name: Run Ninja Build
               timeout-minutes: 60
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "ninja -v -j 1"
+                    /bin/bash -c "ninja -C build UKControllerPluginCore"
 
             - name: Run tests
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
                     /bin/bash -c 'cd build && ctest -C Release --output-on-failure --no-tests=error'
-
-            - name: List build directory after Ninja (debug)
-              if: always()
-              run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "ls -lhR"
-
-            - name: Show disk usage (debug)
-              if: always()
-              run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "df -h && du -sh ./*"
-
-            - name: Show running processes (debug)
-              if: always()
-              run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "ps auxf"
-
-            - name: Show memory usage (debug)
-              if: always()
-              run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "free -m"
