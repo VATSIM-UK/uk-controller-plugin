@@ -45,7 +45,7 @@ jobs:
                         -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN \
                         -DCMAKE_NINJA_FORCE_RESPONSE_FILE=ON \
                         -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON \
-                        -DCMAKE_CXX_FLAGS='/Zm150' \
+                        -DCMAKE_CXX_FLAGS='/Zm150 -Wno-tautological-constant-out-of-range-compare' \
                         -G Ninja \
                         -B build"
 
