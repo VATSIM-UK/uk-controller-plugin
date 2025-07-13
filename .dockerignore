@@ -1,0 +1,26 @@
+# Ignore build artifacts
+/build
+/bin
+/obj
+*.o
+*.out
+*.exe
+
+# Ignore C++ cache files
+*.gch
+*.pch
+
+# Ignore temporary files
+*.tmp
+*.log
+*.swp
+*.bak
+
+# Ignore Git files
+.git
+.gitignore
+.gitattributes
+
+# Ignore Docker-related files
+Dockerfile
+.dockerignore
