@@ -34,15 +34,15 @@ jobs:
             - name: Run CMake
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
-                    /bin/bash -c "mkdir -p build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=$TOOLCHAIN -G Ninja -B build"
+                    /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
 
             - name: Run Ninja Build
               timeout-minutes: 60
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "ninja -C build UKControllerPluginCore"
+                    /bin/bash -c "ninja"
 
             - name: Run tests
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
-                    /bin/bash -c 'cd build && ctest -C Release --output-on-failure --no-tests=error'
+                    /bin/bash -c "cd build && ctest -C Release --output-on-failure --no-tests=error"
