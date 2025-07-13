@@ -40,12 +40,12 @@ jobs:
 
             - name: Run CMake
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
+                docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build -DCMAKE_CXX_FLAGS=\"/Zm150 -DCMAKE_DISABLE_PRECOMPILE_HEADERS=ON -DCMAKE_JOB_POOLS=compile=2,link=1\""
 
             - name: Run Ninja Build
               timeout-minutes: 60
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder /bin/bash -c "ninja -v "
 
             - name: Run tests
               run: |
