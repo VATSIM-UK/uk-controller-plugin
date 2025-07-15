@@ -9,7 +9,7 @@ ARG WINDOWS_SDK_VERSION=10.0.20348
 
 
 ADD "https://github.com/Jake-Shadle/xwin/releases/download/${XWIN_VERSION}/xwin-${XWIN_VERSION}-${XWIN_TRIPLE}.tar.gz" \
-	/tmp/xwin.tar.gz
+    /tmp/xwin.tar.gz
 RUN <<-EOF
 	set -eux
 
@@ -20,8 +20,8 @@ RUN <<-EOF
 EOF
 
 RUN xwin --accept-license --arch x86 \
-	--crt-version ${WINDOWS_CRT_VERSION} --sdk-version ${WINDOWS_SDK_VERSION} \
-	splat --output /opt/xwin --include-debug-libs
+    --crt-version ${WINDOWS_CRT_VERSION} --sdk-version ${WINDOWS_SDK_VERSION} \
+    splat --output /opt/xwin --include-debug-libs
 
 RUN <<-EOF
 	set -eux
@@ -39,7 +39,7 @@ EOF
 ENV LLVM_VERSION=${LLVM_VERSION}
 
 ADD "https://gist.githubusercontent.com/19wintersp/084cd0d4810a25c11559107491525655/raw/31fce25c66837af5538857f1624ff7acb409d7a9/insensitive.c" \
-	/tmp/insensitive.c
+    /tmp/insensitive.c
 RUN <<-EOF
 	set -eux
 
@@ -100,7 +100,7 @@ EOF
 ENV TOOLCHAIN=/opt/xwin/bin/xwin.cmake
 
 ADD "https://curl.se/download/curl-${CURL_VERSION}.tar.gz" \
-	/tmp/curl.tar.gz
+    /tmp/curl.tar.gz
 RUN <<-EOF
 	set -eux
 
@@ -129,5 +129,9 @@ EOF
 ENV CURL_INCLUDEDIR=/opt/curl/include/
 ENV CURL_LIBRARYDIR=/opt/curl/build/lib/
 ENV CURL_DEBUG_LIBRARYDIR=/opt/curl/build/lib/
+
+
+COPY . /app
+WORKDIR /app
 
 CMD ["/bin/bash"]
