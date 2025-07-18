@@ -249,6 +249,12 @@ set(src__eventhandler
         eventhandler/ProcessEventBusEventsOnTimer.cpp eventhandler/ProcessEventBusEventsOnTimer.h eventhandler/EventBusBootstrap.cpp eventhandler/EventBusBootstrap.h)
 source_group("src\\eventhandler" FILES ${src__eventhandler})
 
+set(src__filestatus
+    "filestatus/FileStatusModule.cpp"
+    "filestatus/FileStatusModule.h"
+)
+source_group("src\\filestatus" FILES ${src__filestatus})
+
 set(src__flightinformationservice
     "flightinformationservice/FlightInformationServiceModule.cpp"
     "flightinformationservice/FlightInformationServiceModule.h"
@@ -991,6 +997,7 @@ set(ALL_FILES
     ${src__ecfmp}
     ${src__euroscope}
     ${src__eventhandler}
+    ${src__filestatus}
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}
