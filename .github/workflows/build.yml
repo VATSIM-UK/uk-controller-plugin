@@ -6,12 +6,12 @@ on:
       - 'main'
       - 'alpha'
       - 'beta'
-  pull_request:
+  #pull_request:
 
 jobs:
   build:
     name: Build
-    runs-on: windows-2019
+    runs-on: windows-latest
     concurrency:
       group: ukcp-build-${{ github.ref }}
       cancel-in-progress: true
