@@ -18,4 +18,4 @@
 	url = https://github.com/yhirose/cpp-httplib.git
 [submodule "third_party/ecfmp"]
 	path = third_party/ecfmp
-	url = https://github.com/ECFMP/plugin.git
+	url = https://github.com/kristiankunc/plugin-sdk.git
