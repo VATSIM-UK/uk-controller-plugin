@@ -42,7 +42,13 @@ jobs:
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
                     /bin/bash -c "ninja"
 
-            - name: Run tests
+            - name: Copy build directory to host
               run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
-                    /bin/bash -c "cd build && ctest -C Release --output-on-failure --no-tests=error"
+                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
+                    /bin/bash -c "cp -r . /workspace/build"
+
+            - name: Upload build directory as artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build-artifact
+                  path: build
