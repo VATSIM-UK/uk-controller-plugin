@@ -123,6 +123,19 @@ namespace UKControllerPlugin::Departure {
                 if (this->contentCollapsed) {
                     return;
                 }
+
+                // Calculate dynamic height based on number of items
+                const int totalItems = static_cast<int>(decisions.size() + prenoteMessages.size());
+                const int headerHeight = 30; // Height for column headers
+                const int minHeight = 50; // Minimum height even when no items
+                const int calculatedHeight = headerHeight + (totalItems * lineHeight);
+                const int dynamicHeight = calculatedHeight > minHeight ? calculatedHeight : minHeight;
+                
+                // Update content area with dynamic height
+                this->contentArea = {0, 0, 435, dynamicHeight};
+
+                graphics.FillRect(this->contentArea, Gdiplus::SolidBrush(this->brushes.background));
+
                 // Draw column headers
                 graphics.DrawString(L"Type", this->typeColumnHeader, Gdiplus::SolidBrush(this->brushes.text));
                 graphics.DrawString(L"Callsign", this->callsignColumnHeader, Gdiplus::SolidBrush(this->brushes.text));

@@ -87,6 +87,7 @@ namespace UKControllerPlugin::Departure {
         const Controller::ActiveCallsignCollection& activeCallsigns;
 
         // Drawing RECTs
+        Gdiplus::Rect contentArea{0, 0, 435, 400};
         const Gdiplus::Rect typeColumnHeader{5, 5, 40, 25};
         const Gdiplus::Rect callsignColumnHeader{50, 5, 100, 25};
         const Gdiplus::Rect controllerColumnHeader{160, 5, 100, 25};
