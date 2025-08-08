@@ -223,19 +223,19 @@ jobs:
 
       # Download build artifacts
       - name: Download Core Binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: UKControllerPluginCore.dll
           path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Download Updater Binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: UKControllerPluginUpdater.dll
           path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Download Loader Binary
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: UKControllerPlugin.dll
           path: ".\\build\\bin\\UKControllerPlugin.dll"
