@@ -6,7 +6,7 @@ on:
       - 'main'
       - 'alpha'
       - 'beta'
-  #pull_request:
+  pull_request:
 
 jobs:
   build:
