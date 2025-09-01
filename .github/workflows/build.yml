@@ -100,9 +100,9 @@ jobs:
       - name: Run CMake
         env:
           CC: clang-cl
-          CFLAGS: -m32
+          CFLAGS: -m32 -Wno-error=deprecated-literal-operator
           CXX: clang-cl
-          CXXFLAGS: -m32
+          CXXFLAGS: -m32 -Wno-error=deprecated-literal-operator
         run: cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja -Bbuild
 
       # Run the build and tests
