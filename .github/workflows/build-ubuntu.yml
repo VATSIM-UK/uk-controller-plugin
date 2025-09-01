@@ -38,16 +38,11 @@ jobs:
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
                     /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
 
-            - name: Run Ninja Build
+            - name: Build plugin (Ninja target only)
               timeout-minutes: 60
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "ninja"
-
-            - name: Copy build directory to host
-              run: |
-                  docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "cp -r . /workspace/build"
+                    /bin/bash -c "ninja UKControllerPluginLoader"
 
             - name: Upload build directory as artifact
               uses: actions/upload-artifact@v4
