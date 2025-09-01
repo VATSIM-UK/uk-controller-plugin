@@ -65,63 +65,11 @@ jobs:
               with:
                   arch: x86
 
-            - name: Check Clang Version
-              run: clang-cl --version
-
-            - name: Setup Ninja
-              uses: seanmiddleditch/gha-setup-ninja@master
-
-            - name: Cache cURL
-              id: cache-curl
-              uses: actions/cache@v4
+            - name: Download build artifact
+              uses: actions/download-artifact@v4
               with:
-                  path: "C:\\hostedtoolcache\\windows\\libcurl"
-                  key: "ukcp-curl-build"
-
-            - name: Download and Build cURL
-              if: steps.cache-curl.outputs.cache-hit != 'true'
-              env:
-                  CURL_DOWNLOAD_URL: "https://github.com/curl/curl/releases/download/curl-7_76_1/curl-7.76.1.zip"
-                  CURL_VERSION: 7.76.1
-              run: |
-                  New-Item -Path "C:\\hostedtoolcache\\windows" -Name "libcurl" -ItemType "directory"
-                  $WebClient = New-Object System.Net.WebClient
-                  $WebClient.DownloadFile(${env:CURL_DOWNLOAD_URL}, "C:\\hostedtoolcache\\windows\\libcurl\\curl.zip")
-                  Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl"
-                  7z x curl.zip
-                  Remove-Item curl.zip
-                  Set-Location -Path "C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\winbuild"
-                  nmake /f Makefile.vc mode=static ENABLE_SCHANNEL=yes
-
-            - name: Setup cURL Environment
-              env:
-                  CURL_VERSION: 7.76.1
-              run: |
-                  echo "CURL_INCLUDEDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-                  echo "CURL_LIBRARYDIR=C:\\hostedtoolcache\\windows\\libcurl\\curl-${env:CURL_VERSION}\\builds\\libcurl-vc-x86-release-static-ipv6-sspi-schannel\\lib" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "16"
-
-            - name: Install Assets
-              run: yarn
-
-            - name: Configure CMake (Ninja)
-              env:
-                  CC: clang-cl
-                  CXX: clang-cl
-              run: >
-                  cmake -DCMAKE_BUILD_TYPE=Release
-                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-                  -DCMAKE_C_FLAGS="/Wno-error=deprecated-literal-operator /DFMT_USE_CONSTEXPR=0"
-                  -DCMAKE_CXX_FLAGS="/Wno-error=deprecated-literal-operator /DFMT_USE_CONSTEXPR=0"
-                  -G Ninja -Bbuild
-
-            - name: Build (Ninja)
-              working-directory: build
-              run: ninja
+                  name: ukcp-build
+                  path: build
 
             - name: Run Tests
               working-directory: build
