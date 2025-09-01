@@ -30,6 +30,8 @@ jobs:
                   cache-from: type=gha
                   cache-to: type=gha,mode=max
                   load: true
+                  build-args: |
+                      WINDOWS_SDK_VERSION=10.0.22621
 
             - name: Run CMake
               run: |
