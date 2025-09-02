@@ -85,11 +85,6 @@ jobs:
                     }
                   }
 
-            - name: List binaries and structure
-              working-directory: build
-              run: |
-                  dir /s bin
-
             - name: Update CTest Configuration
               working-directory: build
               shell: powershell
