@@ -85,7 +85,7 @@ jobs:
                     }
                   }
 
-            - name: Update CTest Configuration and Create Links
+            - name: Prepare Test Environment
               working-directory: build
               shell: powershell
               run: |
@@ -101,81 +101,41 @@ jobs:
                     "UKControllerPluginUtilsTest.exe"
                   )
 
-                  # Update CTest test paths in all CTestTestfile.cmake files
-                  Get-ChildItem -Path . -Filter "CTestTestfile.cmake" -Recurse | ForEach-Object {
-                    $file = $_.FullName
-                    $directory = Split-Path -Parent $file
-                    Write-Host "Processing CTest file: $file"
-                    
-                    $content = Get-Content $file -Raw
-                    
-                    # Replace all paths with absolute paths to executables in the bin directory
-                    foreach ($exe in $testExecutables) {
-                      $exePath = Join-Path $binPath $exe
-                      $exePattern = [regex]::Escape($exe)
-                      $content = $content -replace "bin/$exePattern", "$exePath"
-                      $content = $content -replace "bin\\$exePattern", "$exePath"
-                      $content = $content -replace "/workspace/build/bin/$exePattern", "$exePath"
-                      $content = $content -replace "/workspace/build/bin\\$exePattern", "$exePath"
+                  # Verify all test executables exist
+                  foreach ($exe in $testExecutables) {
+                    $exePath = Join-Path $binPath $exe
+                    if (Test-Path $exePath) {
+                      Write-Host "Found test executable: $exePath"
+                    } else {
+                      Write-Host "Warning: Test executable not found: $exePath"
                     }
-                    
-                    Set-Content $file -Value $content -NoNewline
-                    Write-Host "Updated $file with absolute paths"
                   }
 
-                  # Update main CTestTestfile.cmake
-                  if (Test-Path "CTestTestfile.cmake") {
-                    $content = Get-Content "CTestTestfile.cmake" -Raw
-                    
-                    # Replace all paths with absolute paths to executables in the bin directory
-                    foreach ($exe in $testExecutables) {
-                      $exePath = Join-Path $binPath $exe
-                      $exePattern = [regex]::Escape($exe)
-                      $content = $content -replace "bin/$exePattern", "$exePath"
-                      $content = $content -replace "bin\\$exePattern", "$exePath"
-                      $content = $content -replace "/workspace/build/bin/$exePattern", "$exePath"
-                      $content = $content -replace "/workspace/build/bin\\$exePattern", "$exePath"
-                    }
-                    
-                    Set-Content "CTestTestfile.cmake" -Value $content -NoNewline
-                    Write-Host "Updated main CTestTestfile.cmake with absolute paths"
-                  }
-
-                  # Show contents of main CTestTestfile.cmake for debugging
-                  if (Test-Path "CTestTestfile.cmake") {
-                    Write-Host "Contents of main CTestTestfile.cmake:"
-                    Get-Content "CTestTestfile.cmake"
-                  }
-
-                  # Create links in test directories pointing to the executables
+                  # Copy all DLLs to test directories to ensure dependencies are available
                   $testDirs = @(
                     "test/loader",
                     "test/plugin",
-                    "test/updater",
+                    "test/updater", 
                     "test/utils"
                   )
 
+                  # Get all DLLs from bin directory
+                  $dlls = Get-ChildItem -Path $binPath -Filter "*.dll"
+
                   foreach ($dir in $testDirs) {
                     if (Test-Path $dir) {
-                      Write-Host "Creating links in $dir"
+                      Write-Host "Copying DLLs to $dir"
                       
-                      # Create directory if it doesn't exist
-                      $binInTestDir = Join-Path $dir "bin"
-                      if (-not (Test-Path $binInTestDir)) {
-                        New-Item -ItemType Directory -Path $binInTestDir -Force | Out-Null
-                        Write-Host "Created directory: $binInTestDir"
+                      # Create directory for DLLs if it doesn't exist
+                      if (-not (Test-Path $dir)) {
+                        New-Item -ItemType Directory -Path $dir -Force | Out-Null
                       }
                       
-                      # Copy test executables to the bin subdirectory in each test directory
-                      foreach ($exe in $testExecutables) {
-                        $sourcePath = Join-Path $binPath $exe
-                        $destPath = Join-Path $binInTestDir $exe
-                        if (Test-Path $sourcePath) {
-                          Copy-Item -Path $sourcePath -Destination $destPath -Force
-                          Write-Host "Copied $exe to $destPath"
-                        } else {
-                          Write-Host "Warning: Source file not found: $sourcePath"
-                        }
+                      # Copy all DLLs to test directory
+                      foreach ($dll in $dlls) {
+                        $destPath = Join-Path $dir $dll.Name
+                        Copy-Item -Path $dll.FullName -Destination $destPath -Force
+                        Write-Host "  Copied $($dll.Name) to $destPath"
                       }
                     }
                   }
@@ -195,33 +155,77 @@ jobs:
                   # Print current working directory
                   Write-Host "Current working directory: $(Get-Location)"
 
-            - name: Run Tests with CTest
+            - name: Run Tests Directly
               working-directory: build
               shell: powershell
               run: |
-                  # Run tests using CTest with correct configuration
-                  Write-Host "Running tests with CTest..."
+                  # Run tests directly without using CTest
+                  Write-Host "Running tests directly from bin directory..."
+                  $binPath = Join-Path (Get-Location) "bin"
 
-                  # If regular CTest fails, try with full path to test executables
-                  try {
-                      ctest -C Release -V --output-on-failure --no-tests=error
-                  }
-                  catch {
-                      Write-Host "CTest failed. Running tests directly..."
-                      $binPath = Join-Path (Get-Location) "bin"
+                  $testExecutables = @(
+                    "UKControllerPluginLoaderTest.exe",
+                    "UKControllerPluginCoreTest.exe", 
+                    "UKControllerPluginUpdaterTest.exe",
+                    "UKControllerPluginUtilsTest.exe"
+                  )
+
+                  $allPassed = $true
+                  $testResults = @()
+
+                  foreach ($exe in $testExecutables) {
+                    $exePath = Join-Path $binPath $exe
+                    if (Test-Path $exePath) {
+                      Write-Host "========================================================"
+                      Write-Host "Running $exe..."
+                      Write-Host "========================================================"
                       
-                      $testExecutables = @(
-                        "UKControllerPluginLoaderTest.exe",
-                        "UKControllerPluginCoreTest.exe", 
-                        "UKControllerPluginUpdaterTest.exe",
-                        "UKControllerPluginUtilsTest.exe"
-                      )
-                      
-                      foreach ($exe in $testExecutables) {
-                        $exePath = Join-Path $binPath $exe
-                        if (Test-Path $exePath) {
-                            Write-Host "Running $exePath directly..."
-                            & $exePath
+                      $startTime = Get-Date
+                      try {
+                        Push-Location $binPath
+                        & ".\$exe"
+                        $exitCode = $LASTEXITCODE
+                        Pop-Location
+                        
+                        $endTime = Get-Date
+                        $duration = ($endTime - $startTime).TotalSeconds
+                        
+                        if ($exitCode -eq 0) {
+                          Write-Host "Test $exe PASSED in $duration seconds."
+                          $testResults += "  ✓ $exe - PASSED ($duration seconds)"
+                        } else {
+                          Write-Host "Test $exe FAILED with exit code $exitCode in $duration seconds."
+                          $testResults += "  ✗ $exe - FAILED (Exit code: $exitCode, $duration seconds)"
+                          $allPassed = $false
                         }
+                      } catch {
+                        $endTime = Get-Date
+                        $duration = ($endTime - $startTime).TotalSeconds
+                        Write-Host "Error running $exe: $_"
+                        $testResults += "  ✗ $exe - ERROR: $_"
+                        $allPassed = $false
                       }
+                    } else {
+                      Write-Host "Could not find $exe in $binPath"
+                      $testResults += "  ✗ $exe - NOT FOUND"
+                      $allPassed = $false
+                    }
+                  }
+
+                  # Print test summary
+                  Write-Host ""
+                  Write-Host "========================================================"
+                  Write-Host "                    TEST SUMMARY                        "
+                  Write-Host "========================================================"
+                  foreach ($result in $testResults) {
+                    Write-Host $result
+                  }
+
+                  # Exit with proper code
+                  if (-not $allPassed) {
+                    Write-Host "One or more tests failed."
+                    exit 1
+                  } else {
+                    Write-Host "All tests passed!"
+                    exit 0
                   }
