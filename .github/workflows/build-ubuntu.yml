@@ -71,7 +71,58 @@ jobs:
                   name: ukcp-build
                   path: build
 
-            - name: Run Tests
+            - name: Copy DLLs and Dependencies
+              working-directory: build
+              shell: powershell
+              run: |
+                  # Copy any DLL dependencies to the bin directory
+                  Write-Host "Copying required DLLs to test executable directory..."
+                  if (Test-Path "lib") {
+                    Get-ChildItem -Path "lib" -Filter "*.dll" | ForEach-Object {
+                      $dllName = $_.Name
+                      Write-Host "Copying $dllName to bin directory"
+                      Copy-Item -Path $_.FullName -Destination "bin\" -Force
+                    }
+                  }
+
+            - name: List binaries and structure
               working-directory: build
               run: |
-                  ctest -C Release --output-on-failure --no-tests=error
+                  dir /s bin
+
+            - name: Update CTest Configuration
+              working-directory: build
+              shell: powershell
+              run: |
+                  # Update CTestTestfile.cmake to point to the correct executable paths
+                  Write-Host "Updating CTest configuration files..."
+
+                  if (Test-Path "CTestTestfile.cmake") {
+                    $content = Get-Content "CTestTestfile.cmake" -Raw
+                    $updatedContent = $content -replace "/workspace/build/bin/", "bin/"
+                    $updatedContent = $updatedContent -replace "([""'])bin/([^""']+)\.exe([""'])", '$1bin/$2.exe$3'
+                    Set-Content "CTestTestfile.cmake" -Value $updatedContent -NoNewline
+                    
+                    Write-Host "Updated main CTestTestfile.cmake"
+                    Write-Host "Contents:"
+                    Get-Content "CTestTestfile.cmake"
+                  }
+
+                  # Update any other CTestTestfile.cmake files recursively
+                  Get-ChildItem -Path . -Filter "CTestTestfile.cmake" -Recurse | ForEach-Object {
+                    $file = $_.FullName
+                    Write-Host "Updating $file"
+                    
+                    $content = Get-Content $file -Raw
+                    $updatedContent = $content -replace "/workspace/build/bin/", "bin/"
+                    $updatedContent = $updatedContent -replace "([""'])bin/([^""']+)\.exe([""'])", '$1bin/$2.exe$3'
+                    Set-Content $file -Value $updatedContent -NoNewline
+                  }
+
+            - name: Run Tests with CTest
+              working-directory: build
+              shell: powershell
+              run: |
+                  # Run tests using CTest with correct configuration
+                  Write-Host "Running tests with CTest..."
+                  ctest -C Release -V --output-on-failure --no-tests=error
