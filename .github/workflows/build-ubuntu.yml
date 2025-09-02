@@ -22,6 +22,7 @@ jobs:
               uses: docker/setup-qemu-action@v3
 
             - name: Cache build directory
+              id: cache-build
               uses: actions/cache@v4
               with:
                   path: build
@@ -30,6 +31,7 @@ jobs:
                       build-${{ runner.os }}-
 
             - name: Build the Docker image
+              if: steps.cache-build.outputs.cache-hit != 'true'
               uses: docker/build-push-action@v6
               with:
                   context: .
@@ -42,11 +44,13 @@ jobs:
                       WINDOWS_SDK_VERSION=10.0.22621
 
             - name: Run CMake
+              if: steps.cache-build.outputs.cache-hit != 'true'
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
                   /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
 
             - name: Build core (Ninja target)
+              if: steps.cache-build.outputs.cache-hit != 'true'
               timeout-minutes: 60
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
@@ -68,14 +72,6 @@ jobs:
               with:
                   submodules: recursive
 
-            - name: Cache build directory
-              uses: actions/cache@v4
-              with:
-                  path: build
-                  key: build-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
-                  restore-keys: |
-                      build-${{ runner.os }}-
-
             - name: Set up Visual Studio Shell
               uses: egor-tensin/vs-shell@v2
               with:
@@ -90,4 +86,16 @@ jobs:
             - name: Run Tests
               working-directory: build
               run: |
+                  # Update CTest search paths to use Windows paths
+                  $content = Get-Content "CTestTestfile.cmake" -Raw
+                  $content = $content -replace "/workspace/build", "$PWD"
+                  $content | Set-Content "CTestTestfile.cmake"
+
+                  # Also update any subdirectories
+                  Get-ChildItem -Recurse -Filter "CTestTestfile.cmake" | ForEach-Object {
+                      $subContent = Get-Content $_.FullName -Raw
+                      $subContent = $subContent -replace "/workspace/build", "$PWD"
+                      $subContent | Set-Content $_.FullName
+                  }
+
                   ctest -C Release --output-on-failure --no-tests=error
