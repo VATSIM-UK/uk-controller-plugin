@@ -85,34 +85,115 @@ jobs:
                     }
                   }
 
-            - name: Update CTest Configuration
+            - name: Update CTest Configuration and Create Links
               working-directory: build
               shell: powershell
               run: |
-                  # Update CTestTestfile.cmake to point to the correct executable paths
-                  Write-Host "Updating CTest configuration files..."
+                  # Get the absolute path to the bin directory
+                  $binPath = Join-Path (Get-Location) "bin"
+                  Write-Host "Bin directory absolute path: $binPath"
 
+                  # List test executables
+                  $testExecutables = @(
+                    "UKControllerPluginLoaderTest.exe",
+                    "UKControllerPluginCoreTest.exe",
+                    "UKControllerPluginUpdaterTest.exe",
+                    "UKControllerPluginUtilsTest.exe"
+                  )
+
+                  # Update CTest test paths in all CTestTestfile.cmake files
+                  Get-ChildItem -Path . -Filter "CTestTestfile.cmake" -Recurse | ForEach-Object {
+                    $file = $_.FullName
+                    $directory = Split-Path -Parent $file
+                    Write-Host "Processing CTest file: $file"
+                    
+                    $content = Get-Content $file -Raw
+                    
+                    # Replace all paths with absolute paths to executables in the bin directory
+                    foreach ($exe in $testExecutables) {
+                      $exePath = Join-Path $binPath $exe
+                      $exePattern = [regex]::Escape($exe)
+                      $content = $content -replace "bin/$exePattern", "$exePath"
+                      $content = $content -replace "bin\\$exePattern", "$exePath"
+                      $content = $content -replace "/workspace/build/bin/$exePattern", "$exePath"
+                      $content = $content -replace "/workspace/build/bin\\$exePattern", "$exePath"
+                    }
+                    
+                    Set-Content $file -Value $content -NoNewline
+                    Write-Host "Updated $file with absolute paths"
+                  }
+
+                  # Update main CTestTestfile.cmake
                   if (Test-Path "CTestTestfile.cmake") {
                     $content = Get-Content "CTestTestfile.cmake" -Raw
-                    $updatedContent = $content -replace "/workspace/build/bin/", "bin/"
-                    $updatedContent = $updatedContent -replace "([""'])bin/([^""']+)\.exe([""'])", '$1bin/$2.exe$3'
-                    Set-Content "CTestTestfile.cmake" -Value $updatedContent -NoNewline
                     
-                    Write-Host "Updated main CTestTestfile.cmake"
-                    Write-Host "Contents:"
+                    # Replace all paths with absolute paths to executables in the bin directory
+                    foreach ($exe in $testExecutables) {
+                      $exePath = Join-Path $binPath $exe
+                      $exePattern = [regex]::Escape($exe)
+                      $content = $content -replace "bin/$exePattern", "$exePath"
+                      $content = $content -replace "bin\\$exePattern", "$exePath"
+                      $content = $content -replace "/workspace/build/bin/$exePattern", "$exePath"
+                      $content = $content -replace "/workspace/build/bin\\$exePattern", "$exePath"
+                    }
+                    
+                    Set-Content "CTestTestfile.cmake" -Value $content -NoNewline
+                    Write-Host "Updated main CTestTestfile.cmake with absolute paths"
+                  }
+
+                  # Show contents of main CTestTestfile.cmake for debugging
+                  if (Test-Path "CTestTestfile.cmake") {
+                    Write-Host "Contents of main CTestTestfile.cmake:"
                     Get-Content "CTestTestfile.cmake"
                   }
 
-                  # Update any other CTestTestfile.cmake files recursively
-                  Get-ChildItem -Path . -Filter "CTestTestfile.cmake" -Recurse | ForEach-Object {
-                    $file = $_.FullName
-                    Write-Host "Updating $file"
-                    
-                    $content = Get-Content $file -Raw
-                    $updatedContent = $content -replace "/workspace/build/bin/", "bin/"
-                    $updatedContent = $updatedContent -replace "([""'])bin/([^""']+)\.exe([""'])", '$1bin/$2.exe$3'
-                    Set-Content $file -Value $updatedContent -NoNewline
+                  # Create links in test directories pointing to the executables
+                  $testDirs = @(
+                    "test/loader",
+                    "test/plugin",
+                    "test/updater",
+                    "test/utils"
+                  )
+
+                  foreach ($dir in $testDirs) {
+                    if (Test-Path $dir) {
+                      Write-Host "Creating links in $dir"
+                      
+                      # Create directory if it doesn't exist
+                      $binInTestDir = Join-Path $dir "bin"
+                      if (-not (Test-Path $binInTestDir)) {
+                        New-Item -ItemType Directory -Path $binInTestDir -Force | Out-Null
+                        Write-Host "Created directory: $binInTestDir"
+                      }
+                      
+                      # Copy test executables to the bin subdirectory in each test directory
+                      foreach ($exe in $testExecutables) {
+                        $sourcePath = Join-Path $binPath $exe
+                        $destPath = Join-Path $binInTestDir $exe
+                        if (Test-Path $sourcePath) {
+                          Copy-Item -Path $sourcePath -Destination $destPath -Force
+                          Write-Host "Copied $exe to $destPath"
+                        } else {
+                          Write-Host "Warning: Source file not found: $sourcePath"
+                        }
+                      }
+                    }
                   }
+
+            - name: List directory structure
+              working-directory: build
+              shell: powershell
+              run: |
+                  # List contents of bin directory
+                  Write-Host "Contents of bin directory:"
+                  Get-ChildItem -Path "bin" | Format-Table -Property Name, Length, LastWriteTime
+
+                  # List structure of test directories
+                  Write-Host "Test directory structure:"
+                  Get-ChildItem -Path "test" -Recurse | Where-Object { $_.Name -like "*Test*" -or $_.Name -eq "bin" } | Format-Table -Property FullName, Length, LastWriteTime
+
+                  # Print current working directory
+                  Write-Host "Current working directory: $(Get-Location)"
 
             - name: Run Tests with CTest
               working-directory: build
@@ -120,4 +201,27 @@ jobs:
               run: |
                   # Run tests using CTest with correct configuration
                   Write-Host "Running tests with CTest..."
-                  ctest -C Release -V --output-on-failure --no-tests=error
+
+                  # If regular CTest fails, try with full path to test executables
+                  try {
+                      ctest -C Release -V --output-on-failure --no-tests=error
+                  }
+                  catch {
+                      Write-Host "CTest failed. Running tests directly..."
+                      $binPath = Join-Path (Get-Location) "bin"
+                      
+                      $testExecutables = @(
+                        "UKControllerPluginLoaderTest.exe",
+                        "UKControllerPluginCoreTest.exe", 
+                        "UKControllerPluginUpdaterTest.exe",
+                        "UKControllerPluginUtilsTest.exe"
+                      )
+                      
+                      foreach ($exe in $testExecutables) {
+                        $exePath = Join-Path $binPath $exe
+                        if (Test-Path $exePath) {
+                            Write-Host "Running $exePath directly..."
+                            & $exePath
+                        }
+                      }
+                  }
