@@ -21,6 +21,14 @@ jobs:
             - name: Set up QEMU
               uses: docker/setup-qemu-action@v3
 
+            - name: Cache build directory
+              uses: actions/cache@v4
+              with:
+                  path: build
+                  key: build-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
+                  restore-keys: |
+                      build-${{ runner.os }}-
+
             - name: Build the Docker image
               uses: docker/build-push-action@v6
               with:
@@ -36,13 +44,13 @@ jobs:
             - name: Run CMake
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace ukcp-builder \
-                    /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
+                  /bin/bash -c "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=\$TOOLCHAIN -G Ninja -B build"
 
             - name: Build core (Ninja target)
               timeout-minutes: 60
               run: |
                   docker run -v ${{ github.workspace }}:/workspace -w /workspace/build ukcp-builder \
-                    /bin/bash -c "ninja"
+                  /bin/bash -c "ninja"
 
             - name: Upload build directory as artifact
               uses: actions/upload-artifact@v4
@@ -60,6 +68,14 @@ jobs:
               with:
                   submodules: recursive
 
+            - name: Cache build directory
+              uses: actions/cache@v4
+              with:
+                  path: build
+                  key: build-${{ runner.os }}-${{ hashFiles('**/CMakeLists.txt') }}
+                  restore-keys: |
+                      build-${{ runner.os }}-
+
             - name: Set up Visual Studio Shell
               uses: egor-tensin/vs-shell@v2
               with:
@@ -71,161 +87,7 @@ jobs:
                   name: ukcp-build
                   path: build
 
-            - name: Copy DLLs and Dependencies
+            - name: Run Tests
               working-directory: build
-              shell: powershell
               run: |
-                  # Copy any DLL dependencies to the bin directory
-                  Write-Host "Copying required DLLs to test executable directory..."
-                  if (Test-Path "lib") {
-                    Get-ChildItem -Path "lib" -Filter "*.dll" | ForEach-Object {
-                      $dllName = $_.Name
-                      Write-Host "Copying $dllName to bin directory"
-                      Copy-Item -Path $_.FullName -Destination "bin\" -Force
-                    }
-                  }
-
-            - name: Prepare Test Environment
-              working-directory: build
-              shell: powershell
-              run: |
-                  # Get the absolute path to the bin directory
-                  $binPath = Join-Path (Get-Location) "bin"
-                  Write-Host "Bin directory absolute path: $binPath"
-
-                  # List test executables
-                  $testExecutables = @(
-                    "UKControllerPluginLoaderTest.exe",
-                    "UKControllerPluginCoreTest.exe",
-                    "UKControllerPluginUpdaterTest.exe",
-                    "UKControllerPluginUtilsTest.exe"
-                  )
-
-                  # Verify all test executables exist
-                  foreach ($exe in $testExecutables) {
-                    $exePath = Join-Path $binPath $exe
-                    if (Test-Path $exePath) {
-                      Write-Host "Found test executable: $exePath"
-                    } else {
-                      Write-Host "Warning: Test executable not found: $exePath"
-                    }
-                  }
-
-                  # Copy all DLLs to test directories to ensure dependencies are available
-                  $testDirs = @(
-                    "test/loader",
-                    "test/plugin",
-                    "test/updater", 
-                    "test/utils"
-                  )
-
-                  # Get all DLLs from bin directory
-                  $dlls = Get-ChildItem -Path $binPath -Filter "*.dll"
-
-                  foreach ($dir in $testDirs) {
-                    if (Test-Path $dir) {
-                      Write-Host "Copying DLLs to $dir"
-                      
-                      # Create directory for DLLs if it doesn't exist
-                      if (-not (Test-Path $dir)) {
-                        New-Item -ItemType Directory -Path $dir -Force | Out-Null
-                      }
-                      
-                      # Copy all DLLs to test directory
-                      foreach ($dll in $dlls) {
-                        $destPath = Join-Path $dir $dll.Name
-                        Copy-Item -Path $dll.FullName -Destination $destPath -Force
-                        Write-Host "  Copied $($dll.Name) to $destPath"
-                      }
-                    }
-                  }
-
-            - name: List directory structure
-              working-directory: build
-              shell: powershell
-              run: |
-                  # List contents of bin directory
-                  Write-Host "Contents of bin directory:"
-                  Get-ChildItem -Path "bin" | Format-Table -Property Name, Length, LastWriteTime
-
-                  # List structure of test directories
-                  Write-Host "Test directory structure:"
-                  Get-ChildItem -Path "test" -Recurse | Where-Object { $_.Name -like "*Test*" -or $_.Name -eq "bin" } | Format-Table -Property FullName, Length, LastWriteTime
-
-                  # Print current working directory
-                  Write-Host "Current working directory: $(Get-Location)"
-
-            - name: Run Tests Directly
-              working-directory: build
-              shell: powershell
-              run: |
-                  # Run tests directly without using CTest
-                  Write-Host "Running tests directly from bin directory..."
-                  $binPath = Join-Path (Get-Location) "bin"
-
-                  $testExecutables = @(
-                    "UKControllerPluginLoaderTest.exe",
-                    "UKControllerPluginCoreTest.exe", 
-                    "UKControllerPluginUpdaterTest.exe",
-                    "UKControllerPluginUtilsTest.exe"
-                  )
-
-                  $allPassed = $true
-                  $testResults = @()
-
-                  foreach ($exe in $testExecutables) {
-                    $exePath = Join-Path $binPath $exe
-                    if (Test-Path $exePath) {
-                      Write-Host "========================================================"
-                      Write-Host "Running $exe..."
-                      Write-Host "========================================================"
-                      
-                      $startTime = Get-Date
-                      try {
-                        Push-Location $binPath
-                        & ".\$exe"
-                        $exitCode = $LASTEXITCODE
-                        Pop-Location
-                        
-                        $endTime = Get-Date
-                        $duration = ($endTime - $startTime).TotalSeconds
-                        
-                        if ($exitCode -eq 0) {
-                          Write-Host "Test $exe PASSED in $duration seconds."
-                          $testResults += "  ✓ $exe - PASSED ($duration seconds)"
-                        } else {
-                          Write-Host "Test $exe FAILED with exit code $exitCode in $duration seconds."
-                          $testResults += "  ✗ $exe - FAILED (Exit code: $exitCode, $duration seconds)"
-                          $allPassed = $false
-                        }
-                      } catch {
-                        $endTime = Get-Date
-                        $duration = ($endTime - $startTime).TotalSeconds
-                        Write-Host "Error running $exe: $_"
-                        $testResults += "  ✗ $exe - ERROR: $_"
-                        $allPassed = $false
-                      }
-                    } else {
-                      Write-Host "Could not find $exe in $binPath"
-                      $testResults += "  ✗ $exe - NOT FOUND"
-                      $allPassed = $false
-                    }
-                  }
-
-                  # Print test summary
-                  Write-Host ""
-                  Write-Host "========================================================"
-                  Write-Host "                    TEST SUMMARY                        "
-                  Write-Host "========================================================"
-                  foreach ($result in $testResults) {
-                    Write-Host $result
-                  }
-
-                  # Exit with proper code
-                  if (-not $allPassed) {
-                    Write-Host "One or more tests failed."
-                    exit 1
-                  } else {
-                    Write-Host "All tests passed!"
-                    exit 0
-                  }
+                  ctest -C Release --output-on-failure --no-tests=error
