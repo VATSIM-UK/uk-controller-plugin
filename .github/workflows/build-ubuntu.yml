@@ -67,7 +67,6 @@ jobs:
         name: Tests (Windows)
         runs-on: windows-latest
         needs: build
-
         steps:
             - name: Checkout Code and Submodules
               uses: actions/checkout@v4
@@ -80,7 +79,17 @@ jobs:
                   name: ukcp-build
                   path: build
 
+            - name: Fix CTest paths
+              working-directory: build
+              shell: pwsh
+              run: |
+                  $windowsPath = (Get-Location).Path -replace "\\", "/"
+                  Get-ChildItem -Recurse -Filter "CTestTestfile.cmake" | ForEach-Object {
+                      (Get-Content $_.FullName) `
+                        -replace "/workspace/build", $windowsPath `
+                        | Set-Content $_.FullName
+                  }
+
             - name: Run Tests
               working-directory: build
-              run: |
-                  ctest -C Release --output-on-failure --no-tests=error
+              run: ctest -C Release --output-on-failure --no-tests=error
