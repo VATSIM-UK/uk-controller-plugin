@@ -61,21 +61,18 @@ jobs:
               with:
                   name: ukcp-build
                   path: build
+                  retention-days: 1
 
     test:
         name: Tests (Windows)
         runs-on: windows-latest
         needs: build
+
         steps:
             - name: Checkout Code and Submodules
               uses: actions/checkout@v4
               with:
                   submodules: recursive
-
-            - name: Set up Visual Studio Shell
-              uses: egor-tensin/vs-shell@v2
-              with:
-                  arch: x86
 
             - name: Download build artifact
               uses: actions/download-artifact@v4
@@ -85,25 +82,5 @@ jobs:
 
             - name: Run Tests
               working-directory: build
-              shell: pwsh
               run: |
-                  # Update CTest search paths to use Windows paths with proper escaping
-                  $windowsPath = $PWD.Path -replace "\\", "/"
-
-                  # Update main CTest file
-                  $content = Get-Content "CTestTestfile.cmake" -Raw
-                  $content = $content -replace "/workspace/build", $windowsPath
-                  $content | Set-Content "CTestTestfile.cmake"
-
-                  # Also update any subdirectories
-                  Get-ChildItem -Recurse -Filter "CTestTestfile.cmake" | ForEach-Object {
-                      $subContent = Get-Content $_.FullName -Raw
-                      $subContent = $subContent -replace "/workspace/build", $windowsPath
-                      $subContent | Set-Content $_.FullName
-                  }
-
-                  # List the test executables to verify they exist
-                  Write-Host "Looking for test executables in: $($PWD.Path)\bin"
-                  Get-ChildItem -Path "bin" -Filter "*.exe" -ErrorAction SilentlyContinue
-
                   ctest -C Release --output-on-failure --no-tests=error
