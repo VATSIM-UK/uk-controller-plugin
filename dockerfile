@@ -19,7 +19,7 @@ RUN <<-EOF
 	rm -r xwin.tar.gz xwin-*
 EOF
 
-RUN xwin --accept-license --arch x86 \
+RUN xwin --accept-license --arch x64 \
 	--crt-version ${WINDOWS_CRT_VERSION} --sdk-version ${WINDOWS_SDK_VERSION} \
 	splat --output /opt/xwin --include-debug-libs
 
