@@ -12,10 +12,10 @@ namespace UKControllerPluginUtils::Api {
         return url;
     }
 
-    void ApiSettings::Url(const std::string& url)
+    void ApiSettings::Url(const std::string& newUrl)
     {
         const auto lock = std::unique_lock(mutex);
-        this->url = url;
+        this->url = newUrl;
     }
 
     auto ApiSettings::Key() const -> const std::string&
@@ -24,9 +24,9 @@ namespace UKControllerPluginUtils::Api {
         return key;
     }
 
-    void ApiSettings::Key(const std::string& key)
+    void ApiSettings::Key(const std::string& newKey)
     {
         const auto lock = std::unique_lock(mutex);
-        this->key = key;
+        this->key = newKey;
     }
 } // namespace UKControllerPluginUtils::Api

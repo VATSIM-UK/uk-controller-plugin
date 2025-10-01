@@ -33,7 +33,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
         NiceMock<MockCurlApi> mockCurl;
     };
 
-    __stdcall const char* VersionFunction()
+    const char* __stdcall VersionFunction()
     {
         return PerformUpdatesTest::VersionFunctionCalled();
     }
@@ -45,23 +45,23 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
     TEST_F(PerformUpdatesTest, ItGetsVersionFromJson)
     {
-        nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
-        EXPECT_EQ("3.0.1", GetVersionFromJson(version));
+        nlohmann::json versionJson{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
+        EXPECT_EQ("3.0.1", GetVersionFromJson(versionJson));
     }
 
     TEST_F(PerformUpdatesTest, UpdateIsRequiredIfNoCoreBinary)
     {
-        nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
+        nlohmann::json versionJson{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(false));
 
-        EXPECT_TRUE(UpdateRequired(mockWindows, version));
+        EXPECT_TRUE(UpdateRequired(mockWindows, versionJson));
     }
 
     TEST_F(PerformUpdatesTest, UpdateIsRequiredIfCoreBinaryCantBeLoaded)
     {
-        nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
+        nlohmann::json versionJson{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(true));
@@ -71,12 +71,12 @@ namespace UKControllerPluginUpdaterTest::Updater {
             .Times(1)
             .WillOnce(testing::Return(handle));
 
-        EXPECT_TRUE(UpdateRequired(mockWindows, version));
+        EXPECT_TRUE(UpdateRequired(mockWindows, versionJson));
     }
 
     TEST_F(PerformUpdatesTest, UpdateIsRequiredIfVersionFunctionCantBeFoundInCoreBinary)
     {
-        nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
+        nlohmann::json versionJson{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(true));
@@ -92,12 +92,12 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
-        EXPECT_TRUE(UpdateRequired(mockWindows, version));
+        EXPECT_TRUE(UpdateRequired(mockWindows, versionJson));
     }
 
     TEST_F(PerformUpdatesTest, UpdateIsRequiredIfVersionOfCoreBinaryIsNotLatest)
     {
-        nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
+        nlohmann::json versionJson{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(true));
@@ -113,13 +113,13 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
-        EXPECT_TRUE(UpdateRequired(mockWindows, version));
+        EXPECT_TRUE(UpdateRequired(mockWindows, versionJson));
         EXPECT_TRUE(this->versionFunctionCalled);
     }
 
     TEST_F(PerformUpdatesTest, UpdateIsNotRequiredIfVersionOfCoreBinaryIsLatest)
     {
-        nlohmann::json version{{"version", "3.0.0"}, {"not_version", "3.0.2"}};
+        nlohmann::json versionJson{{"version", "3.0.0"}, {"not_version", "3.0.2"}};
 
         ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
             .WillByDefault(testing::Return(true));
@@ -135,7 +135,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
-        EXPECT_FALSE(UpdateRequired(mockWindows, version));
+        EXPECT_FALSE(UpdateRequired(mockWindows, versionJson));
         EXPECT_TRUE(this->versionFunctionCalled);
     }
 

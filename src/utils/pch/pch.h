@@ -10,13 +10,14 @@
 #pragma warning(disable : 26495 26451)
 #define SPDLOG_WCHAR_FILENAMES
 #define CONTINUABLE_HAS_DISABLED_COROUTINE
-#include <curl/curl.h>
-#include <json/json.hpp>
-#include <spdlog/include/spdlog/logger.h>
-#include <spdlog/include/spdlog/sinks/basic_file_sink.h>
-#include <spdlog/include/spdlog/sinks/null_sink.h>
-#include <spdlog/include/spdlog/spdlog.h>
-#include <fmt/include/fmt/chrono.h>
+// Temporarily commenting out Conan includes while fixing build system
+// #include <curl/curl.h>
+// #include <nlohmann/json.hpp>
+// #include <spdlog/logger.h>
+// #include <spdlog/sinks/basic_file_sink.h>
+// #include <spdlog/sinks/null_sink.h>
+// #include <spdlog/spdlog.h>
+// #include <fmt/chrono.h>
 #pragma warning(pop)
 
 #include <any>

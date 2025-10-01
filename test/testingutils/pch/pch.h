@@ -7,7 +7,8 @@
 
 // add headers that you want to pre-compile here
 // Ignore warnings about uninitialised variables in the Gmock headers
-#include "json/json.hpp"
+// Temporarily commenting out while fixing build system
+// #include <nlohmann/json.hpp>
 #pragma warning(push)
 #pragma warning(disable : 26495 26451 28251)
 #include "gmock/gmock.h"
@@ -19,10 +20,11 @@
 #include <shtypes.h>
 #include <fstream>
 #include <filesystem>
-#define SPDLOG_WCHAR_FILENAMES
-#include "spdlog/include/spdlog/logger.h"
-#include "spdlog/include/spdlog/sinks/basic_file_sink.h"
-#include "spdlog/include/spdlog/sinks/null_sink.h"
+// Temporarily commenting out while fixing build system
+// #define SPDLOG_WCHAR_FILENAMES
+// #include <spdlog/logger.h>
+// #include <spdlog/sinks/basic_file_sink.h>
+// #include <spdlog/sinks/null_sink.h>
 #include "mock/MockApiRequestPerformer.h"
 #include "mock/MockApiRequestPerformerFactory.h"
 #include "mock/MockApiSettingsProvider.h"

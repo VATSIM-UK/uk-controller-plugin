@@ -195,8 +195,8 @@ namespace UKControllerPluginUtilsTest::Collection {
         collection.Add(item);
         collection.Add(item2);
         std::vector<MockCollectionValue> items;
-        for (const auto& item : collection) {
-            items.push_back(item);
+        for (const auto& currentItem : collection) {
+            items.push_back(currentItem);
         }
         EXPECT_EQ(2, items.size());
         EXPECT_EQ(1, items[0].id);
@@ -224,8 +224,8 @@ namespace UKControllerPluginUtilsTest::Collection {
         collection.Add(item);
         collection.Add(item2);
         std::vector<MockCollectionValue> items;
-        for (const auto& item : collection) {
-            items.push_back(item);
+        for (const auto& currentItem : collection) {
+            items.push_back(currentItem);
         }
         EXPECT_EQ(2, items.size());
         EXPECT_EQ(1, items[0].id);

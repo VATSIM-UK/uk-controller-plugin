@@ -21,7 +21,7 @@ namespace UKControllerPluginUtilsTest {
 
         TEST(ApiResponseFactory, CreateReturnsCorrectlyIfCurlError)
         {
-            CurlResponse curl("blalalalal", true, -1);
+            CurlResponse curl("blalalalal", true, static_cast<uint64_t>(-1));
             ApiResponse api = ApiResponseFactory::Create(curl);
 
             EXPECT_FALSE(api.IsSuccess());

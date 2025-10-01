@@ -1,0 +1,46 @@
+name: Build Release DLL
+
+on:
+    push:
+        branches: [main, build]
+    pull_request:
+        branches: [main, build]
+
+jobs:
+    build:
+        runs-on: windows-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Setup Python
+              uses: actions/setup-python@v4
+              with:
+                  python-version: "3.11"
+
+            - name: Install Conan 2
+              run: pip install "conan>=2.0"
+
+            - name: Setup Clang
+              uses: KyleMayes/install-llvm-action@v1
+              with:
+                  version: "17.0"
+
+            - name: Create Conan profile
+              run: |
+                  conan profile detect --force
+
+            - name: Install dependencies with MSVC
+              run: conan install . --build=missing -s compiler=msvc -s compiler.version=194 -s compiler.cppstd=17 -s build_type=Release
+
+            - name: Configure with Clang
+              run: cmake --preset conan-default -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
+
+            - name: Build Release DLL
+              run: cmake --build --preset conan-release
+
+            - name: Upload DLL
+              uses: actions/upload-artifact@v3
+              with:
+                  name: UKControllerPlugin-Release
+                  path: build/bin/*.dll

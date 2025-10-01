@@ -250,7 +250,7 @@ namespace UKControllerPlugin::Notifications {
         LogInfo("Marked notification read: " + std::to_string(notification->Id()));
     }
 
-    auto NotificationsDialog::HighlightRelevantNotification(LPNMLVCUSTOMDRAW customDraw) -> HRESULT
+    auto NotificationsDialog::HighlightRelevantNotification(LPNMLVCUSTOMDRAW customDraw) -> LRESULT
     {
         const Notification* notification = reinterpret_cast<Notification*>(customDraw->nmcd.lItemlParam); // NOLINT
 

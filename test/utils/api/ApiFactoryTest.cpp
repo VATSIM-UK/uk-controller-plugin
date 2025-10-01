@@ -36,13 +36,13 @@ namespace UKControllerPluginUtilsTest::Api {
 
     TEST_F(ApiFactoryTest, ItReturnsARequestFactory)
     {
-        auto& requestFactory = factory.RequestFactory();
+        auto& apiRequestFactory = factory.RequestFactory();
         EXPECT_CALL(requestPerformer, Perform(ApiRequestData("test", UKControllerPluginUtils::Http::HttpMethod::Get())))
             .Times(1)
             .WillOnce(testing::Return(Response(UKControllerPluginUtils::Http::HttpStatusCode::Ok, {})));
 
-        static_cast<void>(requestFactory.Get("test"));
-        requestFactory.AwaitRequestCompletion();
+        static_cast<void>(apiRequestFactory.Get("test"));
+        apiRequestFactory.AwaitRequestCompletion();
     }
 
     TEST_F(ApiFactoryTest, ItReturnsARequestFactoryAsASingleton)

@@ -61,7 +61,7 @@ namespace UKControllerPluginUtilsTest {
 
         TEST(ApiResponse, IsCurlErrorReturnsTrueOnCurlError)
         {
-            ApiResponse response(true, -1L, "{\"test\": 1.20}"_json, "Test Message");
+            ApiResponse response(true, static_cast<uint64_t>(-1L), "{\"test\": 1.20}"_json, "Test Message");
             EXPECT_TRUE(response.IsCurlError());
         }
 

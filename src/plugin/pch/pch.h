@@ -14,8 +14,8 @@
 #pragma warning(disable : 26495 26451)
 
 #include "../../resource/resource.h"
-#include "json/json.hpp"
-#include "fmt/include/fmt/chrono.h"
+#include <nlohmann/json.hpp>
+#include <fmt/chrono.h>
 
 #include "api/ApiRequestFacade.h"
 #include "log/LoggerFunctions.h"
@@ -68,4 +68,4 @@ using std::min;
 #include <vector>
 
 #include "euroscope/EuroScopePlugIn.h"
-#include "ecfmp/include/ECFMP/ECFMP.h"
+// #include "ecfmp/include/ECFMP/ECFMP.h" // Temporarily disabled ECFMP

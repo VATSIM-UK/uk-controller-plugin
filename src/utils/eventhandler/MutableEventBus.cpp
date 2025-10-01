@@ -15,14 +15,14 @@ namespace UKControllerPluginUtils::EventHandler {
         LogInfo("EventBus shutdown");
     }
 
-    void MutableEventBus::SetObserver(std::shared_ptr<EventObserver> observer)
+    void MutableEventBus::SetObserver(std::shared_ptr<EventObserver> eventObserver)
     {
-        this->observer = std::move(observer);
+        this->observer = std::move(eventObserver);
     }
 
-    void MutableEventBus::SetFactory(std::shared_ptr<EventBusFactory> factory)
+    void MutableEventBus::SetFactory(std::shared_ptr<EventBusFactory> eventFactory)
     {
-        EventBus::factory = std::move(factory);
+        EventBus::factory = std::move(eventFactory);
     }
 
     auto MutableEventBus::IsInitialised() -> bool

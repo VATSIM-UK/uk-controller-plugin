@@ -127,7 +127,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
+# No special properties needed for 64-bit build
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
@@ -176,7 +176,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/continuable/include"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/function2/include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/spdlog/include"
+    "    # Using Conan spdlog instead of bundled version"
 )
 
 ################################################################################
@@ -184,8 +184,6 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
 ################################################################################
 target_link_directories(
         ${PROJECT_NAME} PUBLIC
-        $ENV{CURL_DEBUG_LIBRARYDIR}
-        $ENV{CURL_LIBRARYDIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
         "${CMAKE_BINARY_DIR}/lib/"
 )
@@ -228,6 +226,12 @@ if(MSVC)
         /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
+        # Suppress non-critical warnings
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100> # unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4458> # declaration hides class member
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # conversion warnings
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4267> # size_t conversion warnings
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4101> # unreferenced local variable
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
@@ -264,11 +268,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
         "EuroScopePlugInDll;"
-        "libcurl_a_debug;"
+        "CURL::libcurl;"
     ">"
     "$<$<CONFIG:Release>:"
         "EuroScopePlugInDll;"
-        "libcurl_a;"
+        "CURL::libcurl;"
     ">"
     "gdiplus"
     "kernel32;"

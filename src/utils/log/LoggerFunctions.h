@@ -8,7 +8,7 @@ namespace UKControllerPluginUtils::Log {
     class ApiLoggerInterface;
 }
 
-[nodiscard] auto ApiLogger() -> const UKControllerPluginUtils::Log::ApiLoggerInterface&;
+[[nodiscard]] auto ApiLogger() -> const UKControllerPluginUtils::Log::ApiLoggerInterface&;
 void LogFatalExceptionAndRethrow(const std::string& source, const std::exception& exception);
 void LogFatalExceptionAndRethrow(
     const std::string& source, const std::string& subsource, const std::exception& exception);

@@ -1,0 +1,9 @@
+# Conan 2 data file for reproducible builds
+requirements:
+  - "nlohmann_json/3.11.3"
+  - "spdlog/1.12.0" 
+  - "fmt/10.2.1"
+  - "gtest/1.14.0"
+
+# Lock file will be generated automatically by Conan 2
+# Run: conan lock create conanfile.py --lockfile-out=conan.lock

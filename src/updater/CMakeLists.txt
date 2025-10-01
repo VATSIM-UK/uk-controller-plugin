@@ -23,7 +23,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+# No special properties needed for 64-bit build
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -138,31 +138,29 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
-    "$<$<CONFIG:Debug>:"
-        "libcurl_a_debug"
-    ">"
-    "$<$<CONFIG:Release>:"
-        "libcurl_a"
-    ">"
-    "kernel32;"
-    "user32;"
-    "gdi32;"
-    "winspool;"
-    "comdlg32;"
-    "advapi32;"
-    "shell32;"
-    "ole32;"
-    "oleaut32;"
-    "uuid;"
-    "odbc32;"
-    "odbccp32;"
-    "EuroScopePlugInDll;"
-    "Winmm;"
-    "Shell32;"
-    "Ole32;"
-    "Ws2_32;"
-    "Wldap32;"
-    "normaliz;"
-    "crypt32"
+    CURL::libcurl
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog_header_only
+    fmt::fmt
+    kernel32
+    user32
+    gdi32
+    winspool
+    comdlg32
+    advapi32
+    shell32
+    ole32
+    oleaut32
+    uuid
+    odbc32
+    odbccp32
+    EuroScopePlugInDll
+    Winmm
+    Shell32
+    Ole32
+    Ws2_32
+    Wldap32
+    normaliz
+    crypt32
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")

@@ -46,7 +46,7 @@ namespace UKControllerPluginUtils::Api {
     {
         try {
             return nlohmann::json::parse(response.GetResponse());
-        } catch (nlohmann::json::exception& jsonException) {
+        } catch (const nlohmann::json::exception&) {
             throw ApiRequestException(data.Uri(), static_cast<HttpStatusCode>(response.GetStatusCode()), true);
         }
     }

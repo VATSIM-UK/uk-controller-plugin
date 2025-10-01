@@ -7,7 +7,7 @@
 
 #pragma warning(push)
 #pragma warning(disable : 26495 26451)
-#include <json/json.hpp>
+#include <nlohmann/json.hpp>
 #pragma warning(pop)
 
 // add headers that you want to pre-compile here

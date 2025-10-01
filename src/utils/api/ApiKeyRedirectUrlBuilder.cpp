@@ -32,6 +32,6 @@ namespace UKControllerPluginUtils::Api {
     {
         const auto redirectUrl = "http://" + host + ":" + std::to_string(port);
         return impl->settings.Url() + "/user-create-api-key/?redirect=" +
-               curl_easy_escape(impl->curlHandle, redirectUrl.c_str(), redirectUrl.size());
+               curl_easy_escape(impl->curlHandle, redirectUrl.c_str(), static_cast<int>(redirectUrl.size()));
     }
 } // namespace UKControllerPluginUtils::Api

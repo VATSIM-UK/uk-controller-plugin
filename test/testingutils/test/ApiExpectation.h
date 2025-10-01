@@ -1,4 +1,5 @@
 #pragma once
+#include <variant>
 #include "ApiMethodExpectation.h"
 #include "ApiRequestExpectation.h"
 #include "ApiResponseExpectation.h"

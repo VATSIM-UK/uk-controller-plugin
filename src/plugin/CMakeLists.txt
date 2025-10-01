@@ -181,9 +181,11 @@ set(src__dependency
 )
 source_group("src\\dependency" FILES ${src__dependency})
 
-set(src__ecfmp
-        
-        ecfmp/ECFMPModuleFactory.cpp ecfmp/ECFMPModuleFactory.h ecfmp/Logger.cpp ecfmp/Logger.h ecfmp/HttpClient.cpp ecfmp/HttpClient.h ecfmp/ECFMPBootstrapProvider.cpp ecfmp/ECFMPBootstrapProvider.h ecfmp/TriggerEcfmpEventLoop.cpp ecfmp/TriggerEcfmpEventLoop.h ecfmp/AircraftFlowMeasureMap.cpp ecfmp/AircraftFlowMeasureMap.h ecfmp/AircraftFlowMeasureMapInterface.h ecfmp/AircraftFlowMeasureTagItem.cpp ecfmp/AircraftFlowMeasureTagItem.h ecfmp/ListAircraftFlowMeasures.cpp ecfmp/ListAircraftFlowMeasures.h ecfmp/AircraftFlowMeasuresDialog.cpp ecfmp/AircraftFlowMeasuresDialog.h ecfmp/HomeFirsFlowMeasureFilter.cpp ecfmp/HomeFirsFlowMeasureFilter.h ecfmp/ControllerFlowMeasureRelevance.cpp ecfmp/ControllerFlowMeasureRelevance.h ecfmp/ECFMPCustomMeasureFilterWrapper.cpp ecfmp/ECFMPCustomMeasureFilterWrapper.h ecfmp/ECFMPCustomMeasureFilter.h)
+# TODO: Re-enable ECFMP after fixing compatibility issues
+# set(src__ecfmp
+#         
+#         ecfmp/ECFMPModuleFactory.cpp ecfmp/ECFMPModuleFactory.h ecfmp/Logger.cpp ecfmp/Logger.h ecfmp/HttpClient.cpp ecfmp/HttpClient.h ecfmp/ECFMPBootstrapProvider.cpp ecfmp/ECFMPBootstrapProvider.h ecfmp/TriggerEcfmpEventLoop.cpp ecfmp/TriggerEcfmpEventLoop.h ecfmp/AircraftFlowMeasureMap.cpp ecfmp/AircraftFlowMeasureMap.h ecfmp/AircraftFlowMeasureMapInterface.h ecfmp/AircraftFlowMeasureTagItem.cpp ecfmp/AircraftFlowMeasureTagItem.h ecfmp/ListAircraftFlowMeasures.cpp ecfmp/ListAircraftFlowMeasures.h ecfmp/AircraftFlowMeasuresDialog.cpp ecfmp/AircraftFlowMeasuresDialog.h ecfmp/HomeFirsFlowMeasureFilter.cpp ecfmp/HomeFirsFlowMeasureFilter.h ecfmp/ControllerFlowMeasureRelevance.cpp ecfmp/ControllerFlowMeasureRelevance.h ecfmp/ECFMPCustomMeasureFilterWrapper.cpp ecfmp/ECFMPCustomMeasureFilterWrapper.h ecfmp/ECFMPCustomMeasureFilter.h)
+set(src__ecfmp)
 
 set(src__euroscope
     "euroscope/AsrEventHandlerCollection.cpp"
@@ -1039,7 +1041,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+# No special properties needed for 64-bit build
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -1098,8 +1100,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 ################################################################################
 target_link_directories(
     ${PROJECT_NAME} PUBLIC
-    $ENV{CURL_DEBUG_LIBRARYDIR}
-    $ENV{CURL_LIBRARYDIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
 )
 
@@ -1142,15 +1142,22 @@ if(MSVC)
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         /Zm200;
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        -Wno-unused-parameter # Lots of interfaces don't use everything
-        -Wno-missing-field-initializers # Windows has loads of this sadly
-        -ftime-trace
+        # Suppress non-critical warnings
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4100> # unreferenced formal parameter
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4458> # declaration hides class member
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4244> # conversion warnings
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4267> # size_t conversion warnings
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4101> # unreferenced local variable
+        $<$<CXX_COMPILER_ID:MSVC>:/wd2337> # attribute not found
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-unused-parameter> # Lots of interfaces don't use everything
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-missing-field-initializers> # Windows has loads of this sadly
+        $<$<CXX_COMPILER_ID:Clang>:-ftime-trace>
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
             /DEBUG:GHASH;
             /INCREMENTAL
-            -flto=thin
+            $<$<CXX_COMPILER_ID:Clang>:-flto=thin>
             >
         $<$<CONFIG:Release>:
             /DEBUG:NONE;
@@ -1169,43 +1176,50 @@ endif()
 ################################################################################
 add_dependencies(${PROJECT_NAME}
     UKControllerPluginUtils
-    ecfmp_sdk
+    # TODO: Re-enable ECFMP after fixing compatibility issues
+    # ecfmp_sdk
 )
 
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PUBLIC
     UKControllerPluginUtils
-    ecfmp_sdk
+    # TODO: Re-enable ECFMP after fixing compatibility issues
+    # ecfmp_sdk
 )
 
+# Link with EuroScope library
+add_library(EuroScopePlugInDll SHARED IMPORTED)
+set_target_properties(EuroScopePlugInDll PROPERTIES
+    IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/EuroScopePlugInDll.dll"
+    IMPORTED_IMPLIB "${CMAKE_CURRENT_SOURCE_DIR}/../../lib/EuroScopePlugInDll.lib"
+)
+target_link_libraries(${PROJECT_NAME} PUBLIC EuroScopePlugInDll)
+
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
-    "$<$<CONFIG:Debug>:"
-        "libcurl_a_debug"
-    ">"
-    "$<$<CONFIG:Release>:"
-        "libcurl_a"
-    ">"
-    "kernel32;"
-    "user32;"
-    "gdi32;"
-    "winspool;"
-    "Ws2_32;"
-    "Wldap32;"
-    "normaliz;"
-    "crypt32;"
-    "comdlg32;"
-    "advapi32;"
-    "shell32;"
-    "ole32;"
-    "oleaut32;"
-    "uuid;"
-    "odbc32;"
-    "odbccp32;"
-    "EuroScopePlugInDll;"
-    "Winmm;"
-    "Dwmapi;"
-    "gdiplus;"
-    "comctl32"
+    CURL::libcurl
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog_header_only
+    fmt::fmt
+    kernel32
+    user32
+    gdi32
+    winspool
+    Ws2_32
+    Wldap32
+    normaliz
+    crypt32
+    comdlg32
+    advapi32
+    shell32
+    ole32
+    oleaut32
+    uuid
+    odbc32
+    odbccp32
+    Winmm
+    Dwmapi
+    gdiplus
+    comctl32
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 

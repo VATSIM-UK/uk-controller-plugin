@@ -47,9 +47,22 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+# No special properties needed
 
-target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
+# Link dependencies first so they're available for precompiled headers
+add_dependencies(${PROJECT_NAME}
+    gmock
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC 
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog_header_only
+    fmt::fmt
+    gmock
+)
+
+# Temporarily disable precompiled headers while fixing build system
+# target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 set(ROOT_NAMESPACE TestingUtils)
@@ -81,7 +94,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../../resource;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../src/utils;"
     "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../../third_party/spdlog/include"
+    "    # Using Conan spdlog instead of bundled version"
 )
 
 ################################################################################
@@ -126,11 +139,4 @@ if(MSVC)
     )
 endif()
 
-################################################################################
-# Dependencies
-################################################################################
-add_dependencies(${PROJECT_NAME}
-    gmock
-)
-
-target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+# Dependencies now handled above before precompiled headers

@@ -316,3 +316,16 @@ CTestTestfile.cmake
 _deps
 build
 UKControllerPlugin.cbp
+
+# Conan 2 files
+conan.lock
+CMakeUserPresets.json
+build-*/
+.conan2/profiles/default
+
+# ccache
+.ccache/
+
+# Clang build artifacts
+*.pch
+*.gch

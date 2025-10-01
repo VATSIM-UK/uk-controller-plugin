@@ -4,7 +4,7 @@
 #pragma warning(push)
 #pragma warning(disable : 26495 26451 28251)
 #include "gmock/gmock.h"
-#include "json/json.hpp"
+#include <nlohmann/json.hpp>
 #pragma warning(pop)
 
 // Windows and standard headers

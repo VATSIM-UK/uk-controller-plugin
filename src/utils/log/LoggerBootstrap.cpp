@@ -103,8 +103,9 @@ namespace UKControllerPlugin::Log {
     auto LoggerBootstrap::GetLogfileName(const std::wstring& logFilePrefix) -> std::wstring
     {
         return logFilePrefix + L"-" +
-               HelperFunctions::ConvertToWideString(fmt::format(
-                   "{:%Y%m%d%H%M%S}", std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now()))) +
+               HelperFunctions::ConvertToWideString(
+                   fmt::format(
+                       "{:%Y%m%d%H%M%S}", std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now()))) +
                L".txt";
     }
 

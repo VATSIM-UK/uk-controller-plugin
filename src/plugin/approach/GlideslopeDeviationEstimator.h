@@ -21,8 +21,8 @@ namespace UKControllerPlugin::Approach {
     class GlideslopeDeviationEstimator
     {
         public:
-        [nodiscard] auto CalculateGlideslopeDeviation(
-            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
-            const Runway::Runway& runway) const -> GlideslopeDeviation;
+        [[nodiscard]] auto CalculateGlideslopeDeviation(
+            const Euroscope::EuroScopeCRadarTargetInterface& radarTarget, const Runway::Runway& runway) const
+            -> GlideslopeDeviation;
     };
 } // namespace UKControllerPlugin::Approach
