@@ -75,7 +75,7 @@ jobs:
                   path: build/bin/Release/UKControllerPluginCore.dll
 
             - name: Upload utility libraries
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: uk-controller-plugin-utils
                   path: |
