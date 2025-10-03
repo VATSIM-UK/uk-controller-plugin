@@ -1,7 +1,22 @@
-cmake_minimum_required(VERSION 3.15.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 10.0 CACHE STRING "" FORCE)
+
 project(UKControllerPlugin CXX)
+
+# Set C++ standard to 20 (required by third_party dependencies)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+################################################################################
+# Conan setup
+################################################################################
+find_package(nlohmann_json REQUIRED)
+find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(GTest REQUIRED)
+find_package(CURL REQUIRED)
 
 ################################################################################
 # Testing
@@ -40,6 +55,37 @@ if(MSVC)
 endif()
 
 ################################################################################
+# Clang-specific compiler options
+################################################################################
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # Remove MSVC-specific flags and add Clang equivalents
+    set(CMAKE_CXX_FLAGS "")
+    set(CMAKE_CXX_FLAGS_DEBUG "")
+    set(CMAKE_CXX_FLAGS_RELEASE "")
+    
+    # Clang flags for Windows DLL development - using /clang: prefix for clang-cl compatibility
+    add_compile_options(
+        /W4                      # High warning level
+        /clang:-fms-extensions   # Enable Microsoft extensions for Windows API
+        /clang:-fms-compatibility # MSVC compatibility
+    )
+    
+    # Debug configuration
+    set(CMAKE_CXX_FLAGS_DEBUG "/Od /Zi")
+    
+    # Release configuration  
+    set(CMAKE_CXX_FLAGS_RELEASE "/O2 /DNDEBUG")
+    
+    # Windows-specific definitions
+    add_compile_definitions(
+        WIN32
+        _WINDOWS
+        UNICODE
+        _UNICODE
+    )
+endif()
+
+################################################################################
 # Global linker options
 ################################################################################
 if(MSVC)
@@ -56,6 +102,17 @@ if(MSVC)
     set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS}")
     set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS}")
     set(CMAKE_STATIC_LINKER_FLAGS_RELEASE "${CMAKE_STATIC_LINKER_FLAGS}")
+endif()
+
+################################################################################
+# Global linker options for Clang on Windows
+################################################################################
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # Use lld-link for better Windows compatibility
+    set(CMAKE_EXE_LINKER_FLAGS "")
+    set(CMAKE_MODULE_LINKER_FLAGS "")
+    set(CMAKE_SHARED_LINKER_FLAGS "")
+    set(CMAKE_STATIC_LINKER_FLAGS "")
 endif()
 
 ################################################################################

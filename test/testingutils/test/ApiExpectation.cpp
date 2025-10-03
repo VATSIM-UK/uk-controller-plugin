@@ -113,9 +113,9 @@ namespace UKControllerPluginTest {
         return *this;
     }
 
-    ApiRequestExpectation& ApiExpectation::To(const std::string& uri)
+    ApiRequestExpectation& ApiExpectation::To(const std::string& targetUri)
     {
-        this->uri = uri;
+        this->uri = targetUri;
         return *this;
     }
 

@@ -25,8 +25,11 @@ void RunUpdater(UKControllerPlugin::Windows::WinApiInterface& windows)
     }
 
     LogInfo("Performing updates, please refer to the updater log for more information");
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
     PERFORMUPDATES PerformUpdates =
         reinterpret_cast<PERFORMUPDATES>(windows.GetFunctionPointerFromLibrary(updaterHandle, "PerformUpdates"));
+#pragma clang diagnostic pop
 
     /*
      * If the updater returns false, it means the user wouldn't let it update.
@@ -54,8 +57,11 @@ LoadPlugin(HINSTANCE pluginLibraryHandle, UKControllerPlugin::Windows::WinApiInt
         return nullptr;
     }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
     LOADPLUGINLIBRARY LoadPlugin =
         reinterpret_cast<LOADPLUGINLIBRARY>(windows.GetFunctionPointerFromLibrary(pluginLibraryHandle, "LoadPlugin"));
+#pragma clang diagnostic pop
 
     if (!LoadPlugin) {
         LogError("Cannot find LoadPlugin function in Core binary");

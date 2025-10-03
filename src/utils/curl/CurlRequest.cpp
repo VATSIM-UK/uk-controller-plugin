@@ -68,7 +68,7 @@ namespace UKControllerPlugin::Curl {
     /*
         Sets the body of the request, if its valid
     */
-    void CurlRequest::SetBody(const std::string& body)
+    void CurlRequest::SetBody(const std::string& requestBody)
     {
         if (this->body != nobody) {
             throw std::logic_error("Body already set");
@@ -78,7 +78,7 @@ namespace UKControllerPlugin::Curl {
             throw std::logic_error("This type of request cannot have a body");
         }
 
-        this->body = body;
+        this->body = requestBody;
     }
 
     /*

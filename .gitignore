@@ -316,3 +316,5 @@ CTestTestfile.cmake
 _deps
 build
 UKControllerPlugin.cbp
+CMakeUserPresets.json
+build-clang/

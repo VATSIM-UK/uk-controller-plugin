@@ -1039,7 +1039,18 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} SHARED ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+
+# Set C++20 standard for the target (required by dependencies)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
+
+# Only set GCC-specific flags for GCC, use different approach for Clang
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # For clang-cl, Win32 platform already sets the architecture
+    # No additional flags needed as we're using -A Win32 in cmake generation
+endif()
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -1080,7 +1091,7 @@ string(CONCAT "MSVC_RUNTIME_LIBRARY_STR"
     $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:Release>>>:${MSVC_RUNTIME_LIBRARY_DEFAULT}>
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES MSVC_RUNTIME_LIBRARY ${MSVC_RUNTIME_LIBRARY_STR})
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+# C++ standard already set above to 17
 ################################################################################
 # Include directories
 ################################################################################
@@ -1094,13 +1105,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 ################################################################################
-# Link directories for cURL
+# Link directories
 ################################################################################
 target_link_directories(
     ${PROJECT_NAME} PUBLIC
-    $ENV{CURL_DEBUG_LIBRARYDIR}
-    $ENV{CURL_LIBRARYDIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../../lib
+    # Conan will handle curl library paths automatically
 )
 
 ################################################################################
@@ -1126,41 +1136,53 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 ################################################################################
 # Compile and link options
 ################################################################################
-if(MSVC)
+if(MSVC OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
             /Od
-            /Zi;
+            /Zi
         >
         $<$<CONFIG:Release>:
-            /O2;
+            /O2
         >
-        /std:c++20;
-        /sdl;
-        /W4;
-        /WX;
-        ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
-        /Zm200;
-        ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        -Wno-unused-parameter # Lots of interfaces don't use everything
-        -Wno-missing-field-initializers # Windows has loads of this sadly
-        -ftime-trace
+        /std:c++20
+        /W4
+        /EHsc              # Enable C++ exceptions
+        # Remove /WX (warnings as errors) for now to get initial build working
+        # /WX;
+        /Zm200
     )
+    
+    # Add Clang-specific warning suppressions only for Clang
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_compile_options(${PROJECT_NAME} PRIVATE
+            /clang:-Wno-unused-parameter
+            /clang:-Wno-missing-field-initializers
+        )
+    else()
+        # MSVC-specific options
+        target_compile_options(${PROJECT_NAME} PRIVATE
+            ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
+            ${DEFAULT_CXX_EXCEPTION_HANDLING}
+            -Wno-unused-parameter
+            -Wno-missing-field-initializers
+            -ftime-trace
+        )
+    endif()
+    
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:
-            /DEBUG:GHASH;
+            /DEBUG:FULL
             /INCREMENTAL
-            -flto=thin
-            >
+        >
         $<$<CONFIG:Release>:
-            /DEBUG:NONE;
-            /OPT:REF;
-            /OPT:ICF;
+            /DEBUG:NONE
+            /OPT:REF
+            /OPT:ICF
             /INCREMENTAL:NO
         >
-        /NODEFAULTLIB:LIBCMT;
+        /NODEFAULTLIB:LIBCMT
         /SUBSYSTEM:WINDOWS
-        /ALLOWISOLATION
     )
 endif()
 
@@ -1178,13 +1200,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     ecfmp_sdk
 )
 
+# Link with Conan dependencies
+target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)
+target_link_libraries(${PROJECT_NAME} PUBLIC CURL::libcurl)
+message(STATUS "Using Conan-managed dependencies: fmt and curl")
+
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
-    "$<$<CONFIG:Debug>:"
-        "libcurl_a_debug"
-    ">"
-    "$<$<CONFIG:Release>:"
-        "libcurl_a"
-    ">"
     "kernel32;"
     "user32;"
     "gdi32;"

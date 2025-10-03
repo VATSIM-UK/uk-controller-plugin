@@ -140,10 +140,12 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
-        "libcurl_a_debug"
+        "libcurl"
+        "zlib"
     ">"
     "$<$<CONFIG:Release>:"
-        "libcurl_a"
+        "libcurl"
+        "zlib"
     ">"
     "kernel32;"
     "user32;"

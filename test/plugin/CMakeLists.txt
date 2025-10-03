@@ -821,11 +821,9 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "$<$<CONFIG:Debug>:"
         "EuroScopePlugInDll;"
         "dbghelp;"
-        "libcurl_a_debug"
     ">"
     "$<$<CONFIG:Release>:"
         "EuroScopePlugInDll;"
-        "libcurl_a"
     ">"
     "gdiplus;"
     "kernel32;"
@@ -847,6 +845,7 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "advapi32"
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PRIVATE CURL::libcurl)
 
 target_link_directories(${PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/lib/test"

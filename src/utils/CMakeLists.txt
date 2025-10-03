@@ -1,25 +1,7 @@
 set(PROJECT_NAME UKControllerPluginUtils)
 
-# Check for curl includes
-if (DEFINED ENV{CURL_INCLUDEDIR})
-    message("Curl include directory set to $ENV{CURL_INCLUDEDIR}")
-ELSE()
-    message(FATAL_ERROR "Curl include directory not set, please set ENV::CURL_INCLUDEDIR")
-ENDIF()
-
-# Check for curl libraries
-if (DEFINED ENV{CURL_LIBRARYDIR})
-    message("Curl library directory set to $ENV{CURL_LIBRARYDIR}")
-ELSEIF(${CMAKE_BUILD_TYPE} STREQUAL "Release")
-    message(FATAL_ERROR "Curl library directory not set, please set ENV::CURL_LIBRARYDIR")
-ENDIF()
-
-# Check for curl libraries (debug)
-if (DEFINED ENV{CURL_DEBUG_LIBRARYDIR})
-    message("Curl debug library directory set to $ENV{CURL_DEBUG_LIBRARYDIR}")
-ELSEIF(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-    message(FATAL_ERROR "Curl debug library directory not set, please set ENV::CURL_DEBUG_LIBRARYDIR")
-ENDIF()
+# Use Conan-managed CURL
+find_package(CURL REQUIRED)
 
 ################################################################################
 # Source groups
@@ -214,7 +196,7 @@ set(ALL_FILES
 # Target
 ################################################################################
 add_library(${PROJECT_NAME} STATIC ${ALL_FILES})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+# Remove -m32 flags for MSVC/clang-cl compatibility
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -295,3 +277,9 @@ if(MSVC)
         >
     )
 endif()
+
+################################################################################
+# Dependencies and Linking
+################################################################################
+target_link_libraries(${PROJECT_NAME} PUBLIC CURL::libcurl)
+message(STATUS "Using Conan-managed CURL library")

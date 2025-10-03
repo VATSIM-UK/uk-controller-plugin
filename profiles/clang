@@ -1,0 +1,12 @@
+[settings]
+os=Windows
+arch=x86
+compiler=clang
+compiler.version=17
+compiler.cppstd=20
+compiler.libcxx=libstdc++11
+build_type=Release
+
+[buildenv]
+CC=clang-cl
+CXX=clang-cl

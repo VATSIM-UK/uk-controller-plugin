@@ -142,12 +142,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 set(ADDITIONAL_LIBRARY_DEPENDENCIES
-    "$<$<CONFIG:Debug>:"
-        "libcurl_a_debug"
-    ">"
-    "$<$<CONFIG:Release>:"
-        "libcurl_a"
-    ">"
     "Winmm;"
     "Shell32;"
     "Ole32;"
@@ -159,3 +153,4 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "advapi32"
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
+target_link_libraries(${PROJECT_NAME} PUBLIC CURL::libcurl)

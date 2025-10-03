@@ -10,6 +10,8 @@ using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Curl::MockCurlApi;
 using UKControllerPluginTest::Windows::MockWinApi;
 
+#pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
+
 namespace UKControllerPluginUpdaterTest::Updater {
     class PerformUpdatesTest : public Test
     {
