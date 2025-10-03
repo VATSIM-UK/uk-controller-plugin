@@ -23,8 +23,14 @@ jobs:
 
             - name: Install Clang
               run: |
-                  # Install LLVM/Clang which includes clang-cl
-                  choco install llvm --version=18.1.8 -y
+                  # Check if LLVM is already installed, if not install it
+                  if (!(Get-Command clang-cl -ErrorAction SilentlyContinue)) {
+                      # Install latest LLVM/Clang which includes clang-cl
+                      choco install llvm -y
+                  } else {
+                      Write-Host "LLVM/Clang is already installed"
+                      clang-cl --version
+                  }
                   # Add to PATH for this session
                   echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
               shell: powershell
