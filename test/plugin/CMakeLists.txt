@@ -806,8 +806,11 @@ add_dependencies(${PROJECT_NAME}
     UKControllerPluginUtils
     gmock
     UKControllerPluginTestingUtils
-    ecfmp_sdk
 )
+
+if(ENABLE_ECFMP)
+    add_dependencies(${PROJECT_NAME} ecfmp_sdk)
+endif()
 
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PRIVATE

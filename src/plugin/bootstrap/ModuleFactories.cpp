@@ -1,6 +1,8 @@
 #include "ModuleFactories.h"
 #include "approach/ApproachModuleFactory.h"
+#ifdef ENABLE_ECFMP
 #include "ecfmp/ECFMPModuleFactory.h"
+#endif
 #include "intention/IntentionCodeModuleFactory.h"
 
 namespace UKControllerPlugin::Bootstrap {
@@ -26,6 +28,7 @@ namespace UKControllerPlugin::Bootstrap {
         return *intentionCode;
     }
 
+#ifdef ENABLE_ECFMP
     auto ModuleFactories::ECFMP() -> ECFMP::ECFMPModuleFactory&
     {
         if (!ecfmp) {
@@ -34,4 +37,5 @@ namespace UKControllerPlugin::Bootstrap {
 
         return *ecfmp;
     }
+#endif
 } // namespace UKControllerPlugin::Bootstrap

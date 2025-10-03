@@ -140,9 +140,22 @@ include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 ################################################################################
+# Build Options
+################################################################################
+# Temporarily disable ECFMP to fix build issues
+# TODO: Update ECFMP SDK to compatible version or fix API issues
+option(ENABLE_ECFMP "Enable ECFMP SDK integration" OFF)
+
+################################################################################
 # Sub-projects
 ################################################################################
-add_subdirectory(third_party/ecfmp/src)
+if(ENABLE_ECFMP)
+    add_subdirectory(third_party/ecfmp/src)
+    message(STATUS "ECFMP SDK enabled")
+else()
+    message(STATUS "ECFMP SDK disabled - use -DENABLE_ECFMP=ON to enable")
+endif()
+
 add_subdirectory(src/loader)
 add_subdirectory(src/plugin)
 add_subdirectory(src/updater)

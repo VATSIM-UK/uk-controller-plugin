@@ -988,7 +988,7 @@ set(ALL_FILES
     ${src__datablock}
     ${src__departure}
     ${src__dependency}
-    ${src__ecfmp}
+    $<$<BOOL:${ENABLE_ECFMP}>:${src__ecfmp}>
     ${src__euroscope}
     ${src__eventhandler}
     ${src__flightinformationservice}
@@ -1153,20 +1153,24 @@ if(MSVC OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
         /Zm200
     )
     
-    # Add Clang-specific warning suppressions only for Clang
+    # Add compiler-specific warning suppressions
     if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        # For clang-cl (Clang with MSVC compatibility)
         target_compile_options(${PROJECT_NAME} PRIVATE
             /clang:-Wno-unused-parameter
             /clang:-Wno-missing-field-initializers
+            /wd4458  # declaration hides class member
+            /wd4244  # conversion with possible loss of data
         )
-    else()
-        # MSVC-specific options
+    elseif(MSVC)
+        # Pure MSVC options
         target_compile_options(${PROJECT_NAME} PRIVATE
             ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT}
             ${DEFAULT_CXX_EXCEPTION_HANDLING}
-            -Wno-unused-parameter
-            -Wno-missing-field-initializers
-            -ftime-trace
+            /wd4100  # unreferenced formal parameter
+            /wd4101  # unreferenced local variable
+            /wd4458  # declaration hides class member
+            /wd4244  # conversion with possible loss of data
         )
     endif()
     
@@ -1191,14 +1195,24 @@ endif()
 ################################################################################
 add_dependencies(${PROJECT_NAME}
     UKControllerPluginUtils
-    ecfmp_sdk
 )
+
+if(ENABLE_ECFMP)
+    add_dependencies(${PROJECT_NAME} ecfmp_sdk)
+endif()
 
 # Link with other targets.
 target_link_libraries(${PROJECT_NAME} PUBLIC
     UKControllerPluginUtils
-    ecfmp_sdk
 )
+
+if(ENABLE_ECFMP)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ecfmp_sdk)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE ENABLE_ECFMP)
+    message(STATUS "ECFMP SDK enabled")
+else()
+    message(STATUS "ECFMP SDK disabled - use -DENABLE_ECFMP=ON to enable")
+endif()
 
 # Link with Conan dependencies
 target_link_libraries(${PROJECT_NAME} PUBLIC fmt::fmt)

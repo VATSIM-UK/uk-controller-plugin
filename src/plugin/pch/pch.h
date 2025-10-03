@@ -68,4 +68,6 @@ using std::min;
 #include <vector>
 
 #include "euroscope/EuroScopePlugIn.h"
+#ifdef ENABLE_ECFMP
 #include "ecfmp/include/ECFMP/ECFMP.h"
+#endif
