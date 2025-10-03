@@ -59,7 +59,7 @@ jobs:
               run: |
                   # This may fail due to ECFMP SDK compilation issues
                   cmake --build build --config Release --target UKControllerPluginCore
-                  if (Test-Path "build/bin/Release/UKControllerPluginCore.dll") {
+                  if (Test-Path "build/bin/UKControllerPluginCore.dll") {
                     echo "plugin_built=true" >> $env:GITHUB_OUTPUT
                   } else {
                     echo "plugin_built=false" >> $env:GITHUB_OUTPUT
@@ -69,10 +69,10 @@ jobs:
 
             - name: Upload DLL artifact (if successful)
               if: steps.build_plugin.outputs.plugin_built == 'true'
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: uk-controller-plugin-dll
-                  path: build/bin/Release/UKControllerPluginCore.dll
+                  path: build/bin/UKControllerPluginCore.dll
 
             - name: Upload utility libraries
               uses: actions/upload-artifact@v4
