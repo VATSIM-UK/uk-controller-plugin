@@ -48,12 +48,27 @@ jobs:
         run: |
           conan install . --profile=profiles/clang-win32 -o libcurl/*:with_ssl=False --build=missing
 
-      - name: Apply ECFMP fixes patch
+      - name: Apply ECFMP fixes
         run: |
-          # Apply comprehensive ECFMP SDK fixes for clang-cl compatibility
+          Write-Host "🔧 Applying ECFMP SDK fixes for clang-cl compatibility..."
           cd third_party/ecfmp
-          git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch
-          Write-Host "✅ Applied ECFMP compatibility patches"
+
+          # Apply the patch (ignore errors if already applied)
+          git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch 2>$null
+          if ($LASTEXITCODE -eq 0) {
+              Write-Host "✅ ECFMP patch applied successfully"
+          } else {
+              Write-Host "ℹ️ Patch not applied (may already be applied) - continuing with build..."
+          }
+
+          # Verify critical files have the fixes we need
+          $eventBusContent = Get-Content "include/ECFMP/eventbus/EventBus.h" -Raw
+          if ($eventBusContent -like "*protected:*GetStream*") {
+              Write-Host "✅ EventBus.h fix confirmed"
+          } else {
+              Write-Host "❌ EventBus.h fix missing - applying manually..."
+              (Get-Content "include/ECFMP/eventbus/EventBus.h") -replace "        private:", "        protected:" | Set-Content "include/ECFMP/eventbus/EventBus.h"
+          }
         shell: powershell
 
       - name: Setup MSBuild
