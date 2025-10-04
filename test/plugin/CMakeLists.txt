@@ -682,7 +682,11 @@ set(ALL_FILES
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+
+# Remove -m32 flags for MSVC/clang-cl compatibility
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND NOT CMAKE_CXX_SIMULATE_ID))
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "-m32" LINK_FLAGS "-m32")
+endif()
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "pch/pch.h")
 
@@ -778,8 +782,8 @@ if(MSVC)
         -ftime-trace;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
-        -Wno-unused-parameter # Lots of interfaces don't use everything
-        -Wno-missing-field-initializers # Windows has loads of this sadly
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-unused-parameter> # Lots of interfaces don't use everything
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-missing-field-initializers> # Windows has loads of this sadly
     )
     target_link_options(${PROJECT_NAME} PRIVATE
         $<$<CONFIG:Debug>:

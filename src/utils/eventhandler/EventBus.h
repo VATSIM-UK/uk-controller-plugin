@@ -2,6 +2,7 @@
 #include "EventHandlerFlags.h"
 #include "EuroscopeThreadEventSink.h"
 #include <typeindex>
+#include <any>
 
 namespace UKControllerPluginUtils::EventHandler {
     template <class T> class EventHandler;

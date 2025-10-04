@@ -74,11 +74,15 @@ bool UpdateRequired(WinApiInterface& windows, const nlohmann::json& versionDetai
         return true;
     }
 
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
+#endif
     GETPLUGINVERSION PluginVersion =
         reinterpret_cast<GETPLUGINVERSION>(windows.GetFunctionPointerFromLibrary(coreBinaryHandle, "GetPluginVersion"));
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
     if (!PluginVersion) {
         windows.UnloadLibrary(coreBinaryHandle);

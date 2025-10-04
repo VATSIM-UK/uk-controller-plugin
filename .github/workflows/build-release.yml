@@ -36,8 +36,11 @@ jobs:
 
       - name: Apply ECFMP fixes
         run: |
+          Write-Host "🔧 Applying ECFMP SDK compatibility fixes..."
           git apply --verbose --directory=third_party/ecfmp ecfmp-complete-fixes.patch
-        shell: powershell
+          Write-Host "🔧 Applying build system fixes for clang-cl compatibility..."
+          git apply --verbose build-fixes.patch
+        shell: pwsh
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
