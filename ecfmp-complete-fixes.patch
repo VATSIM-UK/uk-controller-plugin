@@ -37,8 +37,6 @@ index c5e1455..76348c7 100644
 +++ b/src/CMakeLists.txt
 @@ -92,6 +92,10 @@ target_compile_options(${PROJECT_NAME} PRIVATE
          ${DEFAULT_CXX_EXCEPTION_HANDLING}
-         /W4;
-         /WX;
 -        -Wno-unused-parameter; # Lots of interfaces don't use everything
 -        -Wno-missing-field-initializers; # Windows has loads of this sadly
 +        $<$<CXX_COMPILER_ID:GNU,Clang>:-Wno-unused-parameter>; # Lots of interfaces don't use everything

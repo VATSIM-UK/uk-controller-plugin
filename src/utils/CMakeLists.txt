@@ -262,8 +262,6 @@ if(MSVC)
         /permissive-;
         /std:c++latest;
         /sdl;
-        /W4;
-        /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )

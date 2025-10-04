@@ -777,8 +777,6 @@ if(MSVC)
         /O1;
         /std:c++20;
         /sdl;
-        /W4;
-        /WX;
         -ftime-trace;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}

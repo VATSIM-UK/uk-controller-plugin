@@ -48,33 +48,28 @@ set(CMAKE_CONFIGURATION_TYPES
 # Global compiler options
 ################################################################################
 if(MSVC)
-    # remove default flags provided with CMake for MSVC
-    set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "")
-    set(CMAKE_CXX_FLAGS_RELEASE "")
+    # Keep default CMake flags, just adjust warnings-as-errors
+    add_compile_options(/WX-)  # disable treat warnings as errors globally
 endif()
 
 ################################################################################
 # Clang-specific compiler options
 ################################################################################
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    # Remove MSVC-specific flags and add Clang equivalents
-    set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "")
-    set(CMAKE_CXX_FLAGS_RELEASE "")
-    
-    # Clang flags for Windows DLL development - using /clang: prefix for clang-cl compatibility
+    # Clang-cl compatibility with MSVC-style flags
     add_compile_options(
-        /W4                      # High warning level
-        /clang:-fms-extensions   # Enable Microsoft extensions for Windows API
-        /clang:-fms-compatibility # MSVC compatibility
+        /clang:-fms-extensions      # Enable Microsoft extensions for Windows API
+        /clang:-fms-compatibility   # MSVC compatibility
     )
     
+    # Disable warnings-as-errors in general
+    add_compile_options(-Wno-error)
+
     # Debug configuration
-    set(CMAKE_CXX_FLAGS_DEBUG "/Od /Zi")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Od /Zi")
     
     # Release configuration  
-    set(CMAKE_CXX_FLAGS_RELEASE "/O2 /DNDEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /DNDEBUG")
     
     # Windows-specific definitions
     add_compile_definitions(

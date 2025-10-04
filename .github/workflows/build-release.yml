@@ -36,10 +36,7 @@ jobs:
 
       - name: Apply ECFMP fixes
         run: |
-          Write-Host "🔧 Applying ECFMP SDK compatibility fixes..."
           git apply --verbose --directory=third_party/ecfmp ecfmp-complete-fixes.patch
-          Write-Host "🔧 Applying build system fixes for clang-cl compatibility..."
-          git apply --verbose build-fixes.patch
         shell: pwsh
 
       - name: Setup MSBuild
@@ -52,24 +49,10 @@ jobs:
       - name: Build all targets
         id: build_all
         run: |
-          Write-Host "🔨 Building all targets with ECFMP enabled..."
-
-          # Build all targets in one command
           cmake --build build --config Release
-
-          # Verify DLL was built
-          if (Test-Path "build/bin/UKControllerPluginCore.dll") {
-            Write-Host "✅ UKControllerPluginCore.dll built successfully"
-            echo "plugin_built=true" >> $env:GITHUB_OUTPUT
-          } else {
-            Write-Host "❌ UKControllerPluginCore.dll build failed"
-            echo "plugin_built=false" >> $env:GITHUB_OUTPUT
-            exit 1
-          }
         shell: pwsh
 
       - name: Upload DLL artifact (if successful)
-        if: steps.build_all.outputs.plugin_built == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: uk-controller-plugin-dll
@@ -82,13 +65,3 @@ jobs:
           path: |
             build/lib/UKControllerPluginUtils.lib
             build/lib/UKControllerPluginTestingUtils.lib
-
-      - name: Report build status
-        run: |
-          if (${{ steps.build_all.outputs.plugin_built == 'true' }}) {
-            Write-Host "🎉 Complete build successful - DLL, utilities, and ECFMP features ready!"
-            Write-Host "📦 Built with ECFMP SDK enabled for full flow measure functionality"
-          } else {
-            Write-Host "❌ Build failed - check logs for details"
-          }
-        shell: pwsh

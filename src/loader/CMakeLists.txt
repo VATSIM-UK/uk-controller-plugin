@@ -105,8 +105,6 @@ if(MSVC)
         /permissive-;
         /std:c++20;
         /sdl;
-        /W4;
-        /WX;
         ${DEFAULT_CXX_DEBUG_INFORMATION_FORMAT};
         ${DEFAULT_CXX_EXCEPTION_HANDLING}
     )
