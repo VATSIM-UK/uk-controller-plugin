@@ -54,10 +54,10 @@ jobs:
           cd third_party/ecfmp
 
           # Apply the patch (ignore errors if already applied)
-          git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch 2>$null
-          if ($LASTEXITCODE -eq 0) {
+          try {
+              git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch *>$null
               Write-Host "✅ ECFMP patch applied successfully"
-          } else {
+          } catch {
               Write-Host "ℹ️ Patch not applied (may already be applied) - continuing with build..."
           }
 
