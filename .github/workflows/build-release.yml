@@ -54,10 +54,10 @@ jobs:
           cd third_party/ecfmp
 
           # Apply the patch (ignore errors if already applied)
-          try {
-              git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch *>$null
+          git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch 2>$null
+          if ($LASTEXITCODE -eq 0) {
               Write-Host "✅ ECFMP patch applied successfully"
-          } catch {
+          } else {
               Write-Host "ℹ️ Patch not applied (may already be applied) - continuing with build..."
           }
 
@@ -67,7 +67,22 @@ jobs:
               Write-Host "✅ EventBus.h fix confirmed"
           } else {
               Write-Host "❌ EventBus.h fix missing - applying manually..."
-              (Get-Content "include/ECFMP/eventbus/EventBus.h") -replace "        private:", "        protected:" | Set-Content "include/ECFMP/eventbus/EventBus.h"
+              $content = Get-Content "include/ECFMP/eventbus/EventBus.h"
+              $content = $content -replace "        private:", "        protected:"
+              $content | Set-Content "include/ECFMP/eventbus/EventBus.h"
+              Write-Host "✅ EventBus.h fix applied manually"
+          }
+
+          # Check ConcreteEvent.h inheritance fix
+          $concreteEventContent = Get-Content "src/event/ConcreteEvent.h" -Raw
+          if ($concreteEventContent -like "*: public Event*" -and $concreteEventContent -notlike "*Event::Event*") {
+              Write-Host "✅ ConcreteEvent.h fix confirmed"
+          } else {
+              Write-Host "❌ ConcreteEvent.h fix missing - applying manually..."
+              $content = Get-Content "src/event/ConcreteEvent.h"
+              $content = $content -replace ": public Event::Event", ": public Event"
+              $content | Set-Content "src/event/ConcreteEvent.h"
+              Write-Host "✅ ConcreteEvent.h fix applied manually"
           }
         shell: powershell
 
