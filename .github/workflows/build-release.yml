@@ -1,99 +1,115 @@
 name: Build Release DLL
 
 on:
-    push:
-        branches: [build-clang, main]
-    pull_request:
-        branches: [main]
+  push:
+    branches: [build-clang, main]
+  pull_request:
+    branches: [main]
 
 jobs:
-    build:
-        runs-on: windows-latest
+  build:
+    runs-on: windows-latest
 
-        steps:
-            - name: Checkout code with submodules
-              uses: actions/checkout@v4
-              with:
-                  submodules: recursive
+    steps:
+      - name: Checkout code with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-            - name: Setup Python
-              uses: actions/setup-python@v4
-              with:
-                  python-version: "3.11"
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-            - name: Install Clang
-              run: |
-                  # Check if LLVM is already installed, if not install it
-                  if (!(Get-Command clang-cl -ErrorAction SilentlyContinue)) {
-                      # Install latest LLVM/Clang which includes clang-cl
-                      choco install llvm -y
-                  } else {
-                      Write-Host "LLVM/Clang is already installed"
-                      clang-cl --version
-                  }
-                  # Add to PATH for this session
-                  echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
-              shell: powershell
+      - name: Install Clang
+        run: |
+          # Check if LLVM is already installed, if not install it
+          if (!(Get-Command clang-cl -ErrorAction SilentlyContinue)) {
+              # Install latest LLVM/Clang which includes clang-cl
+              choco install llvm -y
+          } else {
+              Write-Host "LLVM/Clang is already installed"
+              clang-cl --version
+          }
+          # Add to PATH for this session
+          echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
+        shell: powershell
 
-            - name: Install Conan
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install conan==2.18.1
+      - name: Install Conan
+        run: |
+          python -m pip install --upgrade pip
+          pip install conan==2.18.1
 
-            - name: Setup Conan profile
-              run: |
-                  conan profile detect --force
+      - name: Setup Conan profile
+        run: |
+          conan profile detect --force
 
-            - name: Install dependencies
-              run: |
-                  conan install . --profile=profiles/clang-win32 -o libcurl/*:with_ssl=False --build=missing
+      - name: Install dependencies
+        run: |
+          conan install . --profile=profiles/clang-win32 -o libcurl/*:with_ssl=False --build=missing
 
-            - name: Setup MSBuild
-              uses: microsoft/setup-msbuild@v1.3
+      - name: Apply ECFMP fixes patch
+        run: |
+          # Apply comprehensive ECFMP SDK fixes for clang-cl compatibility
+          cd third_party/ecfmp
+          git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch
+          Write-Host "✅ Applied ECFMP compatibility patches"
+        shell: powershell
 
-            - name: Configure CMake
-              run: |
-                  cmake --preset conan-default
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.3
 
-            - name: Build utilities first (these work)
-              run: |
-                  cmake --build build --config Release --target UKControllerPluginUtils
-                  cmake --build build --config Release --target UKControllerPluginTestingUtils
+      - name: Configure CMake with ECFMP enabled
+        run: |
+          cmake --preset conan-default -DENABLE_ECFMP=ON
 
-            - name: Try to build main plugin DLL
-              id: build_plugin
-              run: |
-                  # This may fail due to ECFMP SDK compilation issues
-                  cmake --build build --config Release --target UKControllerPluginCore
-                  if (Test-Path "build/bin/UKControllerPluginCore.dll") {
-                    echo "plugin_built=true" >> $env:GITHUB_OUTPUT
-                  } else {
-                    echo "plugin_built=false" >> $env:GITHUB_OUTPUT
-                  }
-              continue-on-error: true
-              shell: pwsh
+      - name: Build all targets
+        id: build_all
+        run: |
+          Write-Host "🔨 Building all targets with ECFMP enabled..."
 
-            - name: Upload DLL artifact (if successful)
-              if: steps.build_plugin.outputs.plugin_built == 'true'
-              uses: actions/upload-artifact@v4
-              with:
-                  name: uk-controller-plugin-dll
-                  path: build/bin/UKControllerPluginCore.dll
+          # Build utilities
+          cmake --build build --config Release --target UKControllerPluginUtils
+          cmake --build build --config Release --target UKControllerPluginTestingUtils
 
-            - name: Upload utility libraries
-              uses: actions/upload-artifact@v4
-              with:
-                  name: uk-controller-plugin-utils
-                  path: |
-                      build/lib/UKControllerPluginUtils.lib
-                      build/lib/UKControllerPluginTestingUtils.lib
+          # Build main plugin DLL (should work with our patches)
+          cmake --build build --config Release --target UKControllerPluginCore
 
-            - name: Report build status
-              run: |
-                  if (${{ steps.build_plugin.outputs.plugin_built == 'true' }}) {
-                    Write-Host "✅ Complete build successful - DLL and utilities ready"
-                  } else {
-                    Write-Host "⚠️ Utilities built successfully, but plugin DLL failed due to ECFMP SDK issues"
-                    Write-Host "To fix: Update ECFMP SDK or temporarily disable ECFMP features"
-                  }
-              shell: pwsh
+          # Build tests (if available)
+          cmake --build build --config Release --target UKControllerPluginTest -ErrorAction Continue
+
+          # Verify DLL was built
+          if (Test-Path "build/bin/UKControllerPluginCore.dll") {
+            Write-Host "✅ UKControllerPluginCore.dll built successfully"
+            echo "plugin_built=true" >> $env:GITHUB_OUTPUT
+          } else {
+            Write-Host "❌ UKControllerPluginCore.dll build failed"
+            echo "plugin_built=false" >> $env:GITHUB_OUTPUT
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Upload DLL artifact (if successful)
+        if: steps.build_all.outputs.plugin_built == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: uk-controller-plugin-dll
+          path: build/bin/UKControllerPluginCore.dll
+
+      - name: Upload utility libraries
+        uses: actions/upload-artifact@v4
+        with:
+          name: uk-controller-plugin-utils
+          path: |
+            build/lib/UKControllerPluginUtils.lib
+            build/lib/UKControllerPluginTestingUtils.lib
+
+      - name: Report build status
+        run: |
+          if (${{ steps.build_all.outputs.plugin_built == 'true' }}) {
+            Write-Host "🎉 Complete build successful - DLL, utilities, and ECFMP features ready!"
+            Write-Host "📦 Built with ECFMP SDK enabled for full flow measure functionality"
+          } else {
+            Write-Host "❌ Build failed - check logs for details"
+          }
+        shell: pwsh
