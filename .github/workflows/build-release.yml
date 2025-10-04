@@ -21,20 +21,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Clang
-        run: |
-          # Check if LLVM is already installed, if not install it
-          if (!(Get-Command clang-cl -ErrorAction SilentlyContinue)) {
-              # Install latest LLVM/Clang which includes clang-cl
-              choco install llvm -y
-          } else {
-              Write-Host "LLVM/Clang is already installed"
-              clang-cl --version
-          }
-          # Add to PATH for this session
-          echo "C:\Program Files\LLVM\bin" >> $env:GITHUB_PATH
-        shell: powershell
-
       - name: Install Conan
         run: |
           python -m pip install --upgrade pip
@@ -50,44 +36,11 @@ jobs:
 
       - name: Apply ECFMP fixes
         run: |
-          Write-Host "🔧 Applying ECFMP SDK fixes for clang-cl compatibility..."
-          cd third_party/ecfmp
-
-          # Apply the patch (ignore errors if already applied)
-          git apply --ignore-whitespace ../../ecfmp-complete-fixes.patch 2>$null
-          if ($LASTEXITCODE -eq 0) {
-              Write-Host "✅ ECFMP patch applied successfully"
-          } else {
-              Write-Host "ℹ️ Patch not applied (may already be applied) - continuing with build..."
-          }
-
-          # Verify critical files have the fixes we need
-          $eventBusContent = Get-Content "include/ECFMP/eventbus/EventBus.h" -Raw
-          if ($eventBusContent -like "*protected:*GetStream*") {
-              Write-Host "✅ EventBus.h fix confirmed"
-          } else {
-              Write-Host "❌ EventBus.h fix missing - applying manually..."
-              $content = Get-Content "include/ECFMP/eventbus/EventBus.h"
-              $content = $content -replace "        private:", "        protected:"
-              $content | Set-Content "include/ECFMP/eventbus/EventBus.h"
-              Write-Host "✅ EventBus.h fix applied manually"
-          }
-
-          # Check ConcreteEvent.h inheritance fix
-          $concreteEventContent = Get-Content "src/event/ConcreteEvent.h" -Raw
-          if ($concreteEventContent -like "*: public Event*" -and $concreteEventContent -notlike "*Event::Event*") {
-              Write-Host "✅ ConcreteEvent.h fix confirmed"
-          } else {
-              Write-Host "❌ ConcreteEvent.h fix missing - applying manually..."
-              $content = Get-Content "src/event/ConcreteEvent.h"
-              $content = $content -replace ": public Event::Event", ": public Event"
-              $content | Set-Content "src/event/ConcreteEvent.h"
-              Write-Host "✅ ConcreteEvent.h fix applied manually"
-          }
+          git apply --verbose --directory=third_party/ecfmp ecfmp-complete-fixes.patch
         shell: powershell
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.3
+        uses: microsoft/setup-msbuild@v2
 
       - name: Configure CMake with ECFMP enabled
         run: |
@@ -98,15 +51,8 @@ jobs:
         run: |
           Write-Host "🔨 Building all targets with ECFMP enabled..."
 
-          # Build utilities
-          cmake --build build --config Release --target UKControllerPluginUtils
-          cmake --build build --config Release --target UKControllerPluginTestingUtils
-
-          # Build main plugin DLL (should work with our patches)
-          cmake --build build --config Release --target UKControllerPluginCore
-
-          # Build tests (if available)
-          cmake --build build --config Release --target UKControllerPluginTest -ErrorAction Continue
+          # Build all targets in one command
+          cmake --build build --config Release
 
           # Verify DLL was built
           if (Test-Path "build/bin/UKControllerPluginCore.dll") {
