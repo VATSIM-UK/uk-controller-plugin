@@ -122,11 +122,12 @@ namespace UKControllerPlugin::IntentionCode {
         if (!codes.is_array()) {
             LogWarning("Intention codes dependency is invalid");
             // Add the fallback - full airfield ICAO
-            collection->Add(std::make_shared<IntentionCodeModel>(
-                -1,
-                std::make_unique<FullAirfieldIdentifier>(),
-                std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
-                std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)));
+            collection->Add(
+                std::make_shared<IntentionCodeModel>(
+                    -1,
+                    std::make_unique<FullAirfieldIdentifier>(),
+                    std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
+                    std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)));
             return collection;
         }
 
@@ -137,21 +138,24 @@ namespace UKControllerPlugin::IntentionCode {
             }
 
             auto metadata = std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata);
-            collection->Add(std::make_shared<IntentionCodeModel>(
-                code.at("id").get<int>(),
-                MakeCode(code.at("code")),
-                std::make_unique<AllOf>(MakeConditions(code.at("conditions"), generator, activeControllers, *metadata))
+            collection->Add(
+                std::make_shared<IntentionCodeModel>(
+                    code.at("id").get<int>(),
+                    MakeCode(code.at("code")),
+                    std::make_unique<AllOf>(
+                        MakeConditions(code.at("conditions"), generator, activeControllers, *metadata))
 
-                    ,
-                std::move(metadata)));
+                        ,
+                    std::move(metadata)));
         }
 
         // Add blank as fallback
-        collection->Add(std::make_shared<IntentionCodeModel>(
-            -1,
-            std::make_unique<SingleCode>(""),
-            std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
-            std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)));
+        collection->Add(
+            std::make_shared<IntentionCodeModel>(
+                -1,
+                std::make_unique<SingleCode>(""),
+                std::make_unique<AllOf>(std::list<std::shared_ptr<Condition>>({})),
+                std::unique_ptr<IntentionCodeMetadata>(new IntentionCodeMetadata)));
 
         LogInfo("Loaded " + std::to_string(collection->Count()) + " intention codes");
         return collection;
