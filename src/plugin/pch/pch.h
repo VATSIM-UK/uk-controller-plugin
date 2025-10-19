@@ -14,7 +14,12 @@
 #pragma warning(disable : 26495 26451)
 
 #include "../../resource/resource.h"
+
+// Disable deprecated-literal-operator warning for json.hpp
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-literal-operator"
 #include "json/json.hpp"
+#pragma clang diagnostic pop
 #include "fmt/include/fmt/chrono.h"
 
 #include "api/ApiRequestFacade.h"

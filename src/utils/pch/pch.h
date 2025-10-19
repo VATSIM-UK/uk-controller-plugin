@@ -11,7 +11,12 @@
 #define SPDLOG_WCHAR_FILENAMES
 #define CONTINUABLE_HAS_DISABLED_COROUTINE
 #include <curl/curl.h>
+
+// Disable deprecated-literal-operator warning for json.hpp
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-literal-operator"
 #include <json/json.hpp>
+#pragma clang diagnostic pop
 #include <spdlog/include/spdlog/logger.h>
 #include <spdlog/include/spdlog/sinks/basic_file_sink.h>
 #include <spdlog/include/spdlog/sinks/null_sink.h>

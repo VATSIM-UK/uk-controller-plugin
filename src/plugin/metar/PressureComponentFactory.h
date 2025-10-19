@@ -1,6 +1,5 @@
 #pragma once
 #include "MetarComponentFactoryInterface.h"
-#include "json/json.hpp"
 
 namespace UKControllerPlugin::Metar {
     class PressureComponentFactory : public MetarComponentFactoryInterface

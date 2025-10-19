@@ -86,6 +86,10 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # Sub-projects
 ################################################################################
 add_subdirectory(third_party/ecfmp/src)
+
+# Suppress deprecated-literal-operator warning for ECFMP (uses nlohmann json)
+target_compile_options(ecfmp_sdk PRIVATE -Wno-deprecated-literal-operator)
+
 add_subdirectory(src/loader)
 add_subdirectory(src/plugin)
 add_subdirectory(src/updater)
