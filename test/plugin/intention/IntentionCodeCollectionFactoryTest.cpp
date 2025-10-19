@@ -433,7 +433,8 @@ namespace UKControllerPluginTest::IntentionCode {
         EXPECT_EQ(-1, intention->Id());
 
         try {
-            static_cast<void>(dynamic_cast<const FullAirfieldIdentifier&>(intention->Generator()));
+            static_cast<void>(dynamic_cast<const SingleCode&>(intention->Generator()));
+            EXPECT_EQ("", dynamic_cast<const SingleCode&>(intention->Generator()).Code());
         } catch (std::bad_cast&) {
             FAIL();
         }
