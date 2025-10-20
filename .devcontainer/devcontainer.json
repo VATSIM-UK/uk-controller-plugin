@@ -1,0 +1,6 @@
+{
+	"name": "uk-controller-plugin",
+	"build": {
+		"dockerfile": "../dockerfile"
+	}
+}
