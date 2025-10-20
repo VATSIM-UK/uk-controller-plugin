@@ -35,7 +35,8 @@ namespace UKControllerPlugin::Wake {
                               L"Wake Turbulence Calculator",
                               TitleBarArea(),
                               [this]() -> bool { return this->contentCollapsed; },
-                              screenObjectId)),
+                              screenObjectId,
+                              brushes)),
           brushes(brushes),
           leadClickspot(Components::ClickableArea::Create(leadTextArea, screenObjectId, "leadcallsign", false)),
           followingClickspot(

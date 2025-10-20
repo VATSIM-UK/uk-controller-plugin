@@ -49,10 +49,10 @@ namespace UKControllerPlugin::Departure {
                              ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(this->brushes.text));
 
         this->closeButton = Components::Button::Create(
-            closeButtonOffset, this->screenObjectId, "closeButton", Components::CloseButton());
+            closeButtonOffset, this->screenObjectId, "closeButton", Components::CloseButton(this->brushes));
 
         this->collapseButton = Components::Button::Create(
-            collapseButtonOffset, this->screenObjectId, "collapseButton", Components::CollapseButton([this]() -> bool {
+            collapseButtonOffset, this->screenObjectId, "collapseButton", Components::CollapseButton(this->brushes, [this]() -> bool {
                 return this->contentCollapsed;
             }));
     }

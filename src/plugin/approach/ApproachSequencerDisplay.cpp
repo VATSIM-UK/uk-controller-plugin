@@ -48,7 +48,8 @@ namespace UKControllerPlugin::Approach {
                                               L"Approach Sequencer",
                                               titleBarArea,
                                               [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
-                                              screenObjectId)),
+                                              screenObjectId,
+                                              brushes)),
           airfieldClickspot(Components::ClickableArea::Create(
               this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           addClickspot(
