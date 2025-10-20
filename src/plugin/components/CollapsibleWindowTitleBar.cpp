@@ -5,27 +5,27 @@
 namespace UKControllerPlugin::Components {
 
     CollapsibleWindowTitleBar::CollapsibleWindowTitleBar(
-        std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId)
-        : TitleBar(title, area)
+        std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId, const Windows::GdiplusBrushes& brushes)
+        : TitleBar(title, area), brushes(brushes)
     {
         this->closeButton = Button::Create(
             {area.GetRight() - 20, area.GetTop() + 5, 10, 10},
             screenObjectId,
             "closeButton",
-            Components::CloseButton());
+            Components::CloseButton(this->brushes));
 
         this->collapseButton = Button::Create(
             {area.GetRight() - 35, area.GetTop() + 5, 10, 10},
             screenObjectId,
             "collapseButton",
-            Components::CollapseButton(collapseState));
+            Components::CollapseButton(this->brushes, collapseState));
     }
 
     std::shared_ptr<CollapsibleWindowTitleBar> CollapsibleWindowTitleBar::Create(
-        std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId)
+        std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId, const Windows::GdiplusBrushes& brushes)
     {
         auto titlebar = std::shared_ptr<CollapsibleWindowTitleBar>(
-            new CollapsibleWindowTitleBar(title, area, collapseState, screenObjectId));
+            new CollapsibleWindowTitleBar(title, area, collapseState, screenObjectId, brushes));
         titlebar->WithDefaultBorder()->WithDefaultTextBrush()->WithDefaultBackgroundBrush()->WithDrag(screenObjectId);
 
         return titlebar;
