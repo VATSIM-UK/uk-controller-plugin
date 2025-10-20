@@ -141,7 +141,7 @@ namespace UKControllerPlugin::Regional {
 
         inline static const int DEFAULT_POSITION = 100;
         inline static const int LEFT_COLUMN_WIDTH = 100;
-        inline static const int ROW_HEIGHT = 20;
+        inline static const int ROW_HEIGHT = 15;
         inline static const int HIDE_CLICKSPOT_WIDTH = 50;
         inline static const int APPEND_ZERO_LIMIT = 1000;
     };

@@ -35,6 +35,10 @@ namespace UKControllerPlugin {
             // Initial Headings
             static const std::string initialHeadingToggleSettingsKey;
             static const std::string initialHeadingToggleSettingsDescription;
+
+            // Colour Palette
+            static const std::string colourPaletteSettingsKey;
+            static const std::string colourPaletteSettingsDescription;
         } GeneralSettingsEntries;
     } // namespace Euroscope
 } // namespace UKControllerPlugin

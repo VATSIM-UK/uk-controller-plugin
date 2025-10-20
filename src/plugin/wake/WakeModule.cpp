@@ -22,10 +22,12 @@
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
+#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Dependency::DependencyLoaderInterface;
 using UKControllerPlugin::Wake::WakeCategoryEventHandler;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::Wake {
 
@@ -74,7 +76,8 @@ namespace UKControllerPlugin::Wake {
         const Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& renderables,
         Euroscope::AsrEventHandlerCollection& asrHandlers,
-        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory)
+        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory,
+        const GdiplusBrushes& brushes)
     {
         auto options = std::make_shared<WakeCalculatorOptions>();
         options->Scheme("UK");
@@ -99,6 +102,7 @@ namespace UKControllerPlugin::Wake {
                 std::make_shared<WakeSchemeProvider>(options, *container.wakeSchemes, *container.aircraftTypeMapper),
                 "Wake Calculator Scheme"),
             *container.plugin,
+            *container.brushes,
             renderables.ReserveScreenObjectIdentifier(rendererId));
 
         renderables.RegisterRenderer(rendererId, renderer, RadarScreen::RadarRenderableCollection::afterLists);

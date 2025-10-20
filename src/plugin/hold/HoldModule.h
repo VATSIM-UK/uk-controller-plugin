@@ -26,6 +26,9 @@ namespace UKControllerPlugin {
     namespace Command {
         class CommandHandlerCollection;
     } // namespace Command
+    namespace Windows {
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Hold {
@@ -42,6 +45,7 @@ namespace UKControllerPlugin::Hold {
         UKControllerPlugin::RadarScreen::RadarRenderableCollection& radarRenderables,
         UKControllerPlugin::Euroscope::AsrEventHandlerCollection& asrEvents,
         UKControllerPlugin::Command::CommandHandlerCollection& commandHandlers,
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
         const UKControllerPlugin::Bootstrap::PersistenceContainer& container);
 
     [[nodiscard]] auto GetDependencyKey() -> std::string;
