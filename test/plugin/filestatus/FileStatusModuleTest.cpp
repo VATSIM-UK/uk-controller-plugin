@@ -1,8 +1,8 @@
 #include "bootstrap/PersistenceContainer.h"
-#include "plugin/filestatus/FileStatusModule.h"
-#include "testingutils/mock/MockCurlApi.h"
-#include "testingutils/mock/MockWinApi.h"
-#include "bootstrap/ModuleBootstrap.h"
+#include "filestatus/FileStatusModule.h"
+#include "mock/MockCurlApi.h"
+#include "mock/MockWinApi.h"
+#include "test/BootstrapProviderTestCase.h"
 #include <fstream>
 
 #include <gtest/gtest.h>
