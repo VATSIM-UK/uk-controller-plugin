@@ -1,5 +1,5 @@
 #include "bootstrap/PersistenceContainer.h"
-#include "plugin/filestatus/FileStatusModule.h"
+#include "filestatus/FileStatusModule.h"
 #include "testingutils/mock/MockCurlApi.h"
 #include "testingutils/mock/MockWinApi.h"
 #include "plugin/test/BootstrapProviderTestCase.h"
