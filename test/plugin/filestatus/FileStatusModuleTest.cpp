@@ -1,8 +1,9 @@
 #include "bootstrap/PersistenceContainer.h"
-#include "filestatus/FileStatusModule.h"
-#include "mock/MockCurlApi.h"
-#include "mock/MockWinApi.h"
-#include "test/BootstrapProviderTestCase.h"
+#include "plugin/filestatus/FileStatusModule.h"
+#include "testingutils/mock/MockCurlApi.h"
+#include "testingutils/mock/MockWinApi.h"
+#include "bootstrap/ModuleBootstrap.h"
+#include <fstream>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
@@ -42,8 +43,8 @@ namespace UKControllerPluginTest::FileStatus {
     TEST(FileStatusModule, CheckPackVersion_NoMessageWhenUpToDate)
     {
         // Arrange
-        UKControllerPluginTest::BootstrapProviderTestCase helper;
-        PersistenceContainer container = helper.MakeContainer();
+        PersistenceContainer container;
+        ModuleBootstrap(container);
 
         auto winApi = std::make_unique<NiceMock<MockWinApi>>();
         auto curl = std::make_unique<NiceMock<MockCurlApi>>();
@@ -73,8 +74,8 @@ namespace UKControllerPluginTest::FileStatus {
 
     TEST(FileStatusModule, CheckPackVersion_ShowsMessageWhenOutOfDate)
     {
-        UKControllerPluginTest::BootstrapProviderTestCase helper;
-        PersistenceContainer container = helper.MakeContainer();
+        PersistenceContainer container;
+        ModuleBootstrap(container);
 
         auto winApi = std::make_unique<NiceMock<MockWinApi>>();
         auto curl = std::make_unique<NiceMock<MockCurlApi>>();
@@ -102,8 +103,8 @@ namespace UKControllerPluginTest::FileStatus {
 
     TEST(FileStatusModule, CheckSectorFileProviderFile_NoMessageWhenUpToDate)
     {
-        UKControllerPluginTest::BootstrapProviderTestCase helper;
-        PersistenceContainer container = helper.MakeContainer();
+        PersistenceContainer container;
+        ModuleBootstrap(container);
 
         auto winApi = std::make_unique<NiceMock<MockWinApi>>();
         container.windows = std::move(winApi);
@@ -125,8 +126,8 @@ namespace UKControllerPluginTest::FileStatus {
 
     TEST(FileStatusModule, CheckSectorFileProviderFile_ShowsMessageWhenOutOfDate)
     {
-        UKControllerPluginTest::BootstrapProviderTestCase helper;
-        PersistenceContainer container = helper.MakeContainer();
+        PersistenceContainer container;
+        ModuleBootstrap(container);
 
         auto winApi = std::make_unique<NiceMock<MockWinApi>>();
         container.windows = std::move(winApi);
