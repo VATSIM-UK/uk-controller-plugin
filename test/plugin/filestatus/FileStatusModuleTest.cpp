@@ -2,7 +2,7 @@
 #include "filestatus/FileStatusModule.h"
 #include "mock/MockCurlApi.h"
 #include "mock/MockWinApi.h"
-#include "/test/BootstrapProviderTestCase.h"
+#include "test/BootstrapProviderTestCase.h"
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
