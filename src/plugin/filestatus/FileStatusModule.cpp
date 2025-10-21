@@ -39,7 +39,7 @@ namespace UKControllerPlugin::FileStatus {
             return version;
 
         } catch (const std::exception& e) {
-            LogError("Exception when fetching GitHub version: " + std::string(e.what()));
+            LogError("Exception when fetching pack version from docs.vatsim.uk: " + std::string(e.what()));
             return "";
         }
     }
@@ -47,8 +47,6 @@ namespace UKControllerPlugin::FileStatus {
     void CheckPackVersion(UKControllerPlugin::Bootstrap::PersistenceContainer& container)
     {
         try { // check pack is up to date
-
-            std::ifstream versionFile(PACK_VERSION_PATH);
 
             if (!std::filesystem::exists(PACK_VERSION_PATH)) {
                 LogError("Version file not found at: " + PACK_VERSION_PATH);
@@ -59,6 +57,7 @@ namespace UKControllerPlugin::FileStatus {
                 return;
             }
 
+            std::ifstream versionFile(PACK_VERSION_PATH);
             if (!versionFile.is_open()) {
                 LogError("Could not open file when checking controller pack version");
                 return;
@@ -85,7 +84,7 @@ namespace UKControllerPlugin::FileStatus {
             }
 
         } catch (const std::exception& e) {
-            LogError("Exception when checking UKCPa version");
+            LogError("Exception when checking UK Controller Pack version");
         }
     }
 
@@ -97,10 +96,12 @@ namespace UKControllerPlugin::FileStatus {
 
             if (!std::filesystem::exists(SECTOR_FILE_DOWNLOADER_PATH)) {
                 LogError("File not found at: " + SECTOR_FILE_DOWNLOADER_PATH);
+                return;
             }
 
             if (!downloadFile.is_open()) {
                 LogError("Could not open Sector File Provider File when checking");
+                return;
             }
 
             std::stringstream buffer;
