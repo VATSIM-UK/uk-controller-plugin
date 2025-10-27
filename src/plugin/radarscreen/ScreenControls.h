@@ -55,10 +55,10 @@ namespace UKControllerPlugin::RadarScreen {
         const int toggleboxIdEuroscope;
 
         // Height for each control
-        const int controlHeight = 25;
+        const int controlHeight = 22;
 
         // Width for each control
-        const int controlWidth = 25;
+        const int controlWidth = 22;
 
         // Title for the options
         const std::string menuName = "UKCP Options";
