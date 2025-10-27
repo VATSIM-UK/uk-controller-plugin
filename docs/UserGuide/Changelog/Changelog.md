@@ -1,5 +1,21 @@
 # UK Controller Plugin Changelog
 
+## [5.17.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.3...5.17.4) (2025-10-25)
+
+
+### Bug Fixes
+
+* trigger release ([83c1c2b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/83c1c2bade28602f142c0211561e8510424f40f6))
+
+## [5.17.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.1...5.17.2) (2025-10-19)
+
+
+### Bug Fixes
+
+* library name typo in CMakeLists ([8aa33b5](https://github.com/VATSIM-UK/uk-controller-plugin/commit/8aa33b5e45ed15db984175a3e1e0c45d817b6849))
+* specify const on array size constant ([6e62c1b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6e62c1b46eae3be09460c8520506038a491baa01))
+* use posix paths in resource script ([125b704](https://github.com/VATSIM-UK/uk-controller-plugin/commit/125b7044855ec9547d3cd0ec4c6a2e1d2993c5d7))
+
 ## [5.17.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.0...5.17.1) (2024-04-30)
 
 

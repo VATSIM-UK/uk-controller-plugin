@@ -4,7 +4,13 @@
 #pragma warning(push)
 #pragma warning(disable : 26495 26451 28251)
 #include "gmock/gmock.h"
+
+// Disable deprecated-literal-operator warning for json.hpp
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-literal-operator"
 #include "json/json.hpp"
+#pragma clang diagnostic pop
+
 #pragma warning(pop)
 
 // Windows and standard headers

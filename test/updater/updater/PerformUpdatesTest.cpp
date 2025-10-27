@@ -107,9 +107,11 @@ namespace UKControllerPluginUpdaterTest::Updater {
             .Times(1)
             .WillOnce(testing::Return(handle));
 
+        // Cast through void* to avoid function type mismatch error
+        auto versionFuncPtr = reinterpret_cast<void*>(&VersionFunction);
         EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "GetPluginVersion"))
             .Times(1)
-            .WillOnce(testing::Return(reinterpret_cast<FARPROC>(VersionFunction))); // NOLINT
+            .WillOnce(testing::Return(reinterpret_cast<FARPROC>(versionFuncPtr)));
 
         EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
@@ -129,9 +131,11 @@ namespace UKControllerPluginUpdaterTest::Updater {
             .Times(1)
             .WillOnce(testing::Return(handle));
 
+        // Cast through void* to avoid function type mismatch error
+        auto versionFuncPtr = reinterpret_cast<void*>(&VersionFunction);
         EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "GetPluginVersion"))
             .Times(1)
-            .WillOnce(testing::Return(reinterpret_cast<FARPROC>(VersionFunction))); // NOLINT
+            .WillOnce(testing::Return(reinterpret_cast<FARPROC>(versionFuncPtr)));
 
         EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
@@ -186,9 +190,11 @@ namespace UKControllerPluginUpdaterTest::Updater {
             .Times(1)
             .WillOnce(testing::Return(handle));
 
+        // Cast through void* to avoid function type mismatch error
+        auto versionFuncPtr = reinterpret_cast<void*>(&VersionFunction);
         EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "GetPluginVersion"))
             .Times(1)
-            .WillOnce(testing::Return(reinterpret_cast<FARPROC>(VersionFunction))); // NOLINT
+            .WillOnce(testing::Return(reinterpret_cast<FARPROC>(versionFuncPtr)));
 
         EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
