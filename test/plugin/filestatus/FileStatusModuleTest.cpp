@@ -1,36 +1,31 @@
 #include "filestatus/FileStatusModule.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "curl/CurlInterface.h"
+#include "curl/CurlResponse.h"
 #include "windows/WinApiInterface.h"
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::Return;
-using ::testing::StrEq;
 using ::testing::Throw;
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::FileStatus::CheckPackVersion;
 using UKControllerPlugin::FileStatus::CheckSectorFileProviderFile;
 using UKControllerPlugin::FileStatus::FetchPackVersion;
-using UKControllerPlugin::FileStatus::FileStatusModule;
 
 namespace UKControllerPluginTest {
     namespace FileStatus {
-
-        class MockCurlResponse
-        {
-            public:
-            MOCK_METHOD(int, GetStatusCode, (), (const));
-            MOCK_METHOD(std::string, GetResponse, (), (const));
-        };
 
         class MockCurlInterface : public UKControllerPlugin::Curl::CurlInterface
         {
             public:
             MOCK_METHOD(
-                MockCurlResponse, MakeCurlRequest, (const UKControllerPlugin::Curl::CurlRequest& request), (override));
+                UKControllerPlugin::Curl::CurlResponse,
+                MakeCurlRequest,
+                (const UKControllerPlugin::Curl::CurlRequest& request),
+                (override));
         };
 
         class MockWindowsInterface : public UKControllerPlugin::Windows::WinApiInterface
@@ -55,12 +50,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(FileStatusModuleTest, FetchPackVersionReturnsTrimmedResponse)
         {
-            MockCurlResponse response;
-            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(200));
-            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("  abc123  \n"));
-
             auto& curl = *container.curl;
-            EXPECT_CALL(static_cast<MockCurlInterface&>(curl), MakeCurlRequest(_)).WillOnce(Return(response));
+            EXPECT_CALL(static_cast<MockCurlInterface&>(curl), MakeCurlRequest(_))
+                .WillOnce(Return(UKControllerPlugin::Curl::CurlResponse("  abc123  \n", 200)));
 
             std::string version = FetchPackVersion(curl);
             EXPECT_EQ(version, "abc123");
@@ -68,12 +60,9 @@ namespace UKControllerPluginTest {
 
         TEST_F(FileStatusModuleTest, FetchPackVersionLogsErrorOnHttpFailure)
         {
-            MockCurlResponse response;
-            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(404));
-            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("Not Found"));
-
             auto& curl = *container.curl;
-            EXPECT_CALL(static_cast<MockCurlInterface&>(curl), MakeCurlRequest(_)).WillOnce(Return(response));
+            EXPECT_CALL(static_cast<MockCurlInterface&>(curl), MakeCurlRequest(_))
+                .WillOnce(Return(UKControllerPlugin::Curl::CurlResponse("Not Found", 404)));
 
             std::string version = FetchPackVersion(curl);
             EXPECT_EQ(version, "");
@@ -93,24 +82,19 @@ namespace UKControllerPluginTest {
 
         TEST_F(FileStatusModuleTest, CheckPackVersionOpensMessageBoxWhenFileMissing)
         {
-            // Ensure the local version file doesn't exist
             std::filesystem::remove("./UK/Data/Sector/pack_version.txt");
 
             EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(1);
-
             CheckPackVersion(container);
         }
 
         TEST_F(FileStatusModuleTest, CheckPackVersionShowsWarningWhenVersionsDiffer)
         {
-            // Create local version file
             std::filesystem::create_directories("./UK/Data/Sector/");
             std::ofstream("./UK/Data/Sector/pack_version.txt") << "local123";
 
-            MockCurlResponse response;
-            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(200));
-            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("remote456"));
-            EXPECT_CALL(*container.curl, MakeCurlRequest(_)).WillOnce(Return(response));
+            EXPECT_CALL(*container.curl, MakeCurlRequest(_))
+                .WillOnce(Return(UKControllerPlugin::Curl::CurlResponse("remote456", 200)));
 
             EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(1);
 
@@ -122,10 +106,8 @@ namespace UKControllerPluginTest {
             std::filesystem::create_directories("./UK/Data/Sector/");
             std::ofstream("./UK/Data/Sector/pack_version.txt") << "sameversion";
 
-            MockCurlResponse response;
-            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(200));
-            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("sameversion"));
-            EXPECT_CALL(*container.curl, MakeCurlRequest(_)).WillOnce(Return(response));
+            EXPECT_CALL(*container.curl, MakeCurlRequest(_))
+                .WillOnce(Return(UKControllerPlugin::Curl::CurlResponse("sameversion", 200)));
 
             EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(0);
 
