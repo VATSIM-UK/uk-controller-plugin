@@ -1,150 +1,159 @@
-#include "bootstrap/PersistenceContainer.h"
 #include "filestatus/FileStatusModule.h"
-#include "mock/MockCurlApi.h"
-#include "mock/MockWinApi.h"
-#include "test/BootstrapProviderTestCase.h"
-#include <fstream>
+#include "bootstrap/PersistenceContainer.h"
+#include "curl/CurlInterface.h"
+#include "windows/WinApiInterface.h"
+#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+using ::testing::_;
+using ::testing::Return;
+using ::testing::StrEq;
+using ::testing::Throw;
 
-#include <filesystem>
-
-using testing::NiceMock;
-using testing::Return;
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
-using UKControllerPluginTest::Curl::MockCurlApi;
-using UKControllerPluginTest::Windows::MockWinApi;
+using UKControllerPlugin::FileStatus::CheckPackVersion;
+using UKControllerPlugin::FileStatus::CheckSectorFileProviderFile;
+using UKControllerPlugin::FileStatus::FetchPackVersion;
+using UKControllerPlugin::FileStatus::FileStatusModule;
 
-namespace UKControllerPluginTest::FileStatus {
+namespace UKControllerPluginTest {
+    namespace FileStatus {
 
-    // Paths used by FileStatusModule.cpp
-    static const std::string PACK_VERSION_PATH = "./UK/Data/Sector/pack_version.txt";
-    static const std::string SECTOR_FILE_DOWNLOADER_PATH = "./UK/Data/Sector/VATUK_SectorFileProviderDescriptor.txt";
+        class MockCurlResponse
+        {
+            public:
+            MOCK_METHOD(int, GetStatusCode, (), (const));
+            MOCK_METHOD(std::string, GetResponse, (), (const));
+        };
 
-    static void EnsureParentFolders(const std::string& path)
-    {
-        std::filesystem::path p(path);
-        if (p.has_parent_path()) {
-            std::filesystem::create_directories(p.parent_path());
+        class MockCurlInterface : public UKControllerPlugin::Curl::CurlInterface
+        {
+            public:
+            MOCK_METHOD(
+                MockCurlResponse, MakeCurlRequest, (const UKControllerPlugin::Curl::CurlRequest& request), (override));
+        };
+
+        class MockWindowsInterface : public UKControllerPlugin::Windows::WinApiInterface
+        {
+            public:
+            MOCK_METHOD(void, OpenMessageBox, (const wchar_t*, const wchar_t*, unsigned int), (override));
+        };
+
+        class FileStatusModuleTest : public ::testing::Test
+        {
+            protected:
+            void SetUp() override
+            {
+                container.curl = std::make_shared<MockCurlInterface>();
+                container.windows = std::make_shared<MockWindowsInterface>();
+            }
+
+            PersistenceContainer container;
+        };
+
+        // --- FetchPackVersion tests -----------------------------------------------------
+
+        TEST_F(FileStatusModuleTest, FetchPackVersionReturnsTrimmedResponse)
+        {
+            MockCurlResponse response;
+            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(200));
+            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("  abc123  \n"));
+
+            auto& curl = *container.curl;
+            EXPECT_CALL(static_cast<MockCurlInterface&>(curl), MakeCurlRequest(_)).WillOnce(Return(response));
+
+            std::string version = FetchPackVersion(curl);
+            EXPECT_EQ(version, "abc123");
         }
-    }
 
-    TEST(FileStatusModule, FetchPackVersion_TrimsWhitespaceAndReturnsBody)
-    {
-        NiceMock<MockCurlApi> mockCurl;
-        EXPECT_CALL(mockCurl, MakeCurlRequest(testing::_))
-            .WillOnce(Return(UKControllerPlugin::Curl::CurlResponse("  abc123\n", false, 200)));
+        TEST_F(FileStatusModuleTest, FetchPackVersionLogsErrorOnHttpFailure)
+        {
+            MockCurlResponse response;
+            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(404));
+            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("Not Found"));
 
-        auto result = UKControllerPlugin::FileStatus::FetchPackVersion(mockCurl);
-        EXPECT_EQ("abc123", result);
-    }
+            auto& curl = *container.curl;
+            EXPECT_CALL(static_cast<MockCurlInterface&>(curl), MakeCurlRequest(_)).WillOnce(Return(response));
 
-    TEST(FileStatusModule, CheckPackVersion_NoMessageWhenUpToDate)
-    {
-        // Arrange
-        PersistenceContainer container;
-        ModuleBootstrap(container);
+            std::string version = FetchPackVersion(curl);
+            EXPECT_EQ(version, "");
+        }
 
-        auto winApi = std::make_unique<NiceMock<MockWinApi>>();
-        auto curl = std::make_unique<NiceMock<MockCurlApi>>();
-        container.windows = std::move(winApi);
-        container.curl = std::move(curl);
+        TEST_F(FileStatusModuleTest, FetchPackVersionHandlesException)
+        {
+            auto& curl = *container.curl;
+            EXPECT_CALL(static_cast<MockCurlInterface&>(curl), MakeCurlRequest(_))
+                .WillOnce(Throw(std::runtime_error("network error")));
 
-        // Prepare local file with matching content
-        EnsureParentFolders(PACK_VERSION_PATH);
-        std::ofstream ofs(PACK_VERSION_PATH);
-        ofs << "version-xyz";
-        ofs.close();
+            std::string version = FetchPackVersion(curl);
+            EXPECT_EQ(version, "");
+        }
 
-        EXPECT_CALL(*static_cast<MockCurlApi*>(container.curl.get()), MakeCurlRequest(testing::_))
-            .WillOnce(Return(UKControllerPlugin::Curl::CurlResponse("version-xyz", false, 200)));
+        // --- CheckPackVersion tests -----------------------------------------------------
 
-        // Ensure OpenMessageBox is NOT called
-        EXPECT_CALL(
-            *static_cast<MockWinApi*>(container.windows.get()), OpenMessageBox(testing::_, testing::_, testing::_))
-            .Times(0);
+        TEST_F(FileStatusModuleTest, CheckPackVersionOpensMessageBoxWhenFileMissing)
+        {
+            // Ensure the local version file doesn't exist
+            std::filesystem::remove("./UK/Data/Sector/pack_version.txt");
 
-        // Act
-        UKControllerPlugin::FileStatus::CheckPackVersion(container);
+            EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(1);
 
-        // Clean up
-        std::filesystem::remove(PACK_VERSION_PATH);
-    }
+            CheckPackVersion(container);
+        }
 
-    TEST(FileStatusModule, CheckPackVersion_ShowsMessageWhenOutOfDate)
-    {
-        PersistenceContainer container;
-        ModuleBootstrap(container);
+        TEST_F(FileStatusModuleTest, CheckPackVersionShowsWarningWhenVersionsDiffer)
+        {
+            // Create local version file
+            std::filesystem::create_directories("./UK/Data/Sector/");
+            std::ofstream("./UK/Data/Sector/pack_version.txt") << "local123";
 
-        auto winApi = std::make_unique<NiceMock<MockWinApi>>();
-        auto curl = std::make_unique<NiceMock<MockCurlApi>>();
-        container.windows = std::move(winApi);
-        container.curl = std::move(curl);
+            MockCurlResponse response;
+            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(200));
+            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("remote456"));
+            EXPECT_CALL(*container.curl, MakeCurlRequest(_)).WillOnce(Return(response));
 
-        EnsureParentFolders(PACK_VERSION_PATH);
-        std::ofstream ofs(PACK_VERSION_PATH);
-        ofs << "local-version";
-        ofs.close();
+            EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(1);
 
-        EXPECT_CALL(*static_cast<MockCurlApi*>(container.curl.get()), MakeCurlRequest(testing::_))
-            .WillOnce(Return(UKControllerPlugin::Curl::CurlResponse("remote-version", false, 200)));
+            CheckPackVersion(container);
+        }
 
-        // Expect a single message box call when out of date
-        EXPECT_CALL(
-            *static_cast<MockWinApi*>(container.windows.get()), OpenMessageBox(testing::_, testing::_, testing::_))
-            .Times(1)
-            .WillOnce(Return(1));
+        TEST_F(FileStatusModuleTest, CheckPackVersionDoesNothingWhenVersionsMatch)
+        {
+            std::filesystem::create_directories("./UK/Data/Sector/");
+            std::ofstream("./UK/Data/Sector/pack_version.txt") << "sameversion";
 
-        UKControllerPlugin::FileStatus::CheckPackVersion(container);
+            MockCurlResponse response;
+            EXPECT_CALL(response, GetStatusCode()).WillRepeatedly(Return(200));
+            EXPECT_CALL(response, GetResponse()).WillRepeatedly(Return("sameversion"));
+            EXPECT_CALL(*container.curl, MakeCurlRequest(_)).WillOnce(Return(response));
 
-        std::filesystem::remove(PACK_VERSION_PATH);
-    }
+            EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(0);
 
-    TEST(FileStatusModule, CheckSectorFileProviderFile_NoMessageWhenUpToDate)
-    {
-        PersistenceContainer container;
-        ModuleBootstrap(container);
+            CheckPackVersion(container);
+        }
 
-        auto winApi = std::make_unique<NiceMock<MockWinApi>>();
-        container.windows = std::move(winApi);
+        // --- CheckSectorFileProviderFile tests ------------------------------------------
 
-        EnsureParentFolders(SECTOR_FILE_DOWNLOADER_PATH);
-        std::ofstream ofs(SECTOR_FILE_DOWNLOADER_PATH);
-        ofs << "URL:http://docs.vatsim.uk/General/Software%20Downloads/Files/VATUK_Euroscope_files.txt\n";
-        ofs.close();
+        TEST_F(FileStatusModuleTest, CheckSectorFileProviderFileDetectsOutdatedUrl)
+        {
+            std::filesystem::create_directories("./UK/Data/Sector/");
+            std::ofstream("./UK/Data/Sector/VATUK_SectorFileProviderDescriptor.txt") << "URL:http://old.link.com";
 
-        // No message box expected
-        EXPECT_CALL(
-            *static_cast<MockWinApi*>(container.windows.get()), OpenMessageBox(testing::_, testing::_, testing::_))
-            .Times(0);
+            EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(1);
 
-        UKControllerPlugin::FileStatus::CheckSectorFileProviderFile(container);
+            CheckSectorFileProviderFile(container);
+        }
 
-        std::filesystem::remove(SECTOR_FILE_DOWNLOADER_PATH);
-    }
+        TEST_F(FileStatusModuleTest, CheckSectorFileProviderFileNoWarningWhenUrlCorrect)
+        {
+            std::filesystem::create_directories("./UK/Data/Sector/");
+            std::ofstream("./UK/Data/Sector/VATUK_SectorFileProviderDescriptor.txt")
+                << "URL:http://docs.vatsim.uk/General/Software%20Downloads/Files/VATUK_Euroscope_files.txt";
 
-    TEST(FileStatusModule, CheckSectorFileProviderFile_ShowsMessageWhenOutOfDate)
-    {
-        PersistenceContainer container;
-        ModuleBootstrap(container);
+            EXPECT_CALL(*container.windows, OpenMessageBox(_, _, _)).Times(0);
 
-        auto winApi = std::make_unique<NiceMock<MockWinApi>>();
-        container.windows = std::move(winApi);
+            CheckSectorFileProviderFile(container);
+        }
 
-        EnsureParentFolders(SECTOR_FILE_DOWNLOADER_PATH);
-        std::ofstream ofs(SECTOR_FILE_DOWNLOADER_PATH);
-        ofs << "URL:http://old.example.com/something.txt\n";
-        ofs.close();
-
-        EXPECT_CALL(
-            *static_cast<MockWinApi*>(container.windows.get()), OpenMessageBox(testing::_, testing::_, testing::_))
-            .Times(1)
-            .WillOnce(Return(1));
-
-        UKControllerPlugin::FileStatus::CheckSectorFileProviderFile(container);
-
-        std::filesystem::remove(SECTOR_FILE_DOWNLOADER_PATH);
-    }
-
-} // namespace UKControllerPluginTest::FileStatus
+    } // namespace FileStatus
+} // namespace UKControllerPluginTest
