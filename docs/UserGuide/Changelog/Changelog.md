@@ -1,5 +1,19 @@
 # UK Controller Plugin Changelog
 
+# [5.18.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.4...5.18.0) (2025-11-03)
+
+
+### Features
+
+* make default intention codes blank ([80dc0e2](https://github.com/VATSIM-UK/uk-controller-plugin/commit/80dc0e201009eb63e06cf9b4b240d62a225a65d8))
+
+## [5.17.4](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.3...5.17.4) (2025-10-25)
+
+
+### Bug Fixes
+
+* trigger release ([83c1c2b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/83c1c2bade28602f142c0211561e8510424f40f6))
+
 ## [5.17.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.1...5.17.2) (2025-10-19)
 
 
