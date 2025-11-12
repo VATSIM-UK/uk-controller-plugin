@@ -7,7 +7,13 @@
 
 // add headers that you want to pre-compile here
 // Ignore warnings about uninitialised variables in the Gmock headers
+
+// Disable deprecated-literal-operator warning for json.hpp
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-literal-operator"
 #include "json/json.hpp"
+#pragma clang diagnostic pop
+
 #pragma warning(push)
 #pragma warning(disable : 26495 26451 28251)
 #include "gmock/gmock.h"

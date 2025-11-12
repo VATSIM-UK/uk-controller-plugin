@@ -101,9 +101,11 @@ namespace UKControllerPluginLoaderTest {
             HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
             EuroScopePlugIn::CPlugIn* pluginInstance = reinterpret_cast<EuroScopePlugIn::CPlugIn*>(456);
 
+            // Cast through void* to avoid function type mismatch error
+            auto loadFuncPtr = reinterpret_cast<void*>(&LoadFunction);
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "LoadPlugin"))
                 .Times(1)
-                .WillOnce(Return(reinterpret_cast<FARPROC>(LoadFunction)));
+                .WillOnce(Return(reinterpret_cast<FARPROC>(loadFuncPtr)));
 
             EXPECT_EQ(pluginInstance, LoadPlugin(handle, this->mockWindows));
             EXPECT_TRUE(this->loadFunctionCalled);
@@ -148,9 +150,11 @@ namespace UKControllerPluginLoaderTest {
         {
             HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
 
+            // Cast through void* to avoid function type mismatch error
+            auto unloadFuncPtr = reinterpret_cast<void*>(&UnloadFunction);
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "UnloadPlugin"))
                 .Times(1)
-                .WillOnce(Return(reinterpret_cast<FARPROC>(UnloadFunction)));
+                .WillOnce(Return(reinterpret_cast<FARPROC>(unloadFuncPtr)));
 
             UnloadPlugin(handle, this->mockWindows);
             EXPECT_TRUE(this->unloadFunctionCalled);
@@ -177,9 +181,11 @@ namespace UKControllerPluginLoaderTest {
                 .Times(1)
                 .WillOnce(Return(handle));
 
+            // Cast through void* to avoid function type mismatch error
+            auto updateFuncPtr = reinterpret_cast<void*>(&UpdateFunction);
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "PerformUpdates"))
                 .Times(1)
-                .WillOnce(Return(reinterpret_cast<FARPROC>(UpdateFunction)));
+                .WillOnce(Return(reinterpret_cast<FARPROC>(updateFuncPtr)));
 
             EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
@@ -195,9 +201,11 @@ namespace UKControllerPluginLoaderTest {
                 .Times(1)
                 .WillOnce(Return(handle));
 
+            // Cast through void* to avoid function type mismatch error
+            auto updateFuncPtr = reinterpret_cast<void*>(&UpdateFunction);
             EXPECT_CALL(this->mockWindows, GetFunctionPointerFromLibrary(handle, "PerformUpdates"))
                 .Times(1)
-                .WillOnce(Return(reinterpret_cast<FARPROC>(UpdateFunction)));
+                .WillOnce(Return(reinterpret_cast<FARPROC>(updateFuncPtr)));
 
             EXPECT_CALL(this->mockWindows, UnloadLibrary(handle)).Times(1);
 
