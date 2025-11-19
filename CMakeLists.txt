@@ -59,6 +59,14 @@ if(MSVC)
 endif()
 
 ################################################################################
+# Global compile definitions for all targets
+################################################################################
+add_compile_definitions(
+    $<$<CONFIG:Debug>:_DEBUG>
+    $<$<CONFIG:Release>:NDEBUG>
+)
+
+################################################################################
 # Nuget packages function stub.
 ################################################################################
 function(use_package TARGET PACKAGE VERSION)
