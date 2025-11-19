@@ -62,12 +62,8 @@ endif()
 # Global compile definitions for all targets
 ################################################################################
 add_compile_definitions(
-    "$<$<CONFIG:Debug>:"
-        "_DEBUG"
-    ">"
-    "$<$<CONFIG:Release>:"
-        "NDEBUG"
-    ">"
+    $<$<CONFIG:Debug>:_DEBUG>
+    $<$<CONFIG:Release>:NDEBUG>
 )
 
 ################################################################################
