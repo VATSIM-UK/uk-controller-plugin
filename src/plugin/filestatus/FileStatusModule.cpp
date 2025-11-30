@@ -139,7 +139,7 @@ namespace UKControllerPlugin::FileStatus {
             }
 
         } catch (const std::exception& e) {
-            LogError("Exception when checking Sector File Download Link");
+            LogError("Exception when checking Sector File Download Link: " + std::string(e.what()));
         }
     }
 
