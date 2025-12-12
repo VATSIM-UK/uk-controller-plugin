@@ -41,7 +41,7 @@ jobs:
       # cURL
       - name: Cache cURL
         id: cache-curl
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: "C:\\hostedtoolcache\\windows\\libcurl"
           key: "ukcp-curl-build"
@@ -79,7 +79,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Load Yarn Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -88,7 +88,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
@@ -208,7 +208,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Load Yarn Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -217,7 +217,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
