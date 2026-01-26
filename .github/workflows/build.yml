@@ -17,7 +17,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout Code and Submodules
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
@@ -41,7 +41,7 @@ jobs:
       # cURL
       - name: Cache cURL
         id: cache-curl
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: "C:\\hostedtoolcache\\windows\\libcurl"
           key: "ukcp-curl-build"
@@ -79,7 +79,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Load Yarn Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -88,7 +88,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
@@ -136,19 +136,19 @@ jobs:
 
       # Upload artifacts
       - name: Upload Core Binary As Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: UKControllerPluginCore.dll
           path: ".\\build\\bin\\UKControllerPluginCore.dll"
 
       - name: Upload Updater Binary As Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: UKControllerPluginUpdater.dll
           path: ".\\build\\bin\\UKControllerPluginUpdater.dll"
 
       - name: Upload Loader Binary As Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: UKControllerPlugin.dll
           path: ".\\build\\bin\\UKControllerPlugin.dll"
@@ -161,7 +161,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -193,7 +193,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           persist-credentials: false
 
@@ -208,7 +208,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
 
       - name: Load Yarn Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -217,7 +217,7 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Load Cached Node Modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: "**/node_modules"
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
