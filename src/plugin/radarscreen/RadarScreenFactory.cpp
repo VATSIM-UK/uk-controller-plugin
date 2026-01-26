@@ -66,7 +66,11 @@ namespace UKControllerPlugin::RadarScreen {
         SectorFile::BootstrapRadarScreen(persistence, userSettingHandlers);
 
         GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-            *persistence.pluginFunctionHandlers, configurableDisplays, *persistence.brushes, commandHandlers, *persistence.dialogManager);
+            *persistence.pluginFunctionHandlers,
+            configurableDisplays,
+            *persistence.brushes,
+            commandHandlers,
+            *persistence.dialogManager);
 
         HistoryTrailModule::BootstrapRadarScreen(
             *persistence.pluginFunctionHandlers,
@@ -106,7 +110,12 @@ namespace UKControllerPlugin::RadarScreen {
             userSettingHandlers);
 
         Hold::BootstrapRadarScreen(
-            configurableDisplays, renderers, userSettingHandlers, commandHandlers, *persistence.brushes, this->persistence);
+            configurableDisplays,
+            renderers,
+            userSettingHandlers,
+            commandHandlers,
+            *persistence.brushes,
+            this->persistence);
 
         Srd::BootstrapRadarScreen(configurableDisplays);
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
@@ -114,7 +123,8 @@ namespace UKControllerPlugin::RadarScreen {
         PrenoteModule::BootstrapRadarScreen(this->persistence, renderers);
         Departure::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
-        Wake::BootstrapRadarScreen(this->persistence, renderers, userSettingHandlers, displayFactory, *persistence.brushes);
+        Wake::BootstrapRadarScreen(
+            this->persistence, renderers, userSettingHandlers, displayFactory, *persistence.brushes);
 
         this->persistence.bootstrapProviders->BootstrapRadarScreen(
             this->persistence, renderers, configurableDisplays, userSettingHandlers, displayFactory);

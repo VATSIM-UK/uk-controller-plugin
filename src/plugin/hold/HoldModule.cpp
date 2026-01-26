@@ -57,8 +57,8 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagFunction;
-using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPlugin::Windows::GdiplusBrushes;
+using UKControllerPlugin::Windows::WinApiInterface;
 
 namespace UKControllerPlugin::Hold {
 

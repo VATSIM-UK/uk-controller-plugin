@@ -23,9 +23,9 @@ using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Setting::JsonFileSettingProvider;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPluginUtils::Update::BootstrapReleaseChannelSettings;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin {
     namespace Euroscope {

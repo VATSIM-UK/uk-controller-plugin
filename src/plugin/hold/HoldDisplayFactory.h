@@ -29,7 +29,8 @@ namespace UKControllerPlugin {
         */
         class HoldDisplayFactory
         {
-            public:            HoldDisplayFactory(
+            public:
+            HoldDisplayFactory(
                 UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface& plugin,
                 UKControllerPlugin::Hold::HoldManager& holdManager,
                 const UKControllerPlugin::Navaids::NavaidCollection& navaids,

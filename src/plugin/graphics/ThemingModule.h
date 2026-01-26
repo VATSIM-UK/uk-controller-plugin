@@ -16,9 +16,9 @@ namespace UKControllerPlugin::Graphics {
 
     class ThemingModule
     {
-    public:
+        public:
         static void BootstrapPlugin(Bootstrap::PersistenceContainer& pc, Euroscope::UserSetting& userSetting);
         static void ApplyTheme(const std::string& paletteName, Windows::GdiplusBrushes& brushes);
     };
 
-}
+} // namespace UKControllerPlugin::Graphics

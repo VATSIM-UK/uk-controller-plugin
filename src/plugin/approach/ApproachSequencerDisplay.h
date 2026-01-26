@@ -109,7 +109,7 @@ namespace UKControllerPlugin::Approach {
 
         // The plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
-        
+
         // Pens and brushes
         const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
@@ -144,6 +144,5 @@ namespace UKControllerPlugin::Approach {
         std::shared_ptr<Components::ClickableArea> addClickspot;
         std::shared_ptr<Components::ClickableArea> airfieldTargetClickspot;
         std::shared_ptr<Components::ClickableArea> airfieldSeparationClickspot;
-
     };
 } // namespace UKControllerPlugin::Approach
