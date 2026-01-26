@@ -43,21 +43,25 @@ namespace UKControllerPlugin::Approach {
           displayOptions(std::move(displayOptions)), airfieldSelector(std::move(airfieldSelector)),
           callsignSelector(std::move(callsignSelector)), targetSelector(std::move(targetSelector)),
           airfieldTargetSelector(std::move(airfieldTargetSelector)),
-          airfieldSeparationSelector(std::move(airfieldSeparationSelector)), plugin(plugin),
-          brushes(brushes), screenObjectId(screenObjectId), titleBar(CollapsibleWindowTitleBar::Create(
-                                              L"Approach Sequencer",
-                                              titleBarArea,
-                                              [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
-                                              screenObjectId,
-                                              brushes)),
-          airfieldClickspot(Components::ClickableArea::Create(
-              this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
+          airfieldSeparationSelector(std::move(airfieldSeparationSelector)), plugin(plugin), brushes(brushes),
+          screenObjectId(screenObjectId), titleBar(
+                                              CollapsibleWindowTitleBar::Create(
+                                                  L"Approach Sequencer",
+                                                  titleBarArea,
+                                                  [this]() -> bool { return this->displayOptions->ContentCollapsed(); },
+                                                  screenObjectId,
+                                                  brushes)),
+          airfieldClickspot(
+              Components::ClickableArea::Create(
+                  this->airfieldTextArea, screenObjectId, AIRFIELD_SELECTOR_CLICKSPOT, false)),
           addClickspot(
               Components::ClickableArea::Create(this->addButton, screenObjectId, ADD_AIRCRAFT_CLICKSPOT, false)),
-          airfieldTargetClickspot(Components::ClickableArea::Create(
-              this->airfieldTargetTextArea, screenObjectId, AIRFIELD_TARGET_CLICKSPOT, false)),
-          airfieldSeparationClickspot(Components::ClickableArea::Create(
-              this->airfieldSeparationTextArea, screenObjectId, AIRFIELD_SEPARATION_CLICKSPOT, false))
+          airfieldTargetClickspot(
+              Components::ClickableArea::Create(
+                  this->airfieldTargetTextArea, screenObjectId, AIRFIELD_TARGET_CLICKSPOT, false)),
+          airfieldSeparationClickspot(
+              Components::ClickableArea::Create(
+                  this->airfieldSeparationTextArea, screenObjectId, AIRFIELD_SEPARATION_CLICKSPOT, false))
     {
     }
 
@@ -251,13 +255,18 @@ namespace UKControllerPlugin::Approach {
         while (aircraftToProcess != nullptr) {
             graphics.DrawString(std::to_wstring(sequenceNumber), numberRect, Gdiplus::SolidBrush(this->brushes.text));
             graphics.DrawString(
-                HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()), callsignRect, Gdiplus::SolidBrush(this->brushes.text));
+                HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()),
+                callsignRect,
+                Gdiplus::SolidBrush(this->brushes.text));
 
             // The target distance / wake
             if (aircraftToProcess->Mode() == ApproachSequencingMode::WakeTurbulence) {
                 graphics.DrawString(L"Wake", targetRect, Gdiplus::SolidBrush(this->brushes.text));
             } else {
-                graphics.DrawString(To1DpWide(aircraftToProcess->ExpectedDistance()), targetRect, Gdiplus::SolidBrush(this->brushes.text));
+                graphics.DrawString(
+                    To1DpWide(aircraftToProcess->ExpectedDistance()),
+                    targetRect,
+                    Gdiplus::SolidBrush(this->brushes.text));
             }
             Components::ClickableArea::Create(
                 targetRect, screenObjectId, "approachTarget" + aircraftToProcess->Callsign(), false)

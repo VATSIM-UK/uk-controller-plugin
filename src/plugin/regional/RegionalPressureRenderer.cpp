@@ -217,7 +217,8 @@ namespace UKControllerPlugin::Regional {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(it->key)),
                 asr,
-                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge) : Gdiplus::SolidBrush(this->brushes.text));
+                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge)
+                                              : Gdiplus::SolidBrush(this->brushes.text));
 
             // Draw the RPS itself and associated rectangles
             graphics.FillRect(rps, Gdiplus::SolidBrush(this->brushes.background));
@@ -235,7 +236,8 @@ namespace UKControllerPlugin::Regional {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(rpsString),
                 rps,
-                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge) : Gdiplus::SolidBrush(this->brushes.text));
+                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge)
+                                              : Gdiplus::SolidBrush(this->brushes.text));
 
             // Add the clickable area.
             radarScreen.RegisterScreenObject(

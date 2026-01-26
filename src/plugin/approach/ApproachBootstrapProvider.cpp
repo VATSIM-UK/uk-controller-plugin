@@ -34,8 +34,9 @@ namespace UKControllerPlugin::Approach {
 
     void ApproachBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
     {
-        container.pluginSettingsProviders->AddProvider(std::make_shared<ApproachSequencerOptionsLoader>(
-            container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
+        container.pluginSettingsProviders->AddProvider(
+            std::make_shared<ApproachSequencerOptionsLoader>(
+                container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
 
         container.timedHandler->RegisterEvent(
             std::make_shared<RemoveLandedAircraft>(

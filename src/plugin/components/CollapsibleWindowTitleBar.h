@@ -11,15 +11,26 @@ namespace UKControllerPlugin::Components {
     class CollapsibleWindowTitleBar : public TitleBar
     {
         public:
-        static std::shared_ptr<CollapsibleWindowTitleBar>
-        Create(std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId, const Windows::GdiplusBrushes& brushes);
+        static std::shared_ptr<CollapsibleWindowTitleBar> Create(
+            std::wstring title,
+            Gdiplus::Rect area,
+            std::function<bool()> collapseState,
+            int screenObjectId,
+            const Windows::GdiplusBrushes& brushes);
         void Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
             const override;
-        void DrawTheme(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen, const Windows::GdiplusBrushes& brushes) const override;
+        void DrawTheme(
+            Windows::GdiGraphicsInterface& graphics,
+            Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+            const Windows::GdiplusBrushes& brushes) const override;
 
         protected:
         CollapsibleWindowTitleBar(
-            std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId, const Windows::GdiplusBrushes& brushes);
+            std::wstring title,
+            Gdiplus::Rect area,
+            std::function<bool()> collapseState,
+            int screenObjectId,
+            const Windows::GdiplusBrushes& brushes);
 
         private:
         // The brushes for theming

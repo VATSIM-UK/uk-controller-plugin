@@ -39,7 +39,8 @@ namespace UKControllerPlugin::Components {
         };
     }
 
-    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> CloseButton(const Windows::GdiplusBrushes& brushes)
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    CloseButton(const Windows::GdiplusBrushes& brushes)
     {
         return [&brushes](Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& drawArea) {
             // Create pen at draw time so it uses the current brush color
@@ -124,7 +125,8 @@ namespace UKControllerPlugin::Components {
         return CloseButton(colour);
     }
 
-    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> DeleteButton(const Windows::GdiplusBrushes& brushes)
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    DeleteButton(const Windows::GdiplusBrushes& brushes)
     {
         return CloseButton(brushes);
     }
@@ -134,7 +136,8 @@ namespace UKControllerPlugin::Components {
         return CollapseButton(colour, []() { return false; });
     }
 
-    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> UpArrow(const Windows::GdiplusBrushes& brushes)
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    UpArrow(const Windows::GdiplusBrushes& brushes)
     {
         return CollapseButton(brushes, []() { return false; });
     }
@@ -144,7 +147,8 @@ namespace UKControllerPlugin::Components {
         return CollapseButton(colour, []() { return true; });
     }
 
-    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> DownArrow(const Windows::GdiplusBrushes& brushes)
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    DownArrow(const Windows::GdiplusBrushes& brushes)
     {
         return CollapseButton(brushes, []() { return true; });
     }

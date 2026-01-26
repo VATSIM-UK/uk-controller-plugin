@@ -31,12 +31,13 @@ namespace UKControllerPlugin::Wake {
         int screenObjectId)
         : options(std::move(options)), leadCallsignSelector(std::move(leadCallsignSelector)),
           followCallsignSelector(std::move(followCallsignSelector)), wakeSchemeSelector(std::move(wakeSchemeSelector)),
-          plugin(plugin), titleBar(Components::CollapsibleWindowTitleBar::Create(
-                              L"Wake Turbulence Calculator",
-                              TitleBarArea(),
-                              [this]() -> bool { return this->contentCollapsed; },
-                              screenObjectId,
-                              brushes)),
+          plugin(plugin), titleBar(
+                              Components::CollapsibleWindowTitleBar::Create(
+                                  L"Wake Turbulence Calculator",
+                                  TitleBarArea(),
+                                  [this]() -> bool { return this->contentCollapsed; },
+                                  screenObjectId,
+                                  brushes)),
           brushes(brushes),
           leadClickspot(Components::ClickableArea::Create(leadTextArea, screenObjectId, "leadcallsign", false)),
           followingClickspot(

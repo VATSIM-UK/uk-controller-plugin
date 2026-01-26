@@ -43,9 +43,9 @@ namespace UKControllerPlugin {
             std::shared_ptr<List::PopupListInterface> addAircraftSelector)
             : navaid(navaid), publishedHolds(publishedHoldCollection.GetForFix(navaid.identifier)),
               holdManager(holdManager), plugin(plugin), dialogManager(dialogManager),
-              publishedHoldCollection(publishedHoldCollection), addAircraftSelector(addAircraftSelector), 
-              verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f), verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f), 
-              brushes(brushes), fontFamily(L"EuroScope"),
+              publishedHoldCollection(publishedHoldCollection), addAircraftSelector(addAircraftSelector),
+              verticalSpeedAscentPen(Gdiplus::Color(7, 237, 7), 2.5f),
+              verticalSpeedDescentPen(Gdiplus::Color(7, 237, 7), 2.5f), brushes(brushes), fontFamily(L"EuroScope"),
               font(&fontFamily, 12, Gdiplus::FontStyleBold, Gdiplus::UnitPixel),
               plusFont(&fontFamily, 18, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel),
               stringFormat(Gdiplus::StringFormatFlags::StringFormatFlagsNoClip), dataStartHeight(0),
@@ -703,7 +703,8 @@ namespace UKControllerPlugin {
 
             // Render a message if no published holds
             if (this->publishedHolds.empty()) {
-                graphics.DrawString(std::wstring(L"No published holds found."), dataRect, Gdiplus::SolidBrush(this->brushes.text));
+                graphics.DrawString(
+                    std::wstring(L"No published holds found."), dataRect, Gdiplus::SolidBrush(this->brushes.text));
                 return;
             }
 
@@ -745,25 +746,39 @@ namespace UKControllerPlugin {
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier), dataRect, Gdiplus::SolidBrush(this->brushes.text));
-
-            dataRect.Y = dataRect.Y + this->lineHeight + 5;
-            graphics.DrawString(std::wstring(L"Inbound: ") + ConvertToTchar(hold->inbound), dataRect, Gdiplus::SolidBrush(this->brushes.text));
+                std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier),
+                dataRect,
+                Gdiplus::SolidBrush(this->brushes.text));
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Turn: ") + ConvertToTchar(hold->turnDirection), dataRect, Gdiplus::SolidBrush(this->brushes.text));
+                std::wstring(L"Inbound: ") + ConvertToTchar(hold->inbound),
+                dataRect,
+                Gdiplus::SolidBrush(this->brushes.text));
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
-            graphics.DrawString(std::wstring(L"Maximum: ") + ConvertToTchar(hold->maximum), dataRect, Gdiplus::SolidBrush(this->brushes.text));
+            graphics.DrawString(
+                std::wstring(L"Turn: ") + ConvertToTchar(hold->turnDirection),
+                dataRect,
+                Gdiplus::SolidBrush(this->brushes.text));
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
-            graphics.DrawString(std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum), dataRect, Gdiplus::SolidBrush(this->brushes.text));
+            graphics.DrawString(
+                std::wstring(L"Maximum: ") + ConvertToTchar(hold->maximum),
+                dataRect,
+                Gdiplus::SolidBrush(this->brushes.text));
+
+            dataRect.Y = dataRect.Y + this->lineHeight + 5;
+            graphics.DrawString(
+                std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum),
+                dataRect,
+                Gdiplus::SolidBrush(this->brushes.text));
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
 
             if (*hold->outboundLeg->unit == Geometry::MeasurementUnitType::None) {
-                graphics.DrawString(std::wstring(L"Outbound Leg: --"), dataRect, Gdiplus::SolidBrush(this->brushes.text));
+                graphics.DrawString(
+                    std::wstring(L"Outbound Leg: --"), dataRect, Gdiplus::SolidBrush(this->brushes.text));
             } else {
                 graphics.DrawString(
                     std::wstring(L"Outbound Leg: ") + FormatOutboundLegValue(hold->outboundLeg->value) + L" " +
@@ -787,7 +802,8 @@ namespace UKControllerPlugin {
             graphics.DrawRect(this->titleArea, Gdiplus::Pen(this->brushes.border));
 
             std::wstring holdName = ConvertToTchar(this->navaid.identifier);
-            graphics.DrawString(ConvertToTchar(this->navaid.identifier), this->titleArea, Gdiplus::SolidBrush(this->brushes.text));
+            graphics.DrawString(
+                ConvertToTchar(this->navaid.identifier), this->titleArea, Gdiplus::SolidBrush(this->brushes.text));
             graphics.DrawLine(
                 Gdiplus::Pen(this->brushes.border),
                 Gdiplus::Point{this->titleArea.X, this->titleArea.Y + this->titleArea.Height},
@@ -839,7 +855,8 @@ namespace UKControllerPlugin {
             radarScreen.RegisterScreenObject(
                 screenObjectId, this->navaid.identifier + "/allLevels", this->allButtonClickRect, false);
 
-            graphics.DrawLine(Gdiplus::Pen(this->brushes.border), this->underButtonLineLeft, this->underButtonLineRight);
+            graphics.DrawLine(
+                Gdiplus::Pen(this->brushes.border), this->underButtonLineLeft, this->underButtonLineRight);
         }
 
         /*
@@ -917,7 +934,8 @@ namespace UKControllerPlugin {
                     }
 
                     // Render the numbers
-                    graphics.DrawString(GetLevelDisplayString(level), numbersDisplay, Gdiplus::SolidBrush(this->brushes.text));
+                    graphics.DrawString(
+                        GetLevelDisplayString(level), numbersDisplay, Gdiplus::SolidBrush(this->brushes.text));
 
                     // Increase the lines
                     holdRow.Y = holdRow.Y + this->lineHeight;
@@ -949,7 +967,8 @@ namespace UKControllerPlugin {
 
                         // Render the numbers
                         if (aircraftIndex == 0) {
-                            graphics.DrawString(GetLevelDisplayString(level), numbersDisplay, Gdiplus::SolidBrush(this->brushes.text));
+                            graphics.DrawString(
+                                GetLevelDisplayString(level), numbersDisplay, Gdiplus::SolidBrush(this->brushes.text));
                         }
 
                         rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
@@ -974,7 +993,9 @@ namespace UKControllerPlugin {
 
                             // Reported level
                             graphics.DrawString(
-                                GetLevelDisplayString(rt->GetFlightLevel()), actualLevelDisplay, Gdiplus::SolidBrush(this->brushes.text));
+                                GetLevelDisplayString(rt->GetFlightLevel()),
+                                actualLevelDisplay,
+                                Gdiplus::SolidBrush(this->brushes.text));
                             if (GetVerticalSpeedDirection(rt->GetVerticalSpeed()) == 1) {
                                 graphics.DrawLine(
                                     this->verticalSpeedAscentPen,
@@ -1007,7 +1028,8 @@ namespace UKControllerPlugin {
                                 auto holdProximity = (*it)->GetProximityHold(navaid.identifier);
                                 if (holdProximity != nullptr && holdProximity->HasEntered()) {
                                     std::wstring timeString = GetTimeInHoldDisplayString(holdProximity->EnteredAt());
-                                    graphics.DrawString(timeString, timeInHoldDisplay, Gdiplus::SolidBrush(this->brushes.text));
+                                    graphics.DrawString(
+                                        timeString, timeInHoldDisplay, Gdiplus::SolidBrush(this->brushes.text));
                                 }
                             }
                         }

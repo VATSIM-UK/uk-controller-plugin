@@ -4,9 +4,9 @@
 #include "euroscope/UserSetting.h"
 #include "GdiplusBrushes.h"
 
+using UKControllerPlugin::Bootstrap::PersistenceContainer;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Windows::GdiplusBrushes;
-using UKControllerPlugin::Bootstrap::PersistenceContainer;
 
 namespace UKControllerPlugin::Graphics {
     void ThemingModule::BootstrapPlugin(PersistenceContainer& pc, UserSetting& userSetting)
@@ -29,8 +29,7 @@ namespace UKControllerPlugin::Graphics {
             brushes.timerGreen = ColourPaletteDefinitions::NodeTimerGreen;
             brushes.timerYellow = ColourPaletteDefinitions::NodeTimerYellow;
             brushes.timerRed = ColourPaletteDefinitions::NodeTimerRed;
-        }
-        else if (paletteName == "nerc") {
+        } else if (paletteName == "nerc") {
             brushes.background = ColourPaletteDefinitions::NercBackground;
             brushes.header = ColourPaletteDefinitions::NercHeaders;
             brushes.highlightedHeader = ColourPaletteDefinitions::NercHighlightedHeaders;
@@ -42,8 +41,7 @@ namespace UKControllerPlugin::Graphics {
             brushes.timerGreen = ColourPaletteDefinitions::NercTimerGreen;
             brushes.timerYellow = ColourPaletteDefinitions::NercTimerYellow;
             brushes.timerRed = ColourPaletteDefinitions::NercTimerRed;
-        }
-        else if (paletteName == "nova") {
+        } else if (paletteName == "nova") {
             brushes.background = ColourPaletteDefinitions::NovaBackground;
             brushes.header = ColourPaletteDefinitions::NovaHeaders;
             brushes.highlightedHeader = ColourPaletteDefinitions::NovaHighlightedHeaders;
@@ -55,8 +53,7 @@ namespace UKControllerPlugin::Graphics {
             brushes.timerGreen = ColourPaletteDefinitions::NovaTimerGreen;
             brushes.timerYellow = ColourPaletteDefinitions::NovaTimerYellow;
             brushes.timerRed = ColourPaletteDefinitions::NovaTimerRed;
-        }
-        else if (paletteName == "itec") {
+        } else if (paletteName == "itec") {
             brushes.background = ColourPaletteDefinitions::ItecBackground;
             brushes.header = ColourPaletteDefinitions::ItecHeaders;
             brushes.highlightedHeader = ColourPaletteDefinitions::ItecHighlightedHeaders;
@@ -68,8 +65,7 @@ namespace UKControllerPlugin::Graphics {
             brushes.timerGreen = ColourPaletteDefinitions::ItecTimerGreen;
             brushes.timerYellow = ColourPaletteDefinitions::ItecTimerYellow;
             brushes.timerRed = ColourPaletteDefinitions::ItecTimerRed;
-        }
-        else {
+        } else {
             brushes.background = ColourPaletteDefinitions::DefaultBackground;
             brushes.header = ColourPaletteDefinitions::DefaultHeaders;
             brushes.highlightedHeader = ColourPaletteDefinitions::DefaultHighlightedHeaders;
@@ -91,4 +87,4 @@ namespace UKControllerPlugin::Graphics {
         brushes.red = Gdiplus::Color(255, 255, 0, 0);
         brushes.green = Gdiplus::Color(255, 0, 255, 0);
     }
-}
+} // namespace UKControllerPlugin::Graphics

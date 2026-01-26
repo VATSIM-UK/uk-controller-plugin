@@ -5,7 +5,7 @@ namespace UKControllerPlugin {
     namespace Windows {
         struct GdiplusBrushes;
     } // namespace Windows
-}
+} // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Approach {
     class ApproachBootstrapProvider : public Bootstrap::BootstrapProviderInterface

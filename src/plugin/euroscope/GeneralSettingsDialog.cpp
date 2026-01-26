@@ -14,7 +14,6 @@ using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Graphics::ThemingModule;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 
-
 namespace UKControllerPlugin {
     namespace Euroscope {
 
@@ -23,13 +22,14 @@ namespace UKControllerPlugin {
             const UserSettingAwareCollection& userSettingsHandlers,
             Setting::SettingRepository& settings,
             GdiplusBrushes& brushes)
-            : userSettings(userSettings), brushes(brushes), userSettingsHandlers(userSettingsHandlers), settings(settings)
+            : userSettings(userSettings), brushes(brushes), userSettingsHandlers(userSettingsHandlers),
+              settings(settings)
         {
         }
 
         GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog& newObject)
-            : userSettings(newObject.userSettings), brushes(newObject.brushes), userSettingsHandlers(newObject.userSettingsHandlers),
-              settings(newObject.settings)
+            : userSettings(newObject.userSettings), brushes(newObject.brushes),
+              userSettingsHandlers(newObject.userSettingsHandlers), settings(newObject.settings)
         {
         }
 
@@ -196,7 +196,7 @@ namespace UKControllerPlugin {
                 selectedColourPalette);
 
             ThemingModule::ApplyTheme(selectedColourPalette, this->brushes);
-            
+
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }
 

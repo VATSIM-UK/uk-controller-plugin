@@ -72,7 +72,9 @@ namespace UKControllerPlugin::Components {
     }
 
     void TitleBar::DrawTheme(
-        Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen, const Windows::GdiplusBrushes& brushes) const
+        Windows::GdiGraphicsInterface& graphics,
+        Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+        const Windows::GdiplusBrushes& brushes) const
     {
         // Use theme brushes instead of instance brushes
         graphics.FillRect(this->area, Gdiplus::SolidBrush(brushes.header));
