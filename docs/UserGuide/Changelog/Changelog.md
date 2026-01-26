@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.18.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.0...5.18.1) (2025-12-01)
+
+
+### Bug Fixes
+
+* configure debug options compile targets ([b21d96b](https://github.com/VATSIM-UK/uk-controller-plugin/commit/b21d96b8099bb7f054c9d164d52bffb1d1fdf87f))
+
 # [5.18.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.17.4...5.18.0) (2025-11-03)
 
 
