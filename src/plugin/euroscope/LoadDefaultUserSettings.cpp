@@ -54,6 +54,15 @@ namespace UKControllerPlugin {
                     GeneralSettingsEntries::unknownTimeFormatBlankDescription,
                     false);
             }
+
+            // Colour Palette
+            if (!userSetting.HasEntry(GeneralSettingsEntries::colourPaletteSettingsKey)) {
+                LogInfo("Loading default value for setting " + GeneralSettingsEntries::colourPaletteSettingsKey);
+                userSetting.Save(
+                    GeneralSettingsEntries::colourPaletteSettingsKey,
+                    GeneralSettingsEntries::colourPaletteSettingsDescription,
+                    "default");
+            }
         }
     } // namespace Euroscope
 } // namespace UKControllerPlugin

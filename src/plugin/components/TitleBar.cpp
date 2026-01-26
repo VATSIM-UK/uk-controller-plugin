@@ -2,6 +2,7 @@
 #include "TitleBar.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "graphics/GdiplusBrushes.h"
 
 namespace UKControllerPlugin::Components {
     TitleBar::~TitleBar() = default;
@@ -64,6 +65,21 @@ namespace UKControllerPlugin::Components {
         if (this->borderPen) {
             graphics.DrawRect(this->area, *this->borderPen);
         }
+
+        if (this->clickableArea != nullptr) {
+            this->clickableArea->Apply(graphics, radarScreen);
+        }
+    }
+
+    void TitleBar::DrawTheme(
+        Windows::GdiGraphicsInterface& graphics,
+        Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
+        const Windows::GdiplusBrushes& brushes) const
+    {
+        // Use theme brushes instead of instance brushes
+        graphics.FillRect(this->area, Gdiplus::SolidBrush(brushes.header));
+        graphics.DrawString(this->title, this->area, Gdiplus::SolidBrush(brushes.text));
+        graphics.DrawRect(this->area, Gdiplus::Pen(brushes.border));
 
         if (this->clickableArea != nullptr) {
             this->clickableArea->Apply(graphics, radarScreen);

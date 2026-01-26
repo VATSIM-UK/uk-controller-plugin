@@ -4,11 +4,15 @@
 #include "UserSetting.h"
 #include "dialog/DialogCallArgument.h"
 #include "setting/SettingRepository.h"
+#include "graphics/ThemingModule.h"
+#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
+using UKControllerPlugin::Graphics::ThemingModule;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin {
     namespace Euroscope {
@@ -16,14 +20,16 @@ namespace UKControllerPlugin {
         GeneralSettingsDialog::GeneralSettingsDialog(
             UserSetting& userSettings,
             const UserSettingAwareCollection& userSettingsHandlers,
-            Setting::SettingRepository& settings)
-            : userSettings(userSettings), userSettingsHandlers(userSettingsHandlers), settings(settings)
+            Setting::SettingRepository& settings,
+            GdiplusBrushes& brushes)
+            : userSettings(userSettings), brushes(brushes), userSettingsHandlers(userSettingsHandlers),
+              settings(settings)
         {
         }
 
         GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog& newObject)
-            : userSettings(newObject.userSettings), userSettingsHandlers(newObject.userSettingsHandlers),
-              settings(newObject.settings)
+            : userSettings(newObject.userSettings), brushes(newObject.brushes),
+              userSettingsHandlers(newObject.userSettingsHandlers), settings(newObject.settings)
         {
         }
 
@@ -91,6 +97,31 @@ namespace UKControllerPlugin {
                 }
             }
 
+            // Colour Palette
+            auto selectedColourPalette = this->userSettings.GetStringEntry(
+                GeneralSettingsEntries::colourPaletteSettingsKey, DEFAULT_COLOUR_PALETTE);
+
+            if (this->colourPaletteMap.count(selectedColourPalette) == 0) {
+                selectedColourPalette = DEFAULT_COLOUR_PALETTE;
+            }
+
+            for (const auto& palette : this->colourPaletteMap) {
+                const auto paletteName = palette.second.c_str();
+                int insertIndex = SendDlgItemMessage(
+                    hwnd, IDC_COLOUR_PALETTE, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(paletteName));
+
+                SendDlgItemMessage(
+                    hwnd,
+                    IDC_COLOUR_PALETTE,
+                    CB_SETITEMDATA,
+                    insertIndex,
+                    reinterpret_cast<LPARAM>(palette.first.c_str()));
+
+                if (palette.first == selectedColourPalette) {
+                    SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_SETCURSEL, insertIndex, NULL);
+                }
+            }
+
             return TRUE;
         }
 
@@ -152,6 +183,20 @@ namespace UKControllerPlugin {
                 SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETITEMDATA, selectedReleaseChannelIndex, 0));
 
             this->settings.UpdateSetting("release_channel", selectedChannel);
+
+            // Colour Palette
+            const auto selectedColourPaletteIndex = SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETCURSEL, 0, 0);
+
+            const std::string selectedColourPalette = reinterpret_cast<const char*>(
+                SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETITEMDATA, selectedColourPaletteIndex, 0));
+
+            this->userSettings.Save(
+                GeneralSettingsEntries::colourPaletteSettingsKey,
+                GeneralSettingsEntries::colourPaletteSettingsDescription,
+                selectedColourPalette);
+
+            ThemingModule::ApplyTheme(selectedColourPalette, this->brushes);
+
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }
 

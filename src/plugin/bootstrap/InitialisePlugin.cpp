@@ -64,6 +64,7 @@
 #include "task/TaskRunnerInterface.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
+#include "graphics/ThemingModule.h"
 
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
@@ -82,6 +83,7 @@ using UKControllerPlugin::Duplicate::DuplicatePlugin;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
+using UKControllerPlugin::Graphics::ThemingModule;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Log::LoggerBootstrap;
@@ -236,13 +238,16 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         SectorFile::BootstrapPlugin(*this->container);
 
+        ThemingModule::BootstrapPlugin(*this->container, *this->container->pluginUserSettingHandler);
+
         // General settings config bootstrap
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
             *this->container->dialogManager,
             *this->container->pluginUserSettingHandler,
             *this->container->userSettingHandlers,
             *this->container->settingsRepository,
-            *this->container->windows);
+            *this->container->windows,
+            *this->container->brushes);
 
         // Bootstrap the modules
         Metar::BootstrapPlugin(*this->container);

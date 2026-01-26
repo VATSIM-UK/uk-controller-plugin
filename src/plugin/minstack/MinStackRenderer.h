@@ -133,7 +133,7 @@ namespace UKControllerPlugin::MinStack {
         const int leftColumnWidth = 75;
 
         // Width of the right column
-        const int rowHeight = 20;
+        const int rowHeight = 15;
 
         // Width of the hide clickspot
         const int hideClickspotWidth = 25;

@@ -26,13 +26,17 @@
 #include "radarscreen/RadarRenderableCollection.h"
 #include "tag/TagItemCollection.h"
 #include "timedevent/TimedEventCollection.h"
+#include "graphics/GdiplusBrushes.h"
+
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::Approach {
 
     void ApproachBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
     {
-        container.pluginSettingsProviders->AddProvider(std::make_shared<ApproachSequencerOptionsLoader>(
-            container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
+        container.pluginSettingsProviders->AddProvider(
+            std::make_shared<ApproachSequencerOptionsLoader>(
+                container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
 
         container.timedHandler->RegisterEvent(
             std::make_shared<RemoveLandedAircraft>(
@@ -92,6 +96,7 @@ namespace UKControllerPlugin::Approach {
                         container.moduleFactories->Approach().SequencerOptions(), displayOptions),
                     "Toggle sequencer airfield separation selector"),
                 *container.plugin,
+                *container.brushes,
                 sequencerScreenObjectId),
             RadarScreen::RadarRenderableCollection::beforeTags);
 

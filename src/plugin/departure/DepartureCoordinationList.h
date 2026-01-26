@@ -23,6 +23,10 @@ namespace UKControllerPlugin {
         class DepartureReleaseRequest;
         class DepartureReleaseEventHandler;
     } // namespace Releases
+    namespace Windows {
+        class GdiGraphicsInterface;
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Departure {
@@ -41,6 +45,7 @@ namespace UKControllerPlugin::Departure {
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
             const Controller::ControllerPositionCollection& controllers,
             const Controller::ActiveCallsignCollection& activeCallsigns,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             int screenObjectId);
         void LeftClick(
             Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -72,6 +77,9 @@ namespace UKControllerPlugin::Departure {
         // Contains all the prenote messages
         Prenote::PrenoteMessageCollection& prenotes;
 
+        // Pens and brushes
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
+
         // Provides interface with the plugin
         Euroscope::EuroscopePluginLoopbackInterface& plugin;
 
@@ -79,20 +87,13 @@ namespace UKControllerPlugin::Departure {
         const Controller::ActiveCallsignCollection& activeCallsigns;
 
         // Drawing RECTs
+        Gdiplus::Rect contentArea{0, 0, 435, 400};
         const Gdiplus::Rect typeColumnHeader{5, 5, 40, 25};
         const Gdiplus::Rect callsignColumnHeader{50, 5, 100, 25};
         const Gdiplus::Rect controllerColumnHeader{160, 5, 100, 25};
         const Gdiplus::Rect airportColumnHeader{270, 5, 40, 25};
         const Gdiplus::Rect sidColumnHeader{320, 5, 65, 25};
         const Gdiplus::Rect destColumnHeader{395, 5, 40, 25};
-
-        // Some colours
-        const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
-        const Gdiplus::Color TITLE_BAR_BASE_COLOUR = Gdiplus::Color(130, 50, 154);
-        const Gdiplus::Color TITLE_BAR_FLASH_COLOUR = Gdiplus::Color(179, 3, 0);
-
-        // Brushes
-        const Gdiplus::SolidBrush textBrush;
 
         // Clickspot identifier
         const int screenObjectId;
@@ -104,7 +105,7 @@ namespace UKControllerPlugin::Departure {
         bool contentCollapsed;
 
         // Height of title bar
-        const int titleBarHeight = 20;
+        const int titleBarHeight = 15;
 
         // Width of title bar
         const int titleBarWidth = 435;
