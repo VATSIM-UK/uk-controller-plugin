@@ -27,11 +27,12 @@ namespace UKControllerPlugin::Wake {
         int screenObjectId)
         : options(std::move(options)), leadCallsignSelector(std::move(leadCallsignSelector)),
           followCallsignSelector(std::move(followCallsignSelector)), wakeSchemeSelector(std::move(wakeSchemeSelector)),
-          plugin(plugin), titleBar(Components::CollapsibleWindowTitleBar::Create(
-                              L"Wake Turbulence Calculator",
-                              TitleBarArea(),
-                              [this]() -> bool { return this->contentCollapsed; },
-                              screenObjectId)),
+          plugin(plugin), titleBar(
+                              Components::CollapsibleWindowTitleBar::Create(
+                                  L"Wake Turbulence Calculator",
+                                  TitleBarArea(),
+                                  [this]() -> bool { return this->contentCollapsed; },
+                                  screenObjectId)),
           backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
           textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR)),
           resultBrush(std::make_shared<Gdiplus::SolidBrush>(RESULT_COLOUR)),
