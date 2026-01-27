@@ -3,7 +3,7 @@
 #include "curl/CurlInterface.h"
 #include "curl/CurlRequest.h"
 #include "curl/CurlResponse.h"
-#include "testingutils/mock/MockWinApi.h"
+#include "mock/MockWinApi.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
