@@ -118,7 +118,7 @@ jobs:
       - name: Run Tests
         working-directory: build
         run: |
-          ctest -C Release --output-on-failure --no-tests=error -V
+          ctest -C Release --output-on-failure --no-tests=error
 
       # Do Srclinting
       - name: Get Changed Files (Src)
