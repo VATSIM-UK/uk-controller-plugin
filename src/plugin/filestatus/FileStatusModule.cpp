@@ -116,6 +116,23 @@ namespace UKControllerPlugin::FileStatus {
             while (std::getline(fileStream, line)) {
                 if (line.substr(0, 4) == "URL:") {
                     extractedUrl = line.substr(4);
+
+                    // Trim leading whitespace
+                    extractedUrl.erase(
+                        extractedUrl.begin(),
+                        std::find_if(extractedUrl.begin(), extractedUrl.end(), [](unsigned char c) {
+                            return !std::isspace(c);
+                        }));
+
+                    // Trim trailing whitespace
+                    extractedUrl.erase(
+                        std::find_if(
+                            extractedUrl.rbegin(),
+                            extractedUrl.rend(),
+                            [](unsigned char c) { return !std::isspace(c); })
+                            .base(),
+                        extractedUrl.end());
+
                     break;
                 }
             }

@@ -518,29 +518,31 @@ namespace UKControllerPluginTest {
             EXPECT_NO_THROW(UKControllerPlugin::FileStatus::CheckSectorFileProviderFile(container));
         }
 
-        // Test with URL that has leading/trailing whitespace
-        TEST_F(FileStatusModuleTest, CheckSectorFileProviderFileExtractsUrlWithWhitespace)
+        // Test with URL that has leading/trailing whitespace (should be trimmed)
+        TEST_F(FileStatusModuleTest, CheckSectorFileProviderFileTrimsUrlWhitespace)
         {
             auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
-            auto windowsPtr = windows.get();
             UKControllerPlugin::Bootstrap::PersistenceContainer container;
             container.windows = std::move(windows);
 
-            // Create the directory and file with URL containing whitespace
+            // Create the directory and file with URL containing leading/trailing whitespace
             std::filesystem::path sectorDir("./UK/Data/Sector");
             std::filesystem::path sectorFile = sectorDir / "VATUK_SectorFileProviderDescriptor.txt";
             std::filesystem::create_directories(sectorDir);
 
             std::ofstream file(sectorFile);
-            file << "URL:  http://old.example.com  \n"; // URL with leading/trailing spaces
+            file
+                << "URL:  http://docs.vatsim.uk/General/Software%20Downloads/Files/VATUK_Euroscope_files.txt  \n"; // URL
+                                                                                                                   // with
+                                                                                                                   // leading/trailing
+                                                                                                                   // spaces
             file.close();
 
-            // Should call OpenMessageBox because extracted URL won't match expected
+            // Should not call OpenMessageBox because whitespace is trimmed and URL matches
             EXPECT_CALL(
-                *static_cast<NiceMock<UKControllerPluginTest::Windows::MockWinApi>*>(windowsPtr),
-                OpenMessageBox(::testing::_, ::testing::StrEq(L"Outdated Sector File Configuration"), ::testing::_))
-                .Times(1)
-                .WillOnce(Return(0));
+                *static_cast<NiceMock<UKControllerPluginTest::Windows::MockWinApi>*>(container.windows.get()),
+                OpenMessageBox)
+                .Times(0);
 
             EXPECT_NO_THROW(UKControllerPlugin::FileStatus::CheckSectorFileProviderFile(container));
         }
