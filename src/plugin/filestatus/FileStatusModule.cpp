@@ -8,6 +8,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <string>
 
 namespace UKControllerPlugin::FileStatus {
 
@@ -84,7 +85,7 @@ namespace UKControllerPlugin::FileStatus {
             }
 
         } catch (const std::exception& e) {
-            LogError("Exception when checking UK Controller Pack version");
+            LogError("Exception when checking UK Controller Pack version: " + std::string(e.what()));
         }
     }
 
