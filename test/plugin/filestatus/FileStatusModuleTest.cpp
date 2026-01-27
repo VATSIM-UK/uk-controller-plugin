@@ -185,7 +185,8 @@ namespace UKControllerPluginTest {
 
             // Mock the curl request to return the same version
             UKControllerPlugin::Curl::CurlResponse response(testVersion, false, 200);
-            EXPECT_CALL(*curl, MakeCurlRequest).WillOnce(Return(response));
+            EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(container.curl.get()), MakeCurlRequest)
+                .WillOnce(Return(response));
 
             // Should not show message box when versions match
             EXPECT_CALL(
@@ -202,6 +203,7 @@ namespace UKControllerPluginTest {
             auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
             auto curl = std::make_unique<NiceMock<MockCurlInterface>>();
             auto windowsPtr = windows.get();
+            auto curlPtr = curl.get();
 
             UKControllerPlugin::Bootstrap::PersistenceContainer container;
             container.windows = std::move(windows);
@@ -218,7 +220,8 @@ namespace UKControllerPluginTest {
 
             // Mock the curl request to return a different version
             UKControllerPlugin::Curl::CurlResponse response("v2.0.0new456", false, 200);
-            EXPECT_CALL(*curl, MakeCurlRequest).WillOnce(Return(response));
+            EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(curlPtr), MakeCurlRequest)
+                .WillOnce(Return(response));
 
             // Should show warning message box when versions don't match
             EXPECT_CALL(
@@ -238,6 +241,7 @@ namespace UKControllerPluginTest {
         {
             auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
             auto curl = std::make_unique<NiceMock<MockCurlInterface>>();
+            auto curlPtr = curl.get();
 
             UKControllerPlugin::Bootstrap::PersistenceContainer container;
             container.windows = std::move(windows);
@@ -254,7 +258,8 @@ namespace UKControllerPluginTest {
 
             // Mock the curl request to return error response (non-200)
             UKControllerPlugin::Curl::CurlResponse response("Not Found", false, 404);
-            EXPECT_CALL(*curl, MakeCurlRequest).WillOnce(Return(response));
+            EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(curlPtr), MakeCurlRequest)
+                .WillOnce(Return(response));
 
             // Should not show message box when fetch fails
             EXPECT_CALL(
@@ -271,6 +276,7 @@ namespace UKControllerPluginTest {
             auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
             auto curl = std::make_unique<NiceMock<MockCurlInterface>>();
             auto windowsPtr = windows.get();
+            auto curlPtr = curl.get();
 
             UKControllerPlugin::Bootstrap::PersistenceContainer container;
             container.windows = std::move(windows);
@@ -287,7 +293,8 @@ namespace UKControllerPluginTest {
 
             // Mock the curl request to return version without whitespace
             UKControllerPlugin::Curl::CurlResponse response("v1.2.3abc123def456", false, 200);
-            EXPECT_CALL(*curl, MakeCurlRequest).WillOnce(Return(response));
+            EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(curlPtr), MakeCurlRequest)
+                .WillOnce(Return(response));
 
             // Should show warning because versions don't exactly match (whitespace difference)
             EXPECT_CALL(
@@ -308,6 +315,7 @@ namespace UKControllerPluginTest {
             auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
             auto curl = std::make_unique<NiceMock<MockCurlInterface>>();
             auto windowsPtr = windows.get();
+            auto curlPtr = curl.get();
 
             UKControllerPlugin::Bootstrap::PersistenceContainer container;
             container.windows = std::move(windows);
@@ -324,7 +332,8 @@ namespace UKControllerPluginTest {
 
             // Mock the curl request to return a version
             UKControllerPlugin::Curl::CurlResponse response("v1.2.3abc123def456", false, 200);
-            EXPECT_CALL(*curl, MakeCurlRequest).WillOnce(Return(response));
+            EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(curlPtr), MakeCurlRequest)
+                .WillOnce(Return(response));
 
             // Should show warning because empty file doesn't match GitHub version
             EXPECT_CALL(
@@ -344,6 +353,7 @@ namespace UKControllerPluginTest {
         {
             auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
             auto curl = std::make_unique<NiceMock<MockCurlInterface>>();
+            auto curlPtr = curl.get();
 
             UKControllerPlugin::Bootstrap::PersistenceContainer container;
             container.windows = std::move(windows);
@@ -359,7 +369,8 @@ namespace UKControllerPluginTest {
             file.close();
 
             // Mock the curl request to throw an exception
-            EXPECT_CALL(*curl, MakeCurlRequest).WillOnce(::testing::Throw(std::runtime_error("Network error")));
+            EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(curlPtr), MakeCurlRequest)
+                .WillOnce(::testing::Throw(std::runtime_error("Network error")));
 
             // Should not throw when exception occurs during fetch
             EXPECT_NO_THROW(UKControllerPlugin::FileStatus::CheckPackVersion(container));
