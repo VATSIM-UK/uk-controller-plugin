@@ -531,11 +531,7 @@ namespace UKControllerPluginTest {
             std::filesystem::create_directories(sectorDir);
 
             std::ofstream file(sectorFile);
-            file
-                << "URL:  http://docs.vatsim.uk/General/Software%20Downloads/Files/VATUK_Euroscope_files.txt  \n"; // URL
-                                                                                                                   // with
-                                                                                                                   // leading/trailing
-                                                                                                                   // spaces
+            file << "URL:  http://docs.vatsim.uk/General/Software%20Downloads/Files/VATUK_Euroscope_files.txt  \n";
             file.close();
 
             // Should not call OpenMessageBox because whitespace is trimmed and URL matches
