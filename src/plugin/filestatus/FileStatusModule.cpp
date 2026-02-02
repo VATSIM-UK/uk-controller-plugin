@@ -67,6 +67,10 @@ namespace UKControllerPlugin::FileStatus {
             std::stringstream buffer;
             buffer << versionFile.rdbuf();
             std::string versionContent = buffer.str();
+            versionContent.erase(
+                std::remove_if(
+                    versionContent.begin(), versionContent.end(), [](unsigned char c) { return std::isspace(c); }),
+                versionContent.end());
             versionFile.close();
 
             std::string githubVersion = FetchPackVersion(*container.curl);
