@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.18.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.1...5.18.2) (2026-02-02)
+
+
+### Bug Fixes
+
+* close button to close wake calculator ([654aa56](https://github.com/VATSIM-UK/uk-controller-plugin/commit/654aa56973320852e438439d3677041f8af6b3d8))
+
 ## [5.18.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.0...5.18.1) (2025-12-01)
 
 
