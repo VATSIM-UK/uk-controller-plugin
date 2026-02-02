@@ -270,41 +270,70 @@ namespace UKControllerPluginTest {
             EXPECT_NO_THROW(UKControllerPlugin::FileStatus::CheckPackVersion(container));
         }
 
-        // Test version comparison with whitespace in file
-        TEST_F(FileStatusModuleTest, CheckPackVersionComparesVersionsWithWhitespace)
+        // Test version comparison with whitespace in file - should be stripped and match
+        TEST_F(FileStatusModuleTest, CheckPackVersionStripsLocalWhitespaceAndMatches)
         {
             auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
             auto curl = std::make_unique<NiceMock<MockCurlInterface>>();
-            auto windowsPtr = windows.get();
             auto curlPtr = curl.get();
 
             UKControllerPlugin::Bootstrap::PersistenceContainer container;
             container.windows = std::move(windows);
             container.curl = std::move(curl);
 
-            // Create the directory and file with version containing leading whitespace
+            // Create the directory and file with version containing leading/trailing whitespace
             std::filesystem::path versionDir("./UK/Data/Sector");
             std::filesystem::path versionFile = versionDir / "pack_version.txt";
             std::filesystem::create_directories(versionDir);
 
             std::ofstream file(versionFile);
-            file << "  v1.2.3abc123def456  \n"; // Version with whitespace
+            file << "  abc123def456  \n"; // Version with leading/trailing whitespace and newline
             file.close();
 
             // Mock the curl request to return version without whitespace
-            UKControllerPlugin::Curl::CurlResponse response("v1.2.3abc123def456", false, 200);
+            UKControllerPlugin::Curl::CurlResponse response("abc123def456", false, 200);
             EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(curlPtr), MakeCurlRequest)
                 .WillOnce(Return(response));
 
-            // Should show warning because versions don't exactly match (whitespace difference)
+            // Should NOT show warning because local whitespace is stripped and versions now match
             EXPECT_CALL(
-                *static_cast<NiceMock<UKControllerPluginTest::Windows::MockWinApi>*>(windowsPtr),
-                OpenMessageBox(
-                    ::testing::StrEq(L"You must update your controller pack"),
-                    ::testing::StrEq(L"Out of Date Controller Pack Detected"),
-                    ::testing::_))
-                .Times(1)
-                .WillOnce(Return(0));
+                *static_cast<NiceMock<UKControllerPluginTest::Windows::MockWinApi>*>(container.windows.get()),
+                OpenMessageBox)
+                .Times(0);
+
+            EXPECT_NO_THROW(UKControllerPlugin::FileStatus::CheckPackVersion(container));
+        }
+
+        // Test version comparison with trailing newlines in file
+        TEST_F(FileStatusModuleTest, CheckPackVersionStripsTrailingNewlines)
+        {
+            auto windows = std::make_unique<NiceMock<UKControllerPluginTest::Windows::MockWinApi>>();
+            auto curl = std::make_unique<NiceMock<MockCurlInterface>>();
+            auto curlPtr = curl.get();
+
+            UKControllerPlugin::Bootstrap::PersistenceContainer container;
+            container.windows = std::move(windows);
+            container.curl = std::move(curl);
+
+            // Create the directory and file with version containing trailing newlines
+            std::filesystem::path versionDir("./UK/Data/Sector");
+            std::filesystem::path versionFile = versionDir / "pack_version.txt";
+            std::filesystem::create_directories(versionDir);
+
+            std::ofstream file(versionFile);
+            file << "abc123def456\n\n\n"; // Version with multiple trailing newlines
+            file.close();
+
+            // Mock the curl request to return version without trailing newlines
+            UKControllerPlugin::Curl::CurlResponse response("abc123def456", false, 200);
+            EXPECT_CALL(*static_cast<NiceMock<MockCurlInterface>*>(curlPtr), MakeCurlRequest)
+                .WillOnce(Return(response));
+
+            // Should NOT show warning because trailing newlines are stripped and versions match
+            EXPECT_CALL(
+                *static_cast<NiceMock<UKControllerPluginTest::Windows::MockWinApi>*>(container.windows.get()),
+                OpenMessageBox)
+                .Times(0);
 
             EXPECT_NO_THROW(UKControllerPlugin::FileStatus::CheckPackVersion(container));
         }
