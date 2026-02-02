@@ -1,5 +1,6 @@
 #pragma once
 #include "Clearance.h"
+#include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "tag/TagItemInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
 
@@ -25,7 +26,9 @@ namespace UKControllerPlugin::Oceanic {
     /*
         Handles events over the ocean
     */
-    class OceanicEventHandler : public TimedEvent::AbstractTimedEvent, public Tag::TagItemInterface
+    class OceanicEventHandler : public TimedEvent::AbstractTimedEvent,
+                                public Tag::TagItemInterface,
+                                public Flightplan::FlightPlanEventHandlerInterface
     {
         public:
         OceanicEventHandler(
@@ -34,6 +37,11 @@ namespace UKControllerPlugin::Oceanic {
             Dialog::DialogManager& dialogManager);
 
         void TimedEventTrigger() override;
+        void FlightPlanEvent(
+            Euroscope::EuroScopeCFlightPlanInterface& flightPlan,
+            Euroscope::EuroScopeCRadarTargetInterface& radarTarget) override;
+        void FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan) override;
+        void ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType) override;
         [[nodiscard]] static auto NattrakClearanceValid(const nlohmann::json& clearance) -> bool;
         [[nodiscard]] auto CountClearances() const -> size_t;
         [[nodiscard]] auto GetClearanceForCallsign(const std::string& callsign) const -> const Clearance&;

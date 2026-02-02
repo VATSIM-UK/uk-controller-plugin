@@ -50,25 +50,55 @@ namespace UKControllerPlugin::Oceanic {
                     continue;
                 }
 
-                this->clearances.insert(std::pair<std::string, Clearance>(
-                    clearance.at("callsign").get<std::string>(),
-                    {
+                this->clearances.insert(
+                    std::pair<std::string, Clearance>(
                         clearance.at("callsign").get<std::string>(),
-                        clearance.at("status").get<std::string>(),
-                        clearance.at("nat").is_null() ? "" : clearance.at("nat").get<std::string>(),
-                        clearance.at("fix").get<std::string>(),
-                        std::to_string(
-                            Datablock::NormaliseFlightLevelFromString(clearance.at("level").get<std::string>())),
-                        clearance.at("mach").get<std::string>(),
-                        clearance.at("estimating_time").get<std::string>(),
-                        clearance.at("clearance_issued").is_null()
-                            ? ""
-                            : clearance.at("clearance_issued").get<std::string>(),
-                        clearance.at("extra_info").is_null() ? "" : clearance.at("extra_info").get<std::string>(),
-                    }));
+                        {
+                            clearance.at("callsign").get<std::string>(),
+                            clearance.at("status").get<std::string>(),
+                            clearance.at("nat").is_null() ? "" : clearance.at("nat").get<std::string>(),
+                            clearance.at("fix").get<std::string>(),
+                            std::to_string(
+                                Datablock::NormaliseFlightLevelFromString(clearance.at("level").get<std::string>())),
+                            clearance.at("mach").get<std::string>(),
+                            clearance.at("estimating_time").get<std::string>(),
+                            clearance.at("clearance_issued").is_null()
+                                ? ""
+                                : clearance.at("clearance_issued").get<std::string>(),
+                            clearance.at("extra_info").is_null() ? "" : clearance.at("extra_info").get<std::string>(),
+                        }));
             }
             LogInfo("Finished updating oceanic clearance data");
         });
+    }
+
+    /*
+        When a flightplan is updated (including when an aircraft is assumed), clear any cached
+        clearance data so that fresh data is displayed when the next TimedEventTrigger runs.
+        This fixes the issue where assumed aircraft would show incorrect track information.
+    */
+    void OceanicEventHandler::FlightPlanEvent(
+        Euroscope::EuroScopeCFlightPlanInterface& flightPlan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+    {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
+        this->clearances.erase(flightPlan.GetCallsign());
+    }
+
+    /*
+        When a flightplan disconnects, remove its clearance from the cache.
+    */
+    void OceanicEventHandler::FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan)
+    {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
+        this->clearances.erase(flightPlan.GetCallsign());
+    }
+
+    /*
+        Controller flightplan data events don't require any special handling for oceanic clearances.
+    */
+    void OceanicEventHandler::ControllerFlightPlanDataEvent(
+        Euroscope::EuroScopeCFlightPlanInterface& flightPlan, int dataType)
+    {
     }
 
     auto OceanicEventHandler::NattrakClearanceValid(const nlohmann::json& clearance) -> bool
