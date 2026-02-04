@@ -23,136 +23,143 @@ namespace UKControllerPlugin::Oceanic {
 
         lastAssumeClxFetch_[callsign] = now;
         return true;
-        Build Clearance from CLX JSON == ==
-            = std::optional<Clearance> OceanicEventHandler::BuildClearanceFromClx_(const nlohmann::json& obj) const
-        {
-            try {
-                if (!obj.contains("callsign") || !obj.at("callsign").is_string())
-                    return std::nullopt;
+    }
 
-                const std::string callsign = obj.at("callsign").get<std::string>();
-                const std::string status = "CLEARED";
+    // ===== Build Clearance from CLX JSON =====
+    std::optional<Clearance> OceanicEventHandler::BuildClearanceFromClx_(const nlohmann::json& obj) const
+    {
+        try {
+            if (!obj.contains("callsign") || !obj.at("callsign").is_string())
+                return std::nullopt;
 
-                std::string track;
-                if (obj.contains("track") && obj.at("track").is_string())
-                    track = obj.at("track").get<std::string>();
-                else if (obj.contains("random_routeing") && obj.at("random_routeing").is_string())
-                    track = "RR";
-                else
-                    track = "";
+            const std::string callsign = obj.at("callsign").get<std::string>();
+            const std::string status = "CLEARED";
 
-                std::string entryFix, entryTime;
-                if (obj.contains("entry") && obj.at("entry").is_object()) {
-                    const auto& e = obj.at("entry");
-                    if (e.contains("fix") && e.at("fix").is_string())
-                        entryFix = e.at("fix").get<std::string>();
-                    if (e.contains("estimate") && e.at("estimate").is_string())
-                        entryTime = e.at("estimate").get<std::string>();
-                }
+            std::string track;
+            if (obj.contains("track") && obj.at("track").is_string())
+                track = obj.at("track").get<std::string>();
+            else if (obj.contains("random_routeing") && obj.at("random_routeing").is_string())
+                track = "RR";
+            else
+                track = "";
 
-                const std::string level = (obj.contains("flight_level") && obj.at("flight_level").is_string())
-                                              ? obj.at("flight_level").get<std::string>()
+            std::string entryFix, entryTime;
+            if (obj.contains("entry") && obj.at("entry").is_object()) {
+                const auto& e = obj.at("entry");
+                if (e.contains("fix") && e.at("fix").is_string())
+                    entryFix = e.at("fix").get<std::string>();
+                if (e.contains("estimate") && e.at("estimate").is_string())
+                    entryTime = e.at("estimate").get<std::string>();
+            }
+
+            const std::string level = (obj.contains("flight_level") && obj.at("flight_level").is_string())
+                                          ? obj.at("flight_level").get<std::string>()
+                                          : "";
+
+            const std::string mach =
+                (obj.contains("mach") && obj.at("mach").is_string()) ? obj.at("mach").get<std::string>() : "";
+
+            const std::string extraInfo = (obj.contains("free_text") && obj.at("free_text").is_string())
+                                              ? obj.at("free_text").get<std::string>()
                                               : "";
 
-                const std::string mach =
-                    (obj.contains("mach") && obj.at("mach").is_string()) ? obj.at("mach").get<std::string>() : "";
-
-                const std::string extraInfo = (obj.contains("free_text") && obj.at("free_text").is_string())
-                                                  ? obj.at("free_text").get<std::string>()
-                                                  : "";
-
-                return Clearance{callsign, status, track, entryFix, level, mach, entryTime, "", extraInfo};
-            } catch (...) {
-                return std::nullopt;
-            }
+            return Clearance{callsign, status, track, entryFix, level, mach, entryTime, "", extraInfo};
+        } catch (...) {
+            return std::nullopt;
         }
+    }
 
-        // ===== Asynchronous CLX fetch for a callsign =====
-        void OceanicEventHandler::RefreshClxForCallsignAsync_(const std::string& callsign)
-        {
-            this->taskRunner.QueueAsynchronousTask(
-                this, callsign {
-                    try {
-                        Curl::CurlRequest req(nattrakClxUrl, Curl::CurlRequest::METHOD_GET);
-                        Curl::CurlResponse res = this->curl.MakeCurlRequest(req);
-                        if (res.IsCurlError() || !res.StatusOk())
+    // ===== Asynchronous CLX fetch for a callsign =====
+    void OceanicEventHandler::RefreshClxForCallsignAsync_(const std::string& callsign)
+    {
+        this->taskRunner.QueueAsynchronousTask(
+            this, callsign {
+                try {
+                    Curl::CurlRequest req(nattrakClxUrl, Curl::CurlRequest::METHOD_GET);
+                    Curl::CurlResponse res = this->curl.MakeCurlRequest(req);
+                    if (res.IsCurlError() || !res.StatusOk())
+                        return;
+
+                    nlohmann::json clxArray = nlohmann::json::parse(res.GetResponse());
+                    if (!clxArray.is_array())
+                        return;
+
+                    // Case-insensitive match
+                    auto upper = std::string s
+                    {
+                        std::transform(
+                            s.begin(), s.end(), s.begin(), unsigned char c {
+                                return static_cast<char>(std::toupper(c));
+                            });
+                        return s;
+                    };
+
+                    const std::string target = upper(callsign);
+
+                    for (const auto& clx : clxArray) {
+                        if (!clx.is_object() || !clx.contains("callsign") || !clx.at("callsign").is_string())
+                            continue;
+
+                        if (upper(clx.at("callsign").get<std::string>()) != target)
+                            continue;
+
+                        auto built = BuildClearanceFromClx_(clx);
+                        if (!built.has_value())
                             return;
 
-                        nlohmann::json clxArray = nlohmann::json::parse(res.GetResponse());
-                        if (!clxArray.is_array())
-                            return;
-
-                        // Case-insensitive match
-                        auto upper = std::string s
                         {
-                            std::transform(
-                                s.begin(), s.end(), s.begin(), unsigned char c {
-                                    return static_cast<char>(std::toupper(c));
-                                });
-                            return s;
-                        };
-
-                        const std::string target = upper(callsign);
-
-                        for (const auto& clx : clxArray) {
-                            if (!clx.is_object() || !clx.contains("callsign") || !clx.at("callsign").is_string())
-                                continue;
-
-                            if (upper(clx.at("callsign").get<std::string>()) != target)
-                                continue;
-
-                            auto built = BuildClearanceFromClx_(clx);
-                            if (!built.has_value())
-                                return;
-
-                            {
-                                std::lock_guard lock(this->clearanceMapMutex);
-                                this->clearances.erase(callsign);
-                                this->clearances.emplace(callsign, *built);
-                            }
-                            return;
+                            std::lock_guard lock(this->clearanceMapMutex);
+                            this->clearances.erase(callsign);
+                            this->clearances.emplace(callsign, *built);
                         }
-                    } catch (...) {
                         return;
                     }
-                });
-        }
-
-        // ===== Constructor =====
-        OceanicEventHandler::OceanicEventHandler(
-            Curl::CurlInterface & curl,
-            TaskManager::TaskRunnerInterface & taskRunner,
-            Dialog::DialogManager & dialogManager)
-            : curl(curl), taskRunner(taskRunner), dialogManager(dialogManager)
-        {
-        }
-
-        // ===== Timed event =====
-        to retrieve oceanic clearances from Nattrak.");
-            return;
+                } catch (...) {
+                    return;
+                }
+            });
     }
 
-    nlohmann::json clearanceData;
-    try {
-        clearanceData = nlohmann::json::parse(apiUpdateResponse.GetResponse());
-    } catch (nlohmann::json::exception&) {
-        LogWarning("Unable to decode oceanic clearances from Nattrak, JSON parse failed.");
-        return;
+    // ===== Constructor =====
+    OceanicEventHandler::OceanicEventHandler(
+        Curl::CurlInterface& curl, TaskManager::TaskRunnerInterface& taskRunner, Dialog::DialogManager& dialogManager)
+        : curl(curl), taskRunner(taskRunner), dialogManager(dialogManager)
+    {
     }
 
-    if (!clearanceData.is_array()) {
-        Unable to decode oceanic clearances from Nattrak, JSON is not array.");
-                                                          return;
-    }
+    // ===== Timed event =====
+    void OceanicEventHandler::TimedEventTrigger()
+    {
+        this->taskRunner.QueueAsynchronousTask([this]() {
+            LogInfo("Updating oceanic clearance data from Nattrak");
+            Curl::CurlRequest apiUpdateRequest(nattrakUrl, Curl::CurlRequest::METHOD_GET);
+            Curl::CurlResponse apiUpdateResponse = this->curl.MakeCurlRequest(apiUpdateRequest);
 
-    std::lock_guard lock(this->clearanceMapMutex);
-    this->clearances.clear();
+            if (apiUpdateResponse.IsCurlError() || !apiUpdateResponse.StatusOk()) {
+                LogWarning("Unable to retrieve oceanic clearances from Nattrak.");
+                return;
+            }
+            nlohmann::json clearanceData;
+            try {
+                clearanceData = nlohmann::json::parse(apiUpdateResponse.GetResponse());
+            } catch (nlohmann::json::exception&) {
+                LogWarning("Unable to decode oceanic clearances from Nattrak, JSON parse failed.");
+                return;
+            }
 
-    for (const nlohmann::json& clearance : clearanceData) {
-        if (!NattrakClearanceValid(clearance)) {
-            LogWarning("Invalid clearance received from Nattrak");
-            continue;
-        }
+            if (!clearanceData.is_array()) {
+                LogWarning("Unable to decode oceanic clearances from Nattrak, JSON is not array.");
+                return;
+            }
+
+            std::lock_guard lock(this->clearanceMapMutex);
+            this->clearances.clear();
+
+            for (const nlohmann::json& clearance : clearanceData) {
+                if (!NattrakClearanceValid(clearance)) {
+                    LogWarning("Invalid clearance received from Nattrak");
+                    continue;
+                }
 
                 this->clearances.insert({
                     clearance.at("callsign").get<std::string>(),
@@ -165,61 +172,74 @@ namespace UKControllerPlugin::Oceanic {
                             Datablock::Normal clearance.at("extra_info").get<std::string>()
                     }
                 });
+            }
+
+            LogInfo("Finished updating oceanic clearance data");
+        });
     }
 
-    LogInfo("Finished updating oceanic clearance data");
-});
-}
+    // ===== Assumed flightplan handling =====
+    void OceanicEventHandler::FlightPlanEvent(
+        Euroscope::EuroScopeCFlightPlanInterface& flightPlan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
+    {
+        {
+            auto lock = std::lock_guard(this->clearanceMapMutex);
+            this->clearances.erase(flightPlan.GetCallsign());
+        }
 
-// ===== Assumed flightplan handling =====
-void OceanicEventHandler::FlightPlanEvent(
-    Euroscope::EuroScopeCFlightPlanInterface& flightPlan, Euroscope::EuroScopeCRadarTargetInterface&) this
-    -> clearances.erase(flightPlan.GetCallsign());
-}
+        const std::string cs = flightPlan.GetCallsign();
+        if (ShouldGetchClxNow_(cs)) {
+            RefreshClxForCallsignAsync_(cs);
+            this->TimedEventTrigger();
+        }
+    }
 
-const std::string cs = flightPlan.GetCallsign();
-if (ShouldFetchClxNow_(cs)) {
-    RefreshClxForCallsignAsync_(cs);
-    this->TimedEventTrigger();
-}
-}
+    // ===== Disconnect event =====
+    void OceanicEventHandler::FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan)
+    {
+        std::lock_guard lock(this->clearanceMapMutex);
+        this->clearances.erase(flightPlan.GetCallsign());
+    }
 
-// ===== Disconnect event =====
-void OceanicEventHandler::FlightPlanDisconnectEvent(Euroscope::EuroScopeCFlightPlanInterface& flightPlan)
-{
-    std::lock_guard lock(this->clearanceMapMutex);
-    this->clearances.erase(flightPlan.GetCallsign());
-}
+    // ===== Controller data event =====
+    void OceanicEventHandler::ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface&, int)
+    {
+    }
 
-// ===== Controller data event =====
-void OceanicEventHandler::ControllerFlightPlanDataEvent(Euroscope::EuroScopeCFlightPlanInterface&, int)
-{
-}
+    // ===== Validation =====
+    auto OceanicEventHandler::NattrakClearanceValid(const nlohmann::json& clearance) -> bool
+    {
+        return clearance.is_object() && clearance.contains("callsign") && clearance.at("callsign").is_string() &&
+               clearance.contains("status") && clearance.at("status").is_string() && clearance.contains("nat") &&
+               (clearance.at("nat").is_null() || clearance.at("nat").is_string()) && clearance.contains("fix") &&
+               clearance.at("fix").is_string() && clearance.contains("level") && clearance.at("level").is_string() &&
+               clearance.contains("estimating_time") && clearance.at("estimating_time").is_string() &&
+               clearance.contains("clearance_issued") &&
+               (clearance.at("clearance_issued").is_string() || clearance.at("clearance_issued").is_null()) &&
+               clearance.contains("extra_info") &&
+               (clearance.at("extra_info").is_string() || clearance.at("extra_info").is_null());
+    }
 
-// ===== Validation =====
-bool OceanicEventHandler::NattrakClearanceValid(const nlohmann::json& clearance)
-{
-        return clearance.is_object()
-            && clearance.contains("callsign") && clearance.at("callsign").is_string()
-            && clearance.contains("status") && clearance.at("status").is_string()
-            && clearance.contains("nat")
-            && (clearance.at("nat").is_null() || clearance.at("nat").is_string())
-            && clearance.contains("fix") && clearance.at("fix").is_string()
-            && clearance.contains("level") && clearance.at("level").is_string()
-            && clearance.contains("estimating_time") && clearance.at("estimating_time").is_string()
-            && clearance.contains("clearance_issued")
-            && (clearance.at("clearance_issued").is_string()
-                || clearance.at("clearance_issued").is_null())
-            && clearance.contains("extra_info")
-            && (clearance.at("extra_info").is_string()
-               _guard lock(this->clearanceMapMutex);
+    auto OceanicEventHandler::CountClearances() const -> size_t
+    {
+        auto lock = std::lock_guard(this_ > clearanceMapMutex);
         return this->clearances.size();
-}
+    }
 
-const Clearance& OceanicEventHandler::GetClearanceForCallsign(const std::string& callsign) const
-{
-    std::lock_guard lock(this->clearanceMapMutex);
+    auto OceanicEventHandler::GetClearanceForCallsign(const std::string& callsign) const Clearance&
+    {
+        auto lock = std::lock_guard lock(this->clearanceMapMutex);
+        return this->clearances.size();
+    }
 
+    auto OceanicEventHandler::GetClearanceForCallsign(const std::string& callsign) const -> const Clearance&
+    {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
+        auto clearance = this->clearances.find(callsign);
+        return clearance == this->clearances.cend() ? this->invalidClearance : clearance->second;
+    }
+
+    auto OceanicEventHandler::GetTagItemDescription(int tagIteamId) const -> std::string
     {
         switch (tagItemId) {
         case CLEARANCE_INDICATOR_TAG_ITEM_ID:
@@ -239,7 +259,7 @@ const Clearance& OceanicEventHandler::GetClearanceForCallsign(const std::string&
     }
 
     void OceanicEventHandler::TagFunction(
-        Euroscope::EuroScopeCFlightPlanInterface & flightplan,
+        Euroscope::EuroScopeCFlightPlanInterface& flightplan,
         Euroscope::EuroScopeCRadarTargetInterface&,
         const std::string&,
         const POINT&)
@@ -252,7 +272,7 @@ const Clearance& OceanicEventHandler::GetClearanceForCallsign(const std::string&
         );
     }
 
-    void OceanicEventHandler::SetTagItemData(Tag::TagData & tagData)
+    void OceanicEventHandler::SetTagItemData(Tag::TagData& tagData)
     {
         std::lock_guard lock(this->clearanceMapMutex);
         auto clearance = this->clearances.find(tagData.GetFlightplan().GetCallsign());
@@ -298,7 +318,7 @@ const Clearance& OceanicEventHandler::GetClearanceForCallsign(const std::string&
         return clearedLevel == currentLevel ? clearanceIndicatorOk : clearanceIndicatorActionRequired;
     }
 
-    void OceanicEventHandler::SetClearanceIndicatorTagItem(Tag::TagData & tagData, const Clearance& clearance) const
+    void OceanicEventHandler::SetClearanceIndicatorTagItem(Tag::TagData& tagData, const Clearance& clearance) const
     {
         const auto& fp = tagData.GetFlightplan();
         COLORREF colour;
@@ -318,7 +338,7 @@ const Clearance& OceanicEventHandler::GetClearanceForCallsign(const std::string&
         tagData.SetTagColour(colour);
     }
 
-    void OceanicEventHandler::SetClearedLevelTagItem(Tag::TagData & tagData, const Clearance& clearance) const
+    void OceanicEventHandler::SetClearedLevelTagItem(Tag::TagData& tagData, const Clearance& clearance) const
     {
         const auto& fp = tagData.GetFlightplan();
         int clearedAltitude = fp.GetClearedAltitude();
@@ -328,28 +348,46 @@ const Clearance& OceanicEventHandler::GetClearanceForCallsign(const std::string&
         tagData.SetTagColour(
             (clearedAltitude != 0) ? GetClearedTagItemColour(nattrakLevel, clearedAltitude)
                                    : GetClearedTagItemColour(nattrakLevel, cruisingLevel));
-
         tagData.SetItemString(clearance.flightLevel);
     }
 
-    void OceanicEventHandler::SetClearedMachNumberTagItem(Tag::TagData & tagData, const Clearance& clearance)
+    void OceanicEventHandler::SetClearedMachNumberTagItem(Tag::TagData& tagData, const Clearance& clearance)
     {
         tagData.SetItemString(clearance.mach);
     }
 
-    void OceanicEventHandler::SetClearedEntryPointTagItem(Tag::TagData & tagData, const Clearance& clearance)
+    void OceanicEventHandler::SetClearedEntryPointTagItem(Tag::TagData& tagData, const Clearance& clearance)
     {
-
-        {
-            return this->invalidClearance;
-        }
-
-    Clearance OceanicEventHandler::GetDefaultClearanceForCallsign(
-        Euroscope::EuroScopeCFlightPlanInterface& flightplan)
-   plan.GetCallsign());
-
-    this->currentlySelectedClearance =
-        (it != this->clearances.end()) ? it->second : GetDefaultClearanceForCallsign(flightplan);
+        tagData.SetItemString(clearance.entryFix);
     }
 
+    void OceanicEventHandler::SetClearedTrackIdentifierTagItem(Tag::TagData& tagData, const Clearance& clearance)
+    {
+        tagData.SetItemString(clearance.track);
+    }
+
+    void OceanicEventHandler::SetClearedEntryTimeTagItem(Tag::TagData& tagData, const Clearance& clearance)
+    {
+        tagData.SetItemString(clearance.entryTime);
+    }
+
+    auto OceanicEventHandler::GetInvalidClearance() const -> const Clearance&
+    {
+        return this->invalidClearance;
+    }
+
+    auto OceanicEventHandler::GetDefaultClearanceForCallsign(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+        -> Clearance
+    {
+        return Clearance{flightplan.GetCallsign()};
+    }
+
+    void OceanicEventHandler::SetCurrentlySelectedClearance(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
+    {
+        auto lock = std::lock_guard(this->clearanceMapMutex);
+        auto storedClearance = this->clearances.find(flightplan.GetCallsign());
+        this->currentlySelectedClearance = storedClearance != this->clearances.cend()
+                                               ? storedClearance->second
+                                               : GetDefaultClearanceForCallsign(flightplan);
+    }
 } // namespace UKControllerPlugin::Oceanic
