@@ -9,7 +9,7 @@ the Plugin API to offer useful functionality to controllers of UK positions on t
 
 ## Setting Up The Project Locally
 
-- Fork the repo
+- Fork the repo a
 - Clone the project
 - Open the project, we suggest you either use Visual Studio Community Edition or Visual Studio Code (both free)
 - You will need to ensure that you have the libraries containing mitigation for the Spectre exploit, information on how to install them may be found in the [installation guide](https://docs.microsoft.com/en-us/cpp/build/reference/qspectre?view=vs-2017)
