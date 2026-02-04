@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.18.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.2...5.18.3) (2026-02-03)
+
+
+### Bug Fixes
+
+* Fix pack hash comparison with whitespaces ([5400bad](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5400bad1e57e1f93492843b312e36e0d0c905a4f))
+
 ## [5.18.2](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.1...5.18.2) (2026-02-02)
 
 
