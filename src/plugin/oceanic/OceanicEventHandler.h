@@ -111,11 +111,11 @@ namespace UKControllerPlugin::Oceanic {
 
         // ===== On‑assume CLX refresh (debounced) =====
         std::unordered_map<std::string, std::chrono::steady_clock::time_point> lastAssumeClxFetch_;
+
         static constexpr std::chrono::seconds ASSUME_CLX_DEBOUNCE{10};
 
         bool ShouldFetchClxNow_(const std::string& callsign);
         void RefreshClxForCallsignAsync_(const std::string& callsign);
         std::optional<Clearance> BuildClearanceFromClx_(const nlohmann::json& json);
-        
-    };
-} // namespace UKControllerPlugin::Oceanic
+
+    } // namespace UKControllerPlugin::Oceanic
