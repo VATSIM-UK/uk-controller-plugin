@@ -136,7 +136,7 @@ namespace UKControllerPlugin::Oceanic {
 
         bool ShouldFetchClxNow_(const std::string& callsign);
         void RefreshClxForCallsignAsync_(const std::string& callsign);
-        std::optional<Clearance> BuildClearanceFromClx_(const nlohmann::json& json);
+        std::optional<Clearance> BuildClearanceFromClx_(const nlohmann::json& json) const;
     };
 
 } // namespace UKControllerPlugin::Oceanic
