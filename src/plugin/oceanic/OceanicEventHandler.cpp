@@ -166,7 +166,8 @@ namespace UKControllerPlugin::Oceanic {
                          clearance.at("status").get<std::string>(),
                          clearance.at("nat").is_null() ? "" : clearance.at("nat").get<std::string>(),
                          clearance.at("fix").get<std::string>(),
-                         clearance.at("level").get<std::string>(),
+                         std::to_string(
+                             Datablock::NormaliseFlightLevelFromString(clearance.at("level").get<std::string>())),
                          (clearance.contains("mach") && !clearance.at("mach").is_null())
                              ? clearance.at("mach").get<std::string>()
                              : "",
@@ -213,15 +214,48 @@ namespace UKControllerPlugin::Oceanic {
     // ===== Validation =====
     auto OceanicEventHandler::NattrakClearanceValid(const nlohmann::json& clearance) -> bool
     {
-        return clearance.is_object() && clearance.contains("callsign") && clearance.at("callsign").is_string() &&
-               clearance.contains("status") && clearance.at("status").is_string() && clearance.contains("nat") &&
-               (clearance.at("nat").is_null() || clearance.at("nat").is_string()) && clearance.contains("fix") &&
-               clearance.at("fix").is_string() && clearance.contains("level") && clearance.at("level").is_string() &&
-               clearance.contains("estimating_time") && clearance.at("estimating_time").is_string() &&
-               clearance.contains("clearance_issued") &&
-               (clearance.at("clearance_issued").is_string() || clearance.at("clearance_issued").is_null()) &&
-               clearance.contains("extra_info") &&
-               (clearance.at("extra_info").is_string() || clearance.at("extra_info").is_null());
+        if (!clearance.is_object())
+            return false;
+
+        // Required string fields
+        if (!clearance.contains("callsign") || !clearance.at("callsign").is_string())
+            return false;
+        if (!clearance.contains("status") || !clearance.at("status").is_string())
+            return false;
+        if (!clearance.contains("fix") || !clearance.at("fix").is_string())
+            return false;
+        if (!clearance.contains("estimating_time") || !clearance.at("estimating_time").is_string())
+            return false;
+
+        // nat: required, may be null or string
+        if (!clearance.contains("nat"))
+            return false;
+        if (!(clearance.at("nat").is_null() || clearance.at("nat").is_string()))
+            return false;
+
+        // clearance_issued: required, may be null or string
+        if (!clearance.contains("clearance_issued"))
+            return false;
+        if (!(clearance.at("clearance_issued").is_null() || clearance.at("clearance_issued").is_string()))
+            return false;
+
+        // extra_info: required, may be null or string
+        if (!clearance.contains("extra_info"))
+            return false;
+        if (!(clearance.at("extra_info").is_null() || clearance.at("extra_info").is_string()))
+            return false;
+
+        // level: required string AND must parse to a valid flight level
+        if (!clearance.contains("level") || !clearance.at("level").is_string())
+            return false;
+        if (!NattrakLevelValid(clearance.at("level").get<std::string>()))
+            return false;
+
+        // mach: required string
+        if (!clearance.contains("mach") || !clearance.at("mach").is_string())
+            return false;
+
+        return true;
     }
 
     auto OceanicEventHandler::CountClearances() const -> size_t
