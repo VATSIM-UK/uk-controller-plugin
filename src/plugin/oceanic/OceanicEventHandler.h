@@ -104,17 +104,5 @@ namespace UKControllerPlugin::Oceanic {
 
         // Protects the map during updates
         mutable std::mutex clearanceMapMutex;
-
-        // --- Detailed natTrak CLX endpoint (recommended for plugins) ---
-        const std::string nattrakClxUrl = "https://nattrak.vatsim.net/api/clx-messages";
-
-        // CLX refresh on assume:
-        void RefreshClxForCallsignAsync_(const std::string& callsign);
-        std::optional<Clearance> BuildClearanceFromClx_(const nlohmann::json& json);
-
-        // Debounce to avoid hammering natTrak if ES fires multiple FP events.
-        std::unordered_map<std::string, std::chrono::steady_clock::time_point> lastAssumeClxFetch_;
-        static constexpr std::chrono::seconds ASSUME_CLX_DEBOUNCE{10};
-        bool ShouldFetchClxNow_(const std::string& callsign);
     };
 } // namespace UKControllerPlugin::Oceanic
