@@ -21,7 +21,7 @@ namespace UKControllerPlugin::Oceanic {
     // ============================================================================
     void OceanicEventHandler::RefreshClxForCallsignAsync_(const std::string& callsign)
     {
-    this->taskRunner.QueueAsynchronousTask([this, callsign{
+        this->taskRunner.QueueAsynchronousTask([this, callsign] {
             try {
                 Curl::CurlRequest req(nattrakClxUrl, Curl::CurlRequest::METHOD_GET);
                 Curl::CurlResponse res = this->curl.MakeCurlRequest(req);
@@ -51,7 +51,7 @@ namespace UKControllerPlugin::Oceanic {
                     return s;
                 };
 
-                const std::string target = toUpper(callsign);
+                const std::string target = upper(callsign);
 
                 for (const auto& clx : clxArray) {
                     if (!clx.is_object())
@@ -59,7 +59,7 @@ namespace UKControllerPlugin::Oceanic {
                     if (!clx.contains("callsign") || !clx.at("callsign").is_string())
                         continue;
 
-                    std::string cs = toUpper(clx.at("callsign").get<std::string>());
+                    std::string cs = upper(clx.at("callsign").get<std::string>());
                     if (cs != target)
                         continue;
 
@@ -76,7 +76,7 @@ namespace UKControllerPlugin::Oceanic {
             } catch (const std::exception& e) {
                 LogWarning(std::string("Exception during CLX refresh: ") + e.what());
             }
-    });
+        });
     }
 
     void OceanicEventHandler::TimedEventTrigger()
