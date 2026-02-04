@@ -80,8 +80,20 @@ namespace UKControllerPlugin::Oceanic {
     void OceanicEventHandler::FlightPlanEvent(
         Euroscope::EuroScopeCFlightPlanInterface& flightPlan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
     {
-        auto lock = std::lock_guard(this->clearanceMapMutex);
-        this->clearances.erase(flightPlan.GetCallsign());
+        {
+            auto lock = std::lock_guard(this->clearanceMapMutex);
+            this->clearances.erase(flightPlan.GetCallsign());
+        }
+
+        const std::string cs = flightPlan.GetCallsign();
+
+        if (ShouldFetchClxNow_(cs)) {
+            // Fetch detailed CLX for THIS callsign (accurate track)
+            RefreshClxForCallsignAsync_(cs);
+
+            // AND still run the normal plugin-feed poll so all aircraft stay updated
+            this->TimedEventTrigger();
+        }
     }
 
     /*
@@ -263,6 +275,21 @@ namespace UKControllerPlugin::Oceanic {
     auto OceanicEventHandler::GetInvalidClearance() const -> const Clearance&
     {
         return this->invalidClearance;
+    }
+
+    bool OceanicEventHandler::ShouldFetchClxNow_(const std::string& callsign)
+    {
+        using clock = std::chrono::steady_clock;
+        const auto now = clock::now();
+
+        auto it = lastAssumeClxFetch_.find(callsign);
+
+        if (it != lastAssumeClxFetch_.end() && (now - it->second) < ASSUME_CLX_DEBOUNCE) {
+            return false;
+        }
+
+        lastAssumeClxFetch_[callsign] = now;
+        return true;
     }
 
     auto OceanicEventHandler::GetDefaultClearanceForCallsign(Euroscope::EuroScopeCFlightPlanInterface& flightplan)
