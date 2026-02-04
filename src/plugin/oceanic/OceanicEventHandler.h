@@ -3,6 +3,9 @@
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "tag/TagItemInterface.h"
 #include "timedevent/AbstractTimedEvent.h"
+#include <unordered_map>
+#include <chrono>
+#include <optional>
 
 namespace UKControllerPlugin {
     namespace Curl {
@@ -86,6 +89,7 @@ namespace UKControllerPlugin::Oceanic {
 
         // The URL to find nattrak
         const std::string nattrakUrl = "https://nattrak.vatsim.net/api/plugins";
+        const std::string nattrakClxUrl = "https://nattrak.vatsim.net/api/clx-messages";
 
         // Returned if clearance doesnt exist
         const Clearance invalidClearance = Clearance("NOTAVALIDCLEARANCESORRY");
@@ -104,5 +108,14 @@ namespace UKControllerPlugin::Oceanic {
 
         // Protects the map during updates
         mutable std::mutex clearanceMapMutex;
+
+        // ===== On‑assume CLX refresh (debounced) =====
+        std::unordered_map<std::string, std::chrono::steady_clock::time_point> lastAssumeClxFetch_;
+        static constexpr std::chrono::seconds ASSUME_CLX_DEBOUNCE{10};
+
+        bool ShouldFetchClxNow_(const std::string& callsign);
+        void RefreshClxForCallsignAsync_(const std::string& callsign);
+        std::optional<Clearance> BuildClearanceFromClx_(const nlohmann::json& json);
+        
     };
 } // namespace UKControllerPlugin::Oceanic

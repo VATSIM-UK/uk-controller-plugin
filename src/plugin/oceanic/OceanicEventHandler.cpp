@@ -7,8 +7,117 @@
 #include "euroscope/EuroScopeCRadarTargetInterface.h"
 #include "tag/TagData.h"
 #include "task/TaskRunnerInterface.h"
+#include <algorithm>
+#include <cctype>
 
 namespace UKControllerPlugin::Oceanic {
+
+    // ===== Debounce helper =====
+    bool OceanicEventHandler::ShouldFetchClxNow_(const std::string& callsign)
+    {
+        using clock = std::chrono::steady_clock;
+        const auto now = clock::now();
+        auto it = lastAssumeClxFetch_.find(callsign);
+        if (it != lastAssumeClxFetch_.end() && (now - it->second) < ASSUME_CLX_DEBOUNCE)
+            return false;
+
+        lastAssumeClxFetch_[callsign] = now;
+        return true;
+    }
+
+    // ===== Build Clearance from CLX JSON =====
+    std::optional<Clearance> OceanicEventHandler::BuildClearanceFromClx_(const nlohmann::json& obj) const
+    {
+        try {
+            if (!obj.contains("callsign") || !obj.at("callsign").is_string())
+                return std::nullopt;
+
+            const std::string callsign = obj.at("callsign").get<std::string>();
+            const std::string status = "CLEARED"; // CLX implies cleared
+
+            std::string track;
+            if (obj.contains("track") && obj.at("track").is_string())
+                track = obj.at("track").get<std::string>();
+            else if (obj.contains("random_routeing") && obj.at("random_routeing").is_string())
+                track = "RR";
+            else
+                track = "";
+
+            std::string entryFix, entryTime;
+            if (obj.contains("entry") && obj.at("entry").is_object()) {
+                const auto& e = obj.at("entry");
+                if (e.contains("fix") && e.at("fix").is_string())
+                    entryFix = e.at("fix").get<std::string>();
+                if (e.contains("estimate") && e.at("estimate").is_string())
+                    entryTime = e.at("estimate").get<std::string>();
+            }
+
+            const std::string level = (obj.contains("flight_level") && obj.at("flight_level").is_string())
+                                          ? obj.at("flight_level").get<std::string>()
+                                          : "";
+            const std::string mach =
+                (obj.contains("mach") && obj.at("mach").is_string()) ? obj.at("mach").get<std::string>() : "";
+
+            const std::string extraInfo = (obj.contains("free_text") && obj.at("free_text").is_string())
+                                              ? obj.at("free_text").get<std::string>()
+                                              : "";
+
+            // Clearance(callsign,status,track,entryFix,flightLevel,mach,entryTime,clearanceIssued,extra)
+            return Clearance{callsign, status, track, entryFix, level, mach, entryTime, "", extraInfo};
+        } catch (...) {
+            return std::nullopt;
+        }
+    }
+
+    // ===== Asynchronous CLX fetch for a callsign =====
+    void OceanicEventHandler::RefreshClxForCallsignAsync_(const std::string& callsign)
+    {
+        this->taskRunner.QueueAsynchronousTask(
+            this, callsign {
+                try {
+                    Curl::CurlRequest req(nattrakClxUrl, Curl::CurlRequest::METHOD_GET);
+                    Curl::CurlResponse res = this->curl.MakeCurlRequest(req);
+                    if (res.IsCurlError() || !res.StatusOk())
+                        return;
+
+                    nlohmann::json clxArray = nlohmann::json::parse(res.GetResponse());
+                    if (!clxArray.is_array())
+                        return;
+
+                    // Case-insensitive match
+                    auto upper = std::string s
+                    {
+                        std::transform(
+                            s.begin(), s.end(), s.begin(), unsigned char c {
+                                return static_cast<char>(std::toupper(c));
+                            });
+                        return s;
+                    };
+                    const std::string target = upper(callsign);
+
+                    for (const auto& clx : clxArray) {
+                        if (!clx.is_object() || !clx.contains("callsign") || !clx.at("callsign").is_string())
+                            continue;
+
+                        if (upper(clx.at("callsign").get<std::string>()) != target)
+                            continue;
+
+                        auto built = BuildClearanceFromClx_(clx);
+                        if (!built.has_value())
+                            return;
+
+                        {
+                            auto lock = std::lock_guard(this->clearanceMapMutex);
+                            this->clearances.erase(callsign);           // avoid default-constructing Clearance
+                            this->clearances.emplace(callsign, *built); // correct insertion
+                        }
+                        return;
+                    }
+                } catch (...) {
+                    return;
+                }
+            });
+    }
 
     OceanicEventHandler::OceanicEventHandler(
         Curl::CurlInterface& curl, TaskManager::TaskRunnerInterface& taskRunner, Dialog::DialogManager& dialogManager)
@@ -80,8 +189,17 @@ namespace UKControllerPlugin::Oceanic {
     void OceanicEventHandler::FlightPlanEvent(
         Euroscope::EuroScopeCFlightPlanInterface& flightPlan, Euroscope::EuroScopeCRadarTargetInterface& radarTarget)
     {
-        auto lock = std::lock_guard(this->clearanceMapMutex);
-        this->clearances.erase(flightPlan.GetCallsign());
+        {
+            auto lock = std::lock_guard(this->clearanceMapMutex);
+            this->clearances.erase(flightPlan.GetCallsign());
+        }
+
+        // Option B: immediate (debounced) CLX refresh for this callsign + normal plugin poll
+        const std::string cs = flightPlan.GetCallsign();
+        if (ShouldFetchClxNow_(cs)) {
+            RefreshClxForCallsignAsync_(cs);
+            this->TimedEventTrigger();
+        }
     }
 
     /*
