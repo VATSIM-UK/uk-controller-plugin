@@ -16,6 +16,66 @@ namespace UKControllerPlugin::Oceanic {
     {
     }
 
+    // ============================================================================
+    // One-shot CLX fetch for a specific callsign (async)
+    // ============================================================================
+    void OceanicEventHandler::RefreshClxForCallsignAsync_(const std::string& callsign)
+    {
+    this->taskRunner.QueueAsynchronousTask([this, callsign{
+            try {
+                Curl::CurlRequest req(nattrakClxUrl, Curl::CurlRequest::METHOD_GET);
+                Curl::CurlResponse res = this->curl.MakeCurlRequest(req);
+
+                if (res.IsCurlError() || !res.StatusOk()) {
+                    LogWarning("CLX fetch failed for " + callsign);
+                    return;
+                }
+
+                nlohmann::json clxArray;
+                try {
+                    clxArray = nlohmann::json::parse(res.GetResponse());
+                } catch (...) {
+                    LogWarning("CLX JSON parse failed");
+                    return;
+                }
+
+                if (!clxArray.is_array())
+                    return;
+
+                // Uppercase helper for matching
+                auto toUpper = [](std::string s) {
+                    std::transform(s.begin(), s.end(), s.begin(), [](unsigned char c) { return std::toupper(c); });
+                    return s;
+                };
+
+                const std::string target = toUpper(callsign);
+
+                for (const auto& clx : clxArray) {
+                    if (!clx.is_object())
+                        continue;
+                    if (!clx.contains("callsign") || !clx.at("callsign").is_string())
+                        continue;
+
+                    std::string cs = toUpper(clx.at("callsign").get<std::string>());
+                    if (cs != target)
+                        continue;
+
+                    auto built = BuildClearanceFromClx_(clx);
+                    if (!built.has_value())
+                        return;
+
+                    {
+                        auto lock = std::lock_guard(this->clearanceMapMutex);
+                        this->clearances[callsign] = *built;
+                    }
+                    return;
+                }
+            } catch (const std::exception& e) {
+                LogWarning(std::string("Exception during CLX refresh: ") + e.what());
+            }
+    });
+    }
+
     void OceanicEventHandler::TimedEventTrigger()
     {
         this->taskRunner.QueueAsynchronousTask([this]() {
