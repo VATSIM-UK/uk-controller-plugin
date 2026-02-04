@@ -35,14 +35,18 @@ namespace UKControllerPlugin::Oceanic {
             const std::string callsign = obj.at("callsign").get<std::string>();
             const std::string status = "CLEARED";
 
+            // Track: object { identifier: "E" } or string or null
             std::string track;
-            if (obj.contains("track") && obj.at("track").is_string())
-                track = obj.at("track").get<std::string>();
-            else if (obj.contains("random_routeing") && obj.at("random_routeing").is_string())
-                track = "RR";
-            else
-                track = "";
+            if (obj.contains("track")) {
+                const auto& t = obj.at("track");
+                if (t.is_string()) {
+                    track = t.get<std::string>();
+                } else if (t.is_object() && t.contains("identifier") && t.at("identifier").is_string()) {
+                    track = t.at("identifier").get<std::string>();
+                }
+            }
 
+            // Entry fix/time
             std::string entryFix, entryTime;
             if (obj.contains("entry") && obj.at("entry").is_object()) {
                 const auto& e = obj.at("entry");
@@ -52,16 +56,40 @@ namespace UKControllerPlugin::Oceanic {
                     entryTime = e.at("estimate").get<std::string>();
             }
 
-            const std::string level = (obj.contains("flight_level") && obj.at("flight_level").is_string())
-                                          ? obj.at("flight_level").get<std::string>()
-                                          : "";
+            // Flight level: object with cleared/requested/maximum OR string
+            std::string level;
+            if (obj.contains("flight_level")) {
+                const auto& fl = obj.at("flight_level");
+                if (fl.is_string()) {
+                    level = fl.get<std::string>();
+                } else if (fl.is_object()) {
+                    if (fl.contains("cleared") && fl.at("cleared").is_string())
+                        level = fl.at("cleared").get<std::string>();
+                    else if (fl.contains("requested") && fl.at("requested").is_string())
+                        level = fl.at("requested").get<std::string>();
+                }
+            }
 
-            const std::string mach =
-                (obj.contains("mach") && obj.at("mach").is_string()) ? obj.at("mach").get<std::string>() : "";
+            // Mach: object with cleared/requested OR string
+            std::string mach;
+            if (obj.contains("mach")) {
+                const auto& m = obj.at("mach");
+                if (m.is_string()) {
+                    mach = m.get<std::string>();
+                } else if (m.is_object()) {
+                    if (m.contains("cleared") && m.at("cleared").is_string())
+                        mach = m.at("cleared").get<std::string>();
+                    else if (m.contains("requested") && m.at("requested").is_string())
+                        mach = m.at("requested").get<std::string>();
+                }
+            }
 
-            const std::string extraInfo = (obj.contains("free_text") && obj.at("free_text").is_string())
-                                              ? obj.at("free_text").get<std::string>()
-                                              : "";
+            // Extra info: CLX uses extra_info (not free_text)
+            std::string extraInfo;
+            if (obj.contains("extra_info") && obj.at("extra_info").is_string())
+                extraInfo = obj.at("extra_info").get<std::string>();
+            else if (obj.contains("free_text") && obj.at("free_text").is_string())
+                extraInfo = obj.at("free_text").get<std::string>();
 
             return Clearance{callsign, status, track, entryFix, level, mach, entryTime, "", extraInfo};
         } catch (...) {
