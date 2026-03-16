@@ -2,6 +2,7 @@
 #include "StandEventHandler.h"
 #include "StandModule.h"
 #include "StandSerializer.h"
+#include "StandColourConfiguration.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "euroscope/CallbackFunction.h"
@@ -24,6 +25,7 @@ namespace UKControllerPlugin::Stands {
 
     // The tag item id for assigned stand
     const int assignedStandTagItemId = 110;
+    const int standAssignmentSourceTagItemId = 200;
     const int openStandAssignmentPopupTagFunctionId = 9007;
     const int openStandAssignmentEditBoxTagFunctionId = 9008;
 
@@ -32,6 +34,10 @@ namespace UKControllerPlugin::Stands {
         // Load stand data from the dependency
         std::set<Stand, CompareStands> stands;
         from_json(dependencies.LoadDependency(GetDependencyKey(), nlohmann::json::object()), stands);
+
+        // Load stand colour configuration from EuroScope user settings
+        auto colourConfiguration = std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler);
+        colourConfiguration->LoadFromUserSettings();
 
         // Create the event handler
         auto standSelectedCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
@@ -42,7 +48,8 @@ namespace UKControllerPlugin::Stands {
             *container.integrationModuleContainer->outboundMessageHandler,
             container.airfieldOwnership,
             stands,
-            standSelectedCallbackId);
+            standSelectedCallbackId,
+            *colourConfiguration);
 
         // Create a tag function for the stand assignment popup list and add a callback
         TagFunction openStandAssignmentPopupMenu(
@@ -84,6 +91,7 @@ namespace UKControllerPlugin::Stands {
         // Assign to handlers
         container.flightplanHandler->RegisterHandler(eventHandler);
         container.tagHandler->RegisterTagItem(assignedStandTagItemId, eventHandler);
+        container.tagHandler->RegisterTagItem(standAssignmentSourceTagItemId, eventHandler);
         container.pushEventProcessors->AddProcessor(eventHandler);
         container.externalEventHandler->AddHandler(eventHandler);
         container.integrationModuleContainer->inboundMessageHandler->AddProcessor(eventHandler);

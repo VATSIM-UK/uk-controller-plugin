@@ -1,6 +1,8 @@
 #pragma once
 #include "CompareStands.h"
 #include "Stand.h"
+#include "StandAssignmentSource.h"
+#include "StandColourConfiguration.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/ExternalMessageHandlerInterface.h"
 #include "integration/IntegrationActionProcessor.h"
@@ -41,7 +43,8 @@ namespace UKControllerPlugin::Stands {
             Integration::OutboundIntegrationEventHandler& integrationEventHandler,
             std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
             std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
-            int standSelectedCallbackId);
+            int standSelectedCallbackId,
+            const StandColourConfiguration& colourConfiguration);
         [[nodiscard]] auto ActionsToProcess() const -> std::vector<Integration::MessageType> override;
         void ProcessAction(
             std::shared_ptr<Integration::MessageInterface> message,
@@ -95,6 +98,7 @@ namespace UKControllerPlugin::Stands {
 
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
+        void AssignStandToAircraft(const std::string& callsign, const Stand& stand, const std::string& source);
         [[nodiscard]] auto
         AssignStandInApi(const std::string& callsign, const std::string& airfield, const std::string& identifier)
             -> std::string;
@@ -104,6 +108,8 @@ namespace UKControllerPlugin::Stands {
         void DoApiStandRequest(const std::string& callsign, const nlohmann::json data);
         void UnassignStandForAircraft(const std::string& callsign);
         [[nodiscard]] auto AssignmentMessageValid(const nlohmann::json& message) const -> bool;
+        [[nodiscard]] static auto GetAssignmentSourceFromMessage(const nlohmann::json& message) -> std::string;
+        [[nodiscard]] static auto GetAssignmentSourceShorthand(const std::string& source) -> std::string;
         auto CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool;
         static auto UnassignmentMessageValid(const nlohmann::json& message) -> bool;
         auto
@@ -126,8 +132,11 @@ namespace UKControllerPlugin::Stands {
         // All the stands we have
         std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands;
 
-        // The currently assigned stands and who they are assigned to
-        std::map<std::string, int> standAssignments;
+        // The currently assigned stands and who they are assigned to, with source information
+        std::map<std::string, StandAssignmentSource> standAssignments;
+
+        // Colour configuration for stand assignment sources
+        const StandColourConfiguration& colourConfiguration;
 
         // Locks the stand assignments map to prevent concurrent edits
         std::recursive_mutex mapMutex;
