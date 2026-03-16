@@ -5,6 +5,7 @@ ARG LLVM_VERSION=18
 ARG XWIN_VERSION=0.8.0
 ARG XWIN_TRIPLE=x86_64-unknown-linux-musl
 ARG WINDOWS_CRT_VERSION=14.29.16.11
+# Old known working = 10.0.20348
 ARG WINDOWS_SDK_VERSION=10.0.26100
 
 ADD "https://github.com/Jake-Shadle/xwin/releases/download/${XWIN_VERSION}/xwin-${XWIN_VERSION}-${XWIN_TRIPLE}.tar.gz" \
