@@ -24,8 +24,7 @@ using UKControllerPlugin::Tag::TagFunction;
 namespace UKControllerPlugin::Stands {
 
     // The tag item id for assigned stand
-    const int assignedStandTagItemId = 110;
-    const int standAssignmentSourceTagItemId = 200;
+    // Tag item IDs are defined in StandEventHandler
     const int openStandAssignmentPopupTagFunctionId = 9007;
     const int openStandAssignmentEditBoxTagFunctionId = 9008;
 
@@ -36,8 +35,10 @@ namespace UKControllerPlugin::Stands {
         from_json(dependencies.LoadDependency(GetDependencyKey(), nlohmann::json::object()), stands);
 
         // Load stand colour configuration from EuroScope user settings
-        auto colourConfiguration = std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler);
-        colourConfiguration->LoadFromUserSettings();
+        // If pluginUserSettingHandler is not available (e.g., in tests), creates default-only config
+        auto colourConfiguration = container.pluginUserSettingHandler
+                                       ? std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler)
+                                       : std::make_shared<StandColourConfiguration>();
 
         // Create the event handler
         auto standSelectedCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
@@ -49,7 +50,7 @@ namespace UKControllerPlugin::Stands {
             container.airfieldOwnership,
             stands,
             standSelectedCallbackId,
-            *colourConfiguration);
+            colourConfiguration);
 
         // Create a tag function for the stand assignment popup list and add a callback
         TagFunction openStandAssignmentPopupMenu(
@@ -90,8 +91,8 @@ namespace UKControllerPlugin::Stands {
 
         // Assign to handlers
         container.flightplanHandler->RegisterHandler(eventHandler);
-        container.tagHandler->RegisterTagItem(assignedStandTagItemId, eventHandler);
-        container.tagHandler->RegisterTagItem(standAssignmentSourceTagItemId, eventHandler);
+        container.tagHandler->RegisterTagItem(StandEventHandler::assignedStandTagItemId, eventHandler);
+        container.tagHandler->RegisterTagItem(StandEventHandler::standAssignmentSourceTagItemId, eventHandler);
         container.pushEventProcessors->AddProcessor(eventHandler);
         container.externalEventHandler->AddHandler(eventHandler);
         container.integrationModuleContainer->inboundMessageHandler->AddProcessor(eventHandler);

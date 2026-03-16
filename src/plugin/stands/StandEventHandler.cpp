@@ -33,7 +33,7 @@ namespace UKControllerPlugin::Stands {
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
         std::set<Stand, CompareStands> stands,
         int standSelectedCallbackId,
-        const StandColourConfiguration& colourConfiguration)
+        std::shared_ptr<const StandColourConfiguration> colourConfiguration)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
           integrationEventHandler(integrationEventHandler), ownership(ownership),
           standSelectedCallbackId(standSelectedCallbackId), colourConfiguration(colourConfiguration)
@@ -278,10 +278,10 @@ namespace UKControllerPlugin::Stands {
 
     auto StandEventHandler::GetTagItemDescription(int tagItemId) const -> std::string
     {
-        if (tagItemId == 110) {
+        if (tagItemId == assignedStandTagItemId) {
             return "Assigned Stand";
         }
-        if (tagItemId == 200) {
+        if (tagItemId == standAssignmentSourceTagItemId) {
             return "Stand Assignment Source";
         }
         return "";
@@ -304,15 +304,15 @@ namespace UKControllerPlugin::Stands {
             return;
         }
 
-        // Tag item 110: Show stand identifier with colour based on source
-        if (tagData.GetItemCode() == 110) {
+        // Tag item: Show stand identifier with colour based on source
+        if (tagData.GetItemCode() == assignedStandTagItemId) {
             tagData.SetItemString(stand->identifier);
-            tagData.SetTagColour(this->colourConfiguration.GetColourForSource(assignment.source));
+            tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
         }
-        // Tag item 200: Show assignment source shorthand
-        else if (tagData.GetItemCode() == 200) {
+        // Tag item: Show assignment source shorthand
+        else if (tagData.GetItemCode() == standAssignmentSourceTagItemId) {
             tagData.SetItemString(GetAssignmentSourceShorthand(assignment.source));
-            tagData.SetTagColour(this->colourConfiguration.GetColourForSource(assignment.source));
+            tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
         }
     }
 

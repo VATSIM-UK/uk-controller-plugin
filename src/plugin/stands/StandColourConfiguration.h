@@ -1,5 +1,4 @@
 #pragma once
-#include "nlohmann/json.hpp"
 #include <map>
 #include <string>
 #include <windows.h>
@@ -17,6 +16,7 @@ namespace UKControllerPlugin::Stands {
     {
         public:
         explicit StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting& userSetting);
+        explicit StandColourConfiguration();
 
         /*
             Get the colour for a given assignment source.
@@ -46,8 +46,8 @@ namespace UKControllerPlugin::Stands {
         // Converts COLORREF to hex string
         [[nodiscard]] static auto ColourrefToHex(COLORREF colour) -> std::string;
 
-        // Reference to user settings for persistence
-        UKControllerPlugin::Euroscope::UserSetting& userSetting;
+        // Reference to user settings for persistence (null if not available)
+        UKControllerPlugin::Euroscope::UserSetting* userSetting;
 
         // Map of source to RGB colour
         std::map<std::string, COLORREF> sourceColours;

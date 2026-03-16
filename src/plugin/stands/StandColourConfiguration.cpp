@@ -8,7 +8,7 @@
 namespace UKControllerPlugin::Stands {
 
     StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting& userSetting)
-        : userSetting(userSetting)
+        : userSetting(&userSetting)
     {
         // Initialize with default colours
         sourceColours[std::string(StandAssignmentSource::SOURCE_USER)] = DEFAULT_USER_COLOUR;
@@ -18,6 +18,15 @@ namespace UKControllerPlugin::Stands {
 
         // Try to load from UserSettings
         LoadFromUserSettings();
+    }
+
+    StandColourConfiguration::StandColourConfiguration() : userSetting(nullptr)
+    {
+        // Initialize with default colours (no persistence without UserSetting)
+        sourceColours[std::string(StandAssignmentSource::SOURCE_USER)] = DEFAULT_USER_COLOUR;
+        sourceColours[std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR)] = DEFAULT_RESERVATION_COLOUR;
+        sourceColours[std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR)] = DEFAULT_VAA_COLOUR;
+        sourceColours[std::string(StandAssignmentSource::SOURCE_SYSTEM)] = DEFAULT_SYSTEM_COLOUR;
     }
 
     auto StandColourConfiguration::GetColourForSource(const std::string& source) const -> COLORREF
@@ -32,35 +41,37 @@ namespace UKControllerPlugin::Stands {
 
     void StandColourConfiguration::LoadFromUserSettings()
     {
-        try {
-            std::string key(SETTING_PREFIX);
+        if (!this->userSetting) {
+            return;
+        }
 
+        try {
             // Load user colour
-            key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_USER);
-            if (this->userSetting.HasEntry(key)) {
+            std::string key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_USER);
+            if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_USER)] =
-                    this->userSetting.GetColourEntry(key, DEFAULT_USER_COLOUR);
+                    this->userSetting->GetColourEntry(key, DEFAULT_USER_COLOUR);
             }
 
             // Load reservation allocator colour
             key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR);
-            if (this->userSetting.HasEntry(key)) {
+            if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR)] =
-                    this->userSetting.GetColourEntry(key, DEFAULT_RESERVATION_COLOUR);
+                    this->userSetting->GetColourEntry(key, DEFAULT_RESERVATION_COLOUR);
             }
 
             // Load VAA allocator colour
             key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR);
-            if (this->userSetting.HasEntry(key)) {
+            if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR)] =
-                    this->userSetting.GetColourEntry(key, DEFAULT_VAA_COLOUR);
+                    this->userSetting->GetColourEntry(key, DEFAULT_VAA_COLOUR);
             }
 
             // Load system colour
             key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_SYSTEM);
-            if (this->userSetting.HasEntry(key)) {
+            if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_SYSTEM)] =
-                    this->userSetting.GetColourEntry(key, DEFAULT_SYSTEM_COLOUR);
+                    this->userSetting->GetColourEntry(key, DEFAULT_SYSTEM_COLOUR);
             }
 
             LogInfo("Loaded stand assignment source colours from UserSettings");
@@ -71,10 +82,14 @@ namespace UKControllerPlugin::Stands {
 
     void StandColourConfiguration::SaveToUserSettings()
     {
+        if (!this->userSetting) {
+            return;
+        }
+
         try {
             for (const auto& [source, colour] : sourceColours) {
                 const std::string key = std::string(SETTING_PREFIX) + source;
-                this->userSetting.Save(key, "Stand assignment source colour for " + source, colour);
+                this->userSetting->Save(key, "Stand assignment source colour for " + source, colour);
             }
             LogInfo("Saved stand assignment source colours to UserSettings");
         } catch (const std::exception& e) {
@@ -86,9 +101,13 @@ namespace UKControllerPlugin::Stands {
     {
         sourceColours[source] = colour;
         // Immediately save to UserSettings
+        if (!this->userSetting) {
+            return;
+        }
+
         try {
             const std::string key = std::string(SETTING_PREFIX) + source;
-            this->userSetting.Save(key, "Stand assignment source colour for " + source, colour);
+            this->userSetting->Save(key, "Stand assignment source colour for " + source, colour);
         } catch (const std::exception& e) {
             LogWarning("Failed to save stand colour for '" + source + "': " + std::string(e.what()));
         }

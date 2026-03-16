@@ -44,7 +44,7 @@ namespace UKControllerPlugin::Stands {
             std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
             std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
             int standSelectedCallbackId,
-            const StandColourConfiguration& colourConfiguration);
+            std::shared_ptr<const StandColourConfiguration> colourConfiguration);
         [[nodiscard]] auto ActionsToProcess() const -> std::vector<Integration::MessageType> override;
         void ProcessAction(
             std::shared_ptr<Integration::MessageInterface> message,
@@ -96,6 +96,10 @@ namespace UKControllerPlugin::Stands {
         // No stand has been assigned to the aircraft
         inline static const int noStandAssigned = -1;
 
+        // Tag item IDs for stand display and source indication
+        inline static const int assignedStandTagItemId = 110;
+        inline static const int standAssignmentSourceTagItemId = 200;
+
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand, const std::string& source);
@@ -136,7 +140,7 @@ namespace UKControllerPlugin::Stands {
         std::map<std::string, StandAssignmentSource> standAssignments;
 
         // Colour configuration for stand assignment sources
-        const StandColourConfiguration& colourConfiguration;
+        std::shared_ptr<const StandColourConfiguration> colourConfiguration;
 
         // Locks the stand assignments map to prevent concurrent edits
         std::recursive_mutex mapMutex;
