@@ -2,7 +2,6 @@
 #include "CompareStands.h"
 #include "Stand.h"
 #include "StandAssignmentSource.h"
-#include "StandColourConfiguration.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/ExternalMessageHandlerInterface.h"
 #include "integration/IntegrationActionProcessor.h"
@@ -26,6 +25,8 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Stands {
+    class StandColourConfiguration;
+
     /*
         Handles events related to stands.
     */

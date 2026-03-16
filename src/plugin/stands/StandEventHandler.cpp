@@ -1,4 +1,5 @@
 #include "StandAssignedMessage.h"
+#include "StandColourConfiguration.h"
 #include "StandEventHandler.h"
 #include "StandUnassignedMessage.h"
 #include "api/ApiException.h"
@@ -412,6 +413,13 @@ namespace UKControllerPlugin::Stands {
 
         const auto& assignment = this->standAssignments.at(flightPlan.GetCallsign());
         const auto& stand = this->stands.find(assignment.standId);
+        if (stand == this->stands.cend()) {
+            LogWarning(
+                "Assigned stand id " + std::to_string(assignment.standId) + " not found for " +
+                flightPlan.GetCallsign());
+            return;
+        }
+
         if (stand->identifier == flightPlan.GetAnnotation(this->annotationIndex)) {
             return;
         }

@@ -1,6 +1,7 @@
 #include "stands/StandEventHandler.h"
 #include "stands/StandColourConfiguration.h"
 #include "stands/StandAssignmentSource.h"
+#include <cstddef>
 #include "tag/TagData.h"
 #include "api/ApiException.h"
 #include "controller/ActiveCallsign.h"
@@ -171,24 +172,18 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("Stand Assignment Source", this->handler.GetTagItemDescription(200));
         }
 
-        TEST_F(StandEventHandlerTest, ItReturnsAssignedStandSourceShorthandForTagItem200)
+        TEST_F(StandEventHandlerTest, ItReturnsSourceShorthandForTagItem200)
         {
-            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_USER), "USER");
-        }
+            const std::string sources[] = {
+                std::string(StandAssignmentSource::SOURCE_USER),
+                std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR),
+                std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR),
+                std::string(StandAssignmentSource::SOURCE_SYSTEM)};
+            const std::string expectedShorthand[] = {"USER", "RES ", "VAA ", "AUTO"};
 
-        TEST_F(StandEventHandlerTest, ItReturnsReservationAllocatorShorthandForTagItem200)
-        {
-            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR), "RES ");
-        }
-
-        TEST_F(StandEventHandlerTest, ItReturnsVaaAllocatorShorthandForTagItem200)
-        {
-            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR), "VAA ");
-        }
-
-        TEST_F(StandEventHandlerTest, ItReturnsSystemAutoShorthandForTagItem200)
-        {
-            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_SYSTEM), "AUTO");
+            for (size_t i = 0; i < std::size(sources); ++i) {
+                this->ExpectTagItem200Shorthand(sources[i], expectedShorthand[i]);
+            }
         }
 
         TEST_F(StandEventHandlerTest, ItReturnsNothingForTagItem200IfStandNotAssigned)
@@ -198,44 +193,30 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("Foooooo", sourceTagData.GetItemString());
         }
 
-        TEST_F(StandEventHandlerTest, TagItem110UsesUserSourceColourWhenUserAssigns)
+        TEST_F(StandEventHandlerTest, TagItem110UsesSourceColours)
         {
-            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_USER));
+            const std::string sources[] = {
+                std::string(StandAssignmentSource::SOURCE_USER),
+                std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR),
+                std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR),
+                std::string(StandAssignmentSource::SOURCE_SYSTEM)};
+
+            for (const auto& source : sources) {
+                this->ExpectTagItem110ColourForSource(source);
+            }
         }
 
-        TEST_F(StandEventHandlerTest, TagItem110UsesReservationSourceColour)
+        TEST_F(StandEventHandlerTest, TagItem200UsesSourceColours)
         {
-            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
-        }
+            const std::string sources[] = {
+                std::string(StandAssignmentSource::SOURCE_USER),
+                std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR),
+                std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR),
+                std::string(StandAssignmentSource::SOURCE_SYSTEM)};
 
-        TEST_F(StandEventHandlerTest, TagItem110UsesVaaSourceColour)
-        {
-            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR));
-        }
-
-        TEST_F(StandEventHandlerTest, TagItem110UsesSystemSourceColour)
-        {
-            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_SYSTEM));
-        }
-
-        TEST_F(StandEventHandlerTest, TagItem200UsesUserSourceColour)
-        {
-            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_USER));
-        }
-
-        TEST_F(StandEventHandlerTest, TagItem200UsesReservationSourceColour)
-        {
-            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
-        }
-
-        TEST_F(StandEventHandlerTest, TagItem200UsesVaaSourceColour)
-        {
-            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR));
-        }
-
-        TEST_F(StandEventHandlerTest, TagItem200UsesSystemSourceColour)
-        {
-            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_SYSTEM));
+            for (const auto& source : sources) {
+                this->ExpectTagItem200ColourForSource(source);
+            }
         }
 
         TEST_F(StandEventHandlerTest, ItSubscribesToChannels)

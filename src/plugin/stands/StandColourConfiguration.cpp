@@ -2,8 +2,10 @@
 #include "StandAssignmentSource.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
-#include <sstream>
+#include <cstdint>
 #include <iomanip>
+#include <sstream>
+#include <stdexcept>
 
 namespace UKControllerPlugin::Stands {
 
