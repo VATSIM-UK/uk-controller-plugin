@@ -3,14 +3,13 @@
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
 #include <cstdint>
-#include <iomanip>
-#include <sstream>
+#include <format>
 #include <stdexcept>
 
 namespace UKControllerPlugin::Stands {
 
-    StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting& userSetting)
-        : userSetting(&userSetting)
+    StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting& setting)
+        : userSetting(&setting)
     {
         // Initialize with default colours
         sourceColours[std::string(StandAssignmentSource::SOURCE_USER)] = DEFAULT_USER_COLOUR;
@@ -33,8 +32,7 @@ namespace UKControllerPlugin::Stands {
 
     auto StandColourConfiguration::GetColourForSource(const std::string& source) const -> COLORREF
     {
-        auto it = sourceColours.find(source);
-        if (it != sourceColours.cend()) {
+        if (auto it = sourceColours.find(source); it != sourceColours.cend()) {
             return it->second;
         }
 
@@ -138,8 +136,10 @@ namespace UKControllerPlugin::Stands {
             const auto b = static_cast<uint8_t>(rgbValue & 0xFF);
 
             return RGB(r, g, b);
-        } catch (const std::exception& e) {
+        } catch (const std::invalid_argument& e) {
             throw std::invalid_argument(std::string("Invalid hex colour format: ") + e.what());
+        } catch (const std::out_of_range& e) {
+            throw std::invalid_argument(std::string("Hex colour value out of range: ") + e.what());
         }
     }
 
@@ -150,9 +150,10 @@ namespace UKControllerPlugin::Stands {
         const auto g = static_cast<uint8_t>((colour >> 8) & 0xFF);
         const auto r = static_cast<uint8_t>((colour >> 16) & 0xFF);
 
-        std::stringstream ss;
-        ss << "#" << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(r) << std::setw(2)
-           << static_cast<int>(g) << std::setw(2) << static_cast<int>(b);
-        return ss.str();
+        return std::format(
+            "#{:02x}{:02x}{:02x}",
+            static_cast<unsigned int>(r),
+            static_cast<unsigned int>(g),
+            static_cast<unsigned int>(b));
     }
 } // namespace UKControllerPlugin::Stands

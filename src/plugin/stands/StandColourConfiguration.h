@@ -2,7 +2,7 @@
 #include <map>
 #include <string>
 #include <string_view>
-#include <windows.h>
+#include <Windows.h>
 
 namespace UKControllerPlugin::Euroscope {
     class UserSetting;
@@ -51,7 +51,7 @@ namespace UKControllerPlugin::Stands {
         UKControllerPlugin::Euroscope::UserSetting* userSetting;
 
         // Map of source to RGB colour
-        std::map<std::string, COLORREF> sourceColours;
+        std::map<std::string, COLORREF, std::less<>> sourceColours;
 
         // Default colour (grey) for unknown sources
         static constexpr COLORREF DEFAULT_COLOUR = RGB(180, 180, 180);

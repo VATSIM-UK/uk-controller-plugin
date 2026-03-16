@@ -2,6 +2,7 @@
 #include "StandColourConfiguration.h"
 #include "StandEventHandler.h"
 #include "StandUnassignedMessage.h"
+#include <format>
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "api/ApiRequestFactory.h"
@@ -33,11 +34,10 @@ namespace UKControllerPlugin::Stands {
         Integration::OutboundIntegrationEventHandler& integrationEventHandler,
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
         std::set<Stand, CompareStands> stands,
-        int standSelectedCallbackId,
-        std::shared_ptr<const StandColourConfiguration> colourConfiguration)
+        StandEventHandlerConfig config)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
-          colourConfiguration(colourConfiguration), integrationEventHandler(integrationEventHandler),
-          ownership(ownership), standSelectedCallbackId(standSelectedCallbackId)
+          colourConfiguration(std::move(config.colourConfiguration)), integrationEventHandler(integrationEventHandler),
+          ownership(ownership), standSelectedCallbackId(config.standSelectedCallbackId)
     {
         assert(this->ownership != nullptr && "Ownership must not be null");
     }
@@ -300,7 +300,7 @@ namespace UKControllerPlugin::Stands {
     {
         auto mapLock = this->LockStandMap();
         const auto& callsign = tagData.GetFlightplan().GetCallsign();
-        if (this->standAssignments.count(callsign) == 0) {
+        if (!this->standAssignments.contains(callsign)) {
             return;
         }
 
@@ -407,7 +407,7 @@ namespace UKControllerPlugin::Stands {
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
     {
         auto mapLock = this->LockStandMap();
-        if (this->standAssignments.count(flightPlan.GetCallsign()) == 0) {
+        if (!this->standAssignments.contains(flightPlan.GetCallsign())) {
             return;
         }
 
@@ -415,8 +415,7 @@ namespace UKControllerPlugin::Stands {
         const auto& stand = this->stands.find(assignment.standId);
         if (stand == this->stands.cend()) {
             LogWarning(
-                "Assigned stand id " + std::to_string(assignment.standId) + " not found for " +
-                flightPlan.GetCallsign());
+                std::format("Assigned stand id {} not found for {}", assignment.standId, flightPlan.GetCallsign()));
             return;
         }
 
