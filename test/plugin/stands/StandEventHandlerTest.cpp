@@ -31,6 +31,7 @@ using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Stands::StandAssignedMessage;
 using UKControllerPlugin::Stands::StandAssignmentSource;
 using UKControllerPlugin::Stands::StandColourConfiguration;
+using UKControllerPlugin::Stands::StandEventHandlerConfig;
 using UKControllerPlugin::Stands::StandEventHandler;
 using UKControllerPlugin::Stands::StandUnassignedMessage;
 using UKControllerPlugin::Tag::TagData;
