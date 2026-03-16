@@ -2,10 +2,11 @@ FROM ubuntu:24.04
 
 ARG CURL_VERSION=7.62.0
 ARG LLVM_VERSION=18
-ARG XWIN_VERSION=0.6.5
+ARG XWIN_VERSION=0.8.0
 ARG XWIN_TRIPLE=x86_64-unknown-linux-musl
 ARG WINDOWS_CRT_VERSION=14.29.16.11
-ARG WINDOWS_SDK_VERSION=10.0.20348
+# Old known working = 10.0.20348
+ARG WINDOWS_SDK_VERSION=10.0.26100
 
 ADD "https://github.com/Jake-Shadle/xwin/releases/download/${XWIN_VERSION}/xwin-${XWIN_VERSION}-${XWIN_TRIPLE}.tar.gz" \
 	/tmp/xwin.tar.gz
@@ -18,6 +19,8 @@ RUN <<-EOF
 	rm -r xwin.tar.gz xwin-*
 EOF
 
+RUN apt update && apt install -y --no-install-recommends ca-certificates && apt autoremove -y && apt clean -y
+
 RUN xwin --accept-license --arch x86 \
 	--crt-version ${WINDOWS_CRT_VERSION} --sdk-version ${WINDOWS_SDK_VERSION} \
 	splat --output /opt/xwin --include-debug-libs
@@ -28,6 +31,7 @@ RUN <<-EOF
 	export DEBIAN_FRONTEND=noninteractive
 	apt update
 	apt install -y \
+		openssh-client \
 		build-essential cmake cppcheck gdb ninja-build valgrind \
 		clang-${LLVM_VERSION} clang-tools-${LLVM_VERSION} \
 		lld-${LLVM_VERSION} llvm-${LLVM_VERSION}
@@ -128,5 +132,7 @@ EOF
 ENV CURL_INCLUDEDIR=/opt/curl/include/
 ENV CURL_LIBRARYDIR=/opt/curl/build/lib/
 ENV CURL_DEBUG_LIBRARYDIR=/opt/curl/build/lib/
+
+USER ubuntu
 
 CMD ["/bin/bash"]
