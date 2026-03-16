@@ -67,6 +67,7 @@ namespace UKControllerPlugin::Stands {
         [[nodiscard]] auto GetLastAirfield() const -> std::string;
         void RemoveFlightStripAnnotation(const std::string& callsign) const;
         void SetAssignedStand(const std::string& callsign, int standId);
+        void SetAssignedStand(const std::string& callsign, int standId, const std::string& source);
         void StandSelected(int functionId, std::string context, RECT);
         void DisplayStandAssignmentEditBox(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,

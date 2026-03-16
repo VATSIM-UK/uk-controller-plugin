@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <string>
+#include <string_view>
 #include <windows.h>
 
 namespace UKControllerPlugin::Euroscope {

@@ -78,6 +78,49 @@ namespace UKControllerPluginTest {
                 return stands;
             }
 
+            void SetAssignedStandWithSource(int standId, const std::string& source)
+            {
+                this->handler.SetAssignedStand("BAW123", standId, source);
+            }
+
+            auto CreateSourceTagData() -> TagData
+            {
+                return TagData(
+                    this->flightplan,
+                    this->radarTarget,
+                    200,
+                    1,
+                    this->itemString,
+                    &this->euroscopeColourCode,
+                    &this->tagColour,
+                    &this->fontSize);
+            }
+
+            void ExpectTagItem200Shorthand(const std::string& source, const std::string& expectedShorthand)
+            {
+                this->SetAssignedStandWithSource(1, source);
+                auto sourceTagData = this->CreateSourceTagData();
+                this->handler.SetTagItemData(sourceTagData);
+                EXPECT_EQ(expectedShorthand, sourceTagData.GetItemString());
+            }
+
+            void ExpectTagItem110ColourForSource(const std::string& source)
+            {
+                this->SetAssignedStandWithSource(3, source);
+                COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
+                this->handler.SetTagItemData(this->tagData);
+                EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
+            }
+
+            void ExpectTagItem200ColourForSource(const std::string& source)
+            {
+                this->SetAssignedStandWithSource(3, source);
+                COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
+                auto sourceTagData = this->CreateSourceTagData();
+                this->handler.SetTagItemData(sourceTagData);
+                EXPECT_EQ(expectedColour, sourceTagData.GetTagColour());
+            }
+
             double fontSize = 24.1;
             COLORREF tagColour = RGB(255, 255, 255);
             int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
@@ -130,154 +173,69 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItReturnsAssignedStandSourceShorthandForTagItem200)
         {
-            this->handler.AssignStandToAircraft("BAW123", 1, std::string(StandAssignmentSource::SOURCE_USER));
-            TagData sourceTagData(
-                this->flightplan,
-                this->radarTarget,
-                200,
-                1,
-                this->itemString,
-                &this->euroscopeColourCode,
-                &this->tagColour,
-                &this->fontSize);
-            this->handler.SetTagItemData(sourceTagData);
-            EXPECT_EQ("USER", sourceTagData.GetItemString());
+            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_USER), "USER");
         }
 
         TEST_F(StandEventHandlerTest, ItReturnsReservationAllocatorShorthandForTagItem200)
         {
-            this->handler.AssignStandToAircraft(
-                "BAW123", 1, std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
-            TagData sourceTagData(
-                this->flightplan,
-                this->radarTarget,
-                200,
-                1,
-                this->itemString,
-                &this->euroscopeColourCode,
-                &this->tagColour,
-                &this->fontSize);
-            this->handler.SetTagItemData(sourceTagData);
-            EXPECT_EQ("RES ", sourceTagData.GetItemString());
+            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR), "RES ");
         }
 
         TEST_F(StandEventHandlerTest, ItReturnsVaaAllocatorShorthandForTagItem200)
         {
-            this->handler.AssignStandToAircraft("BAW123", 1, std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR));
-            TagData sourceTagData(
-                this->flightplan,
-                this->radarTarget,
-                200,
-                1,
-                this->itemString,
-                &this->euroscopeColourCode,
-                &this->tagColour,
-                &this->fontSize);
-            this->handler.SetTagItemData(sourceTagData);
-            EXPECT_EQ("VAA ", sourceTagData.GetItemString());
+            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR), "VAA ");
         }
 
         TEST_F(StandEventHandlerTest, ItReturnsSystemAutoShorthandForTagItem200)
         {
-            this->handler.AssignStandToAircraft("BAW123", 1, std::string(StandAssignmentSource::SOURCE_SYSTEM));
-            TagData sourceTagData(
-                this->flightplan,
-                this->radarTarget,
-                200,
-                1,
-                this->itemString,
-                &this->euroscopeColourCode,
-                &this->tagColour,
-                &this->fontSize);
-            this->handler.SetTagItemData(sourceTagData);
-            EXPECT_EQ("AUTO", sourceTagData.GetItemString());
+            this->ExpectTagItem200Shorthand(std::string(StandAssignmentSource::SOURCE_SYSTEM), "AUTO");
         }
 
         TEST_F(StandEventHandlerTest, ItReturnsNothingForTagItem200IfStandNotAssigned)
         {
-            TagData sourceTagData(
-                this->flightplan,
-                this->radarTarget,
-                200,
-                1,
-                this->itemString,
-                &this->euroscopeColourCode,
-                &this->tagColour,
-                &this->fontSize);
+            auto sourceTagData = this->CreateSourceTagData();
             this->handler.SetTagItemData(sourceTagData);
             EXPECT_EQ("Foooooo", sourceTagData.GetItemString());
         }
 
         TEST_F(StandEventHandlerTest, TagItem110UsesUserSourceColourWhenUserAssigns)
         {
-            this->handler.AssignStandToAircraft("BAW123", 3, std::string(StandAssignmentSource::SOURCE_USER));
-            COLORREF expectedColour = this->colourConfiguration->GetColourForSource(StandAssignmentSource::SOURCE_USER);
-            this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
+            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_USER));
         }
 
         TEST_F(StandEventHandlerTest, TagItem110UsesReservationSourceColour)
         {
-            this->handler.AssignStandToAircraft(
-                "BAW123", 3, std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
-            COLORREF expectedColour =
-                this->colourConfiguration->GetColourForSource(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR);
-            this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
+            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
         }
 
         TEST_F(StandEventHandlerTest, TagItem110UsesVaaSourceColour)
         {
-            this->handler.AssignStandToAircraft("BAW123", 3, std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR));
-            COLORREF expectedColour =
-                this->colourConfiguration->GetColourForSource(StandAssignmentSource::SOURCE_VAA_ALLOCATOR);
-            this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
+            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR));
         }
 
         TEST_F(StandEventHandlerTest, TagItem110UsesSystemSourceColour)
         {
-            this->handler.AssignStandToAircraft("BAW123", 3, std::string(StandAssignmentSource::SOURCE_SYSTEM));
-            COLORREF expectedColour =
-                this->colourConfiguration->GetColourForSource(StandAssignmentSource::SOURCE_SYSTEM);
-            this->handler.SetTagItemData(this->tagData);
-            EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
+            this->ExpectTagItem110ColourForSource(std::string(StandAssignmentSource::SOURCE_SYSTEM));
         }
 
         TEST_F(StandEventHandlerTest, TagItem200UsesUserSourceColour)
         {
-            this->handler.AssignStandToAircraft("BAW123", 3, std::string(StandAssignmentSource::SOURCE_USER));
-            COLORREF expectedColour = this->colourConfiguration->GetColourForSource(StandAssignmentSource::SOURCE_USER);
-            TagData sourceTagData(
-                this->flightplan,
-                this->radarTarget,
-                200,
-                1,
-                this->itemString,
-                &this->euroscopeColourCode,
-                &this->tagColour,
-                &this->fontSize);
-            this->handler.SetTagItemData(sourceTagData);
-            EXPECT_EQ(expectedColour, sourceTagData.GetTagColour());
+            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_USER));
         }
 
         TEST_F(StandEventHandlerTest, TagItem200UsesReservationSourceColour)
         {
-            this->handler.AssignStandToAircraft(
-                "BAW123", 3, std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
-            COLORREF expectedColour =
-                this->colourConfiguration->GetColourForSource(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR);
-            TagData sourceTagData(
-                this->flightplan,
-                this->radarTarget,
-                200,
-                1,
-                this->itemString,
-                &this->euroscopeColourCode,
-                &this->tagColour,
-                &this->fontSize);
-            this->handler.SetTagItemData(sourceTagData);
-            EXPECT_EQ(expectedColour, sourceTagData.GetTagColour());
+            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
+        }
+
+        TEST_F(StandEventHandlerTest, TagItem200UsesVaaSourceColour)
+        {
+            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR));
+        }
+
+        TEST_F(StandEventHandlerTest, TagItem200UsesSystemSourceColour)
+        {
+            this->ExpectTagItem200ColourForSource(std::string(StandAssignmentSource::SOURCE_SYSTEM));
         }
 
         TEST_F(StandEventHandlerTest, ItSubscribesToChannels)

@@ -35,8 +35,8 @@ namespace UKControllerPlugin::Stands {
         int standSelectedCallbackId,
         std::shared_ptr<const StandColourConfiguration> colourConfiguration)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
-          integrationEventHandler(integrationEventHandler), ownership(ownership),
-          standSelectedCallbackId(standSelectedCallbackId), colourConfiguration(colourConfiguration)
+          colourConfiguration(colourConfiguration), integrationEventHandler(integrationEventHandler),
+          ownership(ownership), standSelectedCallbackId(standSelectedCallbackId)
     {
         assert(this->ownership != nullptr && "Ownership must not be null");
     }
@@ -221,6 +221,11 @@ namespace UKControllerPlugin::Stands {
         this->standAssignments[callsign] = {standId, std::string(StandAssignmentSource::SOURCE_SYSTEM)};
     }
 
+    void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, const std::string& source)
+    {
+        this->standAssignments[callsign] = {standId, source};
+    }
+
     void StandEventHandler::StandSelected(int functionId, std::string context, RECT mousePosition)
     {
         /*
@@ -338,16 +343,16 @@ namespace UKControllerPlugin::Stands {
             return "USER";
         }
         if (source == StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR) {
-            return "RES";
+            return "RES ";
         }
         if (source == StandAssignmentSource::SOURCE_VAA_ALLOCATOR) {
-            return "VAA";
+            return "VAA ";
         }
         if (source == StandAssignmentSource::SOURCE_SYSTEM) {
             return "AUTO";
         }
 
-        return "UNK";
+        return "UNK ";
     }
 
     auto StandEventHandler::UnassignmentMessageValid(const nlohmann::json& message) -> bool
