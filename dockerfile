@@ -31,6 +31,7 @@ RUN <<-EOF
 	export DEBIAN_FRONTEND=noninteractive
 	apt update
 	apt install -y \
+		openssh-client \
 		build-essential cmake cppcheck gdb ninja-build valgrind \
 		clang-${LLVM_VERSION} clang-tools-${LLVM_VERSION} \
 		lld-${LLVM_VERSION} llvm-${LLVM_VERSION}
@@ -131,5 +132,7 @@ EOF
 ENV CURL_INCLUDEDIR=/opt/curl/include/
 ENV CURL_LIBRARYDIR=/opt/curl/build/lib/
 ENV CURL_DEBUG_LIBRARYDIR=/opt/curl/build/lib/
+
+USER ubuntu
 
 CMD ["/bin/bash"]

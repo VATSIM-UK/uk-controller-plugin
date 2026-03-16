@@ -1,6 +1,16 @@
 {
 	"name": "uk-controller-plugin",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/home/ubuntu/.ssh,type=bind,consistency=cached", // Linux
+		"source=${localEnv:USERPROFILE}/.ssh,target=/home/ubuntu/.ssh,type=bind,consistency=cached" // Windows
+	],
 	"build": {
 		"dockerfile": "../dockerfile"
-	}
+	},
+	"postCreateCommand": "git config --global --add safe.directory /workspaces/uk-controller-plugin",
+	"containerUser": "ubuntu",
+	"remoteUser": "ubuntu"
 }
