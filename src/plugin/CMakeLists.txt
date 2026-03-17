@@ -909,6 +909,8 @@ set(src__stands
     "stands/StandAssignmentSource.h"
     "stands/StandColourConfiguration.cpp"
     "stands/StandColourConfiguration.h"
+    "stands/StandColourConfigurationMenuItem.cpp"
+    "stands/StandColourConfigurationMenuItem.h"
     "stands/StandEventHandler.cpp"
     "stands/StandEventHandler.h"
     "stands/StandModule.cpp"

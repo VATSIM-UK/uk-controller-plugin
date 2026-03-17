@@ -25,6 +25,7 @@
 #include "releases/ReleaseModule.h"
 #include "sectorfile/SectorFileBootstrap.h"
 #include "srd/SrdModule.h"
+#include "stands/StandModule.h"
 #include "wake/WakeModule.h"
 
 using UKControllerPlugin::Api::BootstrapConfigurationMenuItem;
@@ -109,6 +110,7 @@ namespace UKControllerPlugin::RadarScreen {
             configurableDisplays, renderers, userSettingHandlers, commandHandlers, this->persistence);
 
         Srd::BootstrapRadarScreen(configurableDisplays);
+        Stands::BootstrapRadarScreen(this->persistence, configurableDisplays);
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
         Releases::BootstrapRadarScreen(this->persistence, renderers);
         PrenoteModule::BootstrapRadarScreen(this->persistence, renderers);

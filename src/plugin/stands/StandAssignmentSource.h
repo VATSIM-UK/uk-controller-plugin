@@ -8,7 +8,6 @@ namespace UKControllerPlugin::Stands {
     */
     struct StandAssignmentSource
     {
-        // The ID of the assigned stand
         int standId;
 
         // The source of the assignment (user, reservation_allocator, vaa_allocator, system_auto)

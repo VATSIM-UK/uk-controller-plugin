@@ -138,6 +138,10 @@ namespace UKControllerPlugin {
         class SquawkEventHandler;
         class SquawkGenerator;
     } // namespace Squawk
+    namespace Stands {
+        class StandColourConfiguration;
+        class StandColourConfigurationMenuItem;
+    } // namespace Stands
     namespace Tag {
         class TagItemCollection;
     } // namespace Tag
@@ -236,6 +240,8 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<UKControllerPlugin::Hold::HoldDisplayFactory> holdDisplayFactory;
         std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
         std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseEventHandler> departureReleaseHandler;
+        std::shared_ptr<UKControllerPlugin::Stands::StandColourConfiguration> standColourConfiguration;
+        std::shared_ptr<UKControllerPlugin::Stands::StandColourConfigurationMenuItem> standColourConfigurationMenuItem;
 
         // Collections that are spawned multiple times.
         std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;
