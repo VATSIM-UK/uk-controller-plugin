@@ -49,11 +49,7 @@ namespace UKControllerPlugin::Stands {
             std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR),
             std::string(StandAssignmentSource::SOURCE_SYSTEM)};
 
-        std::array<std::string, 4> sourceLabels = {
-            "User",
-            "Reservation Allocator",
-            "VAA Allocator",
-            "System"};
+        std::array<std::string, 4> sourceLabels = {"User", "Reservation Allocator", "VAA Allocator", "System"};
 
         // Allow user to pick colours for each source
         CHOOSECOLOR chooseColor{};
