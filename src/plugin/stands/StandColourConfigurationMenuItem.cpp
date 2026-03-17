@@ -6,10 +6,28 @@
 #include <Windows.h>
 #include <array>
 
-using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::HelperFunctions;
+using UKControllerPlugin::Plugin::PopupMenuItem;
 
 namespace UKControllerPlugin::Stands {
+
+    namespace {
+        auto CALLBACK ChooseColorTitleHook(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) -> UINT_PTR
+        {
+            if (msg != WM_INITDIALOG) {
+                return 0;
+            }
+
+            const auto* chooseColor = reinterpret_cast<CHOOSECOLOR*>(lParam);
+            if (chooseColor == nullptr || chooseColor->lCustData == 0) {
+                return 0;
+            }
+
+            const auto* title = reinterpret_cast<const char*>(chooseColor->lCustData);
+            SetWindowTextA(hwnd, title);
+            return 1;
+        }
+    } // namespace
 
     StandColourConfigurationMenuItem::StandColourConfigurationMenuItem(
         std::shared_ptr<StandColourConfiguration> colourConfiguration, int callbackFunctionId)
@@ -31,23 +49,37 @@ namespace UKControllerPlugin::Stands {
             std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR),
             std::string(StandAssignmentSource::SOURCE_SYSTEM)};
 
+        std::array<std::string, 4> sourceLabels = {
+            "User",
+            "Reservation Allocator",
+            "VAA Allocator",
+            "System"};
+
         // Allow user to pick colours for each source
         CHOOSECOLOR chooseColor{};
-        COLORREF customColours[16] = {};
         chooseColor.lStructSize = sizeof(CHOOSECOLOR);
         chooseColor.hwndOwner = GetActiveWindow();
-        chooseColor.lpCustColors = customColours;
-        chooseColor.Flags = CC_RGBINIT | CC_FULLOPEN;
+        chooseColor.lpCustColors = this->customColours.data();
+        chooseColor.lpfnHook = ChooseColorTitleHook;
+        chooseColor.Flags = CC_RGBINIT | CC_FULLOPEN | CC_ENABLEHOOK;
 
-        for (size_t i = 0; i < sources.size(); ++i) {
+        for (size_t offset = 0; offset < sources.size(); ++offset) {
+            const size_t i = (this->lastSelectedSourceIndex + offset) % sources.size();
             chooseColor.rgbResult = this->colourConfiguration->GetColourForSource(sources[i]);
+            const auto dialogTitle = std::string("Stand Colour Configuration - ") + sourceLabels[i];
+            chooseColor.lCustData = reinterpret_cast<LPARAM>(dialogTitle.c_str());
 
             if (ChooseColor(&chooseColor) == TRUE) {
                 this->colourConfiguration->SetColourForSource(sources[i], chooseColor.rgbResult);
                 LogInfo("Stand colour updated for source: " + sources[i]);
             } else {
+                this->lastSelectedSourceIndex = i;
                 // User cancelled, stop the colour selection process
                 break;
+            }
+
+            if (offset == sources.size() - 1) {
+                this->lastSelectedSourceIndex = 0;
             }
         }
 

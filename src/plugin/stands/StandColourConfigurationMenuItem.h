@@ -1,6 +1,8 @@
 #pragma once
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "plugin/PopupMenuItem.h"
+#include <Windows.h>
+#include <array>
 
 namespace UKControllerPlugin::Stands {
     class StandColourConfiguration;
@@ -29,5 +31,11 @@ namespace UKControllerPlugin::Stands {
 
         // The callback function ID
         const int callbackFunctionId;
+
+        // The source index to start from next time user opens the configuration
+        size_t lastSelectedSourceIndex = 0;
+
+        // Persistent custom colours for the Windows colour picker
+        std::array<COLORREF, 16> customColours{};
     };
 } // namespace UKControllerPlugin::Stands

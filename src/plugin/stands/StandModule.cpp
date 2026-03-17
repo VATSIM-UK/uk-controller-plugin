@@ -38,9 +38,12 @@ namespace UKControllerPlugin::Stands {
 
         // Load stand colour configuration from EuroScope user settings
         // If pluginUserSettingHandler is not available (e.g., in tests), creates default-only config
-        container.standColourConfiguration = container.pluginUserSettingHandler
-                                                 ? std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler)
-                                                 : std::make_shared<StandColourConfiguration>();
+        if (container.pluginUserSettingHandler) {
+            container.standColourConfiguration =
+                std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler);
+        } else {
+            container.standColourConfiguration = std::make_shared<StandColourConfiguration>();
+        }
         auto colourConfiguration = container.standColourConfiguration;
 
         // Create the event handler
@@ -93,8 +96,8 @@ namespace UKControllerPlugin::Stands {
 
         // Create the colour configuration menu item and register its callback
         const int colourConfigurationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-        auto colourConfigurationMenuItem = std::make_shared<StandColourConfigurationMenuItem>(
-            colourConfiguration, colourConfigurationCallbackId);
+        auto colourConfigurationMenuItem =
+            std::make_shared<StandColourConfigurationMenuItem>(colourConfiguration, colourConfigurationCallbackId);
         container.standColourConfigurationMenuItem = colourConfigurationMenuItem;
 
         const UKControllerPlugin::Euroscope::CallbackFunction colourConfigCallback(
