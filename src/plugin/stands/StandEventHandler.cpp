@@ -362,8 +362,8 @@ namespace UKControllerPlugin::Stands {
         Get the airfield to use for stand assignment purposes, depending on how far the aircraft is from
         its origin.
     */
-    auto StandEventHandler::GetAirfieldForStandAssignment(EuroScopeCFlightPlanInterface& flightplan) const
-        -> std::string
+    auto
+    StandEventHandler::GetAirfieldForStandAssignment(EuroScopeCFlightPlanInterface& flightplan) const -> std::string
     {
         return flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport ? flightplan.GetOrigin()
                                                                                           : flightplan.GetDestination();
@@ -524,9 +524,13 @@ namespace UKControllerPlugin::Stands {
         this->standAssignments[callsign] = {stand.id, source};
         this->integrationEventHandler.SendEvent(
             std::make_shared<StandAssignedMessage>(callsign, stand.airfieldCode, stand.identifier));
-        const auto logMessage =
-            std::format("Stand id {}({}/{}) assigned to {} (source: {})", stand.id, stand.airfieldCode,
-                        stand.identifier, callsign, source);
+        const auto logMessage = std::format(
+            "Stand id {}({}/{}) assigned to {} (source: {})",
+            stand.id,
+            stand.airfieldCode,
+            stand.identifier,
+            callsign,
+            source);
         LogInfo(logMessage);
     }
     auto StandEventHandler::ActionsToProcess() const -> std::vector<Integration::MessageType>
