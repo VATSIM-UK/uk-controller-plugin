@@ -110,9 +110,8 @@ namespace UKControllerPlugin::Stands {
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand, const std::string& source);
-        [[nodiscard]] auto
-        AssignStandInApi(const std::string& callsign, const std::string& airfield, const std::string& identifier)
-            -> std::string;
+        [[nodiscard]] auto AssignStandInApi(
+            const std::string& callsign, const std::string& airfield, const std::string& identifier) -> std::string;
         void RequestStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan);
         void RequestDepartureStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan);
         void RequestArrivalStandFromApi(const Euroscope::EuroScopeCFlightPlanInterface& flightplan);
@@ -123,9 +122,8 @@ namespace UKControllerPlugin::Stands {
         [[nodiscard]] static auto GetAssignmentSourceShorthand(const std::string& source) -> std::string;
         auto CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool;
         static auto UnassignmentMessageValid(const nlohmann::json& message) -> bool;
-        auto
-        GetAirfieldForStandAssignment(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const
-            -> std::string;
+        auto GetAirfieldForStandAssignment(
+            UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> std::string;
         auto LockStandMap() -> std::lock_guard<std::recursive_mutex>;
 
         // The last airfield that was used to populate the stand menu, used when we receive the callback
