@@ -525,12 +525,8 @@ namespace UKControllerPlugin::Stands {
         this->integrationEventHandler.SendEvent(
             std::make_shared<StandAssignedMessage>(callsign, stand.airfieldCode, stand.identifier));
         LogInfo(std::format(
-            "Stand id {}({}/{}) assigned to {} (source: {})",
-            stand.id,
-            stand.airfieldCode,
-            stand.identifier,
-            callsign,
-            source));
+            "Stand id {}({}/{}) assigned to {} (source: {})", stand.id, stand.airfieldCode, stand.identifier,
+            callsign, source));
     }
     auto StandEventHandler::ActionsToProcess() const -> std::vector<Integration::MessageType>
     {
