@@ -2,7 +2,7 @@
 #include "StandAssignmentSource.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
-#include <exception>
+#include <stdexcept>
 
 namespace UKControllerPlugin::Stands {
 
@@ -66,7 +66,7 @@ namespace UKControllerPlugin::Stands {
             }
 
             LogInfo("Loaded stand assignment source colours from UserSettings");
-        } catch (const std::exception& e) {
+        } catch (const std::out_of_range& e) {
             LogWarning("Failed to load stand colours from UserSettings: " + std::string(e.what()));
         }
     }
