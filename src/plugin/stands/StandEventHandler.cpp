@@ -362,8 +362,8 @@ namespace UKControllerPlugin::Stands {
         Get the airfield to use for stand assignment purposes, depending on how far the aircraft is from
         its origin.
     */
-    auto
-    StandEventHandler::GetAirfieldForStandAssignment(EuroScopeCFlightPlanInterface& flightplan) const -> std::string
+    auto StandEventHandler::GetAirfieldForStandAssignment(EuroScopeCFlightPlanInterface& flightplan) const
+        -> std::string
     {
         return flightplan.GetDistanceFromOrigin() < this->maxDistanceFromDepartureAirport ? flightplan.GetOrigin()
                                                                                           : flightplan.GetDestination();

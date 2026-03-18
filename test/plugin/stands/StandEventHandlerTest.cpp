@@ -50,9 +50,9 @@ namespace UKControllerPluginTest {
         class StandEventHandlerTest : public ApiTestCase
         {
             public:
-            [[nodiscard]] static auto MakeActiveCallsign(
-                const UKControllerPlugin::Controller::ControllerPosition& controller,
-                bool isUser) -> std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsign>
+            [[nodiscard]] static auto
+            MakeActiveCallsign(const UKControllerPlugin::Controller::ControllerPosition& controller, bool isUser)
+                -> std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsign>
             {
                 return std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
                     "LON_S_CTR", "Test", controller, isUser);
@@ -172,8 +172,8 @@ namespace UKControllerPluginTest {
 
             // Creates a mock flightplan registered for "BAW123", sets up the
             // AnnotateFlightStrip(3,"1L") expectation, and expects the integration event.
-            [[nodiscard]] auto
-            MakeSyncFlightplanForBaw123Stand1() -> std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>>
+            [[nodiscard]] auto MakeSyncFlightplanForBaw123Stand1()
+                -> std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>>
             {
                 auto fp = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
                 ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(fp));
