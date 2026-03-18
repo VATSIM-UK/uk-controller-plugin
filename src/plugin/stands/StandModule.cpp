@@ -3,9 +3,7 @@
 #include "StandModule.h"
 #include "StandSerializer.h"
 #include "StandColourConfiguration.h"
-#include "StandColourConfigurationMenuItem.h"
 #include "bootstrap/PersistenceContainer.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "euroscope/CallbackFunction.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
@@ -38,13 +36,9 @@ namespace UKControllerPlugin::Stands {
 
         // Load stand colour configuration from EuroScope user settings
         // If pluginUserSettingHandler is not available (e.g., in tests), creates default-only config
-        if (container.pluginUserSettingHandler) {
-            container.standColourConfiguration =
-                std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler);
-        } else {
-            container.standColourConfiguration = std::make_shared<StandColourConfiguration>();
-        }
-        auto colourConfiguration = container.standColourConfiguration;
+        auto colourConfiguration = container.pluginUserSettingHandler
+                                       ? std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler)
+                                       : std::make_shared<StandColourConfiguration>();
 
         // Create the event handler
         auto standSelectedCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
@@ -94,20 +88,6 @@ namespace UKControllerPlugin::Stands {
 
         container.pluginFunctionHandlers->RegisterFunctionCall(openStandAssignmentEditBox);
 
-        // Create the colour configuration menu item and register its callback
-        const int colourConfigurationCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
-        auto colourConfigurationMenuItem =
-            std::make_shared<StandColourConfigurationMenuItem>(colourConfiguration, colourConfigurationCallbackId);
-        container.standColourConfigurationMenuItem = colourConfigurationMenuItem;
-
-        const UKControllerPlugin::Euroscope::CallbackFunction colourConfigCallback(
-            colourConfigurationCallbackId,
-            "Stand Colour Configuration",
-            [colourConfigurationMenuItem](int functionId, std::string subject, RECT screenObjectArea) {
-                colourConfigurationMenuItem->Configure(functionId, std::move(subject), screenObjectArea);
-            });
-        container.pluginFunctionHandlers->RegisterFunctionCall(colourConfigCallback);
-
         // Assign to handlers
         container.flightplanHandler->RegisterHandler(eventHandler);
         container.tagHandler->RegisterTagItem(StandEventHandler::assignedStandTagItemId, eventHandler);
@@ -115,19 +95,6 @@ namespace UKControllerPlugin::Stands {
         container.pushEventProcessors->AddProcessor(eventHandler);
         container.externalEventHandler->AddHandler(eventHandler);
         container.integrationModuleContainer->inboundMessageHandler->AddProcessor(eventHandler);
-    }
-
-    void BootstrapRadarScreen(
-        const Bootstrap::PersistenceContainer& container,
-        UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection& configurableDisplays)
-    {
-        if (!container.standColourConfigurationMenuItem) {
-            LogWarning("StandModule::BootstrapRadarScreen: Stand colour configuration menu item not available");
-            return;
-        }
-
-        // Register the colour configuration menu item with the configurableDisplays collection
-        configurableDisplays.RegisterDisplay(container.standColourConfigurationMenuItem);
     }
 
     auto GetDependencyKey() -> std::string

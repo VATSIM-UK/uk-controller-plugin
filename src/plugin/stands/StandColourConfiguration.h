@@ -30,23 +30,7 @@ namespace UKControllerPlugin::Stands {
         */
         void LoadFromUserSettings();
 
-        /*
-            Save colours to UserSettings.
-        */
-        void SaveToUserSettings();
-
-        /*
-            Set a colour for a specific source (runtime change).
-        */
-        void SetColourForSource(const std::string& source, COLORREF colour);
-
         private:
-        // Converts a hex colour string (e.g. "#FF00FF") to a COLORREF
-        [[nodiscard]] static auto HexToColorref(const std::string& hex) -> COLORREF;
-
-        // Converts COLORREF to hex string
-        [[nodiscard]] static auto ColourrefToHex(COLORREF colour) -> std::string;
-
         // Reference to user settings for persistence (null if not available)
         UKControllerPlugin::Euroscope::UserSetting* userSetting;
 

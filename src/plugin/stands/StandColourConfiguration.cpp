@@ -2,28 +2,23 @@
 #include "StandAssignmentSource.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
-#include <cstdint>
-#include <format>
-#include <stdexcept>
+#include <exception>
 
 namespace UKControllerPlugin::Stands {
 
     StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting& setting)
         : userSetting(&setting)
     {
-        // Initialize with default colours
         sourceColours[std::string(StandAssignmentSource::SOURCE_USER)] = DEFAULT_USER_COLOUR;
         sourceColours[std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR)] = DEFAULT_RESERVATION_COLOUR;
         sourceColours[std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR)] = DEFAULT_VAA_COLOUR;
         sourceColours[std::string(StandAssignmentSource::SOURCE_SYSTEM)] = DEFAULT_SYSTEM_COLOUR;
 
-        // Try to load from UserSettings
         LoadFromUserSettings();
     }
 
     StandColourConfiguration::StandColourConfiguration() : userSetting(nullptr)
     {
-        // Initialize with default colours (no persistence without UserSetting)
         sourceColours[std::string(StandAssignmentSource::SOURCE_USER)] = DEFAULT_USER_COLOUR;
         sourceColours[std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR)] = DEFAULT_RESERVATION_COLOUR;
         sourceColours[std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR)] = DEFAULT_VAA_COLOUR;
@@ -46,28 +41,24 @@ namespace UKControllerPlugin::Stands {
         }
 
         try {
-            // Load user colour
             std::string key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_USER);
             if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_USER)] =
                     this->userSetting->GetColourEntry(key, DEFAULT_USER_COLOUR);
             }
 
-            // Load reservation allocator colour
             key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR);
             if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR)] =
                     this->userSetting->GetColourEntry(key, DEFAULT_RESERVATION_COLOUR);
             }
 
-            // Load VAA allocator colour
             key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR);
             if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR)] =
                     this->userSetting->GetColourEntry(key, DEFAULT_VAA_COLOUR);
             }
 
-            // Load system colour
             key = std::string(SETTING_PREFIX) + std::string(StandAssignmentSource::SOURCE_SYSTEM);
             if (this->userSetting->HasEntry(key)) {
                 sourceColours[std::string(StandAssignmentSource::SOURCE_SYSTEM)] =
@@ -80,80 +71,4 @@ namespace UKControllerPlugin::Stands {
         }
     }
 
-    void StandColourConfiguration::SaveToUserSettings()
-    {
-        if (!this->userSetting) {
-            return;
-        }
-
-        try {
-            for (const auto& [source, colour] : sourceColours) {
-                const std::string key = std::string(SETTING_PREFIX) + source;
-                this->userSetting->Save(key, "Stand assignment source colour for " + source, colour);
-            }
-            LogInfo("Saved stand assignment source colours to UserSettings");
-        } catch (const std::exception& e) {
-            LogWarning("Failed to save stand colours to UserSettings: " + std::string(e.what()));
-        }
-    }
-
-    void StandColourConfiguration::SetColourForSource(const std::string& source, COLORREF colour)
-    {
-        sourceColours[source] = colour;
-        // Immediately save to UserSettings
-        if (!this->userSetting) {
-            return;
-        }
-
-        try {
-            const std::string key = std::string(SETTING_PREFIX) + source;
-            this->userSetting->Save(key, "Stand assignment source colour for " + source, colour);
-        } catch (const std::exception& e) {
-            LogWarning("Failed to save stand colour for '" + source + "': " + std::string(e.what()));
-        }
-    }
-
-    auto StandColourConfiguration::HexToColorref(const std::string& hex) -> COLORREF
-    {
-        std::string colourStr = hex;
-
-        // Remove '#' if present
-        if (!colourStr.empty() && colourStr[0] == '#') {
-            colourStr = colourStr.substr(1);
-        }
-
-        // Validate hex string length
-        if (colourStr.length() != 6) {
-            throw std::invalid_argument("Hex colour must be 6 characters (without #)");
-        }
-
-        // Parse hex values
-        try {
-            // Windows COLORREF is BGR, not RGB, so we parse as RGB and convert
-            const uint32_t rgbValue = std::stoul(colourStr, nullptr, 16);
-            const auto r = static_cast<uint8_t>((rgbValue >> 16) & 0xFF);
-            const auto g = static_cast<uint8_t>((rgbValue >> 8) & 0xFF);
-            const auto b = static_cast<uint8_t>(rgbValue & 0xFF);
-
-            return RGB(r, g, b);
-        } catch (const std::invalid_argument& e) {
-            throw std::invalid_argument(std::string("Invalid hex colour format: ") + e.what());
-        } catch (const std::out_of_range& e) {
-            throw std::invalid_argument(std::string("Hex colour value out of range: ") + e.what());
-        }
-    }
-
-    auto StandColourConfiguration::ColourrefToHex(COLORREF colour) -> std::string
-    {
-        // COLORREF is BGR format, convert to RGB for hex
-        const auto b = static_cast<uint8_t>((colour >> 0) & 0xFF);
-        const auto g = static_cast<uint8_t>((colour >> 8) & 0xFF);
-        const auto r = static_cast<uint8_t>((colour >> 16) & 0xFF);
-
-        return std::format(
-            "#{:02x}{:02x}{:02x}",
-            static_cast<unsigned int>(r),
-            static_cast<unsigned int>(g),
-            static_cast<unsigned int>(b));
-    }
 } // namespace UKControllerPlugin::Stands

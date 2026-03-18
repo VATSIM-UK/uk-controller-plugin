@@ -310,13 +310,10 @@ namespace UKControllerPlugin::Stands {
             return;
         }
 
-        // Tag item: Show stand identifier with colour based on source
         if (tagData.GetItemCode() == assignedStandTagItemId) {
             tagData.SetItemString(stand->identifier);
             tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
-        }
-        // Tag item: Show assignment source shorthand
-        else if (tagData.GetItemCode() == standAssignmentSourceTagItemId) {
+        } else if (tagData.GetItemCode() == standAssignmentSourceTagItemId) {
             tagData.SetItemString(GetAssignmentSourceShorthand(assignment.source));
             tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
         }
