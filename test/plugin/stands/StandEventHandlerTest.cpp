@@ -1449,7 +1449,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
             SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
@@ -1471,7 +1471,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
             SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
@@ -1489,7 +1489,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
             SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
@@ -1508,7 +1508,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
             SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
@@ -1527,7 +1527,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
             SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
@@ -1546,7 +1546,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
 
             ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(nullptr));
 
@@ -1561,7 +1561,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK");
 
             SetupAutoStandSelectionMenu("EGGW", 0.0);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 0.0);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 0.0);
             SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectNoApiRequests();
@@ -1575,7 +1575,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGKK", UKControllerPlugin::Ownership::ServiceType::Ground);
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
             SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectNoApiRequests();
@@ -1589,7 +1589,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGGW");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
@@ -1610,7 +1610,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGGW");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
@@ -1627,7 +1627,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGGW");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
@@ -1645,7 +1645,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGGW");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
@@ -1663,7 +1663,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGGW");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
@@ -1681,7 +1681,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGGW");
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 0.0, "B738");
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 0.0, "B738");
 
             this->ExpectNoApiRequests();
 
@@ -1694,7 +1694,7 @@ namespace UKControllerPluginTest {
             SetProviderForAirfield("EGGW", UKControllerPlugin::Ownership::ServiceType::Ground);
 
             SetupAutoStandSelectionMenu("EGGW", 1);
-            MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectNoApiRequests();
 
