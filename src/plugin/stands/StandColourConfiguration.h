@@ -32,6 +32,8 @@ namespace UKControllerPlugin::Stands {
         void LoadFromUserSettings();
 
         private:
+        explicit StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting* userSetting);
+
         // Reference to user settings for persistence (null if not available)
         UKControllerPlugin::Euroscope::UserSetting* userSetting;
 

@@ -32,7 +32,6 @@ using UKControllerPlugin::Stands::StandAssignedMessage;
 using UKControllerPlugin::Stands::StandAssignmentSource;
 using UKControllerPlugin::Stands::StandColourConfiguration;
 using UKControllerPlugin::Stands::StandEventHandler;
-using UKControllerPlugin::Stands::StandEventHandlerConfig;
 using UKControllerPlugin::Stands::StandUnassignedMessage;
 using UKControllerPlugin::Tag::TagData;
 using UKControllerPluginTest::Api::MockApiInterface;
@@ -68,13 +67,7 @@ namespace UKControllerPluginTest {
                   colourConfiguration(std::make_shared<StandColourConfiguration>(userSetting)),
                   tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize),
                   handler(
-                      api,
-                      taskRunner,
-                      plugin,
-                      mockIntegration,
-                      airfieldOwnership,
-                      GetStands(),
-                      StandEventHandlerConfig{1, colourConfiguration})
+                      api, taskRunner, plugin, mockIntegration, airfieldOwnership, GetStands(), 1, colourConfiguration)
             {
                 ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
                 ON_CALL(this->mockUserSettingProvider, KeyExists(_)).WillByDefault(Return(false));
@@ -101,7 +94,7 @@ namespace UKControllerPluginTest {
                 return TagData(
                     this->flightplan,
                     this->radarTarget,
-                    200,
+                    132,
                     1,
                     this->itemString,
                     &this->euroscopeColourCode,
@@ -109,7 +102,7 @@ namespace UKControllerPluginTest {
                     &this->fontSize);
             }
 
-            void ExpectTagItem200Shorthand(StandAssignmentSource::Source source, const std::string& expectedShorthand)
+            void ExpectTagItem132Shorthand(StandAssignmentSource::Source source, const std::string& expectedShorthand)
             {
                 this->SetAssignedStandWithSource(1, source);
                 auto sourceTagData = this->CreateSourceTagData();
@@ -125,7 +118,7 @@ namespace UKControllerPluginTest {
                 EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
             }
 
-            void ExpectTagItem200ColourForSource(StandAssignmentSource::Source source)
+            void ExpectTagItem132ColourForSource(StandAssignmentSource::Source source)
             {
                 this->SetAssignedStandWithSource(3, source);
                 COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
@@ -335,22 +328,22 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("Foooooo", this->tagData.GetItemString());
         }
 
-        TEST_F(StandEventHandlerTest, ItReturnsDescriptionForTagItem200)
+        TEST_F(StandEventHandlerTest, ItReturnsDescriptionForTagItem132)
         {
-            EXPECT_EQ("Stand Assignment Source", this->handler.GetTagItemDescription(200));
+            EXPECT_EQ("Stand Assignment Source", this->handler.GetTagItemDescription(132));
         }
 
-        TEST_F(StandEventHandlerTest, ItReturnsSourceShorthandForTagItem200)
+        TEST_F(StandEventHandlerTest, ItReturnsSourceShorthandForTagItem132)
         {
             const auto sources = AllSources();
             const std::array<std::string, 4> expectedShorthand = {"USER", "RES ", "VAA ", "AUTO"};
 
             for (size_t i = 0; i < std::size(sources); ++i) {
-                this->ExpectTagItem200Shorthand(sources[i], expectedShorthand[i]);
+                this->ExpectTagItem132Shorthand(sources[i], expectedShorthand[i]);
             }
         }
 
-        TEST_F(StandEventHandlerTest, ItReturnsNothingForTagItem200IfStandNotAssigned)
+        TEST_F(StandEventHandlerTest, ItReturnsNothingForTagItem132IfStandNotAssigned)
         {
             auto sourceTagData = this->CreateSourceTagData();
             this->handler.SetTagItemData(sourceTagData);
@@ -366,12 +359,12 @@ namespace UKControllerPluginTest {
             }
         }
 
-        TEST_F(StandEventHandlerTest, TagItem200UsesSourceColours)
+        TEST_F(StandEventHandlerTest, TagItem132UsesSourceColours)
         {
             const auto sources = AllSources();
 
             for (const auto& source : sources) {
-                this->ExpectTagItem200ColourForSource(source);
+                this->ExpectTagItem132ColourForSource(source);
             }
         }
 

@@ -34,10 +34,11 @@ namespace UKControllerPlugin::Stands {
         Integration::OutboundIntegrationEventHandler& integrationEventHandler,
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
         std::set<Stand, CompareStands> stands,
-        StandEventHandlerConfig config)
+        int standSelectedCallbackId,
+        std::shared_ptr<const StandColourConfiguration> colourConfiguration)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
-          colourConfiguration(std::move(config.colourConfiguration)), integrationEventHandler(integrationEventHandler),
-          ownership(ownership), standSelectedCallbackId(config.standSelectedCallbackId)
+          colourConfiguration(std::move(colourConfiguration)), integrationEventHandler(integrationEventHandler),
+          ownership(ownership), standSelectedCallbackId(standSelectedCallbackId)
     {
         assert(this->ownership != nullptr && "Ownership must not be null");
     }

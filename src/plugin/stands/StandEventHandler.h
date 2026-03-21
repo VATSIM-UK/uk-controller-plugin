@@ -27,12 +27,6 @@ namespace UKControllerPlugin {
 namespace UKControllerPlugin::Stands {
     class StandColourConfiguration;
 
-    struct StandEventHandlerConfig
-    {
-        int standSelectedCallbackId;
-        std::shared_ptr<const StandColourConfiguration> colourConfiguration;
-    };
-
     /*
         Handles events related to stands.
     */
@@ -50,7 +44,8 @@ namespace UKControllerPlugin::Stands {
             Integration::OutboundIntegrationEventHandler& integrationEventHandler,
             std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
             std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
-            StandEventHandlerConfig config);
+            int standSelectedCallbackId,
+            std::shared_ptr<const StandColourConfiguration> colourConfiguration);
         [[nodiscard]] auto ActionsToProcess() const -> std::vector<Integration::MessageType> override;
         void ProcessAction(
             std::shared_ptr<Integration::MessageInterface> message,

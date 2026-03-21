@@ -49,7 +49,8 @@ namespace UKControllerPlugin::Stands {
             *container.integrationModuleContainer->outboundMessageHandler,
             container.airfieldOwnership,
             stands,
-            StandEventHandlerConfig{standSelectedCallbackId, colourConfiguration});
+            standSelectedCallbackId,
+            colourConfiguration);
 
         // Create a tag function for the stand assignment popup list and add a callback
         TagFunction openStandAssignmentPopupMenu(

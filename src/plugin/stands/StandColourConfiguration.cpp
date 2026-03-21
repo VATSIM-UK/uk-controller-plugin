@@ -18,16 +18,17 @@ namespace UKControllerPlugin::Stands {
     } // namespace
 
     StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting& setting)
-        : userSetting(&setting)
+        : StandColourConfiguration(&setting)
     {
-        sourceColours = DefaultSourceColours();
-
-        LoadFromUserSettings();
     }
 
-    StandColourConfiguration::StandColourConfiguration() : userSetting(nullptr)
+    StandColourConfiguration::StandColourConfiguration() : StandColourConfiguration(nullptr)
     {
-        sourceColours = DefaultSourceColours();
+    }
+
+    StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting* userSetting)
+        : userSetting(userSetting), sourceColours(DefaultSourceColours())
+    {
         LoadFromUserSettings();
     }
 
