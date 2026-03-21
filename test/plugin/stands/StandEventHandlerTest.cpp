@@ -91,7 +91,7 @@ namespace UKControllerPluginTest {
                 return stands;
             }
 
-            void SetAssignedStandWithSource(int standId, const std::string& source)
+            void SetAssignedStandWithSource(int standId, StandAssignmentSource::Source source)
             {
                 this->handler.SetAssignedStand("BAW123", standId, source);
             }
@@ -109,7 +109,7 @@ namespace UKControllerPluginTest {
                     &this->fontSize);
             }
 
-            void ExpectTagItem200Shorthand(const std::string& source, const std::string& expectedShorthand)
+            void ExpectTagItem200Shorthand(StandAssignmentSource::Source source, const std::string& expectedShorthand)
             {
                 this->SetAssignedStandWithSource(1, source);
                 auto sourceTagData = this->CreateSourceTagData();
@@ -117,7 +117,7 @@ namespace UKControllerPluginTest {
                 EXPECT_EQ(expectedShorthand, sourceTagData.GetItemString());
             }
 
-            void ExpectTagItem110ColourForSource(const std::string& source)
+            void ExpectTagItem110ColourForSource(StandAssignmentSource::Source source)
             {
                 this->SetAssignedStandWithSource(3, source);
                 COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
@@ -125,7 +125,7 @@ namespace UKControllerPluginTest {
                 EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
             }
 
-            void ExpectTagItem200ColourForSource(const std::string& source)
+            void ExpectTagItem200ColourForSource(StandAssignmentSource::Source source)
             {
                 this->SetAssignedStandWithSource(3, source);
                 COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
@@ -183,13 +183,13 @@ namespace UKControllerPluginTest {
                 return fp;
             }
 
-            [[nodiscard]] static auto AllSources() -> std::array<std::string, 4>
+            [[nodiscard]] static auto AllSources() -> std::array<StandAssignmentSource::Source, 4>
             {
                 return {
-                    std::string(StandAssignmentSource::SOURCE_USER),
-                    std::string(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR),
-                    std::string(StandAssignmentSource::SOURCE_VAA_ALLOCATOR),
-                    std::string(StandAssignmentSource::SOURCE_SYSTEM)};
+                    StandAssignmentSource::SOURCE_USER,
+                    StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR,
+                    StandAssignmentSource::SOURCE_VAA_ALLOCATOR,
+                    StandAssignmentSource::SOURCE_SYSTEM};
             }
 
             [[nodiscard]] static auto MakeInboundMessage(const std::string& type, const nlohmann::json& data)

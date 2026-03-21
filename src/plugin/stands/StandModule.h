@@ -11,7 +11,7 @@ namespace UKControllerPlugin {
 
 namespace UKControllerPlugin::Stands {
     /*
-        Bootstraps everything to do with stand assignment at the plugin level
+        Bootstraps everything to do with stand assignment
     */
     void BootstrapPlugin(
         UKControllerPlugin::Bootstrap::PersistenceContainer& container,

@@ -8,15 +8,54 @@ namespace UKControllerPlugin::Stands {
     */
     struct StandAssignmentSource
     {
+        enum class Source
+        {
+            User,
+            ReservationAllocator,
+            VaaAllocator,
+            SystemAuto,
+        };
+
         int standId;
 
         // The source of the assignment (user, reservation_allocator, vaa_allocator, system_auto)
-        std::string source;
+        Source source;
 
         // The four possible sources for stand assignments
-        static constexpr std::string_view SOURCE_USER = "user";
-        static constexpr std::string_view SOURCE_RESERVATION_ALLOCATOR = "reservation_allocator";
-        static constexpr std::string_view SOURCE_VAA_ALLOCATOR = "vaa_allocator";
-        static constexpr std::string_view SOURCE_SYSTEM = "system_auto";
+        static constexpr Source SOURCE_USER = Source::User;
+        static constexpr Source SOURCE_RESERVATION_ALLOCATOR = Source::ReservationAllocator;
+        static constexpr Source SOURCE_VAA_ALLOCATOR = Source::VaaAllocator;
+        static constexpr Source SOURCE_SYSTEM = Source::SystemAuto;
+
+        [[nodiscard]] static constexpr auto ToString(Source source) -> std::string_view
+        {
+            switch (source) {
+            case Source::User:
+                return "user";
+            case Source::ReservationAllocator:
+                return "reservation_allocator";
+            case Source::VaaAllocator:
+                return "vaa_allocator";
+            case Source::SystemAuto:
+                return "system_auto";
+            }
+
+            return "system_auto";
+        }
+
+        [[nodiscard]] static constexpr auto FromString(std::string_view source) -> Source
+        {
+            if (source == "user") {
+                return Source::User;
+            }
+            if (source == "reservation_allocator") {
+                return Source::ReservationAllocator;
+            }
+            if (source == "vaa_allocator") {
+                return Source::VaaAllocator;
+            }
+
+            return Source::SystemAuto;
+        }
     };
 } // namespace UKControllerPlugin::Stands

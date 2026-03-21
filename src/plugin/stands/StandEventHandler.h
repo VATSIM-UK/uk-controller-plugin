@@ -74,6 +74,7 @@ namespace UKControllerPlugin::Stands {
         void RemoveFlightStripAnnotation(const std::string& callsign) const;
         void SetAssignedStand(const std::string& callsign, int standId);
         void SetAssignedStand(const std::string& callsign, int standId, const std::string& source);
+        void SetAssignedStand(const std::string& callsign, int standId, StandAssignmentSource::Source source);
         void StandSelected(int functionId, std::string context, RECT);
         void DisplayStandAssignmentEditBox(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
@@ -105,11 +106,12 @@ namespace UKControllerPlugin::Stands {
 
         // Tag item IDs for stand display and source indication
         inline static const int assignedStandTagItemId = 110;
-        inline static const int standAssignmentSourceTagItemId = 200;
+        inline static const int standAssignmentSourceTagItemId = 132;
 
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
-        void AssignStandToAircraft(const std::string& callsign, const Stand& stand, const std::string& source);
+        void
+        AssignStandToAircraft(const std::string& callsign, const Stand& stand, StandAssignmentSource::Source source);
         [[nodiscard]] auto
         AssignStandInApi(const std::string& callsign, const std::string& airfield, const std::string& identifier)
             -> std::string;
@@ -119,8 +121,9 @@ namespace UKControllerPlugin::Stands {
         void DoApiStandRequest(const std::string& callsign, const nlohmann::json data);
         void UnassignStandForAircraft(const std::string& callsign);
         [[nodiscard]] auto AssignmentMessageValid(const nlohmann::json& message) const -> bool;
-        [[nodiscard]] static auto GetAssignmentSourceFromMessage(const nlohmann::json& message) -> std::string;
-        [[nodiscard]] static auto GetAssignmentSourceShorthand(const std::string& source) -> std::string;
+        [[nodiscard]] static auto GetAssignmentSourceFromMessage(const nlohmann::json& message)
+            -> StandAssignmentSource::Source;
+        [[nodiscard]] static auto GetAssignmentSourceShorthand(StandAssignmentSource::Source source) -> std::string;
         auto CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool;
         static auto UnassignmentMessageValid(const nlohmann::json& message) -> bool;
         auto

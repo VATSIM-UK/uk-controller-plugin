@@ -1,4 +1,5 @@
 #pragma once
+#include "StandAssignmentSource.h"
 #include <map>
 #include <string>
 #include <string_view>
@@ -23,7 +24,7 @@ namespace UKControllerPlugin::Stands {
             Get the colour for a given assignment source.
             Returns a default grey if source is not found or not set.
         */
-        [[nodiscard]] auto GetColourForSource(const std::string& source) const -> COLORREF;
+        [[nodiscard]] auto GetColourForSource(StandAssignmentSource::Source source) const -> COLORREF;
 
         /*
             Load colours from UserSettings, with fallback to defaults.
@@ -35,7 +36,7 @@ namespace UKControllerPlugin::Stands {
         UKControllerPlugin::Euroscope::UserSetting* userSetting;
 
         // Map of source to RGB colour
-        std::map<std::string, COLORREF, std::less<>> sourceColours;
+        std::map<StandAssignmentSource::Source, COLORREF> sourceColours;
 
         // Default colour (grey) for unknown sources
         static constexpr COLORREF DEFAULT_COLOUR = RGB(180, 180, 180);

@@ -117,7 +117,7 @@ namespace UKControllerPlugin::Stands {
         }
 
         // Assign that stand
-        this->AssignStandToAircraft(callsign, *stand, std::string(StandAssignmentSource::SOURCE_USER));
+        this->AssignStandToAircraft(callsign, *stand, StandAssignmentSource::SOURCE_USER);
 
         int standId = stand->id;
         auto callsignForRequest = callsign;
@@ -219,10 +219,16 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId)
     {
-        this->standAssignments[callsign] = {standId, std::string(StandAssignmentSource::SOURCE_SYSTEM)};
+        this->standAssignments[callsign] = {standId, StandAssignmentSource::SOURCE_SYSTEM};
     }
 
     void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, const std::string& source)
+    {
+        this->SetAssignedStand(callsign, standId, StandAssignmentSource::FromString(source));
+    }
+
+    void
+    StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, StandAssignmentSource::Source source)
     {
         this->standAssignments[callsign] = {standId, source};
     }
@@ -326,16 +332,17 @@ namespace UKControllerPlugin::Stands {
                this->stands.find(message.at("stand_id").get<int>()) != this->stands.cend();
     }
 
-    auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message) -> std::string
+    auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message)
+        -> StandAssignmentSource::Source
     {
         if (message.contains("assignment_source") && message.at("assignment_source").is_string()) {
-            return message.at("assignment_source").get<std::string>();
+            return StandAssignmentSource::FromString(message.at("assignment_source").get<std::string>());
         }
 
-        return std::string(StandAssignmentSource::SOURCE_SYSTEM);
+        return StandAssignmentSource::SOURCE_SYSTEM;
     }
 
-    auto StandEventHandler::GetAssignmentSourceShorthand(const std::string& source) -> std::string
+    auto StandEventHandler::GetAssignmentSourceShorthand(StandAssignmentSource::Source source) -> std::string
     {
         if (source == StandAssignmentSource::SOURCE_USER) {
             return "USER";
@@ -349,7 +356,6 @@ namespace UKControllerPlugin::Stands {
         if (source == StandAssignmentSource::SOURCE_SYSTEM) {
             return "AUTO";
         }
-
         return "UNK ";
     }
 
@@ -514,23 +520,23 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::AssignStandToAircraft(const std::string& callsign, const Stand& stand)
     {
-        this->AssignStandToAircraft(callsign, stand, std::string(StandAssignmentSource::SOURCE_SYSTEM));
+        this->AssignStandToAircraft(callsign, stand, StandAssignmentSource::SOURCE_SYSTEM);
     }
 
-    void
-    StandEventHandler::AssignStandToAircraft(const std::string& callsign, const Stand& stand, const std::string& source)
+    void StandEventHandler::AssignStandToAircraft(
+        const std::string& callsign, const Stand& stand, StandAssignmentSource::Source source)
     {
         this->AnnotateFlightStrip(callsign, stand.id);
         this->standAssignments[callsign] = {stand.id, source};
         this->integrationEventHandler.SendEvent(
             std::make_shared<StandAssignedMessage>(callsign, stand.airfieldCode, stand.identifier));
         const auto logMessage = std::format(
-            "Stand id {}({}/{}) assigned to {} (source: {})",
+            "Stand id {} ({}/{}) assigned to {} (source: {})",
             stand.id,
             stand.airfieldCode,
             stand.identifier,
             callsign,
-            source);
+            StandAssignmentSource::ToString(source));
         LogInfo(logMessage);
     }
     auto StandEventHandler::ActionsToProcess() const -> std::vector<Integration::MessageType>
