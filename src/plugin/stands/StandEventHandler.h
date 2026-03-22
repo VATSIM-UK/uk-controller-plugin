@@ -37,6 +37,12 @@ namespace UKControllerPlugin::Stands {
                               public Integration::IntegrationActionProcessor
     {
         public:
+        struct ConstructorOptions
+        {
+            int standSelectedCallbackId;
+            std::shared_ptr<const StandColourConfiguration> colourConfiguration;
+        };
+
         StandEventHandler(
             const UKControllerPlugin::Api::ApiInterface& api,
             TaskManager::TaskRunnerInterface& taskRunner,
@@ -44,8 +50,7 @@ namespace UKControllerPlugin::Stands {
             Integration::OutboundIntegrationEventHandler& integrationEventHandler,
             std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
             std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
-            int standSelectedCallbackId,
-            std::shared_ptr<const StandColourConfiguration> colourConfiguration);
+            ConstructorOptions options);
         [[nodiscard]] auto ActionsToProcess() const -> std::vector<Integration::MessageType> override;
         void ProcessAction(
             std::shared_ptr<Integration::MessageInterface> message,

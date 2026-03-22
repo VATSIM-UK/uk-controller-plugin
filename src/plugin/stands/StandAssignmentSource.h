@@ -29,14 +29,16 @@ namespace UKControllerPlugin::Stands {
 
         [[nodiscard]] static constexpr auto ToString(Source source) -> std::string_view
         {
+            using enum Source;
+
             switch (source) {
-            case Source::User:
+            case User:
                 return "user";
-            case Source::ReservationAllocator:
+            case ReservationAllocator:
                 return "reservation_allocator";
-            case Source::VaaAllocator:
+            case VaaAllocator:
                 return "vaa_allocator";
-            case Source::SystemAuto:
+            case SystemAuto:
                 return "system_auto";
             }
 
@@ -45,17 +47,19 @@ namespace UKControllerPlugin::Stands {
 
         [[nodiscard]] static constexpr auto FromString(std::string_view source) -> Source
         {
+            using enum Source;
+
             if (source == "user") {
-                return Source::User;
+                return User;
             }
             if (source == "reservation_allocator") {
-                return Source::ReservationAllocator;
+                return ReservationAllocator;
             }
             if (source == "vaa_allocator") {
-                return Source::VaaAllocator;
+                return VaaAllocator;
             }
 
-            return Source::SystemAuto;
+            return SystemAuto;
         }
     };
 } // namespace UKControllerPlugin::Stands
