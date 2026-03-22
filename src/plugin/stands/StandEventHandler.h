@@ -106,7 +106,7 @@ namespace UKControllerPlugin::Stands {
 
         // Tag item IDs for stand display and source indication
         inline static const int assignedStandTagItemId = 110;
-        inline static const int standAssignmentSourceTagItemId = 132;
+        inline static const int standAssignmentSourceTagItemId = 133;
 
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
