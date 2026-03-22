@@ -108,7 +108,8 @@ namespace UKControllerPluginTest {
                     &this->fontSize);
             }
 
-            void ExpectSourceTagItemShorthand(StandAssignmentSource::Source source, const std::string& expectedShorthand)
+            void
+            ExpectSourceTagItemShorthand(StandAssignmentSource::Source source, const std::string& expectedShorthand)
             {
                 this->SetAssignedStandWithSource(1, source);
                 auto sourceTagData = this->CreateSourceTagData();
