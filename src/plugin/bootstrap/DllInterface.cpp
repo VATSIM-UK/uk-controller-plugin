@@ -44,7 +44,7 @@ UKCP_CORE_API auto LoadPlugin() -> EuroScopePlugIn::CPlugIn*
         std::string typeId = typeid(e).name();
 
         std::wstring message = L"Exception thrown when bootstrapping UKCP.\r\n";
-        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+        message += L"Please contact the VATSIM UK Technology Department.\r\n";
         message += L"Type: " + std::wstring(typeId.cbegin(), typeId.cend()) + L"\r\n";
         message += L"Message: " + std::wstring(what.cbegin(), what.cend()) + L"\r\n";
         ;
@@ -71,7 +71,7 @@ UKCP_CORE_API void UnloadPlugin(void)
         std::string what = e.what();
 
         std::wstring message = L"Exception thrown when shutting down UKCP.\r\n";
-        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
+        message += L"Please contact the VATSIM UK Technology Department.\r\n";
         message += L"Message: " + std::wstring(what.cbegin(), what.cend());
 
         MessageBox(GetActiveWindow(), message.c_str(), L"UKCP Shutdown Failed", MB_OK | MB_ICONSTOP);
