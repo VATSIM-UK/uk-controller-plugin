@@ -67,7 +67,13 @@ namespace UKControllerPluginTest {
                   colourConfiguration(std::make_shared<StandColourConfiguration>(userSetting)),
                   tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize),
                   handler(
-                      api, taskRunner, plugin, mockIntegration, airfieldOwnership, GetStands(), 1, colourConfiguration)
+                      api,
+                      taskRunner,
+                      plugin,
+                      mockIntegration,
+                      airfieldOwnership,
+                      GetStands(),
+                      StandEventHandler::ConstructorOptions{1, colourConfiguration})
             {
                 ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
                 ON_CALL(this->mockUserSettingProvider, KeyExists(_)).WillByDefault(Return(false));
