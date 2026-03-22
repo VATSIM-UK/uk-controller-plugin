@@ -39,7 +39,7 @@ namespace UKControllerPlugin::Api {
                 if (UKControllerPluginUtils::Http::IsAuthenticationError(exception.StatusCode())) {
                     windows.OpenMessageBox(
                         L"API authentication failed. Please try to replace your credentials again. "
-                        "If this problem persists, please contact the Web Services Department. Some "
+                        "If this problem persists, please contact the Technology Department. Some "
                         "functionality such as stand and squawk allocations may not work as expected.",
                         L"UKCP API Config Invalid",
                         MB_OK | MB_ICONWARNING);

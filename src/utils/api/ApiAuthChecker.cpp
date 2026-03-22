@@ -51,7 +51,7 @@ namespace UKControllerPlugin {
                 // Something weird is going on.
                 std::wstring message;
                 message += L"Unable to access the API. Core functionality will be disabled. \r\n\r\n";
-                message += L"If the problem persists, please contact the VATSIM UK Web Services Department.";
+                message += L"If the problem persists, please contact the VATSIM UK Technology Department.";
                 windows.OpenMessageBox(message.c_str(), L"UKCP API Availability Warning", MB_OK | MB_ICONWARNING);
                 LogCritical("The API returned a non-standard response when authenticating: " + std::string(api.what()));
                 return false;
