@@ -18,7 +18,7 @@ void RunUpdater(UKControllerPlugin::Windows::WinApiInterface& windows)
     if (!updaterHandle) {
         LogInfo("Unable to run the updater, binary does not exist.");
         std::wstring message = L"Unable to start updater.\r\n";
-        message += L"Please contact the VATSIM UK Technology Department.\r\n";
+        message += L"Please contact the VATSIM UK Web Services Department.\r\n";
 
         windows.OpenMessageBox(message.c_str(), L"UKCP Update Failed", MB_OK | MB_ICONSTOP);
         throw std::exception("UKCP broke");
@@ -60,7 +60,7 @@ LoadPlugin(HINSTANCE pluginLibraryHandle, UKControllerPlugin::Windows::WinApiInt
     if (!LoadPlugin) {
         LogError("Cannot find LoadPlugin function in Core binary");
         std::wstring message = L"Unable find LoadPlugin function in Core Binary.\r\n\r\n";
-        message += L"Please contact the Technology Department.";
+        message += L"Please contact the Web Services Department.";
         DisplayLoaderError(windows, message);
         return nullptr;
     }
@@ -82,7 +82,7 @@ void UnloadPlugin(HINSTANCE pluginLibraryHandle, UKControllerPlugin::Windows::Wi
     if (!UnloadPlugin) {
         LogError("Cannot find UnloadPlugin function in Core binary");
         std::wstring message = L"Unable find UnloadPlugin function in Core Binary.\r\n\r\n";
-        message += L"Please contact the Technology Department.";
+        message += L"Please contact the Web Services Department.";
         DisplayLoaderError(windows, message);
         return;
     }
@@ -149,7 +149,7 @@ bool DisplayFirstTimeDownloadMessage(UKControllerPlugin::Windows::WinApiInterfac
 void DisplayFirstTimeDownloadFailedMessage(UKControllerPlugin::Windows::WinApiInterface& windows)
 {
     std::wstring message = L"Unable to perform first time download of the UKCP updater.\r\n";
-    message += L"Please contact the VATSIM UK Technology Department.\r\n";
+    message += L"Please contact the VATSIM UK Web Services Department.\r\n";
 
     DisplayLoaderError(windows, message);
 }
