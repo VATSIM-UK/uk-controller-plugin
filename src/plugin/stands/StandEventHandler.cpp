@@ -319,11 +319,12 @@ namespace UKControllerPlugin::Stands {
 
         if (tagData.GetItemCode() == assignedStandTagItemId) {
             tagData.SetItemString(stand->identifier);
-            tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
         } else if (tagData.GetItemCode() == standAssignmentSourceTagItemId) {
             tagData.SetItemString(GetAssignmentSourceShorthand(assignment.source));
-            tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
+        } else {
+            return;
         }
+        tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
     }
 
     auto StandEventHandler::AssignmentMessageValid(const nlohmann::json& message) const -> bool
