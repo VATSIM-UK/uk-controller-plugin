@@ -5,6 +5,7 @@
 #include "DepartureReleaseRequestedEvent.h"
 #include "DepartureReleaseRequestView.h"
 #include "ReleaseApprovalRemarksUserMessage.h"
+#include "ReleasePendingReminderUserMessage.h"
 #include "ReleaseRejectionRemarksUserMessage.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
@@ -511,6 +512,42 @@ namespace UKControllerPlugin::Releases {
                    request->RequestingController();
     }
 
+    auto DepartureReleaseEventHandler::ReleaseNeedsPendingReminder(
+        const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) const -> bool
+    {
+        if (!releaseRequest || !this->activeCallsigns.UserHasCallsign() ||
+            releaseRequest->PendingDecisionReminderSent() || !releaseRequest->RequiresDecision()) {
+            return false;
+        }
+
+        if (this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() !=
+            releaseRequest->TargetController()) {
+            return false;
+        }
+
+        return releaseRequest->CreatedAt() + std::chrono::seconds(PENDING_RELEASE_REMINDER_SECONDS) <= Time::TimeNow();
+    }
+
+    void DepartureReleaseEventHandler::SendPendingReleaseReminders()
+    {
+        for (const auto& release : *this->releaseRequests) {
+            auto releaseRequest = this->releaseRequests->Get(release.Id());
+            if (!this->ReleaseNeedsPendingReminder(releaseRequest)) {
+                continue;
+            }
+
+            auto requestingController = this->controllers.FetchPositionById(releaseRequest->RequestingController());
+            if (!requestingController) {
+                releaseRequest->MarkPendingDecisionReminderSent();
+                continue;
+            }
+
+            this->messager.SendMessageToUser(
+                ReleasePendingReminderUserMessage(releaseRequest->Callsign(), requestingController->GetCallsign()));
+            releaseRequest->MarkPendingDecisionReminderSent();
+        }
+    }
+
     /**
      * Create a new departure release request.
      */
@@ -645,6 +682,7 @@ namespace UKControllerPlugin::Releases {
     void DepartureReleaseEventHandler::TimedEventTrigger()
     {
         std::lock_guard queueLock(this->releaseMapGuard);
+        this->SendPendingReleaseReminders();
         this->releaseRequests->RemoveWhere([this](const std::shared_ptr<DepartureReleaseRequest>& release) {
             return this->ReleaseShouldBeRemoved(release);
         });
@@ -709,7 +747,7 @@ namespace UKControllerPlugin::Releases {
         this->plugin.AddItemToPopupList(menuItem);
         menuItem.firstValue = "Reject";
         this->plugin.AddItemToPopupList(menuItem);
-        menuItem.firstValue = "Acknowledge";
+        menuItem.firstValue = "Standby";
         this->plugin.AddItemToPopupList(menuItem);
     }
 
@@ -748,7 +786,12 @@ namespace UKControllerPlugin::Releases {
             return;
         }
 
-        // Release has been acknowledged
+        // Release has been put on standby
+        if (context != "Standby" && context != "Acknowledge") {
+            LogWarning("Unknown departure release decision context: " + context);
+            return;
+        }
+
         this->taskRunner.QueueAsynchronousTask([this, release]() {
             try {
                 this->api.AcknowledgeDepartureReleaseRequest(release->Id(), release->TargetController());
