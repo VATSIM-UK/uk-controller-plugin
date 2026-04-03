@@ -5,6 +5,7 @@
 #include "DepartureReleaseRequestedEvent.h"
 #include "DepartureReleaseRequestView.h"
 #include "ReleaseApprovalRemarksUserMessage.h"
+#include "ReleasePendingReminderUserMessage.h"
 #include "ReleaseRejectionRemarksUserMessage.h"
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
@@ -94,8 +95,8 @@ namespace UKControllerPlugin::Releases {
     /*
      * An acknowledged message needs an id that we know about.
      */
-    auto DepartureReleaseEventHandler::DepartureReleaseAcknowledgedMessageValid(const nlohmann::json& data) const
-        -> bool
+    auto
+    DepartureReleaseEventHandler::DepartureReleaseAcknowledgedMessageValid(const nlohmann::json& data) const -> bool
     {
         return data.is_object() && data.contains("id") && data.at("id").is_number_integer() &&
                this->releaseRequests->Get(data.at("id").get<int>()) != nullptr;
@@ -131,9 +132,8 @@ namespace UKControllerPlugin::Releases {
     /*
      * Whether releases should be removed from the lists.
      */
-    auto
-    DepartureReleaseEventHandler::ReleaseShouldBeRemoved(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest)
-        -> bool
+    auto DepartureReleaseEventHandler::ReleaseShouldBeRemoved(
+        const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) -> bool
     {
         if (releaseRequest->Approved()) {
             return releaseRequest->ReleaseExpiryTime() +
@@ -502,13 +502,48 @@ namespace UKControllerPlugin::Releases {
                 : requestingControllerCallsign);
     }
 
-    auto
-    DepartureReleaseEventHandler::UserRequestedRelease(const std::shared_ptr<DepartureReleaseRequest>& request) const
-        -> bool
+    auto DepartureReleaseEventHandler::UserRequestedRelease(
+        const std::shared_ptr<DepartureReleaseRequest>& request) const -> bool
     {
         return this->activeCallsigns.UserHasCallsign() &&
                this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() ==
                    request->RequestingController();
+    }
+
+    auto DepartureReleaseEventHandler::ReleaseNeedsPendingReminder(
+        const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) const -> bool
+    {
+        if (!releaseRequest || !this->activeCallsigns.UserHasCallsign() ||
+            releaseRequest->PendingDecisionReminderSent() || !releaseRequest->RequiresDecision()) {
+            return false;
+        }
+
+        if (this->activeCallsigns.GetUserCallsign().GetNormalisedPosition().GetId() !=
+            releaseRequest->TargetController()) {
+            return false;
+        }
+
+        return releaseRequest->CreatedAt() + std::chrono::seconds(PENDING_RELEASE_REMINDER_SECONDS) <= Time::TimeNow();
+    }
+
+    void DepartureReleaseEventHandler::SendPendingReleaseReminders()
+    {
+        for (const auto& release : *this->releaseRequests) {
+            auto releaseRequest = this->releaseRequests->Get(release.Id());
+            if (!this->ReleaseNeedsPendingReminder(releaseRequest)) {
+                continue;
+            }
+
+            auto requestingController = this->controllers.FetchPositionById(releaseRequest->RequestingController());
+            if (!requestingController) {
+                releaseRequest->MarkPendingDecisionReminderSent();
+                continue;
+            }
+
+            this->messager.SendMessageToUser(
+                ReleasePendingReminderUserMessage(releaseRequest->Callsign(), requestingController->GetCallsign()));
+            releaseRequest->MarkPendingDecisionReminderSent();
+        }
     }
 
     /**
@@ -645,6 +680,7 @@ namespace UKControllerPlugin::Releases {
     void DepartureReleaseEventHandler::TimedEventTrigger()
     {
         std::lock_guard queueLock(this->releaseMapGuard);
+        this->SendPendingReleaseReminders();
         this->releaseRequests->RemoveWhere([this](const std::shared_ptr<DepartureReleaseRequest>& release) {
             return this->ReleaseShouldBeRemoved(release);
         });

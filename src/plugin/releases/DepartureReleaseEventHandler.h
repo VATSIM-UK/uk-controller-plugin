@@ -57,8 +57,8 @@ namespace UKControllerPlugin {
                 int releaseDecisionCallbackId,
                 int releaseCancellationCallbackId);
             void ProcessPushEvent(const Push::PushEvent& message) override;
-            [[nodiscard]] auto GetPushEventSubscriptions() const -> std::set<Push::PushEventSubscription> override;
-            void PluginEventsSynced() override{};
+            [[nodiscard]] std::set<Push::PushEventSubscription> GetPushEventSubscriptions() const override;
+            void PluginEventsSynced() override {};
             void AddReleaseRequest(const std::shared_ptr<DepartureReleaseRequest>& request);
             auto GetReleaseRequest(int id) -> std::shared_ptr<DepartureReleaseRequest>;
             void TimedEventTrigger() override;
@@ -80,15 +80,14 @@ namespace UKControllerPlugin {
                 std::chrono::system_clock::time_point releasedAt,
                 int expiresInSeconds,
                 std::string remarks);
-            [[nodiscard]] auto GetTagItemDescription(int tagItemId) const -> std::string override;
+            [[nodiscard]] std::string GetTagItemDescription(int tagItemId) const override;
             void SetTagItemData(Tag::TagData& tagData) override;
             void ShowStatusDisplay(
                 Euroscope::EuroScopeCFlightPlanInterface& flightplan,
                 Euroscope::EuroScopeCRadarTargetInterface& radarTarget,
                 const std::string& context,
                 const POINT& mousePos);
-            [[nodiscard]] auto GetReleasesToDisplay() const
-                -> const std::set<std::shared_ptr<DepartureReleaseRequest>>&;
+            [[nodiscard]] const std::set<std::shared_ptr<DepartureReleaseRequest>>& GetReleasesToDisplay() const;
             auto GetReleasesRequiringUsersDecision()
                 -> std::set<std::shared_ptr<DepartureReleaseRequest>, CompareDepartureReleases>;
             void SelectReleaseRequestToCancel(
@@ -111,16 +110,18 @@ namespace UKControllerPlugin {
             [[nodiscard]] auto DepartureReleaseApprovedMessageValid(const nlohmann::json& data) const -> bool;
             [[nodiscard]] auto DepartureReleaseCancelMessageValid(const nlohmann::json& data) const -> bool;
             static auto ReleaseShouldBeRemoved(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) -> bool;
-            [[nodiscard]] auto
-            ControllerCanMakeReleaseDecision(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) const
-                -> bool;
-            auto FindReleaseRequiringDecisionForCallsign(std::string callsign)
-                -> std::shared_ptr<DepartureReleaseRequest>;
+            [[nodiscard]] bool
+            ControllerCanMakeReleaseDecision(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) const;
+            auto
+            FindReleaseRequiringDecisionForCallsign(std::string callsign) -> std::shared_ptr<DepartureReleaseRequest>;
             void SetReleaseStatusIndicatorTagData(Tag::TagData& tagData);
             void SetReleaseCountdownTagData(Tag::TagData& tagData);
             void SetRequestingControllerTagData(Tag::TagData& tagData);
-            [[nodiscard]] auto UserRequestedRelease(const std::shared_ptr<DepartureReleaseRequest>& request) const
-                -> bool;
+            [[nodiscard]] auto
+            UserRequestedRelease(const std::shared_ptr<DepartureReleaseRequest>& request) const -> bool;
+            void SendPendingReleaseReminders();
+            [[nodiscard]] auto
+            ReleaseNeedsPendingReminder(const std::shared_ptr<DepartureReleaseRequest>& releaseRequest) const -> bool;
 
             // A guard on the map to allow async operations
             std::mutex releaseMapGuard;
@@ -137,6 +138,7 @@ namespace UKControllerPlugin {
 
             static const int RELEASE_EXPIRY_SECONDS = 300;
             static const int RELEASE_DECISION_MADE_DELETE_AFTER_SECONDS = 90;
+            static const int PENDING_RELEASE_REMINDER_SECONDS = 60;
 
             // Release requests in progress
             const std::shared_ptr<DepartureReleaseRequestCollection> releaseRequests;
