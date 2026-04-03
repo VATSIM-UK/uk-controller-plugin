@@ -20,8 +20,7 @@ namespace UKControllerPlugin::Releases {
 
     auto ReleasePendingReminderUserMessage::MessageString() const -> std::string
     {
-        return "Departure release for " + this->callsign + " from " + this->requestingController +
-               " is still pending (standby).";
+        return "Departure release for " + this->callsign + " from " + this->requestingController + " is still pending.";
     }
 
     auto ReleasePendingReminderUserMessage::MessageShowHandler() const -> bool
