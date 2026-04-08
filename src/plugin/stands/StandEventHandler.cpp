@@ -109,6 +109,8 @@ namespace UKControllerPlugin::Stands {
     auto StandEventHandler::AssignStandInApi(
         const std::string& callsign, const std::string& airfield, const std::string& identifier) -> std::string
     {
+        using enum StandAssignment::Source;
+
         // Find the requested stand
         auto stand = std::find_if(
             this->stands.cbegin(), this->stands.cend(), [airfield, identifier](const Stand& stand) -> bool {
@@ -121,7 +123,7 @@ namespace UKControllerPlugin::Stands {
         }
 
         // Assign that stand
-        this->AssignStandToAircraft(callsign, *stand, StandAssignment::Source::User);
+        this->AssignStandToAircraft(callsign, *stand, User);
 
         int standId = stand->id;
         auto callsignForRequest = callsign;
@@ -341,25 +343,29 @@ namespace UKControllerPlugin::Stands {
 
     auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message) -> StandAssignment::Source
     {
+        using enum StandAssignment::Source;
+
         if (message.contains("assignment_source") && message.at("assignment_source").is_string()) {
             return StandAssignment::FromString(message.at("assignment_source").get<std::string>());
         }
 
-        return StandAssignment::Source::Unknown;
+        return Unknown;
     }
 
     auto StandEventHandler::GetAssignmentSourceShorthand(StandAssignment::Source source) -> std::string
     {
+        using enum StandAssignment::Source;
+
         switch (source) {
-        case StandAssignment::Source::Unknown:
+        case Unknown:
             return "UNK ";
-        case StandAssignment::Source::User:
+        case User:
             return "USER";
-        case StandAssignment::Source::ReservationAllocator:
+        case ReservationAllocator:
             return "RES ";
-        case StandAssignment::Source::VaaAllocator:
+        case VaaAllocator:
             return "VAA ";
-        case StandAssignment::Source::SystemAuto:
+        case SystemAuto:
             return "AUTO";
         }
         return "UNK ";
@@ -526,7 +532,9 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::AssignStandToAircraft(const std::string& callsign, const Stand& stand)
     {
-        this->AssignStandToAircraft(callsign, stand, StandAssignment::Source::SystemAuto);
+        using enum StandAssignment::Source;
+
+        this->AssignStandToAircraft(callsign, stand, SystemAuto);
     }
 
     void StandEventHandler::AssignStandToAircraft(
