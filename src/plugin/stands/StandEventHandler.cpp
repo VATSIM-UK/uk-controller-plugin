@@ -354,18 +354,18 @@ namespace UKControllerPlugin::Stands {
 
     auto StandEventHandler::GetAssignmentSourceShorthand(StandAssignment::Source source) -> std::string
     {
-        using Source = StandAssignment::Source;
+        using enum StandAssignment::Source;
 
         switch (source) {
-        case Source::Unknown:
+        case Unknown:
             return "UNK ";
-        case Source::User:
+        case User:
             return "USER";
-        case Source::ReservationAllocator:
+        case ReservationAllocator:
             return "RES ";
-        case Source::VaaAllocator:
+        case VaaAllocator:
             return "VAA ";
-        case Source::SystemAuto:
+        case SystemAuto:
             return "AUTO";
         }
         return "UNK ";
