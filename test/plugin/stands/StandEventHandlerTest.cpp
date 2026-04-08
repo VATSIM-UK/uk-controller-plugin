@@ -29,7 +29,7 @@ using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Stands::StandAssignedMessage;
-using UKControllerPlugin::Stands::StandAssignmentSource;
+using UKControllerPlugin::Stands::StandAssignment;
 using UKControllerPlugin::Stands::StandColourConfiguration;
 using UKControllerPlugin::Stands::StandEventHandler;
 using UKControllerPlugin::Stands::StandUnassignedMessage;
@@ -66,14 +66,7 @@ namespace UKControllerPluginTest {
                   userSetting(mockUserSettingProvider),
                   colourConfiguration(std::make_shared<StandColourConfiguration>(userSetting)),
                   tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize),
-                  handler(
-                      api,
-                      taskRunner,
-                      plugin,
-                      mockIntegration,
-                      airfieldOwnership,
-                      GetStands(),
-                      StandEventHandler::ConstructorOptions{1, colourConfiguration})
+                  handler(api, taskRunner, plugin, &userSetting, mockIntegration, airfieldOwnership, GetStands(), 1)
             {
                 ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
                 ON_CALL(this->mockUserSettingProvider, KeyExists(_)).WillByDefault(Return(false));
@@ -90,7 +83,7 @@ namespace UKControllerPluginTest {
                 return stands;
             }
 
-            void SetAssignedStandWithSource(int standId, StandAssignmentSource::Source source)
+            void SetAssignedStandWithSource(int standId, StandAssignment::Source source)
             {
                 this->handler.SetAssignedStand("BAW123", standId, source);
             }
@@ -108,8 +101,7 @@ namespace UKControllerPluginTest {
                     &this->fontSize);
             }
 
-            void
-            ExpectSourceTagItemShorthand(StandAssignmentSource::Source source, const std::string& expectedShorthand)
+            void ExpectSourceTagItemShorthand(StandAssignment::Source source, const std::string& expectedShorthand)
             {
                 this->SetAssignedStandWithSource(1, source);
                 auto sourceTagData = this->CreateSourceTagData();
@@ -117,7 +109,7 @@ namespace UKControllerPluginTest {
                 EXPECT_EQ(expectedShorthand, sourceTagData.GetItemString());
             }
 
-            void ExpectTagItem110ColourForSource(StandAssignmentSource::Source source)
+            void ExpectTagItem110ColourForSource(StandAssignment::Source source)
             {
                 this->SetAssignedStandWithSource(3, source);
                 COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
@@ -125,7 +117,7 @@ namespace UKControllerPluginTest {
                 EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
             }
 
-            void ExpectSourceTagItemColourForSource(StandAssignmentSource::Source source)
+            void ExpectSourceTagItemColourForSource(StandAssignment::Source source)
             {
                 this->SetAssignedStandWithSource(3, source);
                 COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
@@ -183,13 +175,13 @@ namespace UKControllerPluginTest {
                 return fp;
             }
 
-            [[nodiscard]] static auto AllSources() -> std::array<StandAssignmentSource::Source, 4>
+            [[nodiscard]] static auto AllSources() -> std::array<StandAssignment::Source, 4>
             {
                 return {
-                    StandAssignmentSource::SOURCE_USER,
-                    StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR,
-                    StandAssignmentSource::SOURCE_VAA_ALLOCATOR,
-                    StandAssignmentSource::SOURCE_SYSTEM};
+                    StandAssignment::Source::User,
+                    StandAssignment::Source::ReservationAllocator,
+                    StandAssignment::Source::VaaAllocator,
+                    StandAssignment::Source::SystemAuto};
             }
 
             [[nodiscard]] static auto MakeInboundMessage(const std::string& type, const nlohmann::json& data)

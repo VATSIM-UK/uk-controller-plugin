@@ -109,7 +109,7 @@ namespace UKControllerPlugin::Stands {
     auto StandEventHandler::AssignStandInApi(
         const std::string& callsign, const std::string& airfield, const std::string& identifier) -> std::string
     {
-        using enum StandAssignment::Source;
+        using Source = StandAssignment::Source;
 
         // Find the requested stand
         auto stand = std::find_if(
@@ -123,7 +123,7 @@ namespace UKControllerPlugin::Stands {
         }
 
         // Assign that stand
-        this->AssignStandToAircraft(callsign, *stand, User);
+        this->AssignStandToAircraft(callsign, *stand, Source::User);
 
         int standId = stand->id;
         auto callsignForRequest = callsign;
@@ -343,29 +343,29 @@ namespace UKControllerPlugin::Stands {
 
     auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message) -> StandAssignment::Source
     {
-        using enum StandAssignment::Source;
+        using Source = StandAssignment::Source;
 
         if (message.contains("assignment_source") && message.at("assignment_source").is_string()) {
             return StandAssignment::FromString(message.at("assignment_source").get<std::string>());
         }
 
-        return Unknown;
+        return Source::Unknown;
     }
 
     auto StandEventHandler::GetAssignmentSourceShorthand(StandAssignment::Source source) -> std::string
     {
-        using enum StandAssignment::Source;
+        using Source = StandAssignment::Source;
 
         switch (source) {
-        case Unknown:
+        case Source::Unknown:
             return "UNK ";
-        case User:
+        case Source::User:
             return "USER";
-        case ReservationAllocator:
+        case Source::ReservationAllocator:
             return "RES ";
-        case VaaAllocator:
+        case Source::VaaAllocator:
             return "VAA ";
-        case SystemAuto:
+        case Source::SystemAuto:
             return "AUTO";
         }
         return "UNK ";
@@ -532,9 +532,9 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::AssignStandToAircraft(const std::string& callsign, const Stand& stand)
     {
-        using enum StandAssignment::Source;
+        using Source = StandAssignment::Source;
 
-        this->AssignStandToAircraft(callsign, stand, SystemAuto);
+        this->AssignStandToAircraft(callsign, stand, Source::SystemAuto);
     }
 
     void StandEventHandler::AssignStandToAircraft(
