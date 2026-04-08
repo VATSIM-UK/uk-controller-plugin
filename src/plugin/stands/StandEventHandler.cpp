@@ -367,8 +367,9 @@ namespace UKControllerPlugin::Stands {
             return "VAA ";
         case SystemAuto:
             return "AUTO";
+        default:
+            return "UNK ";
         }
-        return "UNK ";
     }
 
     auto StandEventHandler::UnassignmentMessageValid(const nlohmann::json& message) -> bool
