@@ -177,7 +177,6 @@ namespace UKControllerPluginTest {
 
             [[nodiscard]] static auto AllSources() -> std::array<StandAssignment::Source, 4>
             {
-                using Source = StandAssignment::Source;
                 using enum StandAssignment::Source;
 
                 return {User, ReservationAllocator, VaaAllocator, SystemAuto};

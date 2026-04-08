@@ -37,9 +37,9 @@ namespace UKControllerPlugin::Stands {
                 return "vaa_allocator";
             case SystemAuto:
                 return "system_auto";
-            default:
-                return "system_auto";
             }
+
+            return "system_auto";
         }
 
         [[nodiscard]] static constexpr auto FromString(std::string_view source) -> Source
