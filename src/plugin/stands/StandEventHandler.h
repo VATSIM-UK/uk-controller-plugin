@@ -106,8 +106,7 @@ namespace UKControllerPlugin::Stands {
 
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
-        void
-        AssignStandToAircraft(const std::string& callsign, const Stand& stand, StandAssignment::Source source);
+        void AssignStandToAircraft(const std::string& callsign, const Stand& stand, StandAssignment::Source source);
         [[nodiscard]] auto
         AssignStandInApi(const std::string& callsign, const std::string& airfield, const std::string& identifier)
             -> std::string;

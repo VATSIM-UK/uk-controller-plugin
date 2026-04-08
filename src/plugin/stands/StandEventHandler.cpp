@@ -31,16 +31,17 @@ namespace UKControllerPlugin::Stands {
         const ApiInterface& api,
         TaskRunnerInterface& taskRunner,
         EuroscopePluginLoopbackInterface& plugin,
-                UKControllerPlugin::Euroscope::UserSetting* userSetting,
+        UKControllerPlugin::Euroscope::UserSetting* userSetting,
         Integration::OutboundIntegrationEventHandler& integrationEventHandler,
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
         std::set<Stand, CompareStands> stands,
-                int standSelectedCallbackId)
+        int standSelectedCallbackId)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
-                    colourConfiguration(userSetting ? std::make_shared<StandColourConfiguration>(*userSetting)
-                                                                                    : std::make_shared<StandColourConfiguration>()),
-                    integrationEventHandler(integrationEventHandler), ownership(ownership),
-                    standSelectedCallbackId(standSelectedCallbackId)
+          colourConfiguration(
+              userSetting ? std::make_shared<StandColourConfiguration>(*userSetting)
+                          : std::make_shared<StandColourConfiguration>()),
+          integrationEventHandler(integrationEventHandler), ownership(ownership),
+          standSelectedCallbackId(standSelectedCallbackId)
     {
         assert(this->ownership != nullptr && "Ownership must not be null");
     }
@@ -230,8 +231,7 @@ namespace UKControllerPlugin::Stands {
         this->SetAssignedStand(callsign, standId, StandAssignment::FromString(source));
     }
 
-    void
-    StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, StandAssignment::Source source)
+    void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, StandAssignment::Source source)
     {
         this->standAssignments[callsign] = {standId, source};
     }
@@ -339,8 +339,7 @@ namespace UKControllerPlugin::Stands {
                this->stands.find(message.at("stand_id").get<int>()) != this->stands.cend();
     }
 
-    auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message)
-        -> StandAssignment::Source
+    auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message) -> StandAssignment::Source
     {
         if (message.contains("assignment_source") && message.at("assignment_source").is_string()) {
             return StandAssignment::FromString(message.at("assignment_source").get<std::string>());

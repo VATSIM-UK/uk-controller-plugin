@@ -27,8 +27,8 @@ namespace UKControllerPlugin::Stands {
             StandAssignment::Source source,
             COLORREF defaultColour) -> void
         {
-            const std::string key = std::string(StandColourConfiguration::SETTING_PREFIX) +
-                                    std::string(StandAssignment::ToString(source));
+            const std::string key =
+                std::string(StandColourConfiguration::SETTING_PREFIX) + std::string(StandAssignment::ToString(source));
             if (userSetting.HasEntry(key)) {
                 sourceColours[source] = userSetting.GetColourEntry(key, defaultColour);
             }
@@ -45,11 +45,11 @@ namespace UKControllerPlugin::Stands {
     }
 
     StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting* userSetting)
-        : userSetting(userSetting),
-          sourceColours({{StandAssignment::Source::User, DEFAULT_USER_COLOUR},
-                         {StandAssignment::Source::ReservationAllocator, DEFAULT_RESERVATION_COLOUR},
-                         {StandAssignment::Source::VaaAllocator, DEFAULT_VAA_COLOUR},
-                         {StandAssignment::Source::SystemAuto, DEFAULT_SYSTEM_COLOUR}})
+        : userSetting(userSetting), sourceColours(
+                                        {{StandAssignment::Source::User, DEFAULT_USER_COLOUR},
+                                         {StandAssignment::Source::ReservationAllocator, DEFAULT_RESERVATION_COLOUR},
+                                         {StandAssignment::Source::VaaAllocator, DEFAULT_VAA_COLOUR},
+                                         {StandAssignment::Source::SystemAuto, DEFAULT_SYSTEM_COLOUR}})
     {
         LoadFromUserSettings();
     }
