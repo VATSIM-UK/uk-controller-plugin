@@ -2,18 +2,36 @@
 #include "StandAssignmentSource.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
+#include <array>
 #include <stdexcept>
 
 namespace UKControllerPlugin::Stands {
 
     namespace {
-        auto DefaultSourceColours() -> std::map<StandAssignmentSource::Source, COLORREF>
+        struct SourceColourDefault
         {
-            return {
-                {StandAssignmentSource::SOURCE_USER, RGB(255, 255, 255)},
-                {StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR, RGB(255, 255, 0)},
-                {StandAssignmentSource::SOURCE_VAA_ALLOCATOR, RGB(0, 255, 255)},
-                {StandAssignmentSource::SOURCE_SYSTEM, RGB(180, 180, 180)}};
+            StandAssignment::Source source;
+            COLORREF defaultColour;
+        };
+
+        constexpr std::array<SourceColourDefault, 4> sourceColourDefaults = {{
+            {StandAssignment::Source::User, StandColourConfiguration::DEFAULT_USER_COLOUR},
+            {StandAssignment::Source::ReservationAllocator, StandColourConfiguration::DEFAULT_RESERVATION_COLOUR},
+            {StandAssignment::Source::VaaAllocator, StandColourConfiguration::DEFAULT_VAA_COLOUR},
+            {StandAssignment::Source::SystemAuto, StandColourConfiguration::DEFAULT_SYSTEM_COLOUR},
+        }};
+
+        auto LoadColourFromUserSettings(
+            UKControllerPlugin::Euroscope::UserSetting& userSetting,
+            std::map<StandAssignment::Source, COLORREF>& sourceColours,
+            StandAssignment::Source source,
+            COLORREF defaultColour) -> void
+        {
+            const std::string key = std::string(StandColourConfiguration::SETTING_PREFIX) +
+                                    std::string(StandAssignment::ToString(source));
+            if (userSetting.HasEntry(key)) {
+                sourceColours[source] = userSetting.GetColourEntry(key, defaultColour);
+            }
         }
     } // namespace
 
@@ -27,12 +45,16 @@ namespace UKControllerPlugin::Stands {
     }
 
     StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting* userSetting)
-        : userSetting(userSetting), sourceColours(DefaultSourceColours())
+        : userSetting(userSetting),
+          sourceColours({{StandAssignment::Source::User, DEFAULT_USER_COLOUR},
+                         {StandAssignment::Source::ReservationAllocator, DEFAULT_RESERVATION_COLOUR},
+                         {StandAssignment::Source::VaaAllocator, DEFAULT_VAA_COLOUR},
+                         {StandAssignment::Source::SystemAuto, DEFAULT_SYSTEM_COLOUR}})
     {
         LoadFromUserSettings();
     }
 
-    auto StandColourConfiguration::GetColourForSource(StandAssignmentSource::Source source) const -> COLORREF
+    auto StandColourConfiguration::GetColourForSource(StandAssignment::Source source) const -> COLORREF
     {
         if (auto it = sourceColours.find(source); it != sourceColours.cend()) {
             return it->second;
@@ -47,32 +69,8 @@ namespace UKControllerPlugin::Stands {
             return;
         }
 
-        std::string key = std::string(SETTING_PREFIX) +
-                          std::string(StandAssignmentSource::ToString(StandAssignmentSource::SOURCE_USER));
-        if (this->userSetting->HasEntry(key)) {
-            sourceColours[StandAssignmentSource::SOURCE_USER] =
-                this->userSetting->GetColourEntry(key, DEFAULT_USER_COLOUR);
-        }
-
-        key = std::string(SETTING_PREFIX) +
-              std::string(StandAssignmentSource::ToString(StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR));
-        if (this->userSetting->HasEntry(key)) {
-            sourceColours[StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR] =
-                this->userSetting->GetColourEntry(key, DEFAULT_RESERVATION_COLOUR);
-        }
-
-        key = std::string(SETTING_PREFIX) +
-              std::string(StandAssignmentSource::ToString(StandAssignmentSource::SOURCE_VAA_ALLOCATOR));
-        if (this->userSetting->HasEntry(key)) {
-            sourceColours[StandAssignmentSource::SOURCE_VAA_ALLOCATOR] =
-                this->userSetting->GetColourEntry(key, DEFAULT_VAA_COLOUR);
-        }
-
-        key = std::string(SETTING_PREFIX) +
-              std::string(StandAssignmentSource::ToString(StandAssignmentSource::SOURCE_SYSTEM));
-        if (this->userSetting->HasEntry(key)) {
-            sourceColours[StandAssignmentSource::SOURCE_SYSTEM] =
-                this->userSetting->GetColourEntry(key, DEFAULT_SYSTEM_COLOUR);
+        for (const auto& entry : sourceColourDefaults) {
+            LoadColourFromUserSettings(*this->userSetting, this->sourceColours, entry.source, entry.defaultColour);
         }
 
         LogInfo("Loaded stand assignment source colours from UserSettings");

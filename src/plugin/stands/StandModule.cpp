@@ -2,7 +2,6 @@
 #include "StandEventHandler.h"
 #include "StandModule.h"
 #include "StandSerializer.h"
-#include "StandColourConfiguration.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "dependency/DependencyLoaderInterface.h"
 #include "euroscope/CallbackFunction.h"
@@ -34,22 +33,17 @@ namespace UKControllerPlugin::Stands {
         std::set<Stand, CompareStands> stands;
         from_json(dependencies.LoadDependency(GetDependencyKey(), nlohmann::json::object()), stands);
 
-        // Load stand colour configuration from EuroScope user settings
-        // If pluginUserSettingHandler is not available (e.g., in tests), creates default-only config
-        auto colourConfiguration = container.pluginUserSettingHandler
-                                       ? std::make_shared<StandColourConfiguration>(*container.pluginUserSettingHandler)
-                                       : std::make_shared<StandColourConfiguration>();
-
         // Create the event handler
         auto standSelectedCallbackId = container.pluginFunctionHandlers->ReserveNextDynamicFunctionId();
         std::shared_ptr<StandEventHandler> eventHandler = std::make_shared<StandEventHandler>(
             *container.api,
             *container.taskRunner,
             *container.plugin,
+            container.pluginUserSettingHandler.get(),
             *container.integrationModuleContainer->outboundMessageHandler,
             container.airfieldOwnership,
             stands,
-            StandEventHandler::ConstructorOptions{standSelectedCallbackId, colourConfiguration});
+            standSelectedCallbackId);
 
         // Create a tag function for the stand assignment popup list and add a callback
         TagFunction openStandAssignmentPopupMenu(

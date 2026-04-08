@@ -6,10 +6,11 @@ namespace UKControllerPlugin::Stands {
     /*
         Represents a stand assignment with its source (how it was assigned).
     */
-    struct StandAssignmentSource
+    struct StandAssignment
     {
         enum class Source
         {
+            Unknown,
             User,
             ReservationAllocator,
             VaaAllocator,
@@ -21,17 +22,13 @@ namespace UKControllerPlugin::Stands {
         // The source of the assignment (user, reservation_allocator, vaa_allocator, system_auto)
         Source source;
 
-        // The four possible sources for stand assignments
-        static constexpr Source SOURCE_USER = Source::User;
-        static constexpr Source SOURCE_RESERVATION_ALLOCATOR = Source::ReservationAllocator;
-        static constexpr Source SOURCE_VAA_ALLOCATOR = Source::VaaAllocator;
-        static constexpr Source SOURCE_SYSTEM = Source::SystemAuto;
-
         [[nodiscard]] static constexpr auto ToString(Source source) -> std::string_view
         {
             using enum Source;
 
             switch (source) {
+            case Unknown:
+                return "unknown";
             case User:
                 return "user";
             case ReservationAllocator:
@@ -59,7 +56,11 @@ namespace UKControllerPlugin::Stands {
                 return VaaAllocator;
             }
 
-            return SystemAuto;
+            if (source == "system_auto") {
+                return SystemAuto;
+            }
+
+            return Unknown;
         }
     };
 } // namespace UKControllerPlugin::Stands

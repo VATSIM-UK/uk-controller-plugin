@@ -15,6 +15,7 @@ namespace UKControllerPlugin {
     } // namespace Api
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
+        class UserSetting;
     } // namespace Euroscope
     namespace Ownership {
         class AirfieldServiceProviderCollection;
@@ -37,20 +38,15 @@ namespace UKControllerPlugin::Stands {
                               public Integration::IntegrationActionProcessor
     {
         public:
-        struct ConstructorOptions
-        {
-            int standSelectedCallbackId;
-            std::shared_ptr<const StandColourConfiguration> colourConfiguration;
-        };
-
         StandEventHandler(
             const UKControllerPlugin::Api::ApiInterface& api,
             TaskManager::TaskRunnerInterface& taskRunner,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            UKControllerPlugin::Euroscope::UserSetting* userSetting,
             Integration::OutboundIntegrationEventHandler& integrationEventHandler,
             std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
             std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
-            ConstructorOptions options);
+            int standSelectedCallbackId);
         [[nodiscard]] auto ActionsToProcess() const -> std::vector<Integration::MessageType> override;
         void ProcessAction(
             std::shared_ptr<Integration::MessageInterface> message,
@@ -74,7 +70,7 @@ namespace UKControllerPlugin::Stands {
         void RemoveFlightStripAnnotation(const std::string& callsign) const;
         void SetAssignedStand(const std::string& callsign, int standId);
         void SetAssignedStand(const std::string& callsign, int standId, const std::string& source);
-        void SetAssignedStand(const std::string& callsign, int standId, StandAssignmentSource::Source source);
+        void SetAssignedStand(const std::string& callsign, int standId, StandAssignment::Source source);
         void StandSelected(int functionId, std::string context, RECT);
         void DisplayStandAssignmentEditBox(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
@@ -111,7 +107,7 @@ namespace UKControllerPlugin::Stands {
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
         void
-        AssignStandToAircraft(const std::string& callsign, const Stand& stand, StandAssignmentSource::Source source);
+        AssignStandToAircraft(const std::string& callsign, const Stand& stand, StandAssignment::Source source);
         [[nodiscard]] auto
         AssignStandInApi(const std::string& callsign, const std::string& airfield, const std::string& identifier)
             -> std::string;
@@ -122,8 +118,8 @@ namespace UKControllerPlugin::Stands {
         void UnassignStandForAircraft(const std::string& callsign);
         [[nodiscard]] auto AssignmentMessageValid(const nlohmann::json& message) const -> bool;
         [[nodiscard]] static auto GetAssignmentSourceFromMessage(const nlohmann::json& message)
-            -> StandAssignmentSource::Source;
-        [[nodiscard]] static auto GetAssignmentSourceShorthand(StandAssignmentSource::Source source) -> std::string;
+            -> StandAssignment::Source;
+        [[nodiscard]] static auto GetAssignmentSourceShorthand(StandAssignment::Source source) -> std::string;
         auto CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool;
         static auto UnassignmentMessageValid(const nlohmann::json& message) -> bool;
         auto
@@ -147,7 +143,7 @@ namespace UKControllerPlugin::Stands {
         std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands;
 
         // The currently assigned stands and who they are assigned to, with source information
-        std::map<std::string, StandAssignmentSource, std::less<>> standAssignments;
+        std::map<std::string, StandAssignment, std::less<>> standAssignments;
 
         // Colour configuration for stand assignment sources
         std::shared_ptr<const StandColourConfiguration> colourConfiguration;

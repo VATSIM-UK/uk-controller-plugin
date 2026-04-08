@@ -31,13 +31,16 @@ namespace UKControllerPlugin::Stands {
         const ApiInterface& api,
         TaskRunnerInterface& taskRunner,
         EuroscopePluginLoopbackInterface& plugin,
+                UKControllerPlugin::Euroscope::UserSetting* userSetting,
         Integration::OutboundIntegrationEventHandler& integrationEventHandler,
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
         std::set<Stand, CompareStands> stands,
-        ConstructorOptions options)
+                int standSelectedCallbackId)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
-          colourConfiguration(std::move(options.colourConfiguration)), integrationEventHandler(integrationEventHandler),
-          ownership(ownership), standSelectedCallbackId(options.standSelectedCallbackId)
+                    colourConfiguration(userSetting ? std::make_shared<StandColourConfiguration>(*userSetting)
+                                                                                    : std::make_shared<StandColourConfiguration>()),
+                    integrationEventHandler(integrationEventHandler), ownership(ownership),
+                    standSelectedCallbackId(standSelectedCallbackId)
     {
         assert(this->ownership != nullptr && "Ownership must not be null");
     }
@@ -117,7 +120,7 @@ namespace UKControllerPlugin::Stands {
         }
 
         // Assign that stand
-        this->AssignStandToAircraft(callsign, *stand, StandAssignmentSource::SOURCE_USER);
+        this->AssignStandToAircraft(callsign, *stand, StandAssignment::Source::User);
 
         int standId = stand->id;
         auto callsignForRequest = callsign;
@@ -219,16 +222,16 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId)
     {
-        this->standAssignments[callsign] = {standId, StandAssignmentSource::SOURCE_SYSTEM};
+        this->standAssignments[callsign] = {standId, StandAssignment::Source::SystemAuto};
     }
 
     void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, const std::string& source)
     {
-        this->SetAssignedStand(callsign, standId, StandAssignmentSource::FromString(source));
+        this->SetAssignedStand(callsign, standId, StandAssignment::FromString(source));
     }
 
     void
-    StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, StandAssignmentSource::Source source)
+    StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, StandAssignment::Source source)
     {
         this->standAssignments[callsign] = {standId, source};
     }
@@ -320,7 +323,10 @@ namespace UKControllerPlugin::Stands {
             tagData.SetItemString(stand->identifier);
         } else if (tagData.GetItemCode() == standAssignmentSourceTagItemId) {
             tagData.SetItemString(GetAssignmentSourceShorthand(assignment.source));
-        } else {
+        }
+
+        if (tagData.GetItemCode() != assignedStandTagItemId &&
+            tagData.GetItemCode() != standAssignmentSourceTagItemId) {
             return;
         }
         tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
@@ -334,27 +340,27 @@ namespace UKControllerPlugin::Stands {
     }
 
     auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message)
-        -> StandAssignmentSource::Source
+        -> StandAssignment::Source
     {
         if (message.contains("assignment_source") && message.at("assignment_source").is_string()) {
-            return StandAssignmentSource::FromString(message.at("assignment_source").get<std::string>());
+            return StandAssignment::FromString(message.at("assignment_source").get<std::string>());
         }
 
-        return StandAssignmentSource::SOURCE_SYSTEM;
+        return StandAssignment::Source::Unknown;
     }
 
-    auto StandEventHandler::GetAssignmentSourceShorthand(StandAssignmentSource::Source source) -> std::string
+    auto StandEventHandler::GetAssignmentSourceShorthand(StandAssignment::Source source) -> std::string
     {
-        if (source == StandAssignmentSource::SOURCE_USER) {
+        switch (source) {
+        case StandAssignment::Source::Unknown:
+            return "UNK ";
+        case StandAssignment::Source::User:
             return "USER";
-        }
-        if (source == StandAssignmentSource::SOURCE_RESERVATION_ALLOCATOR) {
+        case StandAssignment::Source::ReservationAllocator:
             return "RES ";
-        }
-        if (source == StandAssignmentSource::SOURCE_VAA_ALLOCATOR) {
+        case StandAssignment::Source::VaaAllocator:
             return "VAA ";
-        }
-        if (source == StandAssignmentSource::SOURCE_SYSTEM) {
+        case StandAssignment::Source::SystemAuto:
             return "AUTO";
         }
         return "UNK ";
@@ -521,11 +527,11 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::AssignStandToAircraft(const std::string& callsign, const Stand& stand)
     {
-        this->AssignStandToAircraft(callsign, stand, StandAssignmentSource::SOURCE_SYSTEM);
+        this->AssignStandToAircraft(callsign, stand, StandAssignment::Source::SystemAuto);
     }
 
     void StandEventHandler::AssignStandToAircraft(
-        const std::string& callsign, const Stand& stand, StandAssignmentSource::Source source)
+        const std::string& callsign, const Stand& stand, StandAssignment::Source source)
     {
         this->AnnotateFlightStrip(callsign, stand.id);
         this->standAssignments[callsign] = {stand.id, source};
@@ -537,7 +543,7 @@ namespace UKControllerPlugin::Stands {
             stand.airfieldCode,
             stand.identifier,
             callsign,
-            StandAssignmentSource::ToString(source));
+            StandAssignment::ToString(source));
         LogInfo(logMessage);
     }
     auto StandEventHandler::ActionsToProcess() const -> std::vector<Integration::MessageType>
