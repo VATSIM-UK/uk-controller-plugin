@@ -38,8 +38,6 @@ namespace UKControllerPlugin::Stands {
             case SystemAuto:
                 return "system_auto";
             }
-
-            return "system_auto";
         }
 
         [[nodiscard]] static constexpr auto FromString(std::string_view source) -> Source

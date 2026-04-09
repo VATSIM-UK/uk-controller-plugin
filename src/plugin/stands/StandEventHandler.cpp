@@ -323,15 +323,11 @@ namespace UKControllerPlugin::Stands {
 
         if (tagData.GetItemCode() == assignedStandTagItemId) {
             tagData.SetItemString(stand->identifier);
+            tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
         } else if (tagData.GetItemCode() == standAssignmentSourceTagItemId) {
             tagData.SetItemString(GetAssignmentSourceShorthand(assignment.source));
+            tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
         }
-
-        if (tagData.GetItemCode() != assignedStandTagItemId &&
-            tagData.GetItemCode() != standAssignmentSourceTagItemId) {
-            return;
-        }
-        tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
     }
 
     auto StandEventHandler::AssignmentMessageValid(const nlohmann::json& message) const -> bool
@@ -358,17 +354,17 @@ namespace UKControllerPlugin::Stands {
 
         switch (source) {
         case Unknown:
-            return "UNK ";
+            return "UNK";
         case User:
             return "USER";
         case ReservationAllocator:
-            return "RES ";
+            return "RES";
         case VaaAllocator:
-            return "VAA ";
+            return "VAA";
         case SystemAuto:
             return "AUTO";
         }
-        return "UNK ";
+        return "UNK";
     }
 
     auto StandEventHandler::UnassignmentMessageValid(const nlohmann::json& message) -> bool
@@ -541,7 +537,7 @@ namespace UKControllerPlugin::Stands {
         const std::string& callsign, const Stand& stand, StandAssignment::Source source)
     {
         this->AnnotateFlightStrip(callsign, stand.id);
-        this->standAssignments[callsign] = {stand.id, source};
+        this->SetAssignedStand(callsign, stand.id, source);
         this->integrationEventHandler.SendEvent(
             std::make_shared<StandAssignedMessage>(callsign, stand.airfieldCode, stand.identifier));
         const auto logMessage = std::format(
