@@ -37,6 +37,8 @@ namespace UKControllerPlugin::Stands {
                 return "vaa_allocator";
             case SystemAuto:
                 return "system_auto";
+            default:
+                return "unknown";
             }
         }
 
