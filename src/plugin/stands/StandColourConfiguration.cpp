@@ -2,8 +2,8 @@
 #include "StandAssignmentSource.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
+#include "utils/log/LoggerFunctions.h"
 #include <array>
-#include <stdexcept>
 
 namespace UKControllerPlugin::Stands {
 
@@ -18,7 +18,8 @@ namespace UKControllerPlugin::Stands {
 
     StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting* userSetting)
         : userSetting(userSetting), sourceColours(
-                                        {{StandAssignment::Source::User, DEFAULT_USER_COLOUR},
+                                        {{StandAssignment::Source::Unknown, DEFAULT_UNKNOWN_COLOUR},
+                                         {StandAssignment::Source::User, DEFAULT_USER_COLOUR},
                                          {StandAssignment::Source::ReservationAllocator, DEFAULT_RESERVATION_COLOUR},
                                          {StandAssignment::Source::VaaAllocator, DEFAULT_VAA_COLOUR},
                                          {StandAssignment::Source::SystemAuto, DEFAULT_SYSTEM_COLOUR}})
@@ -41,23 +42,18 @@ namespace UKControllerPlugin::Stands {
             return;
         }
 
-        struct SourceColourDefault
-        {
-            StandAssignment::Source source;
-            COLORREF defaultColour;
-        };
-
-        constexpr std::array<SourceColourDefault, 4> sourceColourDefaults = {{
-            {StandAssignment::Source::User, DEFAULT_USER_COLOUR},
-            {StandAssignment::Source::ReservationAllocator, DEFAULT_RESERVATION_COLOUR},
-            {StandAssignment::Source::VaaAllocator, DEFAULT_VAA_COLOUR},
-            {StandAssignment::Source::SystemAuto, DEFAULT_SYSTEM_COLOUR},
+        constexpr std::array<StandAssignment::Source, 4> sourceColourDefaults = {{
+            StandAssignment::Source::Unknown,
+            StandAssignment::Source::User,
+            StandAssignment::Source::ReservationAllocator,
+            StandAssignment::Source::VaaAllocator,
+            StandAssignment::Source::SystemAuto,
         }};
 
-        for (const auto& entry : sourceColourDefaults) {
-            const std::string key = std::string(SETTING_PREFIX) + std::string(StandAssignment::ToString(entry.source));
+        for (const auto source : sourceColourDefaults) {
+            const std::string key = std::string(SETTING_PREFIX) + std::string(StandAssignment::ToString(source));
             if (this->userSetting->HasEntry(key)) {
-                this->sourceColours[entry.source] = this->userSetting->GetColourEntry(key);
+                this->sourceColours[source] = this->userSetting->GetColourEntry(key);
             }
         }
 
