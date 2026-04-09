@@ -57,7 +57,7 @@ namespace UKControllerPlugin::Stands {
         for (const auto& entry : sourceColourDefaults) {
             const std::string key = std::string(SETTING_PREFIX) + std::string(StandAssignment::ToString(entry.source));
             if (this->userSetting->HasEntry(key)) {
-                this->sourceColours[entry.source] = this->userSetting->GetColourEntry(key, entry.defaultColour);
+                this->sourceColours[entry.source] = this->userSetting->GetColourEntry(key);
             }
         }
 
