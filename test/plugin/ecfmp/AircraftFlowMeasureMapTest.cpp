@@ -78,27 +78,21 @@ namespace UKControllerPluginTest::ECFMP {
         map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure1});
         map.OnEvent(::ECFMP::Plugin::FlowMeasureActivatedEvent{mockFlowMeasure2});
 
-        const auto& baw123FlowMeasures = map.GetFlowMeasuresForCallsign("BAW123");
-        const auto& baw456FlowMeasures = map.GetFlowMeasuresForCallsign("BAW456");
-
         // Check that flightplan 1 has both measures, but flightplan 2 has only the second
-        EXPECT_EQ(2, baw123FlowMeasures.size());
-        EXPECT_TRUE(baw123FlowMeasures.contains(mockFlowMeasure1));
-        EXPECT_TRUE(baw123FlowMeasures.contains(mockFlowMeasure2));
-        EXPECT_EQ(1, baw456FlowMeasures.size());
-        EXPECT_TRUE(baw456FlowMeasures.contains(mockFlowMeasure2));
+        EXPECT_EQ(2, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure1, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(mockFlowMeasure2, *(++map.GetFlowMeasuresForCallsign("BAW123").begin()));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
 
         // Withdraw the first measure
         map.OnEvent(::ECFMP::Plugin::FlowMeasureWithdrawnEvent{mockFlowMeasure1});
 
-        const auto& baw123FlowMeasuresAfterWithdrawal = map.GetFlowMeasuresForCallsign("BAW123");
-        const auto& baw456FlowMeasuresAfterWithdrawal = map.GetFlowMeasuresForCallsign("BAW456");
-
         // Check that flightplan 1 now has just the second measure, but flightplan 2 has only the second
-        EXPECT_EQ(1, baw123FlowMeasuresAfterWithdrawal.size());
-        EXPECT_TRUE(baw123FlowMeasuresAfterWithdrawal.contains(mockFlowMeasure2));
-        EXPECT_EQ(1, baw456FlowMeasuresAfterWithdrawal.size());
-        EXPECT_TRUE(baw456FlowMeasuresAfterWithdrawal.contains(mockFlowMeasure2));
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW123").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW123").begin());
+        EXPECT_EQ(1, map.GetFlowMeasuresForCallsign("BAW456").size());
+        EXPECT_EQ(mockFlowMeasure2, *map.GetFlowMeasuresForCallsign("BAW456").begin());
     }
 
     TEST_F(AircraftFlowMeasureMapTest, FlowMeasuresWithdrawingRemovesAllFromActiveAircraftFlowMeasures)
