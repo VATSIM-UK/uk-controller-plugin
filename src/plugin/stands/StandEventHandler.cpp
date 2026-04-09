@@ -354,17 +354,17 @@ namespace UKControllerPlugin::Stands {
 
         switch (source) {
         case Unknown:
-            return "UNK ";
+            return "UNK";
         case User:
             return "USER";
         case ReservationAllocator:
-            return "RES ";
+            return "RES";
         case VaaAllocator:
-            return "VAA ";
+            return "VAA";
         case SystemAuto:
             return "AUTO";
         default:
-            return "UNK ";
+            return "UNK";
         }
     }
 

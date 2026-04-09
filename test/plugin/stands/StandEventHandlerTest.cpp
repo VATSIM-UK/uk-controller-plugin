@@ -335,7 +335,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItReturnsSourceShorthandForSourceTagItem)
         {
             const auto sources = AllSources();
-            const std::array<std::string, 4> expectedShorthand = {"USER", "RES ", "VAA ", "AUTO"};
+            const std::array<std::string, 4> expectedShorthand = {"USER", "RES", "VAA", "AUTO"};
 
             for (size_t i = 0; i < std::size(sources); ++i) {
                 this->ExpectSourceTagItemShorthand(sources[i], expectedShorthand[i]);
