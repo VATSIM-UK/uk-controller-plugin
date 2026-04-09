@@ -2,7 +2,7 @@
 #include "StandAssignmentSource.h"
 #include "euroscope/UserSetting.h"
 #include "helper/HelperFunctions.h"
-#include "utils/log/LoggerFunctions.h"
+#include "log/LoggerFunctions.h"
 #include <array>
 
 namespace UKControllerPlugin::Stands {
@@ -42,7 +42,7 @@ namespace UKControllerPlugin::Stands {
             return;
         }
 
-        constexpr std::array<StandAssignment::Source, 4> sourceColourDefaults = {{
+        constexpr std::array<StandAssignment::Source, 5> sourceColourDefaults = {{
             StandAssignment::Source::Unknown,
             StandAssignment::Source::User,
             StandAssignment::Source::ReservationAllocator,
