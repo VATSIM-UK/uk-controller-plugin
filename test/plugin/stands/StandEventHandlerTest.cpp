@@ -177,13 +177,9 @@ namespace UKControllerPluginTest {
 
             [[nodiscard]] static auto AllSources() -> std::array<StandAssignment::Source, 4>
             {
-                using AssignmentSource = StandAssignment::Source;
+                using enum UKControllerPlugin::Stands::StandAssignment::Source;
 
-                return {
-                    AssignmentSource::User,
-                    AssignmentSource::ReservationAllocator,
-                    AssignmentSource::VaaAllocator,
-                    AssignmentSource::SystemAuto};
+                return {User, ReservationAllocator, VaaAllocator, SystemAuto};
             }
 
             [[nodiscard]] static auto MakeInboundMessage(const std::string& type, const nlohmann::json& data)
