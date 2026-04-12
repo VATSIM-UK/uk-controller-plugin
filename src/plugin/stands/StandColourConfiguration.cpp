@@ -42,10 +42,10 @@ namespace UKControllerPlugin::Stands {
             return;
         }
 
-        using Source = StandAssignment::Source;
+        using enum StandAssignment::Source;
 
-        constexpr std::array<Source, 5> sourceColourDefaults = {
-            {Source::Unknown, Source::User, Source::ReservationAllocator, Source::VaaAllocator, Source::SystemAuto}};
+        constexpr std::array<StandAssignment::Source, 5> sourceColourDefaults = {
+            {Unknown, User, ReservationAllocator, VaaAllocator, SystemAuto}};
 
         for (const auto source : sourceColourDefaults) {
             const std::string key = std::string(SETTING_PREFIX) + std::string(StandAssignment::ToString(source));
