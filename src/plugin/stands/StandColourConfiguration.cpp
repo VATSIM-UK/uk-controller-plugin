@@ -18,7 +18,7 @@ namespace UKControllerPlugin::Stands {
 
     StandColourConfiguration::StandColourConfiguration(UKControllerPlugin::Euroscope::UserSetting* userSetting)
         : userSetting(userSetting), sourceColours(
-                                        {{StandAssignment::Source::Unknown, DEFAULT_UNKNOWN_COLOUR},
+                                        {{StandAssignment::Source::Unknown, DEFAULT_COLOUR},
                                          {StandAssignment::Source::User, DEFAULT_USER_COLOUR},
                                          {StandAssignment::Source::ReservationAllocator, DEFAULT_RESERVATION_COLOUR},
                                          {StandAssignment::Source::VaaAllocator, DEFAULT_VAA_COLOUR},

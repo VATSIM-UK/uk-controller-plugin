@@ -44,7 +44,6 @@ namespace UKControllerPlugin::Stands {
         static constexpr COLORREF DEFAULT_COLOUR = RGB(180, 180, 180);
 
         // Default colours if not configured
-        static constexpr COLORREF DEFAULT_UNKNOWN_COLOUR = RGB(204, 204, 204);   // grey
         static constexpr COLORREF DEFAULT_USER_COLOUR = RGB(255, 255, 255);      // white
         static constexpr COLORREF DEFAULT_RESERVATION_COLOUR = RGB(255, 216, 0); // yellow
         static constexpr COLORREF DEFAULT_VAA_COLOUR = RGB(255, 149, 41);        // orange
