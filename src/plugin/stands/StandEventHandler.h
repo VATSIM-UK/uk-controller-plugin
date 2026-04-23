@@ -1,6 +1,7 @@
 #pragma once
 #include "CompareStands.h"
 #include "Stand.h"
+#include "StandAssignmentSource.h"
 #include "flightplan/FlightPlanEventHandlerInterface.h"
 #include "integration/ExternalMessageHandlerInterface.h"
 #include "integration/IntegrationActionProcessor.h"
@@ -14,6 +15,7 @@ namespace UKControllerPlugin {
     } // namespace Api
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
+        class UserSetting;
     } // namespace Euroscope
     namespace Ownership {
         class AirfieldServiceProviderCollection;
@@ -24,6 +26,8 @@ namespace UKControllerPlugin {
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Stands {
+    class StandColourConfiguration;
+
     /*
         Handles events related to stands.
     */
@@ -38,6 +42,7 @@ namespace UKControllerPlugin::Stands {
             const UKControllerPlugin::Api::ApiInterface& api,
             TaskManager::TaskRunnerInterface& taskRunner,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            UKControllerPlugin::Euroscope::UserSetting* userSetting,
             Integration::OutboundIntegrationEventHandler& integrationEventHandler,
             std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
             std::set<Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands,
@@ -64,6 +69,8 @@ namespace UKControllerPlugin::Stands {
         [[nodiscard]] auto GetLastAirfield() const -> std::string;
         void RemoveFlightStripAnnotation(const std::string& callsign) const;
         void SetAssignedStand(const std::string& callsign, int standId);
+        void SetAssignedStand(const std::string& callsign, int standId, const std::string& source);
+        void SetAssignedStand(const std::string& callsign, int standId, StandAssignment::Source source);
         void StandSelected(int functionId, std::string context, RECT);
         void DisplayStandAssignmentEditBox(
             UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan,
@@ -93,8 +100,13 @@ namespace UKControllerPlugin::Stands {
         // No stand has been assigned to the aircraft
         inline static const int noStandAssigned = -1;
 
+        // Tag item IDs for stand display and source indication
+        inline static const int assignedStandTagItemId = 110;
+        inline static const int standAssignmentSourceTagItemId = 133;
+
         private:
         void AssignStandToAircraft(const std::string& callsign, const Stand& stand);
+        void AssignStandToAircraft(const std::string& callsign, const Stand& stand, StandAssignment::Source source);
         [[nodiscard]] auto
         AssignStandInApi(const std::string& callsign, const std::string& airfield, const std::string& identifier)
             -> std::string;
@@ -104,6 +116,9 @@ namespace UKControllerPlugin::Stands {
         void DoApiStandRequest(const std::string& callsign, const nlohmann::json data);
         void UnassignStandForAircraft(const std::string& callsign);
         [[nodiscard]] auto AssignmentMessageValid(const nlohmann::json& message) const -> bool;
+        [[nodiscard]] static auto GetAssignmentSourceFromMessage(const nlohmann::json& message)
+            -> StandAssignment::Source;
+        [[nodiscard]] static auto GetAssignmentSourceShorthand(StandAssignment::Source source) -> std::string;
         auto CanAssignStand(UKControllerPlugin::Euroscope::EuroScopeCFlightPlanInterface& flightplan) const -> bool;
         static auto UnassignmentMessageValid(const nlohmann::json& message) -> bool;
         auto
@@ -126,8 +141,11 @@ namespace UKControllerPlugin::Stands {
         // All the stands we have
         std::set<UKControllerPlugin::Stands::Stand, UKControllerPlugin::Stands::CompareStands> stands;
 
-        // The currently assigned stands and who they are assigned to
-        std::map<std::string, int> standAssignments;
+        // The currently assigned stands and who they are assigned to, with source information
+        std::map<std::string, StandAssignment, std::less<>> standAssignments;
+
+        // Colour configuration for stand assignment sources
+        std::shared_ptr<const StandColourConfiguration> colourConfiguration;
 
         // Locks the stand assignments map to prevent concurrent edits
         std::recursive_mutex mapMutex;

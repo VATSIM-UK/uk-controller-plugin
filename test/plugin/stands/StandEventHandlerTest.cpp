@@ -1,8 +1,13 @@
 #include "stands/StandEventHandler.h"
+#include "stands/StandColourConfiguration.h"
+#include "stands/StandAssignmentSource.h"
+#include <array>
+#include <cstddef>
 #include "tag/TagData.h"
 #include "api/ApiException.h"
 #include "controller/ActiveCallsign.h"
 #include "controller/ControllerPosition.h"
+#include "euroscope/UserSetting.h"
 #include "ownership/AirfieldServiceProviderCollection.h"
 #include "ownership/ServiceProvision.h"
 #include "stands/StandUnassignedMessage.h"
@@ -15,6 +20,7 @@ using ::testing::Return;
 using ::testing::Test;
 using ::testing::Throw;
 using UKControllerPlugin::Api::ApiException;
+using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Integration::InboundMessage;
 using UKControllerPlugin::Integration::MessageType;
 using UKControllerPlugin::Plugin::PopupMenuItem;
@@ -23,6 +29,8 @@ using UKControllerPlugin::Push::PushEventSubscription;
 using UKControllerPlugin::Stands::CompareStands;
 using UKControllerPlugin::Stands::Stand;
 using UKControllerPlugin::Stands::StandAssignedMessage;
+using UKControllerPlugin::Stands::StandAssignment;
+using UKControllerPlugin::Stands::StandColourConfiguration;
 using UKControllerPlugin::Stands::StandEventHandler;
 using UKControllerPlugin::Stands::StandUnassignedMessage;
 using UKControllerPlugin::Tag::TagData;
@@ -31,6 +39,7 @@ using UKControllerPluginTest::Euroscope::MockEuroScopeCControllerInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::Integration::MockOutboundIntegrationEventHandler;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 
@@ -40,18 +49,27 @@ namespace UKControllerPluginTest {
         class StandEventHandlerTest : public ApiTestCase
         {
             public:
+            [[nodiscard]] static auto
+            MakeActiveCallsign(const UKControllerPlugin::Controller::ControllerPosition& controller, bool isUser)
+                -> std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsign>
+            {
+                return std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
+                    "LON_S_CTR", "Test", controller, isUser);
+            }
+
             StandEventHandlerTest()
                 : controller(2, "LON_S_CTR", 129.420, std::vector<std::string>{"EGKK"}, true, false, true),
-                  userCallsign(std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
-                      "LON_S_CTR", "Test", controller, true)),
-                  notUserCallsign(std::make_shared<UKControllerPlugin::Controller::ActiveCallsign>(
-                      "LON_S_CTR", "Test", controller, false)),
+                  userCallsign(MakeActiveCallsign(controller, true)),
+                  notUserCallsign(MakeActiveCallsign(controller, false)),
                   airfieldOwnership(
                       std::make_shared<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection>()),
+                  userSetting(mockUserSettingProvider),
+                  colourConfiguration(std::make_shared<StandColourConfiguration>(userSetting)),
                   tagData(flightplan, radarTarget, 110, 1, itemString, &euroscopeColourCode, &tagColour, &fontSize),
-                  handler(api, taskRunner, plugin, mockIntegration, airfieldOwnership, GetStands(), 1)
+                  handler(api, taskRunner, plugin, &userSetting, mockIntegration, airfieldOwnership, GetStands(), 1)
             {
                 ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(this->mockUserSettingProvider, KeyExists(_)).WillByDefault(Return(false));
 
                 this->mockController = std::make_shared<NiceMock<MockEuroScopeCControllerInterface>>();
             }
@@ -65,6 +83,203 @@ namespace UKControllerPluginTest {
                 return stands;
             }
 
+            void SetAssignedStandWithSource(int standId, StandAssignment::Source source)
+            {
+                this->handler.SetAssignedStand("BAW123", standId, source);
+            }
+
+            auto CreateSourceTagData() -> TagData
+            {
+                return TagData(
+                    this->flightplan,
+                    this->radarTarget,
+                    StandEventHandler::standAssignmentSourceTagItemId,
+                    1,
+                    this->itemString,
+                    &this->euroscopeColourCode,
+                    &this->tagColour,
+                    &this->fontSize);
+            }
+
+            void ExpectSourceTagItemShorthand(StandAssignment::Source source, const std::string& expectedShorthand)
+            {
+                this->SetAssignedStandWithSource(1, source);
+                auto sourceTagData = this->CreateSourceTagData();
+                this->handler.SetTagItemData(sourceTagData);
+                EXPECT_EQ(expectedShorthand, sourceTagData.GetItemString());
+            }
+
+            void ExpectTagItem110ColourForSource(StandAssignment::Source source)
+            {
+                this->SetAssignedStandWithSource(3, source);
+                COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
+                this->handler.SetTagItemData(this->tagData);
+                EXPECT_EQ(expectedColour, this->tagData.GetTagColour());
+            }
+
+            void ExpectSourceTagItemColourForSource(StandAssignment::Source source)
+            {
+                this->SetAssignedStandWithSource(3, source);
+                COLORREF expectedColour = this->colourConfiguration->GetColourForSource(source);
+                auto sourceTagData = this->CreateSourceTagData();
+                this->handler.SetTagItemData(sourceTagData);
+                EXPECT_EQ(expectedColour, sourceTagData.GetTagColour());
+            }
+
+            // Sets IsTracked, IsTrackedByUser, IsVatsimRecognisedController,
+            // GetOrigin("EGKK") and GetDistanceFromOrigin on the fixture flightplan.
+            void SetupFlightplan(bool tracked, bool trackedByUser, bool vatsim = true, double distance = 4)
+            {
+                ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(tracked));
+                ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(trackedByUser));
+                ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
+                ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(vatsim));
+                ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
+                ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(distance));
+            }
+
+            // Creates a NiceMock flightplan wired up as plugin.GetSelectedFlightplan().
+            [[nodiscard]] auto MakeSelectedFlightplan(bool tracked = false, bool trackedByUser = false)
+                -> std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>>
+            {
+                auto fp = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+                ON_CALL(*fp, IsTracked()).WillByDefault(Return(tracked));
+                ON_CALL(*fp, IsTrackedByUser()).WillByDefault(Return(trackedByUser));
+                ON_CALL(*fp, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(fp));
+                return fp;
+            }
+
+            // Calls handler.ProcessAction capturing success/failure into the provided refs.
+            void CallProcessAction(
+                std::shared_ptr<UKControllerPlugin::Integration::MessageInterface> message,
+                bool& successCalled,
+                std::vector<std::string>& failureMessages)
+            {
+                this->handler.ProcessAction(
+                    message,
+                    [&successCalled]() { successCalled = true; },
+                    [&failureMessages](std::vector<std::string> msgs) { failureMessages = std::move(msgs); });
+            }
+
+            // Creates a mock flightplan registered for "BAW123", sets up the
+            // AnnotateFlightStrip(3,"1L") expectation, and expects the integration event.
+            [[nodiscard]] auto MakeSyncFlightplanForBaw123Stand1()
+                -> std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>>
+            {
+                auto fp = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+                ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(fp));
+                EXPECT_CALL(*fp, AnnotateFlightStrip(3, "1L")).Times(1);
+                auto expectedMsg = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
+                EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMsg))).Times(1);
+                return fp;
+            }
+
+            [[nodiscard]] static auto AllSources() -> std::array<StandAssignment::Source, 4>
+            {
+                using enum UKControllerPlugin::Stands::StandAssignment::Source;
+
+                return {User, ReservationAllocator, VaaAllocator, SystemAuto};
+            }
+
+            [[nodiscard]] static auto MakeInboundMessage(const std::string& type, const nlohmann::json& data)
+            {
+                return InboundMessage::FromJson(
+                    nlohmann::json{{"type", type}, {"version", 1}, {"id", "foo"}, {"data", data}});
+            }
+
+            void SetProviderForAirfield(
+                const std::string& airfield,
+                UKControllerPlugin::Ownership::ServiceType serviceType =
+                    UKControllerPlugin::Ownership::ServiceType::Delivery)
+            {
+                std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
+                provisions.push_back(
+                    std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(serviceType, userCallsign));
+                airfieldOwnership->SetProvidersForAirfield(airfield, provisions);
+            }
+
+            void SetupAutoStandSelectionMenu(const std::string& destination = "EGGW", double distance = 1.0)
+            {
+                SetupFlightplan(false, false, true, distance);
+                ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return(destination));
+                this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
+            }
+
+            [[nodiscard]] auto MakeSelectedFlightplanForAutoRequest(
+                const std::string& destination, double distanceFromOrigin, const std::string& aircraftType = "")
+                -> std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>>
+            {
+                auto pluginReturnedFp = std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
+
+                ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
+                ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
+                ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
+                ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
+                ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return(destination));
+                ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(distanceFromOrigin));
+
+                if (!aircraftType.empty()) {
+                    ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return(aircraftType));
+                }
+
+                ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+                return pluginReturnedFp;
+            }
+
+            void SetupRadarTargetForCallsign(const std::string& callsign, double latitude = 123, double longitude = 456)
+            {
+                auto pluginReturnedRt = std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
+
+                EuroScopePlugIn::CPosition position;
+                position.m_Latitude = latitude;
+                position.m_Longitude = longitude;
+                ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
+
+                ON_CALL(this->plugin, GetRadarTargetForCallsign(callsign)).WillByDefault(Return(pluginReturnedRt));
+            }
+
+            void SelectAutoAndExpectNoStandAssigned()
+            {
+                this->handler.StandSelected(1, "AUTO", {});
+                this->AwaitApiCallCompletion();
+                EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            }
+
+            void ExpectProcessActionFailureNoAssignment(
+                const std::shared_ptr<UKControllerPlugin::Integration::MessageInterface>& message)
+            {
+                bool successCalled = false;
+                std::vector<std::string> failureMessages;
+                CallProcessAction(message, successCalled, failureMessages);
+
+                EXPECT_FALSE(successCalled);
+                EXPECT_FALSE(failureMessages.empty());
+                EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            }
+
+            [[nodiscard]] static auto DepartureStandRequestBody() -> nlohmann::json
+            {
+                return nlohmann::json{
+                    {"callsign", "BAW123"},
+                    {"departure_airfield", "EGKK"},
+                    {"assignment_type", "departure"},
+                    {"latitude", 123},
+                    {"longitude", 456},
+                };
+            }
+
+            [[nodiscard]] static auto ArrivalStandRequestBody() -> nlohmann::json
+            {
+                return nlohmann::json{
+                    {"callsign", "BAW123"},
+                    {"departure_airfield", "EGKK"},
+                    {"arrival_airfield", "EGGW"},
+                    {"assignment_type", "arrival"},
+                    {"aircraft_type", "B738"},
+                };
+            }
+
             double fontSize = 24.1;
             COLORREF tagColour = RGB(255, 255, 255);
             int euroscopeColourCode = EuroScopePlugIn::TAG_COLOR_ASSUMED;
@@ -76,10 +291,13 @@ namespace UKControllerPluginTest {
             NiceMock<MockEuroScopeCFlightPlanInterface> flightplan;
             NiceMock<MockEuroScopeCRadarTargetInterface> radarTarget;
             std::shared_ptr<NiceMock<MockEuroScopeCControllerInterface>> mockController;
+            NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             UKControllerPlugin::Controller::ControllerPosition controller;
             std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsign> userCallsign;
             std::shared_ptr<UKControllerPlugin::Controller::ActiveCallsign> notUserCallsign;
             std::shared_ptr<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection> airfieldOwnership;
+            UserSetting userSetting;
+            std::shared_ptr<StandColourConfiguration> colourConfiguration;
             TagData tagData;
             StandEventHandler handler;
         };
@@ -107,6 +325,48 @@ namespace UKControllerPluginTest {
             EXPECT_EQ("Foooooo", this->tagData.GetItemString());
         }
 
+        TEST_F(StandEventHandlerTest, ItReturnsDescriptionForSourceTagItem)
+        {
+            EXPECT_EQ(
+                "Stand Assignment Source",
+                this->handler.GetTagItemDescription(StandEventHandler::standAssignmentSourceTagItemId));
+        }
+
+        TEST_F(StandEventHandlerTest, ItReturnsSourceShorthandForSourceTagItem)
+        {
+            const auto sources = AllSources();
+            const std::array<std::string, 4> expectedShorthand = {"USER", "RES", "VAA", "AUTO"};
+
+            for (size_t i = 0; i < std::size(sources); ++i) {
+                this->ExpectSourceTagItemShorthand(sources[i], expectedShorthand[i]);
+            }
+        }
+
+        TEST_F(StandEventHandlerTest, ItReturnsNothingForSourceTagItemIfStandNotAssigned)
+        {
+            auto sourceTagData = this->CreateSourceTagData();
+            this->handler.SetTagItemData(sourceTagData);
+            EXPECT_EQ("Foooooo", sourceTagData.GetItemString());
+        }
+
+        TEST_F(StandEventHandlerTest, TagItem110UsesSourceColours)
+        {
+            const auto sources = AllSources();
+
+            for (const auto& source : sources) {
+                this->ExpectTagItem110ColourForSource(source);
+            }
+        }
+
+        TEST_F(StandEventHandlerTest, SourceTagItemUsesSourceColours)
+        {
+            const auto sources = AllSources();
+
+            for (const auto& source : sources) {
+                this->ExpectSourceTagItemColourForSource(source);
+            }
+        }
+
         TEST_F(StandEventHandlerTest, ItSubscribesToChannels)
         {
             std::set<PushEventSubscription> expectedSubscriptions;
@@ -124,15 +384,7 @@ namespace UKControllerPluginTest {
                     {"stand_id", 1},
                 }};
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
-
-            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L")).Times(1);
-
-            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+            auto pluginReturnedFp = MakeSyncFlightplanForBaw123Stand1();
 
             this->handler.ProcessPushEvent(message);
             ASSERT_EQ(1, this->handler.GetAssignedStandForCallsign("BAW123"));
@@ -365,15 +617,7 @@ namespace UKControllerPluginTest {
             });
             assignments.push_back(nlohmann::json::object());
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
-
-            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L")).Times(1);
-
-            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+            auto pluginReturnedFp = MakeSyncFlightplanForBaw123Stand1();
 
             EXPECT_CALL(this->api, GetAssignedStands()).Times(1).WillOnce(Return(assignments));
 
@@ -393,15 +637,7 @@ namespace UKControllerPluginTest {
                 {"stand_id", 2},
             });
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
-
-            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L")).Times(1);
-
-            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+            auto pluginReturnedFp = MakeSyncFlightplanForBaw123Stand1();
 
             EXPECT_CALL(this->api, GetAssignedStands()).Times(1).WillOnce(Return(assignments));
 
@@ -422,15 +658,7 @@ namespace UKControllerPluginTest {
                 {"stand_id", 2},
             });
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
-
-            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L")).Times(1);
-
-            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+            auto pluginReturnedFp = MakeSyncFlightplanForBaw123Stand1();
 
             EXPECT_CALL(this->api, GetAssignedStands()).Times(1).WillOnce(Return(assignments));
 
@@ -450,15 +678,7 @@ namespace UKControllerPluginTest {
                 {"callsign", "VIR245"},
             });
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
-
-            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L")).Times(1);
-
-            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+            auto pluginReturnedFp = MakeSyncFlightplanForBaw123Stand1();
 
             EXPECT_CALL(this->api, GetAssignedStands()).Times(1).WillOnce(Return(assignments));
 
@@ -479,15 +699,7 @@ namespace UKControllerPluginTest {
                 {"stand_id", "2"},
             });
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
-
-            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L")).Times(1);
-
-            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+            auto pluginReturnedFp = MakeSyncFlightplanForBaw123Stand1();
 
             EXPECT_CALL(this->api, GetAssignedStands()).Times(1).WillOnce(Return(assignments));
 
@@ -508,15 +720,7 @@ namespace UKControllerPluginTest {
                 {"stand_id", -55},
             });
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
-
-            EXPECT_CALL(*pluginReturnedFp, AnnotateFlightStrip(3, "1L")).Times(1);
-
-            auto expectedMessage = std::make_shared<StandAssignedMessage>("BAW123", "EGKK", "1L");
-            EXPECT_CALL(this->mockIntegration, SendEvent(MatchMessageInterface(expectedMessage))).Times(1);
+            auto pluginReturnedFp = MakeSyncFlightplanForBaw123Stand1();
 
             EXPECT_CALL(this->api, GetAssignedStands()).Times(1).WillOnce(Return(assignments));
 
@@ -569,19 +773,7 @@ namespace UKControllerPluginTest {
             menuItemStandNone.fixedPosition = true;
 
             // Tracked by user
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(true, true);
 
             RECT expectedArea = {0, 0, 400, 600};
             EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2)).Times(1);
@@ -624,21 +816,8 @@ namespace UKControllerPluginTest {
             menuItemStandNone.fixedPosition = true;
 
             // Not tracked by anyone
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
+            SetupFlightplan(false, false, true, 8);
             ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGLL"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(8));
 
             RECT expectedArea = {0, 0, 400, 600};
             EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2)).Times(1);
@@ -655,19 +834,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntTriggerTheSelectionMenuIfFlightplanTrackedBySomeoneElse)
         {
             // Not tracked by user
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(true, false);
 
             RECT expectedArea = {0, 0, 400, 600};
             EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2)).Times(0);
@@ -680,19 +847,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntTriggerTheSelectionMenuIfNotVatsimRecognisedController)
         {
             // Not tracked by user
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false, false);
 
             RECT expectedArea = {0, 0, 400, 600};
             EXPECT_CALL(this->plugin, TriggerPopupList(RectEq(expectedArea), "Assign Stand", 2)).Times(0);
@@ -705,19 +860,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItTriggersTheStandEditBoxWithDepartureAirportIfWithinLimit)
         {
             // Tracked by user
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(true, true);
 
             RECT expectedArea = {0, 0, 80, 25};
             EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(expectedArea), 1, "")).Times(1);
@@ -729,21 +872,8 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItTriggersTheStandEditBoxWithArrivalAirportIfNotCloseToDeparture)
         {
             // Not tracked by anyone
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
+            SetupFlightplan(false, false, true, 8);
             ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGLL"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(8));
 
             RECT expectedArea = {0, 0, 80, 25};
             EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(expectedArea), 1, "")).Times(1);
@@ -755,19 +885,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntTriggerTheEditBoxIfFlightplanTrackedBySomeoneElse)
         {
             // Not tracked by user
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(true, false);
 
             EXPECT_CALL(this->plugin, ShowTextEditPopup(_, _, _)).Times(0);
 
@@ -778,19 +896,7 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntTriggerTheEditBoxIfNotVatsimRecognisedController)
         {
             // Not tracked by user
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(true, false, false);
 
             EXPECT_CALL(this->plugin, ShowTextEditPopup(_, _, _)).Times(0);
 
@@ -803,21 +909,8 @@ namespace UKControllerPluginTest {
             this->handler.SetAssignedStand("BAW123", 1);
 
             // Not tracked by anyone
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
+            SetupFlightplan(false, false, true, 8);
             ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGLL"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(8));
 
             RECT expectedArea = {0, 0, 80, 25};
             EXPECT_CALL(this->plugin, ShowTextEditPopup(RectEq(expectedArea), 1, "1L")).Times(1);
@@ -828,32 +921,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntMakeAStandAssignmentRequestIfFlightplanTrackedBySomeoneElse)
         {
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(true, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan(true, false);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", _)).Times(0);
 
@@ -864,32 +936,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntMakeAStandAssignmentRequestIfNotVatsimRecognisedController)
         {
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan(true, false);
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", _)).Times(0);
 
@@ -903,16 +954,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2)).Times(0);
 
@@ -923,32 +965,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItMakesAStandAssignmentRequestWhenStandSelected)
         {
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -966,32 +987,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, StandAssignmentsAreCaseInsensitive)
         {
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1009,32 +1009,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItHandlesApiExceptionOnStandAssignment)
         {
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1052,32 +1031,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntAssignStandFromTheWrongAirfield)
         {
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", _)).Times(0);
 
@@ -1090,32 +1048,11 @@ namespace UKControllerPluginTest {
             this->handler.SetAssignedStand("BAW123", 2);
 
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1135,32 +1072,11 @@ namespace UKControllerPluginTest {
             this->handler.SetAssignedStand("BAW123", 2);
 
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1180,32 +1096,11 @@ namespace UKControllerPluginTest {
             this->handler.SetAssignedStand("BAW123", 2);
 
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123"))
                 .Times(1)
@@ -1223,16 +1118,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123")).Times(0);
 
@@ -1243,32 +1129,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntMakeDeletionRequestIfNoStandAssigned)
         {
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft(_)).Times(0);
 
@@ -1281,32 +1146,11 @@ namespace UKControllerPluginTest {
             this->handler.SetAssignedStand("BAW123", 2);
 
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan(true, false);
 
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft(_)).Times(0);
 
@@ -1319,32 +1163,11 @@ namespace UKControllerPluginTest {
             this->handler.SetAssignedStand("BAW123", 2);
 
             // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(4));
+            SetupFlightplan(false, false, false);
 
             this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft(_)).Times(0);
 
@@ -1410,16 +1233,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1439,16 +1253,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1477,16 +1282,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1506,17 +1302,13 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItUnassignsStandFromIntegrationMessage)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "unassign_stand"}, {"version", 1}, {"id", "foo"}, {"data", {{"callsign", "BAW123"}}}});
+            auto message = MakeInboundMessage("unassign_stand", {{"callsign", "BAW123"}});
 
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123")).Times(1);
 
             bool successCalled = false;
             std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
+            CallProcessAction(message, successCalled, failureMessages);
 
             EXPECT_TRUE(successCalled);
             EXPECT_TRUE(failureMessages.empty());
@@ -1525,17 +1317,13 @@ namespace UKControllerPluginTest {
 
         TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromAircraftFromMessageIfNothingToDo)
         {
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "unassign_stand"}, {"version", 1}, {"id", "foo"}, {"data", {{"callsign", "BAW123"}}}});
+            auto message = MakeInboundMessage("unassign_stand", {{"callsign", "BAW123"}});
 
             EXPECT_CALL(this->api, DeleteStandAssignmentForAircraft("BAW123")).Times(0);
 
             bool successCalled = false;
             std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
+            CallProcessAction(message, successCalled, failureMessages);
 
             EXPECT_TRUE(successCalled);
             EXPECT_TRUE(failureMessages.empty());
@@ -1545,15 +1333,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromAircraftIfBadCallsign)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "unassign_stand"}, {"version", 1}, {"id", "foo"}, {"data", {{"callsign", 123}}}});
+            auto message = MakeInboundMessage("unassign_stand", {{"callsign", 123}});
 
             bool successCalled = false;
             std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
+            CallProcessAction(message, successCalled, failureMessages);
 
             EXPECT_FALSE(successCalled);
             EXPECT_FALSE(failureMessages.empty());
@@ -1563,15 +1347,11 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ItDoesntUnassignStandFromAircraftIfNoCallsign)
         {
             this->handler.SetAssignedStand("BAW123", 3);
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "unassign_stand"}, {"version", 1}, {"id", "foo"}, {"data", nlohmann::json::object()}});
+            auto message = MakeInboundMessage("unassign_stand", nlohmann::json::object());
 
             bool successCalled = false;
             std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
+            CallProcessAction(message, successCalled, failureMessages);
 
             EXPECT_FALSE(successCalled);
             EXPECT_FALSE(failureMessages.empty());
@@ -1584,16 +1364,7 @@ namespace UKControllerPluginTest {
 
             ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
 
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            auto pluginReturnedFp = MakeSelectedFlightplan();
 
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(pluginReturnedFp));
 
@@ -1604,18 +1375,12 @@ namespace UKControllerPluginTest {
 
             EXPECT_CALL(this->api, AssignStandToAircraft("BAW123", 2)).Times(1);
 
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data", {{"callsign", "BAW123"}, {"airfield", "EGKK"}, {"stand", "55"}}}});
+            auto message =
+                MakeInboundMessage("assign_stand", {{"callsign", "BAW123"}, {"airfield", "EGKK"}, {"stand", "55"}});
 
             bool successCalled = false;
             std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
+            CallProcessAction(message, successCalled, failureMessages);
 
             EXPECT_TRUE(successCalled);
             EXPECT_TRUE(failureMessages.empty());
@@ -1626,212 +1391,63 @@ namespace UKControllerPluginTest {
         {
             ON_CALL(this->plugin, GetFlightplanForCallsign("BAW123")).WillByDefault(Return(nullptr));
 
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data", {{"callsign", "BAW123"}, {"airfield", "EGKK"}, {"stand", "55"}}}});
-
-            bool successCalled = false;
-            std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
-
-            EXPECT_FALSE(successCalled);
-            EXPECT_FALSE(failureMessages.empty());
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            auto message =
+                MakeInboundMessage("assign_stand", {{"callsign", "BAW123"}, {"airfield", "EGKK"}, {"stand", "55"}});
+            ExpectProcessActionFailureNoAssignment(message);
         }
 
         TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfCallsignMissing)
         {
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data", {{"airfield", "EGKK"}, {"stand", "55"}}}});
-
-            bool successCalled = false;
-            std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
-
-            EXPECT_FALSE(successCalled);
-            EXPECT_FALSE(failureMessages.empty());
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            auto message = MakeInboundMessage("assign_stand", {{"airfield", "EGKK"}, {"stand", "55"}});
+            ExpectProcessActionFailureNoAssignment(message);
         }
 
         TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfCallsignNotString)
         {
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data", {{"callsign", 123}, {"airfield", "EGKK"}, {"stand", "55"}}}});
-
-            bool successCalled = false;
-            std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
-
-            EXPECT_FALSE(successCalled);
-            EXPECT_FALSE(failureMessages.empty());
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            auto message =
+                MakeInboundMessage("assign_stand", {{"callsign", 123}, {"airfield", "EGKK"}, {"stand", "55"}});
+            ExpectProcessActionFailureNoAssignment(message);
         }
 
         TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfAirfieldMissing)
         {
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data", {{"callsign", "BAW123"}, {"stand", "55"}}}});
-
-            bool successCalled = false;
-            std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
-
-            EXPECT_FALSE(successCalled);
-            EXPECT_FALSE(failureMessages.empty());
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            auto message = MakeInboundMessage("assign_stand", {{"callsign", "BAW123"}, {"stand", "55"}});
+            ExpectProcessActionFailureNoAssignment(message);
         }
 
         TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfAirfieldNotString)
         {
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data", {{"callsign", "BAW123"}, {"airfield", 123}, {"stand", "55"}}}});
-
-            bool successCalled = false;
-            std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
-
-            EXPECT_FALSE(successCalled);
-            EXPECT_FALSE(failureMessages.empty());
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            auto message =
+                MakeInboundMessage("assign_stand", {{"callsign", "BAW123"}, {"airfield", 123}, {"stand", "55"}});
+            ExpectProcessActionFailureNoAssignment(message);
         }
 
         TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfStandMissing)
         {
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data",
-                 {
-                     {"callsign", "BAW123"},
-                     {"airfield", "EGKK"},
-                 }}});
-
-            bool successCalled = false;
-            std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
-
-            EXPECT_FALSE(successCalled);
-            EXPECT_FALSE(failureMessages.empty());
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            auto message = MakeInboundMessage("assign_stand", {{"callsign", "BAW123"}, {"airfield", "EGKK"}});
+            ExpectProcessActionFailureNoAssignment(message);
         }
 
         TEST_F(StandEventHandlerTest, ItFailsAssignmentFromMessageIfStandNotString)
         {
-            auto message = InboundMessage::FromJson(nlohmann::json{
-                {"type", "assign_stand"},
-                {"version", 1},
-                {"id", "foo"},
-                {"data", {{"callsign", "BAW123"}, {"airfield", "EGKK"}, {"stand", 55}}}});
-
-            bool successCalled = false;
-            std::vector<std::string> failureMessages;
-            this->handler.ProcessAction(
-                message,
-                [&successCalled]() { successCalled = true; },
-                [&failureMessages](std::vector<std::string> messages) { failureMessages = std::move(messages); });
-
-            EXPECT_FALSE(successCalled);
-            EXPECT_FALSE(failureMessages.empty());
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            auto message =
+                MakeInboundMessage("assign_stand", {{"callsign", "BAW123"}, {"airfield", "EGKK"}, {"stand", 55}});
+            ExpectProcessActionFailureNoAssignment(message);
         }
 
         TEST_F(StandEventHandlerTest, ItRequestsADepartureStandFromApi)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
-
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> pluginReturnedRt =
-                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
-
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 123;
-            position.m_Longitude = 456;
-            ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(pluginReturnedRt));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"assignment_type", "departure"},
-                    {"latitude", 123},
-                    {"longitude", 456},
-                })
+                .WithBody(DepartureStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"stand_id", 3}});
 
@@ -1844,527 +1460,133 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, DepartureStandRequestsHandlesNonCreatedCode)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
-
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> pluginReturnedRt =
-                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
-
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 123;
-            position.m_Longitude = 456;
-            ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(pluginReturnedRt));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"assignment_type", "departure"},
-                    {"latitude", 123},
-                    {"longitude", 456},
-                })
+                .WithBody(DepartureStandRequestBody())
                 .WillReturnForbidden();
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, DepartureStandRequestsHandlesUnknownStandId)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
-
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> pluginReturnedRt =
-                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
-
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 123;
-            position.m_Longitude = 456;
-            ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(pluginReturnedRt));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"assignment_type", "departure"},
-                    {"latitude", 123},
-                    {"longitude", 456},
-                })
+                .WithBody(DepartureStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"stand_id", 999}});
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, DepartureStandRequestsHandlesStandIdNotInteger)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
-
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> pluginReturnedRt =
-                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
-
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 123;
-            position.m_Longitude = 456;
-            ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(pluginReturnedRt));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"assignment_type", "departure"},
-                    {"latitude", 123},
-                    {"longitude", 456},
-                })
+                .WithBody(DepartureStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"stand_id", "abc"}});
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, DepartureStandRequestsHandlesNoStandIdInJson)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
-
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> pluginReturnedRt =
-                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
-
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 123;
-            position.m_Longitude = 456;
-            ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(pluginReturnedRt));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"assignment_type", "departure"},
-                    {"latitude", 123},
-                    {"longitude", 456},
-                })
+                .WithBody(DepartureStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"not_stand_id", 3}});
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, DepartureStandRequestsHandlesNotFoundRadarTarget)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
 
             ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(nullptr));
 
             this->ExpectNoApiRequests();
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, DepartureStandRequestsHandlesUnknownDistanceFromOrigin)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(0.0));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(0.0));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
-
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> pluginReturnedRt =
-                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
-
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 123;
-            position.m_Longitude = 456;
-            ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(pluginReturnedRt));
+            SetupAutoStandSelectionMenu("EGGW", 0.0);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 0.0);
+            SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectNoApiRequests();
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, DepartureStandRequestsHandlesUserNotProvidingDelivery)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Ground, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGKK", provisions);
+            SetProviderForAirfield("EGKK", UKControllerPlugin::Ownership::ServiceType::Ground);
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
-
-            std::shared_ptr<NiceMock<MockEuroScopeCRadarTargetInterface>> pluginReturnedRt =
-                std::make_shared<NiceMock<MockEuroScopeCRadarTargetInterface>>();
-
-            EuroScopePlugIn::CPosition position;
-            position.m_Latitude = 123;
-            position.m_Longitude = 456;
-            ON_CALL(*pluginReturnedRt, GetPosition()).WillByDefault(Return(position));
-
-            ON_CALL(this->plugin, GetRadarTargetForCallsign("BAW123")).WillByDefault(Return(pluginReturnedRt));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 1);
+            SetupRadarTargetForCallsign("BAW123");
 
             this->ExpectNoApiRequests();
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, ItRequestsAnArrivalStandFromApi)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGGW", provisions);
+            SetProviderForAirfield("EGGW");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(55));
-
-            ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return("B738"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"arrival_airfield", "EGGW"},
-                    {"assignment_type", "arrival"},
-                    {"aircraft_type", "B738"}})
+                .WithBody(ArrivalStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"stand_id", 3}});
 
@@ -2377,364 +1599,98 @@ namespace UKControllerPluginTest {
         TEST_F(StandEventHandlerTest, ArrivalStandRequestHandlesInvalidStatusCodeInResponse)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGGW", provisions);
+            SetProviderForAirfield("EGGW");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(55));
-
-            ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return("B738"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"arrival_airfield", "EGGW"},
-                    {"assignment_type", "arrival"},
-                    {"aircraft_type", "B738"}})
+                .WithBody(ArrivalStandRequestBody())
                 .WillReturnServerError();
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, ArrivalStandRequestHandlesInvalidStandIdInJson)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGGW", provisions);
+            SetProviderForAirfield("EGGW");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(55));
-
-            ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return("B738"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"arrival_airfield", "EGGW"},
-                    {"assignment_type", "arrival"},
-                    {"aircraft_type", "B738"}})
+                .WithBody(ArrivalStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"stand_id", 999}});
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, ArrivalStandRequestHandlesNonIntegerStandIdInJson)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGGW", provisions);
+            SetProviderForAirfield("EGGW");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(55));
-
-            ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return("B738"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"arrival_airfield", "EGGW"},
-                    {"assignment_type", "arrival"},
-                    {"aircraft_type", "B738"}})
+                .WithBody(ArrivalStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"stand_id", "abc"}});
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, ArrivalStandRequestHandlesNoStandIdInJson)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGGW", provisions);
+            SetProviderForAirfield("EGGW");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(55));
-
-            ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return("B738"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectApiRequest()
                 ->Post()
                 .To("stand/assignment/requestauto")
-                .WithBody(nlohmann::json{
-                    {"callsign", "BAW123"},
-                    {"departure_airfield", "EGKK"},
-                    {"arrival_airfield", "EGGW"},
-                    {"assignment_type", "arrival"},
-                    {"aircraft_type", "B738"}})
+                .WithBody(ArrivalStandRequestBody())
                 .WillReturnCreated()
                 .WithResponseBody(nlohmann::json{{"not_stand_id", 3}});
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, ArrivalStandRequestHandlesZeroDistanceToOrigin)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Delivery, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGGW", provisions);
+            SetProviderForAirfield("EGGW");
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(0.0));
-
-            ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return("B738"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 0.0, "B738");
 
             this->ExpectNoApiRequests();
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
 
         TEST_F(StandEventHandlerTest, ArrivalStandRequestHandlesUserNotProvidingDelivery)
         {
             // Make "us" the delivery controller
-            std::vector<std::shared_ptr<UKControllerPlugin::Ownership::ServiceProvision>> provisions;
-            provisions.push_back(std::make_shared<UKControllerPlugin::Ownership::ServiceProvision>(
-                UKControllerPlugin::Ownership::ServiceType::Ground, userCallsign));
-            airfieldOwnership->SetProvidersForAirfield("EGGW", provisions);
+            SetProviderForAirfield("EGGW", UKControllerPlugin::Ownership::ServiceType::Ground);
 
-            // Trigger the menu first to set the last airport
-            ON_CALL(this->flightplan, IsTracked()).WillByDefault(Return(false));
-
-            ON_CALL(this->flightplan, IsTrackedByUser()).WillByDefault(Return(false));
-
-            ON_CALL(this->plugin, GetUserControllerObject()).WillByDefault(Return(this->mockController));
-
-            ON_CALL(*this->mockController, IsVatsimRecognisedController()).WillByDefault(Return(true));
-
-            ON_CALL(this->flightplan, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(this->flightplan, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(this->flightplan, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->flightplan, GetDistanceFromOrigin()).WillByDefault(Return(1));
-
-            this->handler.DisplayStandSelectionMenu(this->flightplan, this->radarTarget, "", {0, 0});
-
-            std::shared_ptr<NiceMock<MockEuroScopeCFlightPlanInterface>> pluginReturnedFp =
-                std::make_shared<NiceMock<MockEuroScopeCFlightPlanInterface>>();
-
-            ON_CALL(*pluginReturnedFp, IsTracked()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, IsTrackedByUser()).WillByDefault(Return(true));
-
-            ON_CALL(*pluginReturnedFp, GetCallsign()).WillByDefault(Return("BAW123"));
-
-            ON_CALL(*pluginReturnedFp, GetDistanceFromOrigin()).WillByDefault(Return(55));
-
-            ON_CALL(*pluginReturnedFp, GetAircraftType()).WillByDefault(Return("B738"));
-
-            ON_CALL(*pluginReturnedFp, GetOrigin()).WillByDefault(Return("EGKK"));
-
-            ON_CALL(*pluginReturnedFp, GetDestination()).WillByDefault(Return("EGGW"));
-
-            ON_CALL(this->plugin, GetSelectedFlightplan()).WillByDefault(Return(pluginReturnedFp));
+            SetupAutoStandSelectionMenu("EGGW", 1);
+            [[maybe_unused]] const auto selectedFlightplan = MakeSelectedFlightplanForAutoRequest("EGGW", 55, "B738");
 
             this->ExpectNoApiRequests();
 
-            this->handler.StandSelected(1, "AUTO", {});
-
-            this->AwaitApiCallCompletion();
-            EXPECT_EQ(this->handler.noStandAssigned, this->handler.GetAssignedStandForCallsign("BAW123"));
+            SelectAutoAndExpectNoStandAssigned();
         }
     } // namespace Stands
 } // namespace UKControllerPluginTest

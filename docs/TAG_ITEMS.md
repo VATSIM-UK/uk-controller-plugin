@@ -32,3 +32,4 @@
 130 - Missed Approach Indicator
 131 - Relevant ECFMP Flow Measures
 132 - Glideslope Deviation
+133 - Stand Assignment Source

@@ -1,6 +1,8 @@
 #include "StandAssignedMessage.h"
+#include "StandColourConfiguration.h"
 #include "StandEventHandler.h"
 #include "StandUnassignedMessage.h"
+#include <format>
 #include "api/ApiException.h"
 #include "api/ApiInterface.h"
 #include "api/ApiRequestFactory.h"
@@ -29,11 +31,15 @@ namespace UKControllerPlugin::Stands {
         const ApiInterface& api,
         TaskRunnerInterface& taskRunner,
         EuroscopePluginLoopbackInterface& plugin,
+        UKControllerPlugin::Euroscope::UserSetting* userSetting,
         Integration::OutboundIntegrationEventHandler& integrationEventHandler,
         std::shared_ptr<Ownership::AirfieldServiceProviderCollection> ownership,
         std::set<Stand, CompareStands> stands,
         int standSelectedCallbackId)
         : api(api), taskRunner(taskRunner), plugin(plugin), stands(std::move(stands)),
+          colourConfiguration(
+              userSetting ? std::make_shared<StandColourConfiguration>(*userSetting)
+                          : std::make_shared<StandColourConfiguration>()),
           integrationEventHandler(integrationEventHandler), ownership(ownership),
           standSelectedCallbackId(standSelectedCallbackId)
     {
@@ -103,6 +109,8 @@ namespace UKControllerPlugin::Stands {
     auto StandEventHandler::AssignStandInApi(
         const std::string& callsign, const std::string& airfield, const std::string& identifier) -> std::string
     {
+        using Source = StandAssignment::Source;
+
         // Find the requested stand
         auto stand = std::find_if(
             this->stands.cbegin(), this->stands.cend(), [airfield, identifier](const Stand& stand) -> bool {
@@ -115,7 +123,7 @@ namespace UKControllerPlugin::Stands {
         }
 
         // Assign that stand
-        this->AssignStandToAircraft(callsign, *stand);
+        this->AssignStandToAircraft(callsign, *stand, Source::User);
 
         int standId = stand->id;
         auto callsignForRequest = callsign;
@@ -192,7 +200,7 @@ namespace UKControllerPlugin::Stands {
     auto StandEventHandler::GetAssignedStandForCallsign(const std::string& callsign) const -> int
     {
         auto assignment = this->standAssignments.find(callsign);
-        return assignment == this->standAssignments.cend() ? noStandAssigned : assignment->second;
+        return assignment == this->standAssignments.cend() ? noStandAssigned : assignment->second.standId;
     }
 
     auto StandEventHandler::GetLastAirfield() const -> std::string
@@ -217,7 +225,17 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId)
     {
-        this->standAssignments[callsign] = standId;
+        this->SetAssignedStand(callsign, standId, StandAssignment::Source::SystemAuto);
+    }
+
+    void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, const std::string& source)
+    {
+        this->SetAssignedStand(callsign, standId, StandAssignment::FromString(source));
+    }
+
+    void StandEventHandler::SetAssignedStand(const std::string& callsign, int standId, StandAssignment::Source source)
+    {
+        this->standAssignments[callsign] = {standId, source};
     }
 
     void StandEventHandler::StandSelected(int functionId, std::string context, RECT mousePosition)
@@ -254,8 +272,8 @@ namespace UKControllerPlugin::Stands {
         auto mapLock = this->LockStandMap();
         auto assignedStand = this->standAssignments.find(flightplan.GetCallsign());
         if (assignedStand != this->standAssignments.cend() &&
-            this->stands.find(assignedStand->second) != this->stands.cend()) {
-            startingText = this->stands.find(assignedStand->second)->identifier;
+            this->stands.find(assignedStand->second.standId) != this->stands.cend()) {
+            startingText = this->stands.find(assignedStand->second.standId)->identifier;
         }
 
         // Display the popup
@@ -277,7 +295,13 @@ namespace UKControllerPlugin::Stands {
 
     auto StandEventHandler::GetTagItemDescription(int tagItemId) const -> std::string
     {
-        return "Assigned Stand";
+        if (tagItemId == assignedStandTagItemId) {
+            return "Assigned Stand";
+        }
+        if (tagItemId == standAssignmentSourceTagItemId) {
+            return "Stand Assignment Source";
+        }
+        return "";
     }
 
     /*
@@ -286,14 +310,24 @@ namespace UKControllerPlugin::Stands {
     void StandEventHandler::SetTagItemData(UKControllerPlugin::Tag::TagData& tagData)
     {
         auto mapLock = this->LockStandMap();
-        if (this->standAssignments.count(tagData.GetFlightplan().GetCallsign()) != 0) {
-            auto stand = this->stands.find(this->standAssignments.at(tagData.GetFlightplan().GetCallsign()));
-            if (stand == this->stands.cend()) {
-                return;
-            }
-
-            tagData.SetItemString(stand->identifier);
+        const auto& callsign = tagData.GetFlightplan().GetCallsign();
+        if (!this->standAssignments.contains(callsign)) {
+            return;
         }
+
+        const auto& assignment = this->standAssignments.at(callsign);
+        auto stand = this->stands.find(assignment.standId);
+        if (stand == this->stands.cend()) {
+            return;
+        }
+
+        if (tagData.GetItemCode() == assignedStandTagItemId) {
+            tagData.SetItemString(stand->identifier);
+        } else if (tagData.GetItemCode() == standAssignmentSourceTagItemId) {
+            tagData.SetItemString(GetAssignmentSourceShorthand(assignment.source));
+        }
+
+        tagData.SetTagColour(this->colourConfiguration->GetColourForSource(assignment.source));
     }
 
     auto StandEventHandler::AssignmentMessageValid(const nlohmann::json& message) const -> bool
@@ -301,6 +335,37 @@ namespace UKControllerPlugin::Stands {
         return message.is_object() && message.contains("callsign") && message.at("callsign").is_string() &&
                message.contains("stand_id") && message.at("stand_id").is_number_integer() &&
                this->stands.find(message.at("stand_id").get<int>()) != this->stands.cend();
+    }
+
+    auto StandEventHandler::GetAssignmentSourceFromMessage(const nlohmann::json& message) -> StandAssignment::Source
+    {
+        using Source = StandAssignment::Source;
+
+        if (message.contains("assignment_source") && message.at("assignment_source").is_string()) {
+            return StandAssignment::FromString(message.at("assignment_source").get<std::string>());
+        }
+
+        return Source::Unknown;
+    }
+
+    auto StandEventHandler::GetAssignmentSourceShorthand(StandAssignment::Source source) -> std::string
+    {
+        using enum UKControllerPlugin::Stands::StandAssignment::Source;
+
+        switch (source) {
+        case Unknown:
+            return "UNK";
+        case User:
+            return "USER";
+        case ReservationAllocator:
+            return "RES";
+        case VaaAllocator:
+            return "VAA";
+        case SystemAuto:
+            return "AUTO";
+        default:
+            return "UNK";
+        }
     }
 
     auto StandEventHandler::UnassignmentMessageValid(const nlohmann::json& message) -> bool
@@ -354,17 +419,23 @@ namespace UKControllerPlugin::Stands {
         EuroScopeCFlightPlanInterface& flightPlan, EuroScopeCRadarTargetInterface& radarTarget)
     {
         auto mapLock = this->LockStandMap();
-        if (this->standAssignments.count(flightPlan.GetCallsign()) == 0) {
+        if (!this->standAssignments.contains(flightPlan.GetCallsign())) {
             return;
         }
 
-        if (this->stands.find(this->standAssignments.at(flightPlan.GetCallsign()))->identifier ==
-            flightPlan.GetAnnotation(this->annotationIndex)) {
+        const auto& assignment = this->standAssignments.at(flightPlan.GetCallsign());
+        const auto& stand = this->stands.find(assignment.standId);
+        if (stand == this->stands.cend()) {
+            LogWarning(
+                std::format("Assigned stand id {} not found for {}", assignment.standId, flightPlan.GetCallsign()));
             return;
         }
 
-        flightPlan.AnnotateFlightStrip(
-            this->annotationIndex, this->stands.find(this->standAssignments.at(flightPlan.GetCallsign()))->identifier);
+        if (stand->identifier == flightPlan.GetAnnotation(this->annotationIndex)) {
+            return;
+        }
+
+        flightPlan.AnnotateFlightStrip(this->annotationIndex, stand->identifier);
     }
 
     void StandEventHandler::FlightPlanDisconnectEvent(EuroScopeCFlightPlanInterface& flightPlan)
@@ -400,7 +471,8 @@ namespace UKControllerPlugin::Stands {
 
                     this->AssignStandToAircraft(
                         assignment->at("callsign").get<std::string>(),
-                        *this->stands.find(assignment->at("stand_id").get<int>()));
+                        *this->stands.find(assignment->at("stand_id").get<int>()),
+                        GetAssignmentSourceFromMessage(*assignment));
                 }
                 LogInfo("Loaded " + std::to_string(this->standAssignments.size()) + " stand assignments");
             } catch (ApiException&) {
@@ -424,7 +496,8 @@ namespace UKControllerPlugin::Stands {
 
             this->AssignStandToAircraft(
                 message.data.at("callsign").get<std::string>(),
-                *this->stands.find(message.data.at("stand_id").get<int>()));
+                *this->stands.find(message.data.at("stand_id").get<int>()),
+                GetAssignmentSourceFromMessage(message.data));
         } else if (message.event == "App\\Events\\StandUnassignedEvent") {
             // If a stand has been unassigned, unassign it here
             if (!UnassignmentMessageValid(message.data)) {
@@ -456,15 +529,26 @@ namespace UKControllerPlugin::Stands {
 
     void StandEventHandler::AssignStandToAircraft(const std::string& callsign, const Stand& stand)
     {
+        using Source = StandAssignment::Source;
+
+        this->AssignStandToAircraft(callsign, stand, Source::SystemAuto);
+    }
+
+    void StandEventHandler::AssignStandToAircraft(
+        const std::string& callsign, const Stand& stand, StandAssignment::Source source)
+    {
         this->AnnotateFlightStrip(callsign, stand.id);
-        this->standAssignments[callsign] = stand.id;
+        this->SetAssignedStand(callsign, stand.id, source);
         this->integrationEventHandler.SendEvent(
             std::make_shared<StandAssignedMessage>(callsign, stand.airfieldCode, stand.identifier));
-        LogInfo(
-            "Stand id " + std::to_string(stand.id) + "(" + stand.airfieldCode + "/" + stand.identifier +
-            ") "
-            "assigned to " +
-            callsign);
+        const auto logMessage = std::format(
+            "Stand id {} ({}/{}) assigned to {} (source: {})",
+            stand.id,
+            stand.airfieldCode,
+            stand.identifier,
+            callsign,
+            StandAssignment::ToString(source));
+        LogInfo(logMessage);
     }
     auto StandEventHandler::ActionsToProcess() const -> std::vector<Integration::MessageType>
     {

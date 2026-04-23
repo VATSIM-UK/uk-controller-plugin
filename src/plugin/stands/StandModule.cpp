@@ -23,7 +23,7 @@ using UKControllerPlugin::Tag::TagFunction;
 namespace UKControllerPlugin::Stands {
 
     // The tag item id for assigned stand
-    const int assignedStandTagItemId = 110;
+    // Tag item IDs are defined in StandEventHandler
     const int openStandAssignmentPopupTagFunctionId = 9007;
     const int openStandAssignmentEditBoxTagFunctionId = 9008;
 
@@ -39,6 +39,7 @@ namespace UKControllerPlugin::Stands {
             *container.api,
             *container.taskRunner,
             *container.plugin,
+            container.pluginUserSettingHandler.get(),
             *container.integrationModuleContainer->outboundMessageHandler,
             container.airfieldOwnership,
             stands,
@@ -83,7 +84,8 @@ namespace UKControllerPlugin::Stands {
 
         // Assign to handlers
         container.flightplanHandler->RegisterHandler(eventHandler);
-        container.tagHandler->RegisterTagItem(assignedStandTagItemId, eventHandler);
+        container.tagHandler->RegisterTagItem(StandEventHandler::assignedStandTagItemId, eventHandler);
+        container.tagHandler->RegisterTagItem(StandEventHandler::standAssignmentSourceTagItemId, eventHandler);
         container.pushEventProcessors->AddProcessor(eventHandler);
         container.externalEventHandler->AddHandler(eventHandler);
         container.integrationModuleContainer->inboundMessageHandler->AddProcessor(eventHandler);
