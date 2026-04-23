@@ -1,5 +1,15 @@
 # UK Controller Plugin Changelog
 
+# [5.19.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.3...5.19.0) (2026-04-23)
+
+
+### Features
+
+* Add stand assignment source tracking with runtime-configurable colours ([41871aa](https://github.com/VATSIM-UK/uk-controller-plugin/commit/41871aac3786e1c907aa07d4b24310649f9ab1ea))
+* Add StandAssignmentSource and StandColourConfiguration files to stands source group ([c1f98b7](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c1f98b78b963b69662bf2ca75b2f21b41f796602))
+* Add StandEventHandlerConfig to StandEventHandlerTest for enhanced configuration handling ([6ff5c17](https://github.com/VATSIM-UK/uk-controller-plugin/commit/6ff5c1762fab79f5c2a6b612ec6de167d0011db0))
+* Enhance StandEventHandler with source tracking and update related tests ([c547eee](https://github.com/VATSIM-UK/uk-controller-plugin/commit/c547eeeb3267d0386d344a99812f9c637d9ef7f6))
+
 ## [5.18.3](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.2...5.18.3) (2026-02-03)
 
 
