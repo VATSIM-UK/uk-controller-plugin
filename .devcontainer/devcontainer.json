@@ -5,7 +5,7 @@
 	},
 	"mounts": [
 		"source=${localEnv:HOME}/.ssh,target=/home/ubuntu/.ssh,type=bind,consistency=cached", // Linux
-		"source=${localEnv:USERPROFILE}/.ssh,target=/home/ubuntu/.ssh,type=bind,consistency=cached" // Windows
+		//"source=${localEnv:USERPROFILE}/.ssh,target=/home/ubuntu/.ssh,type=bind,consistency=cached" // Windows
 	],
 	"build": {
 		"dockerfile": "../dockerfile"
