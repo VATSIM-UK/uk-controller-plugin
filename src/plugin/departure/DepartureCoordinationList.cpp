@@ -36,10 +36,8 @@ namespace UKControllerPlugin::Departure {
         : controllers(controllers), handler(handler), prenotes(prenotes), brushes(brushes), plugin(plugin),
           activeCallsigns(activeCallsigns), screenObjectId(screenObjectId), visible(false), contentCollapsed(false)
     {
-        this->brushSwitcher =
-            Components::BrushSwitcher::Create(
-                this->brushes.headerBrush, std::chrono::seconds(2))
-                ->AdditionalBrush(this->brushes.highlightedHeaderBrush);
+        this->brushSwitcher = Components::BrushSwitcher::Create(this->brushes.headerBrush, std::chrono::seconds(2))
+                                  ->AdditionalBrush(this->brushes.highlightedHeaderBrush);
 
         this->titleBar = Components::TitleBar::Create(
                              L"Departure Coordination Requests", {0, 0, this->titleBarWidth, this->titleBarHeight})
@@ -140,8 +138,7 @@ namespace UKControllerPlugin::Departure {
                 // Draw column headers
                 graphics.DrawString(L"Type", this->typeColumnHeader, *this->brushes.textBrush);
                 graphics.DrawString(L"Callsign", this->callsignColumnHeader, *this->brushes.textBrush);
-                graphics.DrawString(
-                    L"Controller", this->controllerColumnHeader, *this->brushes.textBrush);
+                graphics.DrawString(L"Controller", this->controllerColumnHeader, *this->brushes.textBrush);
                 graphics.DrawString(L"Dept", this->airportColumnHeader, *this->brushes.textBrush);
                 graphics.DrawString(L"SID", this->sidColumnHeader, *this->brushes.textBrush);
                 graphics.DrawString(L"Dest", this->destColumnHeader, *this->brushes.textBrush);
@@ -197,9 +194,7 @@ namespace UKControllerPlugin::Departure {
                     // Type column
                     const std::string itemType = listItem.index() == 0 ? "Rls" : "Pre";
                     graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(itemType),
-                        typeColumn,
-                        *this->brushes.textBrush);
+                        HelperFunctions::ConvertToWideString(itemType), typeColumn, *this->brushes.textBrush);
 
                     // Callsign column
                     const std::string callsign =
@@ -207,9 +202,7 @@ namespace UKControllerPlugin::Departure {
                             ? std::get<std::shared_ptr<Releases::DepartureReleaseRequest>>(listItem)->Callsign()
                             : std::get<std::shared_ptr<Prenote::PrenoteMessage>>(listItem)->GetCallsign();
                     graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(callsign),
-                        callsignColumn,
-                        *this->brushes.textBrush);
+                        HelperFunctions::ConvertToWideString(callsign), callsignColumn, *this->brushes.textBrush);
                     std::shared_ptr<Components::ClickableArea> callsignClickspot = Components::ClickableArea::Create(
                         callsignColumn, this->screenObjectId, itemType + "." + callsign, false);
                     callsignClickspot->Apply(graphics, radarScreen);
@@ -231,14 +224,10 @@ namespace UKControllerPlugin::Departure {
 
                     // Remaining FP-driven columns
                     graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(fp->GetOrigin()),
-                        airportColumn,
-                        *this->brushes.textBrush);
+                        HelperFunctions::ConvertToWideString(fp->GetOrigin()), airportColumn, *this->brushes.textBrush);
 
                     graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(fp->GetSidName()),
-                        sidColumn,
-                        *this->brushes.textBrush);
+                        HelperFunctions::ConvertToWideString(fp->GetSidName()), sidColumn, *this->brushes.textBrush);
 
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetDestination()),

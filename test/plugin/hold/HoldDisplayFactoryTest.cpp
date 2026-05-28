@@ -26,11 +26,11 @@ using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest::Hold {
 

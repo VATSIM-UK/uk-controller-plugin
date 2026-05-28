@@ -30,10 +30,10 @@ using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
@@ -47,7 +47,8 @@ namespace UKControllerPluginTest {
             HoldRendererTest()
                 : popupFactory(functionHandlers, mockPlugin), callsignSelectionFactory(popupFactory),
                   dialogManager(mockDialog), userSetting(mockUserSettingProvider), holdManager(mockApi, mockTaskRunner),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory, brushes),
+                  displayFactory(
+                      mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory, brushes),
                   displayManager(new HoldDisplayManager(displayFactory)), renderer(displayManager, 1, 2)
             {
                 this->holds.Add({1, "WILLO", "WILLO", 8000, 15000, 209, "left", {}});

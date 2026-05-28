@@ -16,8 +16,8 @@ using UKControllerPlugin::Approach::ApproachSequencerDisplayOptions;
 using UKControllerPlugin::Approach::ApproachSequencerOptions;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 using UKControllerPlugin::Approach::ApproachSpacingCalculator;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Wake::WakeCategoryMapperCollection;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest::Approach {
     class ApproachSequencerDisplayTest : public testing::Test

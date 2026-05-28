@@ -243,9 +243,7 @@ namespace UKControllerPlugin::Countdown {
             graphics.FillRect(this->timerButtonAreas[it->timerId], *this->brushes.backgroundBrush);
             graphics.DrawRect(this->timerButtonAreas[it->timerId], *this->brushes.borderPen);
             graphics.DrawString(
-                std::to_wstring(it->timerDuration),
-                this->timerButtonAreas[it->timerId],
-                *this->brushes.textBrush);
+                std::to_wstring(it->timerDuration), this->timerButtonAreas[it->timerId], *this->brushes.textBrush);
             radarScreen.RegisterScreenObject(
                 this->functionsClickspotId,
                 "timer" + std::to_string(it->timerId) + "Toggle",

@@ -20,17 +20,17 @@ namespace UKControllerPlugin::Graphics {
     };
 
     const Theme NODE_THEME = {
-        Gdiplus::Color(0, 0, 0),         // background              #000000
-        Gdiplus::Color(255, 255, 255),   // border                  #ffffff
-        Gdiplus::Color(160, 111, 112),   // header                  #a06f70
-        Gdiplus::Color(255, 100, 50),    // highlightedHeader       #ff6432
-        Gdiplus::Color(255, 255, 255),   // text                    #ffffff
-        Gdiplus::Color(232, 163, 0),     // highlightedText         #e8a300
-        Gdiplus::Color(104, 221, 69),    // mainAircraftText        #68dd45
-        Gdiplus::Color(232, 163, 0),     // highlightedAircraftText #e8a300
-        Gdiplus::Color(104, 221, 69),    // timerGreen              #68dd45
-        Gdiplus::Color(232, 163, 0),     // timerYellow             #e8a300
-        Gdiplus::Color(255, 100, 50),    // timerRed                #ff6432
+        Gdiplus::Color(0, 0, 0),       // background              #000000
+        Gdiplus::Color(255, 255, 255), // border                  #ffffff
+        Gdiplus::Color(160, 111, 112), // header                  #a06f70
+        Gdiplus::Color(255, 100, 50),  // highlightedHeader       #ff6432
+        Gdiplus::Color(255, 255, 255), // text                    #ffffff
+        Gdiplus::Color(232, 163, 0),   // highlightedText         #e8a300
+        Gdiplus::Color(104, 221, 69),  // mainAircraftText        #68dd45
+        Gdiplus::Color(232, 163, 0),   // highlightedAircraftText #e8a300
+        Gdiplus::Color(104, 221, 69),  // timerGreen              #68dd45
+        Gdiplus::Color(232, 163, 0),   // timerYellow             #e8a300
+        Gdiplus::Color(255, 100, 50),  // timerRed                #ff6432
     };
 
     const Theme NERC_THEME = {

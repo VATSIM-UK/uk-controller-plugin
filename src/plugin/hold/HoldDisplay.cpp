@@ -703,8 +703,7 @@ namespace UKControllerPlugin {
 
             // Render a message if no published holds
             if (this->publishedHolds.empty()) {
-                graphics.DrawString(
-                    std::wstring(L"No published holds found."), dataRect, *this->brushes.textBrush);
+                graphics.DrawString(std::wstring(L"No published holds found."), dataRect, *this->brushes.textBrush);
                 return;
             }
 
@@ -746,39 +745,28 @@ namespace UKControllerPlugin {
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier),
-                dataRect,
-                *this->brushes.textBrush);
+                std::wstring(L"Fix: ") + ConvertToTchar(this->navaid.identifier), dataRect, *this->brushes.textBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Inbound: ") + ConvertToTchar(hold->inbound),
-                dataRect,
-                *this->brushes.textBrush);
+                std::wstring(L"Inbound: ") + ConvertToTchar(hold->inbound), dataRect, *this->brushes.textBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Turn: ") + ConvertToTchar(hold->turnDirection),
-                dataRect,
-                *this->brushes.textBrush);
+                std::wstring(L"Turn: ") + ConvertToTchar(hold->turnDirection), dataRect, *this->brushes.textBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Maximum: ") + ConvertToTchar(hold->maximum),
-                dataRect,
-                *this->brushes.textBrush);
+                std::wstring(L"Maximum: ") + ConvertToTchar(hold->maximum), dataRect, *this->brushes.textBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
             graphics.DrawString(
-                std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum),
-                dataRect,
-                *this->brushes.textBrush);
+                std::wstring(L"Minimum: ") + ConvertToTchar(hold->minimum), dataRect, *this->brushes.textBrush);
 
             dataRect.Y = dataRect.Y + this->lineHeight + 5;
 
             if (*hold->outboundLeg->unit == Geometry::MeasurementUnitType::None) {
-                graphics.DrawString(
-                    std::wstring(L"Outbound Leg: --"), dataRect, *this->brushes.textBrush);
+                graphics.DrawString(std::wstring(L"Outbound Leg: --"), dataRect, *this->brushes.textBrush);
             } else {
                 graphics.DrawString(
                     std::wstring(L"Outbound Leg: ") + FormatOutboundLegValue(hold->outboundLeg->value) + L" " +
@@ -802,8 +790,7 @@ namespace UKControllerPlugin {
             graphics.DrawRect(this->titleArea, *this->brushes.borderPen);
 
             std::wstring holdName = ConvertToTchar(this->navaid.identifier);
-            graphics.DrawString(
-                ConvertToTchar(this->navaid.identifier), this->titleArea, *this->brushes.textBrush);
+            graphics.DrawString(ConvertToTchar(this->navaid.identifier), this->titleArea, *this->brushes.textBrush);
             graphics.DrawLine(
                 *this->brushes.borderPen,
                 Gdiplus::Point{this->titleArea.X, this->titleArea.Y + this->titleArea.Height},
@@ -855,8 +842,7 @@ namespace UKControllerPlugin {
             radarScreen.RegisterScreenObject(
                 screenObjectId, this->navaid.identifier + "/allLevels", this->allButtonClickRect, false);
 
-            graphics.DrawLine(
-                *this->brushes.borderPen, this->underButtonLineLeft, this->underButtonLineRight);
+            graphics.DrawLine(*this->brushes.borderPen, this->underButtonLineLeft, this->underButtonLineRight);
         }
 
         /*
@@ -934,8 +920,7 @@ namespace UKControllerPlugin {
                     }
 
                     // Render the numbers
-                    graphics.DrawString(
-                        GetLevelDisplayString(level), numbersDisplay, *this->brushes.textBrush);
+                    graphics.DrawString(GetLevelDisplayString(level), numbersDisplay, *this->brushes.textBrush);
 
                     // Increase the lines
                     holdRow.Y = holdRow.Y + this->lineHeight;
@@ -967,8 +952,7 @@ namespace UKControllerPlugin {
 
                         // Render the numbers
                         if (aircraftIndex == 0) {
-                            graphics.DrawString(
-                                GetLevelDisplayString(level), numbersDisplay, *this->brushes.textBrush);
+                            graphics.DrawString(GetLevelDisplayString(level), numbersDisplay, *this->brushes.textBrush);
                         }
 
                         rt = this->plugin.GetRadarTargetForCallsign((*it)->GetCallsign());
@@ -1028,8 +1012,7 @@ namespace UKControllerPlugin {
                                 auto holdProximity = (*it)->GetProximityHold(navaid.identifier);
                                 if (holdProximity != nullptr && holdProximity->HasEntered()) {
                                     std::wstring timeString = GetTimeInHoldDisplayString(holdProximity->EnteredAt());
-                                    graphics.DrawString(
-                                        timeString, timeInHoldDisplay, *this->brushes.textBrush);
+                                    graphics.DrawString(timeString, timeInHoldDisplay, *this->brushes.textBrush);
                                 }
                             }
                         }

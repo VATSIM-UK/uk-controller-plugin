@@ -35,9 +35,9 @@ namespace UKControllerPluginTest::Departure {
                   messager,
                   103,
                   104),
-              brushes(),
-              list(std::make_shared<DepartureCoordinationList>(
-                  handler, prenotes, mockPlugin, controllers, activeCallsigns, brushes, 3)),
+              brushes(), list(
+                             std::make_shared<DepartureCoordinationList>(
+                                 handler, prenotes, mockPlugin, controllers, activeCallsigns, brushes, 3)),
               dialogManager(dialogProvider)
         {
         }

@@ -50,7 +50,11 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapRadarScreenRegistersConfigurationCallback)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-                this->functionHandler, this->configurableDisplays, this->brushes, this->commandHandlers, this->dialogManager);
+                this->functionHandler,
+                this->configurableDisplays,
+                this->brushes,
+                this->commandHandlers,
+                this->dialogManager);
 
             EXPECT_EQ(1, this->functionHandler.CountCallbacks());
         }
@@ -58,7 +62,11 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapRadarScreenRegistersInTheConfigurationMenu)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-                this->functionHandler, this->configurableDisplays, this->brushes, this->commandHandlers, this->dialogManager);
+                this->functionHandler,
+                this->configurableDisplays,
+                this->brushes,
+                this->commandHandlers,
+                this->dialogManager);
 
             EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
         }
@@ -66,7 +74,11 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapRadarScreenRegistersInTheCommandHandlers)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-                this->functionHandler, this->configurableDisplays, this->brushes, this->commandHandlers, this->dialogManager);
+                this->functionHandler,
+                this->configurableDisplays,
+                this->brushes,
+                this->commandHandlers,
+                this->dialogManager);
 
             EXPECT_EQ(1, this->commandHandlers.CountHandlers());
         }
@@ -74,7 +86,12 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapPluginAddsDialogToDialogManager)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
-                this->dialogManager, this->userSettings, this->userSettingCollection, settings, mockWindows, this->brushes);
+                this->dialogManager,
+                this->userSettings,
+                this->userSettingCollection,
+                settings,
+                mockWindows,
+                this->brushes);
 
             EXPECT_EQ(1, this->dialogManager.CountDialogs());
             EXPECT_TRUE(this->dialogManager.HasDialog(IDD_GENERAL_SETTINGS));

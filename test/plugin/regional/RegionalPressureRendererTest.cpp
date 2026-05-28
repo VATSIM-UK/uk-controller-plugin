@@ -38,7 +38,7 @@ namespace UKControllerPluginTest {
 
             inline static const int HIDE_CLICKSPOT_WIDTH = 50;
             inline static const int LEFT_COLUMN_WIDTH = 100;
-            inline static const int ROW_HEIGHT = 20;
+            inline static const int ROW_HEIGHT = 15;
             const std::string SELECTED_ASR_KEY = "SelectedRegionalPressures";
             const std::string SELECTED_ASR_DESC = "Selected Regional Pressures To Display";
             const std::string VISIBLE_ASR_KEY = "DisplayRegionalPressures";

@@ -218,8 +218,7 @@ namespace UKControllerPlugin::MinStack {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(MinStackManager::GetNameFromKey(minStack.key)),
                 tma,
-                mslData.IsAcknowledged() ? *this->brushes.highlightedTextBrush
-                                         : *this->brushes.textBrush);
+                mslData.IsAcknowledged() ? *this->brushes.highlightedTextBrush : *this->brushes.textBrush);
 
             // Draw the MSL itself and associated rectangles
             graphics.FillRect(msl, *this->brushes.backgroundBrush);
@@ -231,8 +230,7 @@ namespace UKControllerPlugin::MinStack {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(mslString),
                 msl,
-                mslData.IsAcknowledged() ? *this->brushes.highlightedTextBrush
-                                         : *this->brushes.textBrush);
+                mslData.IsAcknowledged() ? *this->brushes.highlightedTextBrush : *this->brushes.textBrush);
 
             // Add the clickable area.
             radarScreen.RegisterScreenObject(

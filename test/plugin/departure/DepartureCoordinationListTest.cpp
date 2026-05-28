@@ -24,8 +24,9 @@ namespace UKControllerPluginTest::Departure {
         public:
         DepartureCoordinationListTest()
             : userSettings(mockAsrProvider), messager(mockPlugin),
-              list(std::make_shared<DepartureCoordinationList>(
-                  handler, prenotes, mockPlugin, controllers, activeCallsigns, brushes, 3)),
+              list(
+                  std::make_shared<DepartureCoordinationList>(
+                      handler, prenotes, mockPlugin, controllers, activeCallsigns, brushes, 3)),
               handler(
                   std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>(),
                   mockApi,

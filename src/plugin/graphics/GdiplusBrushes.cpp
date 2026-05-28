@@ -39,7 +39,6 @@ namespace UKControllerPlugin::Windows {
         timerGreen = theme.timerGreen;
         timerYellow = theme.timerYellow;
         timerRed = theme.timerRed;
-
     }
 
 } // namespace UKControllerPlugin::Windows

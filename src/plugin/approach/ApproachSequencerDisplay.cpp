@@ -264,9 +264,7 @@ namespace UKControllerPlugin::Approach {
                 graphics.DrawString(L"Wake", targetRect, *this->brushes.textBrush);
             } else {
                 graphics.DrawString(
-                    To1DpWide(aircraftToProcess->ExpectedDistance()),
-                    targetRect,
-                    *this->brushes.textBrush);
+                    To1DpWide(aircraftToProcess->ExpectedDistance()), targetRect, *this->brushes.textBrush);
             }
             Components::ClickableArea::Create(
                 targetRect, screenObjectId, "approachTarget" + aircraftToProcess->Callsign(), false)

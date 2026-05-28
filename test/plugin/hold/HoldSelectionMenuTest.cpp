@@ -34,12 +34,12 @@ using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 
@@ -113,10 +113,11 @@ namespace UKControllerPluginTest {
             displayManager1->AsrLoadedEvent(this->userSetting);
             displayManager2->AsrLoadedEvent(this->userSetting);
             displayManager1->LoadSelectedHolds(std::vector<std::string>({"TIMBA", "WILLO"}));
-            displayManager2->LoadSelectedHolds(std::vector<std::string>({
-                "WILLO",
-                "MAY",
-            }));
+            displayManager2->LoadSelectedHolds(
+                std::vector<std::string>({
+                    "WILLO",
+                    "MAY",
+                }));
             this->holdSelectionMenu.AddDisplayManager(displayManager1);
             this->holdSelectionMenu.AddDisplayManager(displayManager2);
 
