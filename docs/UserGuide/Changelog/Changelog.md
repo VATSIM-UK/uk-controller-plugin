@@ -1,5 +1,12 @@
 # UK Controller Plugin Changelog
 
+## [5.19.1](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.19.0...5.19.1) (2026-05-28)
+
+
+### Bug Fixes
+
+* Match OP button height with other buttons ([5648b30](https://github.com/VATSIM-UK/uk-controller-plugin/commit/5648b3008caf6ce3121901a1ea4183cf212bafbf))
+
 # [5.19.0](https://github.com/VATSIM-UK/uk-controller-plugin/compare/5.18.3...5.19.0) (2026-04-23)
 
 
