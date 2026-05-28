@@ -42,7 +42,7 @@ namespace UKControllerPluginTest::RadarScreen {
         StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadar;
 
         RECT radarArea = {0, 0, 1024, 768};
-        RECT menuRect = {radarArea.right - 25, radarArea.bottom - 25, radarArea.right, radarArea.bottom};
+        RECT menuRect = {radarArea.right - 22, radarArea.bottom - 22, radarArea.right, radarArea.bottom};
 
         EXPECT_CALL(mockRadar, GetRadarViewport()).Times(1).WillOnce(Return(radarArea));
 
@@ -80,7 +80,7 @@ namespace UKControllerPluginTest::RadarScreen {
         StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadar;
 
         RECT radarArea = {0, 0, 1024, 768};
-        RECT menuRect = {radarArea.right - 25, radarArea.bottom - 25, radarArea.right, radarArea.bottom};
+        RECT menuRect = {radarArea.right - 22, radarArea.bottom - 22, radarArea.right, radarArea.bottom};
 
         EXPECT_CALL(mockRadar, GetRadarViewport()).Times(1).WillOnce(Return(radarArea));
 
