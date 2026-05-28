@@ -178,7 +178,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             L"Airfield:",
             airfieldStaticArea,
-            Gdiplus::SolidBrush(this->brushes.text),
+            *this->brushes.textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
 
@@ -186,7 +186,7 @@ namespace UKControllerPlugin::Approach {
             HelperFunctions::ConvertToWideString(
                 displayOptions->Airfield().empty() ? "--" : displayOptions->Airfield()),
             airfieldTextArea,
-            Gdiplus::SolidBrush(this->brushes.text),
+            *this->brushes.textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->airfieldClickspot->Apply(graphics, radarScreen);
@@ -194,23 +194,23 @@ namespace UKControllerPlugin::Approach {
 
     void ApproachSequencerDisplay::RenderDivider(Windows::GdiGraphicsInterface& graphics)
     {
-        graphics.DrawLine(Gdiplus::Pen(this->brushes.text), dividerLeft, dividerRight);
+        graphics.DrawLine(*this->brushes.textPen, dividerLeft, dividerRight);
     }
 
     void ApproachSequencerDisplay::RenderHeaders(Windows::GdiGraphicsInterface& graphics)
     {
-        graphics.DrawString(L"#", numberHeader, Gdiplus::SolidBrush(this->brushes.text));
-        graphics.DrawString(L"Callsign", callsignHeader, Gdiplus::SolidBrush(this->brushes.text));
-        graphics.DrawString(L"Target", targetHeader, Gdiplus::SolidBrush(this->brushes.text));
-        graphics.DrawString(L"Actual", actualHeader, Gdiplus::SolidBrush(this->brushes.text));
-        graphics.DrawString(L"Actions", actionsHeader, Gdiplus::SolidBrush(this->brushes.text));
+        graphics.DrawString(L"#", numberHeader, *this->brushes.textBrush);
+        graphics.DrawString(L"Callsign", callsignHeader, *this->brushes.textBrush);
+        graphics.DrawString(L"Target", targetHeader, *this->brushes.textBrush);
+        graphics.DrawString(L"Actual", actualHeader, *this->brushes.textBrush);
+        graphics.DrawString(L"Actions", actionsHeader, *this->brushes.textBrush);
     }
 
     void ApproachSequencerDisplay::RenderAddButton(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        graphics.DrawRect(addButton, Gdiplus::Pen(this->brushes.text));
-        graphics.DrawString(L"Add Aircraft", addButton, Gdiplus::SolidBrush(this->brushes.text));
+        graphics.DrawRect(addButton, *this->brushes.textPen);
+        graphics.DrawString(L"Add Aircraft", addButton, *this->brushes.textBrush);
         addClickspot->Apply(graphics, radarScreen);
     }
 
@@ -253,20 +253,20 @@ namespace UKControllerPlugin::Approach {
         int sequenceNumber = 1;
 
         while (aircraftToProcess != nullptr) {
-            graphics.DrawString(std::to_wstring(sequenceNumber), numberRect, Gdiplus::SolidBrush(this->brushes.text));
+            graphics.DrawString(std::to_wstring(sequenceNumber), numberRect, *this->brushes.textBrush);
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()),
                 callsignRect,
-                Gdiplus::SolidBrush(this->brushes.text));
+                *this->brushes.textBrush);
 
             // The target distance / wake
             if (aircraftToProcess->Mode() == ApproachSequencingMode::WakeTurbulence) {
-                graphics.DrawString(L"Wake", targetRect, Gdiplus::SolidBrush(this->brushes.text));
+                graphics.DrawString(L"Wake", targetRect, *this->brushes.textBrush);
             } else {
                 graphics.DrawString(
                     To1DpWide(aircraftToProcess->ExpectedDistance()),
                     targetRect,
-                    Gdiplus::SolidBrush(this->brushes.text));
+                    *this->brushes.textBrush);
             }
             Components::ClickableArea::Create(
                 targetRect, screenObjectId, "approachTarget" + aircraftToProcess->Callsign(), false)
@@ -274,9 +274,9 @@ namespace UKControllerPlugin::Approach {
 
             double requiredSpacing = spacingCalculator.Calculate(displayOptions->Airfield(), *aircraftToProcess);
             if (requiredSpacing == spacingCalculator.NoSpacing()) {
-                graphics.DrawString(L"--", actualRect, Gdiplus::SolidBrush(this->brushes.text));
+                graphics.DrawString(L"--", actualRect, *this->brushes.textBrush);
             } else {
-                graphics.DrawString(To1DpWide(requiredSpacing), actualRect, Gdiplus::SolidBrush(this->brushes.text));
+                graphics.DrawString(To1DpWide(requiredSpacing), actualRect, *this->brushes.textBrush);
             }
 
             auto upButton = Components::Button::Create(
@@ -307,7 +307,7 @@ namespace UKControllerPlugin::Approach {
                 [&aircraftToProcess, &radarScreen, this](
                     Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& area) {
                     Gdiplus::Rect drawArea = {0, 0, area.Width, area.Height};
-                    graphics.FillCircle(drawArea, Gdiplus::SolidBrush(this->brushes.text));
+                    graphics.FillCircle(drawArea, *this->brushes.textBrush);
                     if (!aircraftToProcess->ShouldDraw()) {
                         Components::Button::Create(
                             drawArea,
@@ -342,7 +342,7 @@ namespace UKControllerPlugin::Approach {
             TITLE_BAR_HEIGHT,
             WINDOW_WIDTH,
             static_cast<INT>(callsignHeader.GetBottom() + INSETS + (numberOfCallsigns * callsignHeader.Height))};
-        graphics.FillRect(contentArea, Gdiplus::SolidBrush(this->brushes.background));
+        graphics.FillRect(contentArea, *this->brushes.backgroundBrush);
     }
 
     void ApproachSequencerDisplay::RenderAirfieldTarget(
@@ -351,7 +351,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             L"Target:",
             airfieldTargetStatic,
-            Gdiplus::SolidBrush(this->brushes.text),
+            *this->brushes.textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
 
@@ -366,7 +366,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             targetString,
             airfieldTargetTextArea,
-            Gdiplus::SolidBrush(this->brushes.text),
+            *this->brushes.textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->airfieldTargetClickspot->Apply(graphics, radarScreen);
@@ -378,7 +378,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             L"Separation:",
             airfieldSeparationStatic,
-            Gdiplus::SolidBrush(this->brushes.text),
+            *this->brushes.textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
 
@@ -387,7 +387,7 @@ namespace UKControllerPlugin::Approach {
                 ? L"--"
                 : To1DpWide(options.Get(displayOptions->Airfield()).minimumSeparationRequirement),
             airfieldSeparationTextArea,
-            Gdiplus::SolidBrush(this->brushes.text),
+            *this->brushes.textBrush,
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->airfieldSeparationClickspot->Apply(graphics, radarScreen);

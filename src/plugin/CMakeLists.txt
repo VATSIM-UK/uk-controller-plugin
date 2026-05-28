@@ -300,14 +300,13 @@ set(src__geometry
 source_group("src\\geometry" FILES ${src__geometry})
 
 set(src__graphics
-    "graphics/ColourPaletteDefinitions.cpp"
-    "graphics/ColourPaletteDefinitions.h"
-    "graphics/ThemingModule.cpp"
-    "graphics/ThemingModule.h"
     "graphics/GdiGraphicsInterface.h"
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
     "graphics/GdiplusBrushes.h"
+    "graphics/GdiplusBrushes.cpp"
+    "graphics/Theme.h"
+    "graphics/Theme.cpp"
         graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h)
 source_group("src\\graphics" FILES ${src__graphics})
 

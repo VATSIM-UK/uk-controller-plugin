@@ -43,20 +43,18 @@ namespace UKControllerPlugin::Components {
     CloseButton(const Windows::GdiplusBrushes& brushes)
     {
         return [&brushes](Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& drawArea) {
-            // Create pen at draw time so it uses the current brush color
-            Gdiplus::Pen pen(brushes.text, 2.0F);
+            auto pen = std::make_shared<Gdiplus::Pen>(brushes.text, 2.0F);
             Gdiplus::REAL scaleX = drawArea.Width / buttonSize;
             Gdiplus::REAL scaleY = drawArea.Height / buttonSize;
-            pen.ResetTransform();
-            pen.ScaleTransform(1 / scaleX, 1 / scaleY);
+            ScalePen(pen, scaleX, scaleY);
 
             graphics.Translated(
                 static_cast<Gdiplus::REAL>(5) * scaleX,
                 static_cast<Gdiplus::REAL>(5) * scaleY,
                 [&graphics, &pen, &scaleX, &scaleY] {
                     graphics.Scaled(scaleX, scaleY, [&graphics, &pen]() {
-                        graphics.DrawLine(pen, closeTopLeft, closeBottomRight);
-                        graphics.DrawLine(pen, closeBottomLeft, closeTopRight);
+                        graphics.DrawLine(*pen, closeTopLeft, closeBottomRight);
+                        graphics.DrawLine(*pen, closeBottomLeft, closeTopRight);
                     });
                 });
         };
@@ -94,8 +92,7 @@ namespace UKControllerPlugin::Components {
     CollapseButton(const Windows::GdiplusBrushes& brushes, std::function<bool()> stateFunction)
     {
         return [&brushes, stateFunction](Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& drawArea) {
-            // Create brush at draw time so it uses the current brush color
-            Gdiplus::SolidBrush brush(brushes.text);
+            auto brush = std::make_shared<Gdiplus::SolidBrush>(brushes.text);
             Gdiplus::REAL scaleX = drawArea.Width / buttonSize;
             Gdiplus::REAL scaleY = drawArea.Height / buttonSize;
 
@@ -107,7 +104,7 @@ namespace UKControllerPlugin::Components {
                         stateFunction() ? static_cast<Gdiplus::REAL>(180) : static_cast<Gdiplus::REAL>(0),
                         [&graphics, &brush, &scaleX, &scaleY]() {
                             graphics.Scaled(scaleX, scaleY, [&graphics, &brush]() {
-                                graphics.FillPolygon(collapsePoints, brush, 3);
+                                graphics.FillPolygon(collapsePoints, *brush, 3);
                             });
                         });
                 });

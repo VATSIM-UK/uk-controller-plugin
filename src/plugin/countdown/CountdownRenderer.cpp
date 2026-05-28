@@ -164,22 +164,18 @@ namespace UKControllerPlugin::Countdown {
     {
         // Colour the text depending on how long is left, if we get 0, that means timer is up.
         if (secondsRemaining == 0) {
-            static Gdiplus::SolidBrush textBrush(this->brushes.text);
-            return textBrush;
+            return *this->brushes.textBrush;
         }
 
         if (secondsRemaining > WARNING_SECONDS) {
-            static Gdiplus::SolidBrush timerGreen(this->brushes.timerGreen);
-            return timerGreen;
+            return *this->brushes.timerGreenBrush;
         }
 
         if (secondsRemaining > CRITICAL_SECONDS) {
-            static Gdiplus::SolidBrush timerYellow(this->brushes.timerYellow);
-            return timerYellow;
+            return *this->brushes.timerYellowBrush;
         }
 
-        static Gdiplus::SolidBrush timerRed(this->brushes.timerRed);
-        return timerRed;
+        return *this->brushes.timerRedBrush;
     }
 
     /*
@@ -244,12 +240,12 @@ namespace UKControllerPlugin::Countdown {
                 continue;
             }
 
-            graphics.FillRect(this->timerButtonAreas[it->timerId], Gdiplus::SolidBrush(this->brushes.background));
-            graphics.DrawRect(this->timerButtonAreas[it->timerId], Gdiplus::Pen(this->brushes.border));
+            graphics.FillRect(this->timerButtonAreas[it->timerId], *this->brushes.backgroundBrush);
+            graphics.DrawRect(this->timerButtonAreas[it->timerId], *this->brushes.borderPen);
             graphics.DrawString(
                 std::to_wstring(it->timerDuration),
                 this->timerButtonAreas[it->timerId],
-                Gdiplus::SolidBrush(this->brushes.text));
+                *this->brushes.textBrush);
             radarScreen.RegisterScreenObject(
                 this->functionsClickspotId,
                 "timer" + std::to_string(it->timerId) + "Toggle",
@@ -266,20 +262,20 @@ namespace UKControllerPlugin::Countdown {
                 this->timeDisplayArea.bottom,
                 this->timeDisplayArea.right,
                 this->timeDisplayArea.bottom + this->rowHeight};
-            graphics.FillRect(spaceToFill, Gdiplus::SolidBrush(this->brushes.background));
-            graphics.DrawRect(spaceToFill, Gdiplus::Pen(this->brushes.border));
+            graphics.FillRect(spaceToFill, *this->brushes.backgroundBrush);
+            graphics.DrawRect(spaceToFill, *this->brushes.borderPen);
         }
 
         // The close clickspot
-        graphics.FillRect(this->closeClickspotDisplayArea, Gdiplus::SolidBrush(this->brushes.background));
-        graphics.DrawRect(this->closeClickspotDisplayArea, Gdiplus::Pen(this->brushes.border));
-        graphics.DrawString(L"X", this->closeClickspotDisplayArea, Gdiplus::SolidBrush(this->brushes.text));
+        graphics.FillRect(this->closeClickspotDisplayArea, *this->brushes.backgroundBrush);
+        graphics.DrawRect(this->closeClickspotDisplayArea, *this->brushes.borderPen);
+        graphics.DrawString(L"X", this->closeClickspotDisplayArea, *this->brushes.textBrush);
         radarScreen.RegisterScreenObject(this->closeClickspotId, "", this->closeClickspotDisplayArea, false);
 
         // The reset button.
-        graphics.FillRect(this->resetDisplayArea, Gdiplus::SolidBrush(this->brushes.background));
-        graphics.DrawRect(this->resetDisplayArea, Gdiplus::Pen(this->brushes.border));
-        graphics.DrawString(L"R", this->resetDisplayArea, Gdiplus::SolidBrush(this->brushes.text));
+        graphics.FillRect(this->resetDisplayArea, *this->brushes.backgroundBrush);
+        graphics.DrawRect(this->resetDisplayArea, *this->brushes.borderPen);
+        graphics.DrawString(L"R", this->resetDisplayArea, *this->brushes.textBrush);
         radarScreen.RegisterScreenObject(this->functionsClickspotId, "R", this->resetDisplayArea, false);
     }
 
@@ -290,8 +286,8 @@ namespace UKControllerPlugin::Countdown {
     CountdownRenderer::RenderTimeDisplay(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
     {
         // The time display
-        graphics.FillRect(this->timeDisplayArea, Gdiplus::SolidBrush(this->brushes.background));
-        graphics.DrawRect(this->timeDisplayArea, Gdiplus::Pen(this->brushes.border));
+        graphics.FillRect(this->timeDisplayArea, *this->brushes.backgroundBrush);
+        graphics.DrawRect(this->timeDisplayArea, *this->brushes.borderPen);
         radarScreen.RegisterScreenObject(this->timeDisplayClickspotId, "", this->timeDisplayArea, true);
 
         // Get the seconds remaining from the Countdown class and use that to draw the time to the screen.

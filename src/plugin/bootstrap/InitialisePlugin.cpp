@@ -22,6 +22,7 @@
 #include "dependency/UpdateDependencies.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
+#include "euroscope/UserSetting.h"
 #include "eventhandler/EventBusBootstrap.h"
 #include "filestatus/FileStatusModule.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
@@ -65,7 +66,8 @@
 #include "task/TaskRunnerInterface.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
-#include "graphics/ThemingModule.h"
+#include "graphics/Theme.h"
+#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
@@ -84,7 +86,7 @@ using UKControllerPlugin::Duplicate::DuplicatePlugin;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
-using UKControllerPlugin::Graphics::ThemingModule;
+using UKControllerPlugin::Graphics::Theme;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Log::LoggerBootstrap;
@@ -242,7 +244,22 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         SectorFile::BootstrapPlugin(*this->container);
 
-        ThemingModule::BootstrapPlugin(*this->container, *this->container->pluginUserSettingHandler);
+        // Apply the saved colour palette theme
+        {
+            auto& userSettings = *this->container->pluginUserSettingHandler;
+            std::string palette = userSettings.GetStringEntry("colourPalette", "default");
+            const Graphics::Theme* theme = &Graphics::DEFAULT_THEME;
+            if (palette == "node") {
+                theme = &Graphics::NODE_THEME;
+            } else if (palette == "nerc") {
+                theme = &Graphics::NERC_THEME;
+            } else if (palette == "nova") {
+                theme = &Graphics::NOVA_THEME;
+            } else if (palette == "itec") {
+                theme = &Graphics::ITEC_THEME;
+            }
+            this->container->brushes->LoadTheme(*theme);
+        }
 
         // General settings config bootstrap
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(

@@ -211,18 +211,18 @@ namespace UKControllerPlugin::Regional {
             const RegionalPressure& pressureData = this->manager.GetRegionalPressure(it->key);
 
             // Draw the TMA title and rectangles
-            graphics.FillRect(asr, Gdiplus::SolidBrush(this->brushes.background));
-            graphics.DrawRect(asr, Gdiplus::Pen(this->brushes.border));
+            graphics.FillRect(asr, *this->brushes.backgroundBrush);
+            graphics.DrawRect(asr, *this->brushes.borderPen);
 
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(it->key)),
                 asr,
-                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge)
-                                              : Gdiplus::SolidBrush(this->brushes.text));
+                pressureData.IsAcknowledged() ? *this->brushes.highlightedTextBrush
+                                              : *this->brushes.textBrush);
 
             // Draw the RPS itself and associated rectangles
-            graphics.FillRect(rps, Gdiplus::SolidBrush(this->brushes.background));
-            graphics.DrawRect(rps, Gdiplus::Pen(this->brushes.border));
+            graphics.FillRect(rps, *this->brushes.backgroundBrush);
+            graphics.DrawRect(rps, *this->brushes.borderPen);
 
             std::string rpsString;
             if (pressureData == this->manager.invalidPressure) {
@@ -236,8 +236,8 @@ namespace UKControllerPlugin::Regional {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(rpsString),
                 rps,
-                pressureData.IsAcknowledged() ? Gdiplus::SolidBrush(this->brushes.acknowledge)
-                                              : Gdiplus::SolidBrush(this->brushes.text));
+                pressureData.IsAcknowledged() ? *this->brushes.highlightedTextBrush
+                                              : *this->brushes.textBrush);
 
             // Add the clickable area.
             radarScreen.RegisterScreenObject(
@@ -263,7 +263,7 @@ namespace UKControllerPlugin::Regional {
             this->topBarArea.top,
             LEFT_COLUMN_WIDTH + HIDE_CLICKSPOT_WIDTH,
             1 + ((numRegionalPressures)*ROW_HEIGHT)};
-        graphics.DrawRect(area, Gdiplus::Pen(this->brushes.border));
+        graphics.DrawRect(area, *this->brushes.borderPen);
     }
 
     /*
@@ -273,15 +273,15 @@ namespace UKControllerPlugin::Regional {
     RegionalPressureRenderer::RenderTopBar(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
     {
         // The title bar - the draggable bit
-        graphics.DrawRect(this->topBarRender, Gdiplus::Pen(this->brushes.border));
-        graphics.FillRect(this->topBarRender, Gdiplus::SolidBrush(this->brushes.header));
-        graphics.DrawString(L"ASR", this->topBarRender, Gdiplus::SolidBrush(this->brushes.text));
+        graphics.DrawRect(this->topBarRender, *this->brushes.borderPen);
+        graphics.FillRect(this->topBarRender, *this->brushes.headerBrush);
+        graphics.DrawString(L"ASR", this->topBarRender, *this->brushes.textBrush);
         radarScreen.RegisterScreenObject(this->menuBarClickspotId, "", this->topBarArea, true);
 
         // The toggle button - no draggable
-        graphics.DrawRect(this->hideSpotRender, Gdiplus::Pen(this->brushes.border));
-        graphics.FillRect(this->hideSpotRender, Gdiplus::SolidBrush(this->brushes.header));
-        graphics.DrawString(L"X", this->hideSpotRender, Gdiplus::SolidBrush(this->brushes.text));
+        graphics.DrawRect(this->hideSpotRender, *this->brushes.borderPen);
+        graphics.FillRect(this->hideSpotRender, *this->brushes.headerBrush);
+        graphics.DrawString(L"X", this->hideSpotRender, *this->brushes.textBrush);
         radarScreen.RegisterScreenObject(this->hideClickspotId, "", this->hideClickspotArea, false);
     }
 

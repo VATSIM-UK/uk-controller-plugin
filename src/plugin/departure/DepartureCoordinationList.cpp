@@ -38,15 +38,15 @@ namespace UKControllerPlugin::Departure {
     {
         this->brushSwitcher =
             Components::BrushSwitcher::Create(
-                std::make_shared<Gdiplus::SolidBrush>(this->brushes.header), std::chrono::seconds(2))
-                ->AdditionalBrush(std::make_shared<Gdiplus::SolidBrush>(this->brushes.highlightedHeader));
+                this->brushes.headerBrush, std::chrono::seconds(2))
+                ->AdditionalBrush(this->brushes.highlightedHeaderBrush);
 
         this->titleBar = Components::TitleBar::Create(
                              L"Departure Coordination Requests", {0, 0, this->titleBarWidth, this->titleBarHeight})
                              ->WithDrag(this->screenObjectId)
-                             ->WithBorder(std::make_shared<Gdiplus::Pen>(this->brushes.border))
-                             ->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(this->brushes.header))
-                             ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(this->brushes.text));
+                             ->WithBorder(this->brushes.borderPen)
+                             ->WithBackgroundBrush(this->brushes.headerBrush)
+                             ->WithTextBrush(this->brushes.textBrush);
 
         this->closeButton = Components::Button::Create(
             closeButtonOffset, this->screenObjectId, "closeButton", Components::CloseButton(this->brushes));
@@ -135,16 +135,16 @@ namespace UKControllerPlugin::Departure {
                 // Update content area with dynamic height
                 this->contentArea = {0, 0, 435, dynamicHeight};
 
-                graphics.FillRect(this->contentArea, Gdiplus::SolidBrush(this->brushes.background));
+                graphics.FillRect(this->contentArea, *this->brushes.backgroundBrush);
 
                 // Draw column headers
-                graphics.DrawString(L"Type", this->typeColumnHeader, Gdiplus::SolidBrush(this->brushes.text));
-                graphics.DrawString(L"Callsign", this->callsignColumnHeader, Gdiplus::SolidBrush(this->brushes.text));
+                graphics.DrawString(L"Type", this->typeColumnHeader, *this->brushes.textBrush);
+                graphics.DrawString(L"Callsign", this->callsignColumnHeader, *this->brushes.textBrush);
                 graphics.DrawString(
-                    L"Controller", this->controllerColumnHeader, Gdiplus::SolidBrush(this->brushes.text));
-                graphics.DrawString(L"Dept", this->airportColumnHeader, Gdiplus::SolidBrush(this->brushes.text));
-                graphics.DrawString(L"SID", this->sidColumnHeader, Gdiplus::SolidBrush(this->brushes.text));
-                graphics.DrawString(L"Dest", this->destColumnHeader, Gdiplus::SolidBrush(this->brushes.text));
+                    L"Controller", this->controllerColumnHeader, *this->brushes.textBrush);
+                graphics.DrawString(L"Dept", this->airportColumnHeader, *this->brushes.textBrush);
+                graphics.DrawString(L"SID", this->sidColumnHeader, *this->brushes.textBrush);
+                graphics.DrawString(L"Dest", this->destColumnHeader, *this->brushes.textBrush);
 
                 // Draw each aircraft that we care about
                 Gdiplus::Rect typeColumn = this->typeColumnHeader;
@@ -199,7 +199,7 @@ namespace UKControllerPlugin::Departure {
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(itemType),
                         typeColumn,
-                        Gdiplus::SolidBrush(this->brushes.text));
+                        *this->brushes.textBrush);
 
                     // Callsign column
                     const std::string callsign =
@@ -209,7 +209,7 @@ namespace UKControllerPlugin::Departure {
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(callsign),
                         callsignColumn,
-                        Gdiplus::SolidBrush(this->brushes.text));
+                        *this->brushes.textBrush);
                     std::shared_ptr<Components::ClickableArea> callsignClickspot = Components::ClickableArea::Create(
                         callsignColumn, this->screenObjectId, itemType + "." + callsign, false);
                     callsignClickspot->Apply(graphics, radarScreen);
@@ -222,7 +222,7 @@ namespace UKControllerPlugin::Departure {
                             : std::get<std::shared_ptr<Prenote::PrenoteMessage>>(listItem)->GetSendingControllerId();
                     const std::wstring controller = HelperFunctions::ConvertToWideString(
                         this->controllers.FetchPositionById(controllerId)->GetCallsign());
-                    graphics.DrawString(controller, controllerColumn, Gdiplus::SolidBrush(this->brushes.text));
+                    graphics.DrawString(controller, controllerColumn, *this->brushes.textBrush);
 
                     auto fp = this->plugin.GetFlightplanForCallsign(callsign);
                     if (!fp) {
@@ -233,17 +233,17 @@ namespace UKControllerPlugin::Departure {
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetOrigin()),
                         airportColumn,
-                        Gdiplus::SolidBrush(this->brushes.text));
+                        *this->brushes.textBrush);
 
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetSidName()),
                         sidColumn,
-                        Gdiplus::SolidBrush(this->brushes.text));
+                        *this->brushes.textBrush);
 
                     graphics.DrawString(
                         HelperFunctions::ConvertToWideString(fp->GetDestination()),
                         destColumn,
-                        Gdiplus::SolidBrush(this->brushes.text));
+                        *this->brushes.textBrush);
                 } while (nextRelease != decisions.cend() || nextPrenote != prenoteMessages.cend());
             });
 

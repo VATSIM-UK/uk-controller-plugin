@@ -1,6 +1,7 @@
 #include "Button.h"
 #include "CollapsibleWindowTitleBar.h"
 #include "StandardButtons.h"
+#include "graphics/GdiplusBrushes.h"
 
 namespace UKControllerPlugin::Components {
 
@@ -34,7 +35,10 @@ namespace UKControllerPlugin::Components {
     {
         auto titlebar = std::shared_ptr<CollapsibleWindowTitleBar>(
             new CollapsibleWindowTitleBar(title, area, collapseState, screenObjectId, brushes));
-        titlebar->WithDefaultBorder()->WithDefaultTextBrush()->WithDefaultBackgroundBrush()->WithDrag(screenObjectId);
+        titlebar->WithBackgroundBrush(brushes.headerBrush)
+            ->WithTextBrush(brushes.textBrush)
+            ->WithBorder(brushes.borderPen)
+            ->WithDrag(screenObjectId);
 
         return titlebar;
     }

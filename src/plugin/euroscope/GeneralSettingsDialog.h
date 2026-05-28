@@ -1,10 +1,16 @@
 #pragma once
 
+#include <map>
+#include <string>
+
 namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
         class UserSettingAwareCollection;
     } // namespace Euroscope
+    namespace Graphics {
+        struct Theme;
+    } // namespace Graphics
     namespace Setting {
         class SettingRepository;
     } // namespace Setting
@@ -42,6 +48,7 @@ namespace UKControllerPlugin::Euroscope {
             {"beta", L"Beta"},
         };
 
+        // Maps setting key to display name for the colour palette combo box
         const std::map<std::string, std::wstring> colourPaletteMap{
             {"default", L"Default"},
             {"node", L"NODE"},
@@ -61,6 +68,9 @@ namespace UKControllerPlugin::Euroscope {
 
         // A set of handlers that want to know when user settings get updated
         const UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers;
+
+        // Maps setting key to Theme struct for applying the palette
+        const std::map<std::string, const Graphics::Theme*> themeMap;
 
         // For global settings that transcend ES profiles
         Setting::SettingRepository& settings;

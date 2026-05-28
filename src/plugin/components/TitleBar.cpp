@@ -77,9 +77,9 @@ namespace UKControllerPlugin::Components {
         const Windows::GdiplusBrushes& brushes) const
     {
         // Use theme brushes instead of instance brushes
-        graphics.FillRect(this->area, Gdiplus::SolidBrush(brushes.header));
-        graphics.DrawString(this->title, this->area, Gdiplus::SolidBrush(brushes.text));
-        graphics.DrawRect(this->area, Gdiplus::Pen(brushes.border));
+        graphics.FillRect(this->area, *brushes.headerBrush);
+        graphics.DrawString(this->title, this->area, *brushes.textBrush);
+        graphics.DrawRect(this->area, *brushes.borderPen);
 
         if (this->clickableArea != nullptr) {
             this->clickableArea->Apply(graphics, radarScreen);
