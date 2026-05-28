@@ -40,6 +40,4 @@ namespace UKControllerPlugin::Components {
     DownArrow(const Windows::GdiplusBrushes& brushes);
 
     void ScalePen(const std::shared_ptr<Gdiplus::Pen>& pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY);
-
-    void ScalePen(const std::shared_ptr<Gdiplus::Pen>& pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY);
 } // namespace UKControllerPlugin::Components

@@ -10,6 +10,7 @@ namespace UKControllerPlugin {
     } // namespace Euroscope
     namespace Graphics {
         struct Theme;
+        auto ThemeFromKey(const std::string& key) -> const Theme&;
     } // namespace Graphics
     namespace Setting {
         class SettingRepository;
@@ -68,9 +69,6 @@ namespace UKControllerPlugin::Euroscope {
 
         // A set of handlers that want to know when user settings get updated
         const UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers;
-
-        // Maps setting key to Theme struct for applying the palette
-        const std::map<std::string, const Graphics::Theme*> themeMap;
 
         // For global settings that transcend ES profiles
         Setting::SettingRepository& settings;

@@ -173,17 +173,8 @@ namespace UKControllerPlugin {
             std::shared_ptr<List::PopupListInterface> addAircraftSelector;
 
             // Brushes
-            // const Gdiplus::SolidBrush titleBarTextBrush;
-            // const Gdiplus::SolidBrush titleBarBrush;
-            // const Gdiplus::SolidBrush dataBrush;
-            // const Gdiplus::SolidBrush clearedLevelBrush;
-            // const Gdiplus::SolidBrush blockedLevelBrush;
-            // const Gdiplus::Pen borderPen;
-            // const Gdiplus::Pen sameLevelBoxPen;
             Gdiplus::Pen verticalSpeedAscentPen;
             Gdiplus::Pen verticalSpeedDescentPen;
-            // const Gdiplus::SolidBrush exitButtonBrush;
-            // const Gdiplus::SolidBrush backgroundBrush;
 
             const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 

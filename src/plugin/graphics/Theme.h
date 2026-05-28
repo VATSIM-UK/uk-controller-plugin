@@ -26,4 +26,10 @@ namespace UKControllerPlugin::Graphics {
     extern const Theme NOVA_THEME;
     extern const Theme ITEC_THEME;
 
+    /*
+        Returns the Theme for a given palette key string.
+        If the key is not recognised, returns DEFAULT_THEME.
+    */
+    [[nodiscard]] auto ThemeFromKey(const std::string& key) -> const Theme&;
+
 } // namespace UKControllerPlugin::Graphics

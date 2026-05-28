@@ -11,7 +11,7 @@ using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
-using UKControllerPlugin::Graphics::Theme;
+using UKControllerPlugin::Graphics::ThemeFromKey;
 using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin {
@@ -23,21 +23,13 @@ namespace UKControllerPlugin {
             Setting::SettingRepository& settings,
             GdiplusBrushes& brushes)
             : userSettings(userSettings), brushes(brushes), userSettingsHandlers(userSettingsHandlers),
-              themeMap({
-                  {"default", &Graphics::DEFAULT_THEME},
-                  {"node", &Graphics::NODE_THEME},
-                  {"nerc", &Graphics::NERC_THEME},
-                  {"nova", &Graphics::NOVA_THEME},
-                  {"itec", &Graphics::ITEC_THEME},
-              }),
               settings(settings)
         {
         }
 
         GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog& newObject)
             : userSettings(newObject.userSettings), brushes(newObject.brushes),
-              userSettingsHandlers(newObject.userSettingsHandlers), themeMap(newObject.themeMap),
-              settings(newObject.settings)
+              userSettingsHandlers(newObject.userSettingsHandlers), settings(newObject.settings)
         {
         }
 
@@ -203,13 +195,8 @@ namespace UKControllerPlugin {
                 GeneralSettingsEntries::colourPaletteSettingsDescription,
                 selectedColourPalette);
 
-            // Apply the selected theme using the themeMap
-            {
-                auto themeIt = this->themeMap.find(selectedColourPalette);
-                const Graphics::Theme* theme =
-                    themeIt != this->themeMap.end() ? themeIt->second : &Graphics::DEFAULT_THEME;
-                this->brushes.LoadTheme(*theme);
-            }
+            // Apply the selected theme
+            this->brushes.LoadTheme(ThemeFromKey(selectedColourPalette));
 
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }

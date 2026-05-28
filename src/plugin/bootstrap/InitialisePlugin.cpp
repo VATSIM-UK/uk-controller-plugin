@@ -86,7 +86,7 @@ using UKControllerPlugin::Duplicate::DuplicatePlugin;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
-using UKControllerPlugin::Graphics::Theme;
+using UKControllerPlugin::Graphics::ThemeFromKey;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Log::LoggerBootstrap;
@@ -248,17 +248,7 @@ namespace UKControllerPlugin {
         {
             auto& userSettings = *this->container->pluginUserSettingHandler;
             std::string palette = userSettings.GetStringEntry("colourPalette", "default");
-            const Graphics::Theme* theme = &Graphics::DEFAULT_THEME;
-            if (palette == "node") {
-                theme = &Graphics::NODE_THEME;
-            } else if (palette == "nerc") {
-                theme = &Graphics::NERC_THEME;
-            } else if (palette == "nova") {
-                theme = &Graphics::NOVA_THEME;
-            } else if (palette == "itec") {
-                theme = &Graphics::ITEC_THEME;
-            }
-            this->container->brushes->LoadTheme(*theme);
+            this->container->brushes->LoadTheme(ThemeFromKey(palette));
         }
 
         // General settings config bootstrap

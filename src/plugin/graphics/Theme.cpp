@@ -1,4 +1,5 @@
 #include "Theme.h"
+#include <string>
 
 // When updating - please update the commented hex code as well ;)
 
@@ -74,5 +75,22 @@ namespace UKControllerPlugin::Graphics {
         Gdiplus::Color(130, 111, 0),   // timerYellow               #826F00
         Gdiplus::Color(192, 0, 0),     // timerRed                  #C00000
     };
+
+    auto ThemeFromKey(const std::string& key) -> const Theme&
+    {
+        if (key == "node") {
+            return NODE_THEME;
+        }
+        if (key == "nerc") {
+            return NERC_THEME;
+        }
+        if (key == "nova") {
+            return NOVA_THEME;
+        }
+        if (key == "itec") {
+            return ITEC_THEME;
+        }
+        return DEFAULT_THEME;
+    }
 
 } // namespace UKControllerPlugin::Graphics

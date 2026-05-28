@@ -14,8 +14,6 @@
 #include "navaids/NavaidCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "plugin/FunctionCallEventHandler.h"
-#include "graphics/GdiplusBrushes.h"
-
 using ::testing::_;
 using ::testing::InSequence;
 using ::testing::NiceMock;
