@@ -1,4 +1,5 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
+#include "graphics/GdiplusBrushes.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "command/CommandHandlerCollection.h"
@@ -15,6 +16,7 @@ using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Setting::SettingRepository;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 
@@ -40,6 +42,7 @@ namespace UKControllerPluginTest {
             NiceMock<MockDialogProvider> mockDialogProvider;
             NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             NiceMock<Windows::MockWinApi> mockWindows;
+            GdiplusBrushes brushes;
             SettingRepository settings;
             DialogManager dialogManager;
         };
@@ -47,7 +50,7 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapRadarScreenRegistersConfigurationCallback)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-                this->functionHandler, this->configurableDisplays, this->commandHandlers, this->dialogManager);
+                this->functionHandler, this->configurableDisplays, this->brushes, this->commandHandlers, this->dialogManager);
 
             EXPECT_EQ(1, this->functionHandler.CountCallbacks());
         }
@@ -55,7 +58,7 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapRadarScreenRegistersInTheConfigurationMenu)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-                this->functionHandler, this->configurableDisplays, this->commandHandlers, this->dialogManager);
+                this->functionHandler, this->configurableDisplays, this->brushes, this->commandHandlers, this->dialogManager);
 
             EXPECT_EQ(1, this->configurableDisplays.CountDisplays());
         }
@@ -63,7 +66,7 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapRadarScreenRegistersInTheCommandHandlers)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-                this->functionHandler, this->configurableDisplays, this->commandHandlers, this->dialogManager);
+                this->functionHandler, this->configurableDisplays, this->brushes, this->commandHandlers, this->dialogManager);
 
             EXPECT_EQ(1, this->commandHandlers.CountHandlers());
         }
@@ -71,7 +74,7 @@ namespace UKControllerPluginTest {
         TEST_F(GeneralSettingsConfigurationBootstrapTest, BootstrapPluginAddsDialogToDialogManager)
         {
             GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
-                this->dialogManager, this->userSettings, this->userSettingCollection, settings, mockWindows);
+                this->dialogManager, this->userSettings, this->userSettingCollection, settings, mockWindows, this->brushes);
 
             EXPECT_EQ(1, this->dialogManager.CountDialogs());
             EXPECT_TRUE(this->dialogManager.HasDialog(IDD_GENERAL_SETTINGS));

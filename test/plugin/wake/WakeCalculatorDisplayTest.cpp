@@ -1,10 +1,12 @@
 #include "euroscope/UserSetting.h"
+#include "graphics/GdiplusBrushes.h"
 #include "wake/WakeCalculatorDisplay.h"
 #include "wake/WakeCalculatorOptions.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Wake::WakeCalculatorDisplay;
 using UKControllerPlugin::Wake::WakeCalculatorOptions;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest::Wake {
     class WakeCalculatorDisplayTest : public testing::Test
@@ -16,7 +18,7 @@ namespace UKControllerPluginTest::Wake {
               followingCallsignSelector(std::make_shared<testing::NiceMock<List::MockPopupList>>()),
               wakesSchemeSelector(std::make_shared<testing::NiceMock<List::MockPopupList>>()),
               options(std::make_shared<WakeCalculatorOptions>()),
-              display(options, leadCallsignSelector, followingCallsignSelector, wakesSchemeSelector, plugin, 1)
+              display(options, leadCallsignSelector, followingCallsignSelector, wakesSchemeSelector, plugin, brushes, 1)
         {
         }
 
@@ -28,6 +30,7 @@ namespace UKControllerPluginTest::Wake {
         std::shared_ptr<testing::NiceMock<List::MockPopupList>> followingCallsignSelector;
         std::shared_ptr<testing::NiceMock<List::MockPopupList>> wakesSchemeSelector;
         std::shared_ptr<WakeCalculatorOptions> options;
+        GdiplusBrushes brushes;
         WakeCalculatorDisplay display;
     };
 

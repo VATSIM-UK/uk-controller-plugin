@@ -1,4 +1,5 @@
 #include "hold/HoldModule.h"
+#include "graphics/GdiplusBrushes.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "timedevent/TimedEventCollection.h"
 #include "hold/AbstractHoldLevelRestriction.h"
@@ -328,6 +329,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(2, this->asrEvents.CountHandlers());
@@ -342,6 +344,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(1, this->container.holdSelectionMenu->CountDisplayManagers());
@@ -356,6 +359,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(1, this->radarRenderables.CountRenderers());
@@ -371,6 +375,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(2, this->configurableDisplays.CountDisplays());
@@ -386,6 +391,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(countBefore + 2, this->container.pluginFunctionHandlers->CountCallbacks());
@@ -400,6 +406,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(1, this->radarScreenCommands.CountHandlers());

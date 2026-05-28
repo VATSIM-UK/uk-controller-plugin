@@ -12,7 +12,9 @@
 #include "hold/PublishedHoldCollection.h"
 #include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
+#include "graphics/GdiplusBrushes.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "graphics/GdiplusBrushes.h"
 
 using ::testing::_;
 using ::testing::InSequence;
@@ -37,6 +39,7 @@ using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCRadarTargetInterface;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
 
@@ -49,7 +52,7 @@ namespace UKControllerPluginTest {
             HoldSelectionMenuTest()
                 : popupFactory(functionHandlers, mockPlugin), listFactory(popupFactory),
                   dialogManager(mockDialogProvider), userSetting(mockUserSettingProvider),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory, brushes),
                   holdManager(mockApi, mockTaskRunner), holdSelectionMenu(holdManager, mockPlugin, 1)
             {
                 this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
@@ -80,6 +83,7 @@ namespace UKControllerPluginTest {
             NavaidCollection navaids;
             PublishedHoldCollection holds;
             UserSetting userSetting;
+            GdiplusBrushes brushes;
             HoldDisplayFactory displayFactory;
             HoldManager holdManager;
             HoldSelectionMenu holdSelectionMenu;

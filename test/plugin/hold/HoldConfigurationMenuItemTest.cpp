@@ -11,6 +11,7 @@
 #include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "graphics/GdiplusBrushes.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -31,6 +32,7 @@ using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
 using UKControllerPluginTest::TaskManager::MockTaskRunnerInterface;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest {
     namespace Hold {
@@ -41,7 +43,7 @@ namespace UKControllerPluginTest {
             HoldConfigurationMenuItemTest()
                 : popupFactory(functionHandlers, mockPlugin), listFactory(popupFactory), dialogManager(mockProvider),
                   holdManager(mockApi, mockTaskRunner),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory, brushes),
                   displayManager(new HoldDisplayManager(displayFactory)), menuItem(dialogManager, displayManager, 1)
             {
                 this->dialogManager.AddDialog(this->dialogData);
@@ -59,6 +61,7 @@ namespace UKControllerPluginTest {
             NiceMock<MockDialogProvider> mockProvider;
             UKControllerPlugin::Dialog::DialogManager dialogManager;
             HoldManager holdManager;
+            GdiplusBrushes brushes;
             HoldDisplayFactory displayFactory;
             std::shared_ptr<HoldDisplayManager> displayManager;
             HoldConfigurationMenuItem menuItem;
