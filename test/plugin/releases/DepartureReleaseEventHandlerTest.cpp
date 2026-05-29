@@ -1113,6 +1113,79 @@ namespace UKControllerPluginTest::Releases {
         EXPECT_EQ(relevantRelease, handler.GetReleaseRequest(4));
     }
 
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendPendingReminderIfRequestIsLessThanOneMinuteOld)
+    {
+        this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+
+        auto now = std::chrono::system_clock::now();
+        UKControllerPlugin::Time::SetTestNow(now - std::chrono::seconds(59));
+        auto relevantRelease =
+            std::make_shared<DepartureReleaseRequest>(4, "BAW999", 3, 2, TimeNow() + std::chrono::minutes(5));
+        UKControllerPlugin::Time::SetTestNow(now);
+
+        this->handler.AddReleaseRequest(relevantRelease);
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        this->handler.TimedEventTrigger();
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItDoesntSendPendingReminderIfUserIsNotTargetController)
+    {
+        this->activeCallsigns.AddUserCallsign(*this->controller2Callsign);
+
+        auto now = std::chrono::system_clock::now();
+        UKControllerPlugin::Time::SetTestNow(now - std::chrono::seconds(61));
+        auto relevantRelease =
+            std::make_shared<DepartureReleaseRequest>(4, "BAW999", 3, 2, TimeNow() + std::chrono::minutes(5));
+        UKControllerPlugin::Time::SetTestNow(now);
+
+        this->handler.AddReleaseRequest(relevantRelease);
+        EXPECT_CALL(this->mockPlugin, ChatAreaMessage).Times(0);
+
+        this->handler.TimedEventTrigger();
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItSendsPendingReminderIfRequestOlderThanOneMinute)
+    {
+        this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+
+        auto now = std::chrono::system_clock::now();
+        UKControllerPlugin::Time::SetTestNow(now - std::chrono::seconds(61));
+        auto relevantRelease =
+            std::make_shared<DepartureReleaseRequest>(4, "BAW999", 3, 2, TimeNow() + std::chrono::minutes(5));
+        UKControllerPlugin::Time::SetTestNow(now);
+
+        this->handler.AddReleaseRequest(relevantRelease);
+
+        EXPECT_CALL(
+            this->mockPlugin,
+            ChatAreaMessage(_, _, "Departure release for BAW999 from EGFF_TWR is still pending.", _, _, _, _, _))
+            .Times(1);
+
+        this->handler.TimedEventTrigger();
+    }
+
+    TEST_F(DepartureReleaseEventHandlerTest, ItOnlySendsPendingReminderOncePerRelease)
+    {
+        this->activeCallsigns.AddUserCallsign(*this->controller1Callsign);
+
+        auto now = std::chrono::system_clock::now();
+        UKControllerPlugin::Time::SetTestNow(now - std::chrono::seconds(61));
+        auto relevantRelease =
+            std::make_shared<DepartureReleaseRequest>(4, "BAW999", 3, 2, TimeNow() + std::chrono::minutes(5));
+        UKControllerPlugin::Time::SetTestNow(now);
+
+        this->handler.AddReleaseRequest(relevantRelease);
+
+        EXPECT_CALL(
+            this->mockPlugin,
+            ChatAreaMessage(_, _, "Departure release for BAW999 from EGFF_TWR is still pending.", _, _, _, _, _))
+            .Times(1);
+
+        this->handler.TimedEventTrigger();
+        this->handler.TimedEventTrigger();
+    }
+
     TEST_F(DepartureReleaseEventHandlerTest, ItRemovesPendingReleasesThatHaveExpired)
     {
         std::shared_ptr<DepartureReleaseRequest> relevantRelease =

@@ -30,6 +30,8 @@ namespace UKControllerPlugin::Releases {
         bool Acknowledged() const;
         bool Rejected() const;
         bool Approved() const;
+        void MarkPendingDecisionReminderSent();
+        [[nodiscard]] bool PendingDecisionReminderSent() const;
         bool RequestExpired() const;
         bool ApprovalExpired() const;
         bool AwaitingReleasedTime() const;
@@ -81,5 +83,8 @@ namespace UKControllerPlugin::Releases {
 
         // Remarks relating to the release being approved or rejected
         std::string remarks;
+
+        // Whether the target controller has already been reminded this release is pending
+        bool pendingDecisionReminderSent = false;
     };
 } // namespace UKControllerPlugin::Releases

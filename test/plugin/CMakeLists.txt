@@ -517,6 +517,7 @@ set(test__releases
     "releases/EnrouteReleaseTypesSerializerTest.cpp"
     "releases/ReleaseModuleTest.cpp"
     releases/ReleaseApprovalRemarksUserMessageTest.cpp
+    releases/ReleasePendingReminderUserMessageTest.cpp
     releases/ReleaseRejectionRemarksUserMessageTest.cpp releases/ReleaseIsTargetedAtUserTest.cpp releases/SendReleaseRequestedChatAreaMessageTest.cpp handoff/DefaultDepartureHandoffResolverTest.cpp)
 source_group("test\\releases" FILES ${test__releases})
 

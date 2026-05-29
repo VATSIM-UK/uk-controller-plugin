@@ -71,6 +71,11 @@ namespace UKControllerPluginTest::Releases {
         EXPECT_TRUE(request->Remarks().empty());
     }
 
+    TEST_F(DepartureReleaseRequestTest, ItStartsWithNoPendingDecisionReminder)
+    {
+        EXPECT_FALSE(request->PendingDecisionReminderSent());
+    }
+
     TEST_F(DepartureReleaseRequestTest, ItCanBeAcknowledged)
     {
         request->Acknowledge();
@@ -81,6 +86,12 @@ namespace UKControllerPluginTest::Releases {
     {
         request->Acknowledge();
         EXPECT_TRUE(std::chrono::system_clock::now() - request->AcknowledgedAtTime() < std::chrono::seconds(5));
+    }
+
+    TEST_F(DepartureReleaseRequestTest, PendingDecisionReminderCanBeMarkedAsSent)
+    {
+        request->MarkPendingDecisionReminderSent();
+        EXPECT_TRUE(request->PendingDecisionReminderSent());
     }
 
     TEST_F(DepartureReleaseRequestTest, ItCanBeRejected)
