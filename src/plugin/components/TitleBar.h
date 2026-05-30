@@ -2,7 +2,7 @@
 #include <memory>
 #include <string>
 #include <functional>
-#include <windows.h>
+#include <Windows.h>
 #include <gdiplus.h>
 
 namespace UKControllerPlugin {

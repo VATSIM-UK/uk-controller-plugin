@@ -34,7 +34,7 @@ namespace UKControllerPlugin::Departure {
         const GdiplusBrushes& brushes,
         const int screenObjectId)
         : controllers(controllers), handler(handler), prenotes(prenotes), brushes(brushes), plugin(plugin),
-          activeCallsigns(activeCallsigns), screenObjectId(screenObjectId), visible(false), contentCollapsed(false)
+          activeCallsigns(activeCallsigns), screenObjectId(screenObjectId)
     {
         this->brushSwitcher = Components::BrushSwitcher::Create(this->brushes.headerBrush, std::chrono::seconds(2))
                                   ->AdditionalBrush(this->brushes.highlightedHeaderBrush);
@@ -53,7 +53,7 @@ namespace UKControllerPlugin::Departure {
             collapseButtonOffset,
             this->screenObjectId,
             "collapseButton",
-            Components::CollapseButton(this->brushes, [this]() -> bool { return this->contentCollapsed; }));
+            Components::CollapseButton(this->brushes, [this] { return this->contentCollapsed; }));
     }
 
     void DepartureCoordinationList::LeftClick(
@@ -124,7 +124,7 @@ namespace UKControllerPlugin::Departure {
                 }
 
                 // Calculate dynamic height based on number of items
-                const int totalItems = static_cast<int>(decisions.size() + prenoteMessages.size());
+                const auto totalItems = static_cast<int>(decisions.size() + prenoteMessages.size());
                 const int headerHeight = 30; // Height for column headers
                 const int minHeight = 50;    // Minimum height even when no items
                 const int calculatedHeight = headerHeight + (totalItems * lineHeight);

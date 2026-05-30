@@ -44,13 +44,13 @@ namespace UKControllerPlugin::Euroscope {
         LRESULT InitDialog(HWND hwnd);
         void DestroyDialog(HWND hwnd);
 
-        const std::map<std::string, std::wstring> releaseChannelMap{
+        const std::map<std::string, std::wstring, std::less<>> releaseChannelMap{
             {"stable", L"Stable"},
             {"beta", L"Beta"},
         };
 
         // Maps setting key to display name for the colour palette combo box
-        const std::map<std::string, std::wstring> colourPaletteMap{
+        const std::map<std::string, std::wstring, std::less<>> colourPaletteMap{
             {"default", L"Default"},
             {"node", L"NODE"},
             {"nerc", L"NERC"},

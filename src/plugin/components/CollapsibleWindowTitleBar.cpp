@@ -6,9 +6,9 @@
 namespace UKControllerPlugin::Components {
 
     CollapsibleWindowTitleBar::CollapsibleWindowTitleBar(
-        std::wstring title,
+        const std::wstring& title,
         Gdiplus::Rect area,
-        std::function<bool()> collapseState,
+        const std::function<bool()>& collapseState,
         int screenObjectId,
         const Windows::GdiplusBrushes& brushes)
         : TitleBar(title, area), brushes(brushes)
@@ -27,14 +27,14 @@ namespace UKControllerPlugin::Components {
     }
 
     std::shared_ptr<CollapsibleWindowTitleBar> CollapsibleWindowTitleBar::Create(
-        std::wstring title,
+        const std::wstring& title,
         Gdiplus::Rect area,
-        std::function<bool()> collapseState,
+        const std::function<bool()>& collapseState,
         int screenObjectId,
         const Windows::GdiplusBrushes& brushes)
     {
-        auto titlebar = std::shared_ptr<CollapsibleWindowTitleBar>(
-            new CollapsibleWindowTitleBar(title, area, collapseState, screenObjectId, brushes));
+        auto titlebar =
+            std::make_shared<CollapsibleWindowTitleBar>(title, area, collapseState, screenObjectId, brushes);
         titlebar->WithBackgroundBrush(brushes.headerBrush)
             ->WithTextBrush(brushes.textBrush)
             ->WithBorder(brushes.borderPen)
@@ -54,9 +54,9 @@ namespace UKControllerPlugin::Components {
     void CollapsibleWindowTitleBar::DrawTheme(
         Windows::GdiGraphicsInterface& graphics,
         Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
-        const Windows::GdiplusBrushes& brushes) const
+        const Windows::GdiplusBrushes& themeBrushes) const
     {
-        TitleBar::DrawTheme(graphics, radarScreen, brushes);
+        TitleBar::DrawTheme(graphics, radarScreen, themeBrushes);
         this->closeButton->Draw(graphics, radarScreen);
         this->collapseButton->Draw(graphics, radarScreen);
     }

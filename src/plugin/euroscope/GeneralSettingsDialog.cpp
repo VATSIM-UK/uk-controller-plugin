@@ -6,6 +6,7 @@
 #include "setting/SettingRepository.h"
 #include "graphics/GdiplusBrushes.h"
 #include "graphics/Theme.h"
+#include <bit>
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
@@ -76,12 +77,12 @@ namespace UKControllerPlugin {
                 this->GetCheckboxStateFromSettings(GeneralSettingsEntries::unknownTimeFormatBlankKey));
 
             auto selectedChannel = this->settings.GetSetting("release_channel", DEFAULT_RELEASE_CHANNEL);
-            if (this->releaseChannelMap.count(selectedChannel) == 0) {
+            if (!this->releaseChannelMap.contains(selectedChannel)) {
                 selectedChannel = DEFAULT_RELEASE_CHANNEL;
             }
 
-            for (const auto& releaseChannel : this->releaseChannelMap) {
-                const auto channel = releaseChannel.second.c_str();
+            for (const auto& [channelKey, channelValue] : this->releaseChannelMap) {
+                const auto channel = channelValue.c_str();
                 int insertIndex = SendDlgItemMessage(
                     hwnd, IDC_RELEASE_CHANNEL, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(channel));
 
@@ -90,9 +91,9 @@ namespace UKControllerPlugin {
                     IDC_RELEASE_CHANNEL,
                     CB_SETITEMDATA,
                     insertIndex,
-                    reinterpret_cast<LPARAM>(releaseChannel.first.c_str()));
+                    reinterpret_cast<LPARAM>(channelKey.c_str()));
 
-                if (releaseChannel.first == selectedChannel) {
+                if (channelKey == selectedChannel) {
                     SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_SETCURSEL, insertIndex, NULL);
                 }
             }
@@ -101,23 +102,23 @@ namespace UKControllerPlugin {
             auto selectedColourPalette = this->userSettings.GetStringEntry(
                 GeneralSettingsEntries::colourPaletteSettingsKey, DEFAULT_COLOUR_PALETTE);
 
-            if (this->colourPaletteMap.count(selectedColourPalette) == 0) {
+            if (!this->colourPaletteMap.contains(selectedColourPalette)) {
                 selectedColourPalette = DEFAULT_COLOUR_PALETTE;
             }
 
-            for (const auto& palette : this->colourPaletteMap) {
-                const auto paletteName = palette.second.c_str();
+            for (const auto& [paletteKey, paletteName] : this->colourPaletteMap) {
+                const auto paletteNameStr = paletteName.c_str();
                 int insertIndex = SendDlgItemMessage(
-                    hwnd, IDC_COLOUR_PALETTE, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(paletteName));
+                    hwnd, IDC_COLOUR_PALETTE, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(paletteNameStr));
 
                 SendDlgItemMessage(
                     hwnd,
                     IDC_COLOUR_PALETTE,
                     CB_SETITEMDATA,
                     insertIndex,
-                    reinterpret_cast<LPARAM>(palette.first.c_str()));
+                    reinterpret_cast<LPARAM>(paletteKey.c_str()));
 
-                if (palette.first == selectedColourPalette) {
+                if (paletteKey == selectedColourPalette) {
                     SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_SETCURSEL, insertIndex, NULL);
                 }
             }
@@ -179,7 +180,7 @@ namespace UKControllerPlugin {
 
             const auto selectedReleaseChannelIndex = SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETCURSEL, 0, 0);
 
-            const std::string selectedChannel = reinterpret_cast<const char*>(
+            const std::string selectedChannel = std::bit_cast<const char*>(
                 SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETITEMDATA, selectedReleaseChannelIndex, 0));
 
             this->settings.UpdateSetting("release_channel", selectedChannel);
@@ -187,7 +188,7 @@ namespace UKControllerPlugin {
             // Colour Palette
             const auto selectedColourPaletteIndex = SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETCURSEL, 0, 0);
 
-            const std::string selectedColourPalette = reinterpret_cast<const char*>(
+            const std::string selectedColourPalette = std::bit_cast<const char*>(
                 SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETITEMDATA, selectedColourPaletteIndex, 0));
 
             this->userSettings.Save(

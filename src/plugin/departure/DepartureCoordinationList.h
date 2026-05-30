@@ -99,10 +99,10 @@ namespace UKControllerPlugin::Departure {
         const int screenObjectId;
 
         // Is the window visible
-        bool visible;
+        bool visible = false;
 
         // Is the content collapsed
-        bool contentCollapsed;
+        bool contentCollapsed = false;
 
         // Height of title bar
         const int titleBarHeight = 15;
