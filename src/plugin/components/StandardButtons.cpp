@@ -42,22 +42,7 @@ namespace UKControllerPlugin::Components {
     std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
     CloseButton(const Windows::GdiplusBrushes& brushes)
     {
-        return [&brushes](Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& drawArea) {
-            auto pen = std::make_shared<Gdiplus::Pen>(brushes.text, 2.0F);
-            Gdiplus::REAL scaleX = drawArea.Width / buttonSize;
-            Gdiplus::REAL scaleY = drawArea.Height / buttonSize;
-            ScalePen(pen, scaleX, scaleY);
-
-            graphics.Translated(
-                static_cast<Gdiplus::REAL>(5) * scaleX,
-                static_cast<Gdiplus::REAL>(5) * scaleY,
-                [&graphics, &pen, &scaleX, &scaleY] {
-                    graphics.Scaled(scaleX, scaleY, [&graphics, &pen]() {
-                        graphics.DrawLine(*pen, closeTopLeft, closeBottomRight);
-                        graphics.DrawLine(*pen, closeBottomLeft, closeTopRight);
-                    });
-                });
-        };
+        return CloseButton(brushes.text);
     }
 
     /*
@@ -91,24 +76,7 @@ namespace UKControllerPlugin::Components {
     std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
     CollapseButton(const Windows::GdiplusBrushes& brushes, std::function<bool()> stateFunction)
     {
-        return [&brushes, stateFunction](Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& drawArea) {
-            auto brush = std::make_shared<Gdiplus::SolidBrush>(brushes.text);
-            Gdiplus::REAL scaleX = drawArea.Width / buttonSize;
-            Gdiplus::REAL scaleY = drawArea.Height / buttonSize;
-
-            graphics.Translated(
-                static_cast<Gdiplus::REAL>(5) * scaleX,
-                static_cast<Gdiplus::REAL>(5) * scaleY,
-                [&graphics, &stateFunction, &brush, &scaleX, &scaleY] {
-                    graphics.Rotated(
-                        stateFunction() ? static_cast<Gdiplus::REAL>(180) : static_cast<Gdiplus::REAL>(0),
-                        [&graphics, &brush, &scaleX, &scaleY]() {
-                            graphics.Scaled(scaleX, scaleY, [&graphics, &brush]() {
-                                graphics.FillPolygon(collapsePoints, *brush, 3);
-                            });
-                        });
-                });
-        };
+        return CollapseButton(brushes.text, std::move(stateFunction));
     }
 
     void ScalePen(const std::shared_ptr<Gdiplus::Pen>& pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY)
