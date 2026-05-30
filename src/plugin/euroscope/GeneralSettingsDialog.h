@@ -1,13 +1,23 @@
 #pragma once
 
+#include <map>
+#include <string>
+
 namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;
         class UserSettingAwareCollection;
     } // namespace Euroscope
+    namespace Graphics {
+        struct Theme;
+        auto ThemeFromKey(const std::string& key) -> const Theme&;
+    } // namespace Graphics
     namespace Setting {
         class SettingRepository;
     } // namespace Setting
+    namespace Windows {
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Euroscope {
@@ -21,7 +31,8 @@ namespace UKControllerPlugin::Euroscope {
         GeneralSettingsDialog(
             UKControllerPlugin::Euroscope::UserSetting& userSettings,
             const UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers,
-            Setting::SettingRepository& settings);
+            Setting::SettingRepository& settings,
+            UKControllerPlugin::Windows::GdiplusBrushes& brushes);
         GeneralSettingsDialog(const GeneralSettingsDialog& newObject);
 
         static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -33,15 +44,28 @@ namespace UKControllerPlugin::Euroscope {
         LRESULT InitDialog(HWND hwnd);
         void DestroyDialog(HWND hwnd);
 
-        const std::map<std::string, std::wstring> releaseChannelMap{
+        const std::map<std::string, std::wstring, std::less<>> releaseChannelMap{
             {"stable", L"Stable"},
             {"beta", L"Beta"},
         };
 
+        // Maps setting key to display name for the colour palette combo box
+        const std::map<std::string, std::wstring, std::less<>> colourPaletteMap{
+            {"default", L"Default"},
+            {"node", L"NODE"},
+            {"nerc", L"NERC"},
+            {"nova", L"NOVA"},
+            {"itec", L"iTEC"},
+        };
+
         const std::string DEFAULT_RELEASE_CHANNEL = "stable";
+
+        const std::string DEFAULT_COLOUR_PALETTE = "default";
 
         // A place where user settings are retrieved and stored
         UKControllerPlugin::Euroscope::UserSetting& userSettings;
+
+        UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
         // A set of handlers that want to know when user settings get updated
         const UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers;

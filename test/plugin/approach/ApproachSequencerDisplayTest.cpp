@@ -6,6 +6,7 @@
 #include "approach/ApproachSequencerOptions.h"
 #include "approach/ApproachSpacingCalculator.h"
 #include "airfield/AirfieldCollection.h"
+#include "graphics/GdiplusBrushes.h"
 #include "wake/WakeCategoryMapperCollection.h"
 
 using UKControllerPlugin::Airfield::AirfieldCollection;
@@ -16,6 +17,7 @@ using UKControllerPlugin::Approach::ApproachSequencerOptions;
 using UKControllerPlugin::Approach::ApproachSequencingMode;
 using UKControllerPlugin::Approach::ApproachSpacingCalculator;
 using UKControllerPlugin::Wake::WakeCategoryMapperCollection;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest::Approach {
     class ApproachSequencerDisplayTest : public testing::Test
@@ -39,10 +41,12 @@ namespace UKControllerPluginTest::Approach {
                                                                                 airfieldTargetList,
                                                                                 airfieldSeparationList,
                                                                                 plugin,
+                                                                                brushes,
                                                                                 55)
         {
         }
 
+        GdiplusBrushes brushes;
         ApproachSequencerOptions sequencerOptions;
         testing::NiceMock<Euroscope::MockEuroscopePluginLoopbackInterface> plugin;
         AirfieldCollection airfields;

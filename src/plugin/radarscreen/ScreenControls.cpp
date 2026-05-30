@@ -80,8 +80,8 @@ namespace UKControllerPlugin::RadarScreen {
         RECT radarArea = radarScreen.GetRadarViewport();
         Gdiplus::Rect renderArea = {
             radarArea.right - controlWidth, radarArea.bottom - controlHeight, controlWidth, controlHeight};
-        graphics.FillRect(renderArea, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawString(L"OP", renderArea, *this->brushes.greenBrush);
+        graphics.FillRect(renderArea, Gdiplus::SolidBrush(this->brushes.euroscopeBackground));
+        graphics.DrawString(L"OP", renderArea, Gdiplus::SolidBrush(this->brushes.green));
         radarScreen.RegisterScreenObject(
             toggleboxIdEuroscope,
             "",

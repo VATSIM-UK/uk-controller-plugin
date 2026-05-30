@@ -3,6 +3,7 @@
 #include "controller/ControllerPosition.h"
 #include "controller/ControllerPositionCollection.h"
 #include "departure/DepartureCoordinationList.h"
+#include "graphics/GdiplusBrushes.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
 #include "message/UserMessager.h"
@@ -14,6 +15,7 @@ using testing::Test;
 using UKControllerPlugin::Departure::DepartureCoordinationList;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest::Departure {
 
@@ -22,8 +24,9 @@ namespace UKControllerPluginTest::Departure {
         public:
         DepartureCoordinationListTest()
             : userSettings(mockAsrProvider), messager(mockPlugin),
-              list(std::make_shared<DepartureCoordinationList>(
-                  handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
+              list(
+                  std::make_shared<DepartureCoordinationList>(
+                      handler, prenotes, mockPlugin, controllers, activeCallsigns, brushes, 3)),
               handler(
                   std::make_shared<UKControllerPlugin::Releases::DepartureReleaseRequestCollection>(),
                   mockApi,
@@ -57,6 +60,7 @@ namespace UKControllerPluginTest::Departure {
         testing::NiceMock<Euroscope::MockUserSettingProviderInterface> mockAsrProvider;
         UKControllerPlugin::Euroscope::UserSetting userSettings;
         UserMessager messager;
+        GdiplusBrushes brushes;
         std::shared_ptr<DepartureCoordinationList> list;
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;

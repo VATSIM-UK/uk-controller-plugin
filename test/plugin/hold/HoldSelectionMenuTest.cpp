@@ -12,8 +12,8 @@
 #include "hold/PublishedHoldCollection.h"
 #include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
+#include "graphics/GdiplusBrushes.h"
 #include "plugin/FunctionCallEventHandler.h"
-
 using ::testing::_;
 using ::testing::InSequence;
 using ::testing::NiceMock;
@@ -32,6 +32,7 @@ using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroScopeCFlightPlanInterface;
@@ -49,7 +50,7 @@ namespace UKControllerPluginTest {
             HoldSelectionMenuTest()
                 : popupFactory(functionHandlers, mockPlugin), listFactory(popupFactory),
                   dialogManager(mockDialogProvider), userSetting(mockUserSettingProvider),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory, brushes),
                   holdManager(mockApi, mockTaskRunner), holdSelectionMenu(holdManager, mockPlugin, 1)
             {
                 this->mockFlightplan.reset(new NiceMock<MockEuroScopeCFlightPlanInterface>);
@@ -80,6 +81,7 @@ namespace UKControllerPluginTest {
             NavaidCollection navaids;
             PublishedHoldCollection holds;
             UserSetting userSetting;
+            GdiplusBrushes brushes;
             HoldDisplayFactory displayFactory;
             HoldManager holdManager;
             HoldSelectionMenu holdSelectionMenu;
@@ -109,10 +111,11 @@ namespace UKControllerPluginTest {
             displayManager1->AsrLoadedEvent(this->userSetting);
             displayManager2->AsrLoadedEvent(this->userSetting);
             displayManager1->LoadSelectedHolds(std::vector<std::string>({"TIMBA", "WILLO"}));
-            displayManager2->LoadSelectedHolds(std::vector<std::string>({
-                "WILLO",
-                "MAY",
-            }));
+            displayManager2->LoadSelectedHolds(
+                std::vector<std::string>({
+                    "WILLO",
+                    "MAY",
+                }));
             this->holdSelectionMenu.AddDisplayManager(displayManager1);
             this->holdSelectionMenu.AddDisplayManager(displayManager2);
 

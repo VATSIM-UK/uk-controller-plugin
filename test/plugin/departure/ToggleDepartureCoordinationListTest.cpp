@@ -3,6 +3,7 @@
 #include "controller/ControllerPositionCollection.h"
 #include "departure/DepartureCoordinationList.h"
 #include "departure/ToggleDepartureCoordinationList.h"
+#include "graphics/GdiplusBrushes.h"
 #include "dialog/DialogManager.h"
 #include "message/UserMessager.h"
 #include "prenote/PrenoteMessageCollection.h"
@@ -13,6 +14,7 @@ using UKControllerPlugin::Departure::DepartureCoordinationList;
 using UKControllerPlugin::Departure::ToggleDepartureCoordinationList;
 using UKControllerPlugin::Message::UserMessager;
 using UKControllerPlugin::Prenote::PrenoteMessageCollection;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest::Departure {
 
@@ -33,8 +35,9 @@ namespace UKControllerPluginTest::Departure {
                   messager,
                   103,
                   104),
-              list(std::make_shared<DepartureCoordinationList>(
-                  handler, prenotes, mockPlugin, controllers, activeCallsigns, 3)),
+              brushes(), list(
+                             std::make_shared<DepartureCoordinationList>(
+                                 handler, prenotes, mockPlugin, controllers, activeCallsigns, brushes, 3)),
               dialogManager(dialogProvider)
         {
         }
@@ -54,6 +57,7 @@ namespace UKControllerPluginTest::Departure {
         UserMessager messager;
         PrenoteMessageCollection prenotes;
         UKControllerPlugin::Releases::DepartureReleaseEventHandler handler;
+        GdiplusBrushes brushes;
         std::shared_ptr<DepartureCoordinationList> list;
         UKControllerPlugin::Controller::ActiveCallsignCollection activeCallsigns;
         testing::NiceMock<Dialog::MockDialogProvider> dialogProvider;

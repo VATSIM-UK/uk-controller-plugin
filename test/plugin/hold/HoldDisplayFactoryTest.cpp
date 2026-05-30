@@ -11,6 +11,7 @@
 #include "navaids/NavaidCollection.h"
 #include "navaids/Navaid.h"
 #include "plugin/FunctionCallEventHandler.h"
+#include "graphics/GdiplusBrushes.h"
 
 using ::testing::NiceMock;
 using ::testing::Test;
@@ -25,6 +26,7 @@ using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::Navaid;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -39,7 +41,7 @@ namespace UKControllerPluginTest::Hold {
             : dialogManager(dialogProvider), popupFactory(functionHandlers, mockPlugin),
               callsignSelectionFactory(popupFactory), navaid({1, "TIMBA", EuroScopePlugIn::CPosition()}),
               holdManager(mockApi, taskRunner),
-              factory(mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory)
+              factory(mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory, brushes)
 
         {
             this->navaids.AddNavaid(navaid);
@@ -59,6 +61,7 @@ namespace UKControllerPluginTest::Hold {
         Navaid navaid;
         NavaidCollection navaids;
         HoldManager holdManager;
+        GdiplusBrushes brushes;
         HoldDisplayFactory factory;
     };
 

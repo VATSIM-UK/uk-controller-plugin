@@ -22,6 +22,7 @@
 #include "dependency/UpdateDependencies.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
+#include "euroscope/UserSetting.h"
 #include "eventhandler/EventBusBootstrap.h"
 #include "filestatus/FileStatusModule.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
@@ -65,6 +66,8 @@
 #include "task/TaskRunnerInterface.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
+#include "graphics/Theme.h"
+#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
 using UKControllerPlugin::Bootstrap::EventHandlerCollectionBootstrap;
@@ -83,6 +86,7 @@ using UKControllerPlugin::Duplicate::DuplicatePlugin;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
+using UKControllerPlugin::Graphics::ThemeFromKey;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Log::LoggerBootstrap;
@@ -240,13 +244,21 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         SectorFile::BootstrapPlugin(*this->container);
 
+        // Apply the saved colour palette theme
+        {
+            auto& userSettings = *this->container->pluginUserSettingHandler;
+            std::string palette = userSettings.GetStringEntry("colourPalette", "default");
+            this->container->brushes->LoadTheme(ThemeFromKey(palette));
+        }
+
         // General settings config bootstrap
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
             *this->container->dialogManager,
             *this->container->pluginUserSettingHandler,
             *this->container->userSettingHandlers,
             *this->container->settingsRepository,
-            *this->container->windows);
+            *this->container->windows,
+            *this->container->brushes);
 
         // Bootstrap the modules
         Metar::BootstrapPlugin(*this->container);
