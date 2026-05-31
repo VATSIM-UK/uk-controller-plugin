@@ -1,12 +1,8 @@
-#include "ArrivalWakeInterval.h"
-#include "DepartureWakeInterval.h"
 #include "WakeCalculatorDisplay.h"
-#include "WakeCategory.h"
-#include "WakeCategoryMapperInterface.h"
-#include "WakeCalculatorOptions.h"
-#include "WakeIntervalFormatter.h"
+#include "ArrivalWakeInterval.h"
 #include "components/ClickableArea.h"
 #include "components/CollapsibleWindowTitleBar.h"
+#include "DepartureWakeInterval.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
@@ -16,6 +12,10 @@
 #include "graphics/StringFormatManager.h"
 #include "helper/HelperFunctions.h"
 #include "list/PopupListInterface.h"
+#include "WakeCalculatorOptions.h"
+#include "WakeCategory.h"
+#include "WakeCategoryMapperInterface.h"
+#include "WakeIntervalFormatter.h"
 
 namespace UKControllerPlugin::Wake {
 

@@ -1,12 +1,11 @@
 #include "GeneralSettingsDialog.h"
-#include "GeneralSettingsEntries.h"
-#include "UserSettingAwareCollection.h"
-#include "UserSetting.h"
 #include "dialog/DialogCallArgument.h"
-#include "setting/SettingRepository.h"
+#include "GeneralSettingsEntries.h"
 #include "graphics/GdiplusBrushes.h"
 #include "graphics/Theme.h"
-#include <bit>
+#include "setting/SettingRepository.h"
+#include "UserSetting.h"
+#include "UserSettingAwareCollection.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;

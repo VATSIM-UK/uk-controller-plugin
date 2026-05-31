@@ -1,5 +1,5 @@
-#include "ConfigurableDisplayInterface.h"
 #include "ScreenControls.h"
+#include "ConfigurableDisplayInterface.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"

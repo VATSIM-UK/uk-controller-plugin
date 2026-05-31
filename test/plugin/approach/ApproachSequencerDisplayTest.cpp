@@ -1,11 +1,11 @@
+#include "approach/ApproachSequencerDisplay.h"
+#include "airfield/AirfieldCollection.h"
 #include "approach/ApproachSequence.h"
 #include "approach/ApproachSequencedAircraft.h"
 #include "approach/ApproachSequencer.h"
-#include "approach/ApproachSequencerDisplay.h"
 #include "approach/ApproachSequencerDisplayOptions.h"
 #include "approach/ApproachSequencerOptions.h"
 #include "approach/ApproachSpacingCalculator.h"
-#include "airfield/AirfieldCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "wake/WakeCategoryMapperCollection.h"
 

@@ -1,10 +1,10 @@
-#include "RegionalPressureManager.h"
 #include "RegionalPressureRenderer.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
+#include "RegionalPressureManager.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Dialog::DialogManager;

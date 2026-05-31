@@ -1,7 +1,7 @@
-#include "Button.h"
 #include "CollapsibleWindowTitleBar.h"
-#include "StandardButtons.h"
+#include "Button.h"
 #include "graphics/GdiplusBrushes.h"
+#include "StandardButtons.h"
 
 namespace UKControllerPlugin::Components {
 

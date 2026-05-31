@@ -1,11 +1,11 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
+#include "command/CommandHandlerCollection.h"
+#include "dialog/DialogManager.h"
+#include "euroscope/UserSetting.h"
+#include "euroscope/UserSettingAwareCollection.h"
 #include "graphics/GdiplusBrushes.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
-#include "command/CommandHandlerCollection.h"
-#include "euroscope/UserSetting.h"
-#include "dialog/DialogManager.h"
-#include "euroscope/UserSettingAwareCollection.h"
 #include "setting/SettingRepository.h"
 
 using UKControllerPlugin::Command::CommandHandlerCollection;

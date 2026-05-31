@@ -1,10 +1,8 @@
-#include "AircraftDepartedEvent.h"
-#include "DepartureCoordinationList.h"
 #include "DepartureModule.h"
-#include "DepartureMonitor.h"
-#include "ToggleDepartureCoordinationList.h"
-#include "UserShouldClearDepartureDataMonitor.h"
+#include "AircraftDepartedEvent.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "DepartureCoordinationList.h"
+#include "DepartureMonitor.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "eventhandler/EventBus.h"
@@ -14,6 +12,8 @@
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
 #include "timedevent/TimedEventCollection.h"
+#include "ToggleDepartureCoordinationList.h"
+#include "UserShouldClearDepartureDataMonitor.h"
 
 using UKControllerPlugin::Euroscope::CallbackFunction;
 using UKControllerPluginUtils::EventHandler::EventBus;

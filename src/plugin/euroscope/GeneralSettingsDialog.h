@@ -1,8 +1,5 @@
 #pragma once
 
-#include <map>
-#include <string>
-
 namespace UKControllerPlugin {
     namespace Euroscope {
         class UserSetting;

@@ -1,10 +1,10 @@
 #pragma once
-#include "RegionalPressureRendererConfiguration.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerInterface.h"
 #include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
 #include "radarscreen/RadarRenderableInterface.h"
+#include "RegionalPressureRendererConfiguration.h"
 
 namespace UKControllerPlugin {
     namespace Euroscope {

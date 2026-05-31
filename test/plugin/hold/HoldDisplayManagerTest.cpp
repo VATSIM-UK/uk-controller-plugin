@@ -1,17 +1,17 @@
+#include "hold/HoldDisplayManager.h"
 #include "aircraft/CallsignSelectionListFactory.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
+#include "graphics/GdiplusBrushes.h"
 #include "hold/AbstractHoldLevelRestriction.h"
 #include "hold/DeemedSeparatedHold.h"
 #include "hold/HoldDisplay.h"
 #include "hold/HoldDisplayFactory.h"
-#include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
 #include "hold/PublishedHoldCollection.h"
 #include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
-#include "graphics/GdiplusBrushes.h"
 
 using testing::_;
 using testing::NiceMock;

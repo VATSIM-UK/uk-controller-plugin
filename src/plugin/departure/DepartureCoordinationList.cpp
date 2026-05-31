@@ -13,13 +13,13 @@
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
 #include "prenote/PrenoteMessage.h"
 #include "prenote/PrenoteMessageCollection.h"
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
 #include "tag/TagData.h"
-#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Windows::GdiplusBrushes;
 

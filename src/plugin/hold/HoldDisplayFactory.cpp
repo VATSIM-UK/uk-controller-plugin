@@ -1,15 +1,15 @@
+#include "HoldDisplayFactory.h"
 #include "AbstractHoldLevelRestriction.h"
 #include "AddToHoldCallsignProvider.h"
-#include "DeemedSeparatedHold.h"
-#include "HoldDisplay.h"
-#include "HoldDisplayFactory.h"
-#include "HoldManager.h"
-#include "PublishedHoldCollection.h"
 #include "aircraft/CallsignSelectionListFactory.h"
+#include "DeemedSeparatedHold.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
-#include "navaids/NavaidCollection.h"
 #include "graphics/GdiplusBrushes.h"
+#include "HoldDisplay.h"
+#include "HoldManager.h"
+#include "navaids/NavaidCollection.h"
+#include "PublishedHoldCollection.h"
 
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroscopePluginLoopbackInterface;

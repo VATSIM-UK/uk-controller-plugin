@@ -1,6 +1,6 @@
+#include "wake/WakeCalculatorDisplay.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiplusBrushes.h"
-#include "wake/WakeCalculatorDisplay.h"
 #include "wake/WakeCalculatorOptions.h"
 
 using UKControllerPlugin::Euroscope::UserSetting;

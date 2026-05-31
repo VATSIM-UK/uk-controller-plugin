@@ -1,9 +1,4 @@
 #pragma once
-#include <memory>
-#include <string>
-#include <functional>
-#include <Windows.h>
-#include <gdiplus.h>
 
 namespace UKControllerPlugin {
     namespace Euroscope {

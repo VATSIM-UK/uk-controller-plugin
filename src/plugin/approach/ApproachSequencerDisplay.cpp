@@ -1,8 +1,8 @@
+#include "ApproachSequencerDisplay.h"
 #include "AirfieldApproachOptions.h"
 #include "ApproachSequence.h"
 #include "ApproachSequencedAircraft.h"
 #include "ApproachSequencer.h"
-#include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSequencerOptions.h"
 #include "ApproachSpacingCalculator.h"
@@ -13,11 +13,11 @@
 #include "euroscope/EuroscopePluginLoopbackInterface.h"
 #include "graphics/FontManager.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "graphics/GdiplusBrushes.h"
 #include "graphics/StringFormatManager.h"
 #include "helper/HelperFunctions.h"
 #include "list/PopupListInterface.h"
 #include "number/NumberFormat.h"
-#include "graphics/GdiplusBrushes.h"
 
 using UKControllerPlugin::Components::CollapsibleWindowTitleBar;
 using UKControllerPlugin::Number::To1Dp;

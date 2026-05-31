@@ -1,5 +1,4 @@
 #include "Theme.h"
-#include <string>
 
 // When updating - please update the commented hex code as well ;)
 

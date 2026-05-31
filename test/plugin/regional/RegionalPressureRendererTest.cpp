@@ -1,10 +1,10 @@
+#include "regional/RegionalPressureRenderer.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/TestingFunctions.h"
 #include "plugin/PopupMenuItem.h"
 #include "regional/RegionalPressureManager.h"
-#include "regional/RegionalPressureRenderer.h"
 #include "regional/RegionalPressureRendererConfiguration.h"
 
 using ::testing::_;

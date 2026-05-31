@@ -1,11 +1,11 @@
-#include "MinStackLevel.h"
-#include "MinStackManager.h"
 #include "MinStackRenderer.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
+#include "MinStackLevel.h"
+#include "MinStackManager.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Dialog::DialogManager;

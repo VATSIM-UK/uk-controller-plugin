@@ -1,6 +1,6 @@
 #include "euroscope/LoadDefaultUserSettings.h"
-#include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "euroscope/UserSetting.h"
 
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;

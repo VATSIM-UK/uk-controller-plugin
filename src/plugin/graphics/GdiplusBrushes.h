@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 namespace UKControllerPlugin::Graphics {
     struct Theme;
 } // namespace UKControllerPlugin::Graphics

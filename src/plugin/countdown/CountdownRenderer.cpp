@@ -1,9 +1,9 @@
 #include "CountdownRenderer.h"
 #include "CountdownTimer.h"
-#include "TimerConfigurationManager.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"
+#include "TimerConfigurationManager.h"
 
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Euroscope::UserSetting;

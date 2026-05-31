@@ -3,8 +3,8 @@
 #include "curl/CurlInterface.h"
 #include "curl/CurlRequest.h"
 #include "dialog/DialogManager.h"
-#include "graphics/GdiplusBrushes.h"
 #include "graphics/GdiGraphicsWrapper.h"
+#include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::HelperFunctions;

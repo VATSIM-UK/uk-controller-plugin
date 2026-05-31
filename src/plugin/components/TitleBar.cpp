@@ -1,5 +1,5 @@
-#include "ClickableArea.h"
 #include "TitleBar.h"
+#include "ClickableArea.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
 #include "graphics/GdiplusBrushes.h"
