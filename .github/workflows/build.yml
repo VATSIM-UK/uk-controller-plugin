@@ -70,7 +70,7 @@ jobs:
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
 
@@ -199,7 +199,7 @@ jobs:
 
       # Setup all the yarn things and node modules
       - name: Setup Yarn
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: "24"
 
