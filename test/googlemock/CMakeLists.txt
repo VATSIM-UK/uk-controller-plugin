@@ -1,5 +1,5 @@
 project(GoogleMock)
-set(GOOGLETEST_VERSION "1.11.0")
+set(GOOGLETEST_VERSION "1.17.0")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 set(CMAKE_CXX_FLAGS -m32)
 add_subdirectory(
