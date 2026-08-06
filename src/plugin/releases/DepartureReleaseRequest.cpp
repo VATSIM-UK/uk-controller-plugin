@@ -81,6 +81,16 @@ namespace UKControllerPlugin::Releases {
         return this->releasedAtTime != this->noTime;
     }
 
+    void DepartureReleaseRequest::MarkPendingDecisionReminderSent()
+    {
+        this->pendingDecisionReminderSent = true;
+    }
+
+    bool DepartureReleaseRequest::PendingDecisionReminderSent() const
+    {
+        return this->pendingDecisionReminderSent;
+    }
+
     auto DepartureReleaseRequest::RequestExpired() const -> bool
     {
         return this->requestExpiresAt < Time::TimeNow();
