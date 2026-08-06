@@ -1,30 +1,30 @@
-#include "ConfigurableDisplayCollection.h"
-#include "MenuToggleableDisplayFactory.h"
-#include "PositionResetCommand.h"
 #include "RadarScreenFactory.h"
-#include "ScreenControlsBootstrap.h"
-#include "UKRadarScreen.h"
 #include "api/BootstrapApi.h"
 #include "approach/ApproachBootstrapProvider.h"
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/HelperBootstrap.h"
 #include "bootstrap/PersistenceContainer.h"
+#include "ConfigurableDisplayCollection.h"
 #include "countdown/CountdownModule.h"
 #include "departure/DepartureModule.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "graphics/GdiGraphicsWrapper.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "hold/HoldModule.h"
+#include "MenuToggleableDisplayFactory.h"
 #include "minstack/MinStackModule.h"
 #include "missedapproach/MissedApproachModule.h"
 #include "notifications/NotificationsModule.h"
 #include "plugin/PluginInformationBootstrap.h"
 #include "plugin/UKPlugin.h"
+#include "PositionResetCommand.h"
 #include "prenote/PrenoteModule.h"
 #include "regional/RegionalPressureModule.h"
 #include "releases/ReleaseModule.h"
+#include "ScreenControlsBootstrap.h"
 #include "sectorfile/SectorFileBootstrap.h"
 #include "srd/SrdModule.h"
+#include "UKRadarScreen.h"
 #include "wake/WakeModule.h"
 
 using UKControllerPlugin::Api::BootstrapConfigurationMenuItem;
@@ -66,7 +66,11 @@ namespace UKControllerPlugin::RadarScreen {
         SectorFile::BootstrapRadarScreen(persistence, userSettingHandlers);
 
         GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
-            *persistence.pluginFunctionHandlers, configurableDisplays, commandHandlers, *persistence.dialogManager);
+            *persistence.pluginFunctionHandlers,
+            configurableDisplays,
+            *persistence.brushes,
+            commandHandlers,
+            *persistence.dialogManager);
 
         HistoryTrailModule::BootstrapRadarScreen(
             *persistence.pluginFunctionHandlers,
@@ -106,7 +110,12 @@ namespace UKControllerPlugin::RadarScreen {
             userSettingHandlers);
 
         Hold::BootstrapRadarScreen(
-            configurableDisplays, renderers, userSettingHandlers, commandHandlers, this->persistence);
+            configurableDisplays,
+            renderers,
+            userSettingHandlers,
+            commandHandlers,
+            *persistence.brushes,
+            this->persistence);
 
         Srd::BootstrapRadarScreen(configurableDisplays);
         Notifications::BootstrapRadarScreen(this->persistence, configurableDisplays);
@@ -114,7 +123,8 @@ namespace UKControllerPlugin::RadarScreen {
         PrenoteModule::BootstrapRadarScreen(this->persistence, renderers);
         Departure::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
         MissedApproach::BootstrapRadarScreen(this->persistence, renderers, configurableDisplays, userSettingHandlers);
-        Wake::BootstrapRadarScreen(this->persistence, renderers, userSettingHandlers, displayFactory);
+        Wake::BootstrapRadarScreen(
+            this->persistence, renderers, userSettingHandlers, displayFactory, *persistence.brushes);
 
         this->persistence.bootstrapProviders->BootstrapRadarScreen(
             this->persistence, renderers, configurableDisplays, userSettingHandlers, displayFactory);

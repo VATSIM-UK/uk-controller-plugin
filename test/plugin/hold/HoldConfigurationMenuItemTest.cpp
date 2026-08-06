@@ -1,12 +1,13 @@
+#include "hold/HoldConfigurationMenuItem.h"
 #include "aircraft/CallsignSelectionListFactory.h"
+#include "dialog/DialogManager.h"
+#include "graphics/GdiplusBrushes.h"
 #include "hold/AbstractHoldLevelRestriction.h"
 #include "hold/DeemedSeparatedHold.h"
-#include "hold/HoldConfigurationMenuItem.h"
-#include "dialog/DialogManager.h"
 #include "hold/HoldDisplay.h"
+#include "hold/HoldDisplayFactory.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
-#include "hold/HoldDisplayFactory.h"
 #include "hold/PublishedHoldCollection.h"
 #include "list/PopupListFactory.h"
 #include "navaids/NavaidCollection.h"
@@ -27,6 +28,7 @@ using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -41,7 +43,7 @@ namespace UKControllerPluginTest {
             HoldConfigurationMenuItemTest()
                 : popupFactory(functionHandlers, mockPlugin), listFactory(popupFactory), dialogManager(mockProvider),
                   holdManager(mockApi, mockTaskRunner),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory),
+                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, listFactory, brushes),
                   displayManager(new HoldDisplayManager(displayFactory)), menuItem(dialogManager, displayManager, 1)
             {
                 this->dialogManager.AddDialog(this->dialogData);
@@ -59,6 +61,7 @@ namespace UKControllerPluginTest {
             NiceMock<MockDialogProvider> mockProvider;
             UKControllerPlugin::Dialog::DialogManager dialogManager;
             HoldManager holdManager;
+            GdiplusBrushes brushes;
             HoldDisplayFactory displayFactory;
             std::shared_ptr<HoldDisplayManager> displayManager;
             HoldConfigurationMenuItem menuItem;

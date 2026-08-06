@@ -1,29 +1,30 @@
 #include "hold/HoldModule.h"
-#include "bootstrap/PersistenceContainer.h"
-#include "timedevent/TimedEventCollection.h"
-#include "hold/AbstractHoldLevelRestriction.h"
-#include "hold/DeemedSeparatedHold.h"
-#include "hold/HoldingAircraft.h"
-#include "hold/HoldingData.h"
-#include "bootstrap/BootstrapWarningMessage.h"
-#include "plugin/FunctionCallEventHandler.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
-#include "command/CommandHandlerCollection.h"
-#include "tag/TagItemCollection.h"
-#include "dialog/DialogManager.h"
-#include "dialog/DialogData.h"
-#include "radarscreen/RadarRenderableCollection.h"
-#include "euroscope/AsrEventHandlerCollection.h"
-#include "hold/CompareHolds.h"
-#include "push/PushEventProcessorCollection.h"
 #include "api/ApiException.h"
+#include "bootstrap/BootstrapWarningMessage.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "command/CommandHandlerCollection.h"
+#include "dialog/DialogData.h"
+#include "dialog/DialogManager.h"
+#include "euroscope/AsrEventHandlerCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
-#include "hold/HoldManager.h"
-#include "hold/PublishedHoldCollection.h"
-#include "hold/HoldSelectionMenu.h"
 #include "geometry/Measurement.h"
 #include "geometry/MeasurementUnit.h"
 #include "geometry/MeasurementUnitFactory.h"
+#include "graphics/GdiplusBrushes.h"
+#include "hold/AbstractHoldLevelRestriction.h"
+#include "hold/CompareHolds.h"
+#include "hold/DeemedSeparatedHold.h"
+#include "hold/HoldingAircraft.h"
+#include "hold/HoldingData.h"
+#include "hold/HoldManager.h"
+#include "hold/HoldSelectionMenu.h"
+#include "hold/PublishedHoldCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "push/PushEventProcessorCollection.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
+#include "tag/TagItemCollection.h"
+#include "timedevent/TimedEventCollection.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -328,6 +329,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(2, this->asrEvents.CountHandlers());
@@ -342,6 +344,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(1, this->container.holdSelectionMenu->CountDisplayManagers());
@@ -356,6 +359,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(1, this->radarRenderables.CountRenderers());
@@ -371,6 +375,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(2, this->configurableDisplays.CountDisplays());
@@ -386,6 +391,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(countBefore + 2, this->container.pluginFunctionHandlers->CountCallbacks());
@@ -400,6 +406,7 @@ namespace UKControllerPluginTest::Hold {
             this->radarRenderables,
             this->asrEvents,
             this->radarScreenCommands,
+            *this->container.brushes,
             this->container);
 
         EXPECT_EQ(1, this->radarScreenCommands.CountHandlers());

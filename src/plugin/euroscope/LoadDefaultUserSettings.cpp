@@ -1,6 +1,6 @@
 #include "euroscope/LoadDefaultUserSettings.h"
-#include "euroscope/UserSetting.h"
 #include "euroscope/GeneralSettingsEntries.h"
+#include "euroscope/UserSetting.h"
 
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
 using UKControllerPlugin::Euroscope::UserSetting;
@@ -53,6 +53,15 @@ namespace UKControllerPlugin {
                     GeneralSettingsEntries::unknownTimeFormatBlankKey,
                     GeneralSettingsEntries::unknownTimeFormatBlankDescription,
                     false);
+            }
+
+            // Colour Palette
+            if (!userSetting.HasEntry(GeneralSettingsEntries::colourPaletteSettingsKey)) {
+                LogInfo("Loading default value for setting " + GeneralSettingsEntries::colourPaletteSettingsKey);
+                userSetting.Save(
+                    GeneralSettingsEntries::colourPaletteSettingsKey,
+                    GeneralSettingsEntries::colourPaletteSettingsDescription,
+                    "default");
             }
         }
     } // namespace Euroscope

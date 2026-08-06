@@ -14,6 +14,10 @@ namespace UKControllerPlugin {
     namespace Euroscope {
         class EuroscopePluginLoopbackInterface;
     } // namespace Euroscope
+    namespace Windows {
+        class GdiGraphicsInterface;
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Wake {
@@ -32,6 +36,7 @@ namespace UKControllerPlugin::Wake {
             std::shared_ptr<List::PopupListInterface> followCallsignSelector,
             std::shared_ptr<List::PopupListInterface> wakeSchemeSelector,
             Euroscope::EuroscopePluginLoopbackInterface& plugin,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             int screenObjectId);
         [[nodiscard]] auto IsVisible() const -> bool override;
         [[nodiscard]] auto IsCollapsed() const -> bool;
@@ -75,7 +80,7 @@ namespace UKControllerPlugin::Wake {
         POINT windowPosition = DEFAULT_WINDOW_POSITION;
 
         inline static const int WINDOW_WIDTH = 350;
-        inline static const int TITLE_BAR_HEIGHT = 20;
+        inline static const int TITLE_BAR_HEIGHT = 15;
         inline static const int CONTENT_HEIGHT = 150;
         inline static const int TEXT_INSET = 5;
 
@@ -96,13 +101,7 @@ namespace UKControllerPlugin::Wake {
         std::shared_ptr<Components::TitleBar> titleBar;
 
         // Pens and brushes
-        const Gdiplus::Color BACKGROUND_COLOUR = Gdiplus::Color(64, 64, 64);
-        const Gdiplus::Color TEXT_COLOUR = Gdiplus::Color(225, 225, 225);
-        const Gdiplus::Color RESULT_COLOUR = Gdiplus::Color(55, 249, 1);
-        std::shared_ptr<Gdiplus::Brush> backgroundBrush;
-        std::shared_ptr<Gdiplus::Brush> textBrush;
-        std::shared_ptr<Gdiplus::Brush> resultBrush;
-        std::shared_ptr<Gdiplus::Pen> dividingLinePen;
+        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
         // Drawing rects
         Gdiplus::Rect contentArea;

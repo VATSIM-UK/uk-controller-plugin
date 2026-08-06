@@ -1,8 +1,10 @@
 #include "components/TitleBar.h"
+#include "graphics/GdiplusBrushes.h"
 
 using testing::_;
 using testing::Ref;
 using UKControllerPlugin::Components::TitleBar;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPluginTest::Components {
     class TitleBarTest : public testing::Test
@@ -19,6 +21,7 @@ namespace UKControllerPluginTest::Components {
         std::shared_ptr<Gdiplus::Pen> pen;
         std::shared_ptr<Gdiplus::Brush> brush;
         std::shared_ptr<TitleBar> titlebar;
+        GdiplusBrushes brushes;
         testing::NiceMock<Windows::MockGraphicsInterface> mockGraphics;
         testing::NiceMock<Euroscope::MockEuroscopeRadarScreenLoopbackInterface> mockRadarScreen;
     };
@@ -89,5 +92,27 @@ namespace UKControllerPluginTest::Components {
         EXPECT_CALL(this->mockRadarScreen, RegisterScreenObject(1, "titleBar", RectEq(expectedRect), true)).Times(1);
 
         this->titlebar->Draw(mockGraphics, mockRadarScreen);
+    }
+
+    TEST_F(TitleBarTest, DrawThemeFillsRectWithHeaderBrush)
+    {
+        EXPECT_CALL(this->mockGraphics, FillRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _)).Times(1);
+
+        this->titlebar->DrawTheme(mockGraphics, mockRadarScreen, this->brushes);
+    }
+
+    TEST_F(TitleBarTest, DrawThemeDrawsStringWithTextBrush)
+    {
+        EXPECT_CALL(this->mockGraphics, DrawStringRect(this->title, GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _))
+            .Times(1);
+
+        this->titlebar->DrawTheme(mockGraphics, mockRadarScreen, this->brushes);
+    }
+
+    TEST_F(TitleBarTest, DrawThemeDrawsRectWithBorderPen)
+    {
+        EXPECT_CALL(this->mockGraphics, DrawRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _)).Times(1);
+
+        this->titlebar->DrawTheme(mockGraphics, mockRadarScreen, this->brushes);
     }
 } // namespace UKControllerPluginTest::Components
