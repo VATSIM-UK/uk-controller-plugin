@@ -29,6 +29,7 @@ namespace UKControllerPlugin::Euroscope {
         GetExtractedRoute() const = 0;
         [[nodiscard]] virtual std::shared_ptr<Flightplan::ParsedFlightplan> GetParsedFlightplan() const = 0;
         [[nodiscard]] virtual std::string GetFlightRules() const = 0;
+        [[nodiscard]] virtual bool GetClearanceFlag() const = 0;
         [[nodiscard]] virtual std::string GetGroundState() const = 0;
         [[nodiscard]] virtual std::string GetOrigin() const = 0;
         [[nodiscard]] virtual std::string GetRawRouteString() const = 0;
@@ -43,6 +44,8 @@ namespace UKControllerPlugin::Euroscope {
         virtual void SetClearedAltitude(int cleared) = 0;
         virtual void SetHeading(int heading) = 0;
         virtual void SetSquawk(std::string squawk) = 0;
+        virtual void SetClearanceFlag(bool cleared) = 0;
+        virtual void SetGroundState(std::string state) = 0;
         [[nodiscard]] virtual bool IsSimulated() const = 0;
         [[nodiscard]] virtual bool IsTracked() const = 0;
         [[nodiscard]] virtual bool IsTrackedByUser() const = 0;

@@ -283,6 +283,33 @@ namespace UKControllerPluginUtilsTest::Api {
         EXPECT_TRUE(expectedRequest == this->builder.BuildDeleteStandAssignmentForAircraftRequest("BAW123"));
     }
 
+    TEST_F(ApiRequestBuilderTest, ItBuildsGetAircraftStatesRequest)
+    {
+        CurlRequest expectedRequest("http://testurl.com/api/aircraft-state", CurlRequest::METHOD_GET);
+
+        expectedRequest.AddHeader("Authorization", "Bearer apikey");
+        expectedRequest.AddHeader("Accept", "application/json");
+        expectedRequest.AddHeader("Content-Type", "application/json");
+
+        EXPECT_TRUE(expectedRequest == this->builder.BuildGetAircraftStatesRequest());
+    }
+
+    TEST_F(ApiRequestBuilderTest, ItBuildsUpdateAircraftStatesRequest)
+    {
+        CurlRequest expectedRequest("http://testurl.com/api/aircraft-state", CurlRequest::METHOD_PUT);
+
+        const nlohmann::json updates = nlohmann::json::array(
+            {{{"callsign", "BAW123"}, {"clearance_flag", true}, {"clearance_flag_at", "2026-08-29 12:00:00"}},
+             {{"callsign", "BAW456"}, {"ground_state", "TAXI"}, {"ground_state_at", "2026-08-29 12:00:30"}}});
+        expectedRequest.SetBody(nlohmann::json{{"updates", updates}}.dump());
+
+        expectedRequest.AddHeader("Authorization", "Bearer apikey");
+        expectedRequest.AddHeader("Accept", "application/json");
+        expectedRequest.AddHeader("Content-Type", "application/json");
+
+        EXPECT_TRUE(expectedRequest == this->builder.BuildUpdateAircraftStatesRequest(updates));
+    }
+
     TEST_F(ApiRequestBuilderTest, ItBuildsGetAllNotificationsRequest)
     {
         CurlRequest expectedRequest("http://testurl.com/api/notifications", CurlRequest::METHOD_GET);

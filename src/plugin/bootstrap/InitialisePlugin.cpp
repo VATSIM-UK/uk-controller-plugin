@@ -1,5 +1,6 @@
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
+#include "aircraftstate/AircraftStateModule.h"
 #include "airfield/AirfieldModule.h"
 #include "api/ApiFactory.h"
 #include "api/ApiRequestFactory.h"
@@ -232,6 +233,7 @@ namespace UKControllerPlugin {
         Navaids::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
         Releases::BootstrapPlugin(*this->container, *this->container->plugin, *this->container->dependencyLoader);
         Stands::BootstrapPlugin(*this->container, *this->container->dependencyLoader);
+        AircraftState::BootstrapPlugin(*this->container);
         Notifications::BootstrapPlugin(*this->container);
         FlightInformationService::BootstrapPlugin(*this->container);
         Oceanic::BootstrapPlugin(*this->container);

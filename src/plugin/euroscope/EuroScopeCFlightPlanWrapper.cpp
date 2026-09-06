@@ -6,6 +6,39 @@
 using UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface;
 using UKControllerPlugin::Squawk::SquawkValidator;
 
+namespace {
+    const char* const SCRATCHPAD_CLEARANCE_SET = "CLEA";
+    const char* const SCRATCHPAD_CLEARANCE_UNSET = "NOTC";
+
+    /*
+        EuroScope applies certain scratchpad values as state changes rather than storing them, and
+        does not put the previous value back afterwards.
+
+        @see https://www.euroscope.hu/wp/non-standard-extensions/
+    */
+    class ScopedScratchPadValue
+    {
+        public:
+        ScopedScratchPadValue(EuroScopePlugIn::CFlightPlanControllerAssignedData data, const char* value)
+            : data(data), previousValue(data.GetScratchPadString())
+        {
+            this->data.SetScratchPadString(value);
+        }
+        ~ScopedScratchPadValue()
+        {
+            this->data.SetScratchPadString(this->previousValue.c_str());
+        }
+        ScopedScratchPadValue(const ScopedScratchPadValue&) = delete;
+        ScopedScratchPadValue(ScopedScratchPadValue&&) = delete;
+        auto operator=(const ScopedScratchPadValue&) -> ScopedScratchPadValue& = delete;
+        auto operator=(ScopedScratchPadValue&&) -> ScopedScratchPadValue& = delete;
+
+        private:
+        EuroScopePlugIn::CFlightPlanControllerAssignedData data;
+        const std::string previousValue;
+    };
+} // namespace
+
 namespace UKControllerPlugin::Euroscope {
 
     EuroScopeCFlightPlanWrapper::EuroScopeCFlightPlanWrapper(EuroScopePlugIn::CFlightPlan originalData)
@@ -95,6 +128,12 @@ namespace UKControllerPlugin::Euroscope {
         return this->originalData.GetGroundState();
     }
 
+    // Note the typo in the SDK method name.
+    auto EuroScopeCFlightPlanWrapper::GetClearanceFlag() const -> bool
+    {
+        return this->originalData.GetClearenceFlag();
+    }
+
     auto EuroScopeCFlightPlanWrapper::GetIcaoWakeCategory() const -> std::string
     {
         return {this->originalData.GetFlightPlanData().GetAircraftWtc()};
@@ -159,6 +198,19 @@ namespace UKControllerPlugin::Euroscope {
     void EuroScopeCFlightPlanWrapper::SetSquawk(std::string squawk)
     {
         this->originalData.GetControllerAssignedData().SetSquawk(squawk.c_str());
+    }
+
+    // No direct setter exists for either of these, so both go via the scratchpad.
+    void EuroScopeCFlightPlanWrapper::SetClearanceFlag(bool cleared)
+    {
+        const ScopedScratchPadValue scratchPad(
+            this->originalData.GetControllerAssignedData(),
+            cleared ? SCRATCHPAD_CLEARANCE_SET : SCRATCHPAD_CLEARANCE_UNSET);
+    }
+
+    void EuroScopeCFlightPlanWrapper::SetGroundState(std::string state)
+    {
+        const ScopedScratchPadValue scratchPad(this->originalData.GetControllerAssignedData(), state.c_str());
     }
 
     auto EuroScopeCFlightPlanWrapper::GetEuroScopeObject() const -> EuroScopePlugIn::CFlightPlan&
