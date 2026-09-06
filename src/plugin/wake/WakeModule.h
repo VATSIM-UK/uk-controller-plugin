@@ -14,6 +14,9 @@ namespace UKControllerPlugin {
         class MenuToggleableDisplayFactory;
         class RadarRenderableCollection;
     } // namespace RadarScreen
+    namespace Windows {
+        struct GdiplusBrushes;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Wake {
@@ -26,5 +29,6 @@ namespace UKControllerPlugin::Wake {
         const UKControllerPlugin::Bootstrap::PersistenceContainer& container,
         RadarScreen::RadarRenderableCollection& renderables,
         Euroscope::AsrEventHandlerCollection& asrHandlers,
-        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory);
+        const RadarScreen::MenuToggleableDisplayFactory& toggleableDisplayFactory,
+        const Windows::GdiplusBrushes& brushes);
 } // namespace UKControllerPlugin::Wake

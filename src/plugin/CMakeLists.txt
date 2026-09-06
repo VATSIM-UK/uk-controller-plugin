@@ -304,6 +304,9 @@ set(src__graphics
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
     "graphics/GdiplusBrushes.h"
+    "graphics/GdiplusBrushes.cpp"
+    "graphics/Theme.h"
+    "graphics/Theme.cpp"
         graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h)
 source_group("src\\graphics" FILES ${src__graphics})
 

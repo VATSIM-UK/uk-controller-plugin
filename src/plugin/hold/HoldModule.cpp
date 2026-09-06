@@ -1,8 +1,20 @@
+#include "HoldModule.h"
 #include "AbstractHoldLevelRestriction.h"
 #include "AircraftEnteredHoldingAreaEventHandler.h"
 #include "AircraftExitedHoldingAreaEventHandler.h"
+#include "api/ApiException.h"
+#include "api/ApiInterface.h"
 #include "AssignHoldCommand.h"
+#include "bootstrap/BootstrapWarningMessage.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "command/CommandHandlerCollection.h"
 #include "DeemedSeparatedHold.h"
+#include "dependency/DependencyLoaderInterface.h"
+#include "dialog/DialogData.h"
+#include "dialog/DialogManager.h"
+#include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/CallbackFunction.h"
+#include "graphics/GdiplusBrushes.h"
 #include "HoldConfigurationDialog.h"
 #include "HoldConfigurationMenuItem.h"
 #include "HoldDisplayConfigurationDialog.h"
@@ -10,29 +22,18 @@
 #include "HoldDisplayManager.h"
 #include "HoldEventHandler.h"
 #include "HoldManager.h"
-#include "HoldModule.h"
 #include "HoldRenderer.h"
 #include "HoldSelectionMenu.h"
-#include "PublishedHoldCollection.h"
-#include "PublishedHoldCollectionFactory.h"
-#include "api/ApiException.h"
-#include "api/ApiInterface.h"
-#include "bootstrap/BootstrapWarningMessage.h"
-#include "bootstrap/PersistenceContainer.h"
-#include "command/CommandHandlerCollection.h"
-#include "dependency/DependencyLoaderInterface.h"
-#include "dialog/DialogData.h"
-#include "dialog/DialogManager.h"
-#include "euroscope/AsrEventHandlerCollection.h"
-#include "euroscope/CallbackFunction.h"
 #include "message/UserMessager.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/UKPlugin.h"
+#include "PublishedHoldCollection.h"
+#include "PublishedHoldCollectionFactory.h"
 #include "push/PushEventProcessorCollection.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
-#include "task/TaskRunnerInterface.h"
-#include "tag/TagItemCollection.h"
 #include "tag/TagFunction.h"
+#include "tag/TagItemCollection.h"
+#include "task/TaskRunnerInterface.h"
 #include "timedevent/TimedEventCollection.h"
 #include "windows/WinApiInterface.h"
 
@@ -56,6 +57,7 @@ using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagFunction;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Windows::WinApiInterface;
 
 namespace UKControllerPlugin::Hold {
@@ -138,7 +140,8 @@ namespace UKControllerPlugin::Hold {
             *container.navaids,
             *container.publishedHolds,
             *container.dialogManager,
-            *container.callsignSelectionListFactory);
+            *container.callsignSelectionListFactory,
+            *container.brushes);
 
         // Command to assign holds
         container.commandHandlers->RegisterHandler(
@@ -190,6 +193,7 @@ namespace UKControllerPlugin::Hold {
         RadarRenderableCollection& radarRenderables,
         AsrEventHandlerCollection& asrEvents,
         CommandHandlerCollection& commandHandlers,
+        const GdiplusBrushes& brushes,
         const PersistenceContainer& container)
     {
         // Display manager

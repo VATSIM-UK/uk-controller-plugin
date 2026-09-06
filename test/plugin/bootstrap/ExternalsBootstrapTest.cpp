@@ -3,8 +3,8 @@
 #include "curl/CurlInterface.h"
 #include "curl/CurlRequest.h"
 #include "dialog/DialogManager.h"
-#include "graphics/GdiplusBrushes.h"
 #include "graphics/GdiGraphicsWrapper.h"
+#include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
 
 using UKControllerPlugin::HelperFunctions;
@@ -79,7 +79,7 @@ namespace UKControllerPluginTest::Bootstrap {
         HINSTANCE dll = 0;
         ExternalsBootstrap::Bootstrap(container, dll);
 
-        EXPECT_NO_THROW(container.brushes->euroscopeBackgroundBrush->GetType());
+        EXPECT_EQ(container.brushes->euroscopeBackground.GetR(), 11);
     }
 
     TEST_F(ExternalsBootstrapTest, BootstrapCreatesGraphicsWrapper)

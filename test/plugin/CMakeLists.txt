@@ -62,6 +62,7 @@ set(test__components
     "components/BrushSwitcherTest.cpp"
     "components/ButtonTest.cpp"
     "components/ClickableAreaTest.cpp"
+    "components/StandardButtonsTest.cpp"
     "components/TitleBarTest.cpp"
 )
 source_group("test\\components" FILES ${test__components})
@@ -158,6 +159,11 @@ set(test__geometry
         geometry/AngleTest.cpp
         geometry/LengthTest.cpp)
 source_group("test\\geometry" FILES ${test__geometry})
+
+set(test__graphics
+    "graphics/GdiplusBrushesTest.cpp"
+    "graphics/ThemeTest.cpp")
+source_group("test\\graphics" FILES ${test__graphics})
 
 set(test__handoff
     "handoff/HandoffCollectionFactoryTest.cpp"
@@ -640,6 +646,7 @@ set(ALL_FILES
     ${test__flightplan}
     ${test__flightrule}
     ${test__geometry}
+    ${test__graphics}
     ${test__handoff}
     ${test__headings}
     ${test__historytrail}

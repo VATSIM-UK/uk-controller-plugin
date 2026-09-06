@@ -1,15 +1,16 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
-#include "euroscope/GeneralSettingsConfiguration.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
-#include "plugin/FunctionCallEventHandler.h"
-#include "dialog/DialogManager.h"
-#include "dialog/DialogData.h"
-#include "euroscope/CallbackFunction.h"
 #include "command/CommandHandlerCollection.h"
+#include "dialog/DialogData.h"
+#include "dialog/DialogManager.h"
+#include "euroscope/CallbackFunction.h"
+#include "euroscope/GeneralSettingsConfiguration.h"
 #include "euroscope/GeneralSettingsDialog.h"
 #include "euroscope/UserSettingAwareCollection.h"
-#include "setting/SettingRepository.h"
+#include "graphics/GdiplusBrushes.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "setting/JsonFileSettingProvider.h"
+#include "setting/SettingRepository.h"
 #include "update/BootstrapReleaseChannelSettings.h"
 
 using UKControllerPlugin::Command::CommandHandlerCollection;
@@ -22,6 +23,7 @@ using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::Setting::JsonFileSettingProvider;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Windows::WinApiInterface;
 using UKControllerPluginUtils::Update::BootstrapReleaseChannelSettings;
 
@@ -33,11 +35,12 @@ namespace UKControllerPlugin {
             UserSetting& userSettings,
             UserSettingAwareCollection& userSettingsHandlers,
             Setting::SettingRepository& settings,
-            WinApiInterface& windows)
+            WinApiInterface& windows,
+            Windows::GdiplusBrushes& brushes)
         {
             BootstrapReleaseChannelSettings(settings, windows);
             std::shared_ptr<GeneralSettingsDialog> dialog =
-                std::make_shared<GeneralSettingsDialog>(userSettings, userSettingsHandlers, settings);
+                std::make_shared<GeneralSettingsDialog>(userSettings, userSettingsHandlers, settings, brushes);
             dialogManager.AddDialog(
                 {IDD_GENERAL_SETTINGS,
                  "General Settings",
@@ -49,6 +52,7 @@ namespace UKControllerPlugin {
         void GeneralSettingsConfigurationBootstrap::BootstrapRadarScreen(
             FunctionCallEventHandler& functionHandler,
             ConfigurableDisplayCollection& configurableDisplays,
+            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             CommandHandlerCollection& commandHandlers,
             const DialogManager& dialogManager)
         {
