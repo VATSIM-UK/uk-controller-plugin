@@ -54,6 +54,9 @@ namespace UKControllerPlugin::AircraftState {
             std::map<std::string, std::chrono::system_clock::time_point> changedAt;
         };
 
+        void LoadStates();
+        void ReconcileAll();
+
         // Both return whether the aircraft could be written at all, not whether anything changed.
         auto Reconcile(const std::string& callsign) -> bool;
 

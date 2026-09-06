@@ -132,39 +132,48 @@ namespace UKControllerPlugin::AircraftState {
     // The only read - PollingPushEventConnection syncs once, at login.
     void AircraftStateEventHandler::PluginEventsSynced()
     {
-        this->taskRunner.QueueAsynchronousTask([this]() {
-            try {
-                const nlohmann::json aircraftStates = this->api.GetAircraftStates();
+        this->taskRunner.QueueAsynchronousTask([this]() { this->LoadStates(); });
+    }
 
-                if (!aircraftStates.is_array()) {
-                    LogWarning("Invalid aircraft state data");
-                    return;
-                }
+    void AircraftStateEventHandler::LoadStates()
+    {
+        try {
+            const nlohmann::json aircraftStates = this->api.GetAircraftStates();
 
-                auto lock = this->LockStates();
-                this->states.clear();
-
-                for (const auto& state : aircraftStates) {
-                    if (!MessageValid(state)) {
-                        LogWarning("Invalid aircraft state on mass assignment " + state.dump());
-                        continue;
-                    }
-
-                    this->states[state.at("callsign").get<std::string>()] = StateFromMessage(state);
-                }
-
-                LogInfo("Loaded " + std::to_string(this->states.size()) + " aircraft states");
-
-                this->reconciled.clear();
-                for (const auto& state : this->states) {
-                    if (this->Reconcile(state.first)) {
-                        this->reconciled.insert(state.first);
-                    }
-                }
-            } catch (ApiException&) {
-                LogError("Unable to load aircraft state data");
+            if (!aircraftStates.is_array()) {
+                LogWarning("Invalid aircraft state data");
+                return;
             }
-        });
+
+            auto lock = this->LockStates();
+            this->states.clear();
+
+            for (const auto& state : aircraftStates) {
+                if (!MessageValid(state)) {
+                    LogWarning("Invalid aircraft state on mass assignment " + state.dump());
+                    continue;
+                }
+
+                this->states[state.at("callsign").get<std::string>()] = StateFromMessage(state);
+            }
+
+            LogInfo("Loaded " + std::to_string(this->states.size()) + " aircraft states");
+            this->ReconcileAll();
+        } catch (ApiException&) {
+            LogError("Unable to load aircraft state data");
+        }
+    }
+
+    void AircraftStateEventHandler::ReconcileAll()
+    {
+        auto lock = this->LockStates();
+        this->reconciled.clear();
+
+        for (const auto& state : this->states) {
+            if (this->Reconcile(state.first)) {
+                this->reconciled.insert(state.first);
+            }
+        }
     }
 
     void AircraftStateEventHandler::ProcessPushEvent(const PushEvent& message)
