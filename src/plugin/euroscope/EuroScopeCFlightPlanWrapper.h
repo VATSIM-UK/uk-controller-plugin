@@ -26,6 +26,7 @@ namespace UKControllerPlugin::Euroscope {
         virtual UKControllerPlugin::Euroscope::EuroscopeExtractedRouteInterface& GetExtractedRoute() const override;
         [[nodiscard]] std::shared_ptr<Flightplan::ParsedFlightplan> GetParsedFlightplan() const override;
         std::string GetFlightRules() const override;
+        bool GetClearanceFlag() const override;
         std::string GetGroundState() const override;
         std::string GetIcaoWakeCategory() const override;
         std::string GetOrigin() const override;
@@ -45,6 +46,8 @@ namespace UKControllerPlugin::Euroscope {
         void SetClearedAltitude(int cleared) override;
         void SetHeading(int heading) override;
         void SetSquawk(std::string squawk) override;
+        void SetClearanceFlag(bool cleared) override;
+        void SetGroundState(std::string state) override;
         EuroScopePlugIn::CFlightPlan& GetEuroScopeObject() const override;
         [[nodiscard]] auto GetRemarks() const -> std::string override;
 

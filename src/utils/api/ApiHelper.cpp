@@ -221,6 +221,17 @@ namespace UKControllerPlugin::Api {
             this->MakeApiRequest(this->requestBuilder.BuildDeleteStandAssignmentForAircraftRequest(callsign)));
     }
 
+    auto ApiHelper::GetAircraftStates() const -> nlohmann::json
+    {
+        return this->MakeApiRequest(this->requestBuilder.BuildGetAircraftStatesRequest()).GetRawData();
+    }
+
+    void ApiHelper::UpdateAircraftStates(nlohmann::json updates) const
+    {
+        static_cast<void>(
+            this->MakeApiRequest(this->requestBuilder.BuildUpdateAircraftStatesRequest(std::move(updates))));
+    }
+
     void ApiHelper::SendEnrouteRelease(
         std::string aircraftCallsign,
         std::string sendingController,

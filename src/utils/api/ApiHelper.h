@@ -42,6 +42,8 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] auto GetAssignedStands() const -> nlohmann::json override;
         void AssignStandToAircraft(std::string callsign, int standId) const override;
         void DeleteStandAssignmentForAircraft(std::string callsign) const override;
+        [[nodiscard]] auto GetAircraftStates() const -> nlohmann::json override;
+        void UpdateAircraftStates(nlohmann::json updates) const override;
         void SendEnrouteRelease(
             std::string aircraftCallsign,
             std::string sendingController,
