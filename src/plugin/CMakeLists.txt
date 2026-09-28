@@ -303,7 +303,6 @@ set(src__graphics
     "graphics/GdiGraphicsInterface.h"
     "graphics/GdiGraphicsWrapper.cpp"
     "graphics/GdiGraphicsWrapper.h"
-    "graphics/GdiplusBrushes.h"
         graphics/FontManager.cpp graphics/FontManager.h graphics/StringFormatManager.cpp graphics/StringFormatManager.h)
 source_group("src\\graphics" FILES ${src__graphics})
 
@@ -932,6 +931,22 @@ set(src__tag
         tag/RadarScreenTagFunction.cpp tag/RadarScreenTagFunction.h)
 source_group("src\\tag" FILES ${src__tag})
 
+set(src__theme
+    "theme/Palette.cpp"
+    "theme/Palette.h"
+    "theme/PaletteEntry.h"
+    "theme/PaletteKey.h"
+    "theme/ThemeManager.cpp"
+    "theme/ThemeManager.h"
+    "theme/ThemeModule.cpp"
+    "theme/ThemeModule.h"
+    "theme/ThemeSettings.cpp"
+    "theme/ThemeSettings.h"
+    "theme/ThemeUserSettingHandler.cpp"
+    "theme/ThemeUserSettingHandler.h"
+)
+source_group("src\\theme" FILES ${src__theme})
+
 set(src__time
     "time/ParseTimeStrings.cpp"
     "time/ParseTimeStrings.h"
@@ -1040,6 +1055,7 @@ set(ALL_FILES
     ${src__srd}
     ${src__stands}
     ${src__tag}
+    ${src__theme}
     ${src__time}
     ${src__timedevent}
     ${src__timer}

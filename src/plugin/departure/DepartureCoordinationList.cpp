@@ -19,6 +19,10 @@
 #include "releases/DepartureReleaseEventHandler.h"
 #include "releases/DepartureReleaseRequest.h"
 #include "tag/TagData.h"
+#include "theme/ThemeManager.h"
+
+using UKControllerPlugin::Theme::PaletteKey;
+using UKControllerPlugin::Theme::ThemeManager;
 
 namespace UKControllerPlugin::Departure {
 
@@ -30,25 +34,23 @@ namespace UKControllerPlugin::Departure {
         const Controller::ActiveCallsignCollection& activeCallsigns,
         const int screenObjectId)
         : controllers(controllers), handler(handler), prenotes(prenotes), plugin(plugin),
-          activeCallsigns(activeCallsigns), textBrush(OFF_WHITE_COLOUR), screenObjectId(screenObjectId), visible(false),
-          contentCollapsed(false)
+          activeCallsigns(activeCallsigns), screenObjectId(screenObjectId)
     {
-        this->brushSwitcher = Components::BrushSwitcher::Create(
-                                  std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR), std::chrono::seconds(2))
-                                  ->AdditionalBrush(std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_FLASH_COLOUR));
+        // temporary, until refactors integrate highlighted headers into the titlebar code
+        this->brushSwitcher =
+            Components::BrushSwitcher::Create(
+                std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(0x82, 0x32, 0x9a)), std::chrono::seconds(2))
+                ->AdditionalBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(0xff, 0x99, 0xff)));
 
         this->titleBar = Components::TitleBar::Create(
                              L"Departure Coordination Requests", {0, 0, this->titleBarWidth, this->titleBarHeight})
-                             ->WithDrag(this->screenObjectId)
-                             ->WithBorder(std::make_shared<Gdiplus::Pen>(OFF_WHITE_COLOUR))
-                             ->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(TITLE_BAR_BASE_COLOUR))
-                             ->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(OFF_WHITE_COLOUR));
+                             ->WithDrag(this->screenObjectId);
 
         this->closeButton = Components::Button::Create(
             closeButtonOffset, this->screenObjectId, "closeButton", Components::CloseButton());
 
         this->collapseButton = Components::Button::Create(
-            collapseButtonOffset, this->screenObjectId, "collapseButton", Components::CollapseButton([this]() -> bool {
+            collapseButtonOffset, this->screenObjectId, "collapseButton", Components::CollapseButton([this] {
                 return this->contentCollapsed;
             }));
     }
@@ -105,28 +107,42 @@ namespace UKControllerPlugin::Departure {
                 });
         }
 
-        if (decisions.empty() && prenoteMessages.empty()) {
+        /*if (decisions.empty() && prenoteMessages.empty()) {
             this->titleBar->WithBackgroundBrush(this->brushSwitcher->Base());
         } else {
             this->titleBar->WithBackgroundBrush(this->brushSwitcher->Next());
-        }
+        }*/
 
         // Translate to content position
         graphics.Translated(
             this->position.X,
             this->position.Y + static_cast<float>(this->titleBarHeight),
             [this, &graphics, &radarScreen, &decisions, &prenoteMessages] {
+                const auto& textBrush = ThemeManager::Brush(PaletteKey::Text);
+
                 if (this->contentCollapsed) {
                     return;
                 }
 
+                // Calculate dynamic height based on number of items
+                const auto totalItems = static_cast<int>(decisions.size() + prenoteMessages.size());
+                const int headerHeight = 30; // Height for column headers
+                const int minHeight = 50;    // Minimum height even when no items
+                const int calculatedHeight = headerHeight + (totalItems * lineHeight);
+                const int dynamicHeight = calculatedHeight > minHeight ? calculatedHeight : minHeight;
+
+                // Update content area with dynamic height
+                this->contentArea = {0, 0, 435, dynamicHeight};
+
+                graphics.FillRect(this->contentArea, ThemeManager::Brush(PaletteKey::Background));
+
                 // Draw column headers
-                graphics.DrawString(L"Type", this->typeColumnHeader, this->textBrush);
-                graphics.DrawString(L"Callsign", this->callsignColumnHeader, this->textBrush);
-                graphics.DrawString(L"Controller", this->controllerColumnHeader, this->textBrush);
-                graphics.DrawString(L"Dept", this->airportColumnHeader, this->textBrush);
-                graphics.DrawString(L"SID", this->sidColumnHeader, this->textBrush);
-                graphics.DrawString(L"Dest", this->destColumnHeader, this->textBrush);
+                graphics.DrawString(L"Type", this->typeColumnHeader, textBrush);
+                graphics.DrawString(L"Callsign", this->callsignColumnHeader, textBrush);
+                graphics.DrawString(L"Controller", this->controllerColumnHeader, textBrush);
+                graphics.DrawString(L"Dept", this->airportColumnHeader, textBrush);
+                graphics.DrawString(L"SID", this->sidColumnHeader, textBrush);
+                graphics.DrawString(L"Dest", this->destColumnHeader, textBrush);
 
                 // Draw each aircraft that we care about
                 Gdiplus::Rect typeColumn = this->typeColumnHeader;
@@ -178,15 +194,14 @@ namespace UKControllerPlugin::Departure {
 
                     // Type column
                     const std::string itemType = listItem.index() == 0 ? "Rls" : "Pre";
-                    graphics.DrawString(HelperFunctions::ConvertToWideString(itemType), typeColumn, this->textBrush);
+                    graphics.DrawString(HelperFunctions::ConvertToWideString(itemType), typeColumn, textBrush);
 
                     // Callsign column
                     const std::string callsign =
                         listItem.index() == 0
                             ? std::get<std::shared_ptr<Releases::DepartureReleaseRequest>>(listItem)->Callsign()
                             : std::get<std::shared_ptr<Prenote::PrenoteMessage>>(listItem)->GetCallsign();
-                    graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(callsign), callsignColumn, this->textBrush);
+                    graphics.DrawString(HelperFunctions::ConvertToWideString(callsign), callsignColumn, textBrush);
                     std::shared_ptr<Components::ClickableArea> callsignClickspot = Components::ClickableArea::Create(
                         callsignColumn, this->screenObjectId, itemType + "." + callsign, false);
                     callsignClickspot->Apply(graphics, radarScreen);
@@ -199,7 +214,7 @@ namespace UKControllerPlugin::Departure {
                             : std::get<std::shared_ptr<Prenote::PrenoteMessage>>(listItem)->GetSendingControllerId();
                     const std::wstring controller = HelperFunctions::ConvertToWideString(
                         this->controllers.FetchPositionById(controllerId)->GetCallsign());
-                    graphics.DrawString(controller, controllerColumn, this->textBrush);
+                    graphics.DrawString(controller, controllerColumn, textBrush);
 
                     auto fp = this->plugin.GetFlightplanForCallsign(callsign);
                     if (!fp) {
@@ -208,13 +223,12 @@ namespace UKControllerPlugin::Departure {
 
                     // Remaining FP-driven columns
                     graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(fp->GetOrigin()), airportColumn, this->textBrush);
+                        HelperFunctions::ConvertToWideString(fp->GetOrigin()), airportColumn, textBrush);
+
+                    graphics.DrawString(HelperFunctions::ConvertToWideString(fp->GetSidName()), sidColumn, textBrush);
 
                     graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(fp->GetSidName()), sidColumn, this->textBrush);
-
-                    graphics.DrawString(
-                        HelperFunctions::ConvertToWideString(fp->GetDestination()), destColumn, this->textBrush);
+                        HelperFunctions::ConvertToWideString(fp->GetDestination()), destColumn, textBrush);
                 } while (nextRelease != decisions.cend() || nextPrenote != prenoteMessages.cend());
             });
 

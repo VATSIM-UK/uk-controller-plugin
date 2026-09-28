@@ -1,17 +1,16 @@
 #include "regional/RegionalPressureModule.h"
-#include "regional/RegionalPressureRenderer.h"
-#include "plugin/FunctionCallEventHandler.h"
-#include "regional/RegionalPressureManager.h"
-#include "radarscreen/RadarRenderableCollection.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
-#include "graphics/GdiplusBrushes.h"
-#include "euroscope/AsrEventHandlerCollection.h"
-#include "task/TaskRunnerInterface.h"
-#include "euroscope/CallbackFunction.h"
-#include "push/PushEventProcessorCollection.h"
 #include "api/ApiException.h"
+#include "euroscope/AsrEventHandlerCollection.h"
+#include "euroscope/CallbackFunction.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "push/PushEventProcessorCollection.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
 #include "regional/RegionalPressureConfigurationDialog.h"
+#include "regional/RegionalPressureManager.h"
 #include "regional/RegionalPressureManagerFactory.h"
+#include "regional/RegionalPressureRenderer.h"
+#include "task/TaskRunnerInterface.h"
 
 using UKControllerPlugin::Api::ApiException;
 using UKControllerPlugin::Api::ApiInterface;
@@ -23,7 +22,6 @@ using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin {
     namespace Regional {
@@ -73,7 +71,6 @@ namespace UKControllerPlugin {
             RegionalPressureManager& regionalPressureManager,
             RadarRenderableCollection& radarRender,
             ConfigurableDisplayCollection& configurableDisplays,
-            const GdiplusBrushes& brushes,
             AsrEventHandlerCollection& userSettingHandlers,
             const DialogManager& dialogManager)
         {
@@ -86,7 +83,6 @@ namespace UKControllerPlugin {
                 radarRender.ReserveScreenObjectIdentifier(rendererId),
                 radarRender.ReserveScreenObjectIdentifier(rendererId),
                 configureFunctionId,
-                brushes,
                 dialogManager));
 
             // Add to the handlers.

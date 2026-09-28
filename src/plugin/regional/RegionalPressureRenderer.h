@@ -13,7 +13,6 @@ namespace UKControllerPlugin {
     } // namespace Euroscope
     namespace Windows {
         class GdiGraphicsInterface;
-        struct GdiplusBrushes;
     } // namespace Windows
 } // namespace UKControllerPlugin
 
@@ -35,7 +34,6 @@ namespace UKControllerPlugin::Regional {
             int menuBarClickspotId,
             int rpsClickspotId,
             int toggleCallbackFunctionId,
-            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             const UKControllerPlugin::Dialog::DialogManager& dialogManager);
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
@@ -88,9 +86,6 @@ namespace UKControllerPlugin::Regional {
         // The rectangle to render for the hide clickspot
         Gdiplus::Rect hideSpotRender;
 
-        // Brushes
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
-
         // The configuration for the renderer
         UKControllerPlugin::Regional::RegionalPressureRendererConfiguration config;
 
@@ -141,7 +136,7 @@ namespace UKControllerPlugin::Regional {
 
         inline static const int DEFAULT_POSITION = 100;
         inline static const int LEFT_COLUMN_WIDTH = 100;
-        inline static const int ROW_HEIGHT = 20;
+        inline static const int ROW_HEIGHT = 15;
         inline static const int HIDE_CLICKSPOT_WIDTH = 50;
         inline static const int APPEND_ZERO_LIMIT = 1000;
     };

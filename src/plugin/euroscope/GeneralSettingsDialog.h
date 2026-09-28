@@ -1,6 +1,9 @@
 #pragma once
 
 namespace UKControllerPlugin {
+    namespace Bootstrap {
+        struct PersistenceContainer;
+    } // namespace Bootstrap
     namespace Euroscope {
         class UserSetting;
         class UserSettingAwareCollection;
@@ -8,6 +11,9 @@ namespace UKControllerPlugin {
     namespace Setting {
         class SettingRepository;
     } // namespace Setting
+    namespace Theme {
+        class ThemeSettings;
+    } // namespace Theme
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Euroscope {
@@ -18,11 +24,7 @@ namespace UKControllerPlugin::Euroscope {
     class GeneralSettingsDialog
     {
         public:
-        GeneralSettingsDialog(
-            UKControllerPlugin::Euroscope::UserSetting& userSettings,
-            const UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers,
-            Setting::SettingRepository& settings);
-        GeneralSettingsDialog(const GeneralSettingsDialog& newObject);
+        explicit GeneralSettingsDialog(Bootstrap::PersistenceContainer& container);
 
         static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -33,7 +35,7 @@ namespace UKControllerPlugin::Euroscope {
         LRESULT InitDialog(HWND hwnd);
         void DestroyDialog(HWND hwnd);
 
-        const std::map<std::string, std::wstring> releaseChannelMap{
+        const std::map<std::string, std::wstring, std::less<>> releaseChannelMap{
             {"stable", L"Stable"},
             {"beta", L"Beta"},
         };
@@ -42,6 +44,8 @@ namespace UKControllerPlugin::Euroscope {
 
         // A place where user settings are retrieved and stored
         UKControllerPlugin::Euroscope::UserSetting& userSettings;
+
+        Theme::ThemeSettings& themeSettings;
 
         // A set of handlers that want to know when user settings get updated
         const UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers;

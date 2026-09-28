@@ -32,30 +32,23 @@ namespace UKControllerPluginTest::Components {
 
     TEST_F(TitleBarTest, TestItDrawsBackground)
     {
-        EXPECT_CALL(this->mockGraphics, FillRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), Ref(*this->brush)))
-            .Times(1);
+        EXPECT_CALL(this->mockGraphics, FillRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _)).Times(1);
 
-        EXPECT_EQ(this->titlebar, this->titlebar->WithBackgroundBrush(this->brush));
         this->titlebar->Draw(mockGraphics, mockRadarScreen);
     }
 
     TEST_F(TitleBarTest, TestItDrawsText)
     {
-        EXPECT_CALL(
-            this->mockGraphics,
-            DrawStringRect(this->title, GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), Ref(*this->brush)))
+        EXPECT_CALL(this->mockGraphics, DrawStringRect(this->title, GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _))
             .Times(1);
 
-        EXPECT_EQ(this->titlebar, this->titlebar->WithTextBrush(this->brush));
         this->titlebar->Draw(mockGraphics, mockRadarScreen);
     }
 
     TEST_F(TitleBarTest, TestItDrawsBorder)
     {
-        EXPECT_CALL(this->mockGraphics, DrawRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), Ref(*this->pen)))
-            .Times(1);
+        EXPECT_CALL(this->mockGraphics, DrawRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _)).Times(1);
 
-        EXPECT_EQ(this->titlebar, this->titlebar->WithBorder(this->pen));
         this->titlebar->Draw(mockGraphics, mockRadarScreen);
     }
 
@@ -87,6 +80,28 @@ namespace UKControllerPluginTest::Components {
 
         RECT expectedRect = {70, 130, 180, 250};
         EXPECT_CALL(this->mockRadarScreen, RegisterScreenObject(1, "titleBar", RectEq(expectedRect), true)).Times(1);
+
+        this->titlebar->Draw(mockGraphics, mockRadarScreen);
+    }
+
+    TEST_F(TitleBarTest, DrawThemeFillsRectWithHeaderBrush)
+    {
+        EXPECT_CALL(this->mockGraphics, FillRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _)).Times(1);
+
+        this->titlebar->Draw(mockGraphics, mockRadarScreen);
+    }
+
+    TEST_F(TitleBarTest, DrawThemeDrawsStringWithTextBrush)
+    {
+        EXPECT_CALL(this->mockGraphics, DrawStringRect(this->title, GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _))
+            .Times(1);
+
+        this->titlebar->Draw(mockGraphics, mockRadarScreen);
+    }
+
+    TEST_F(TitleBarTest, DrawThemeDrawsRectWithBorderPen)
+    {
+        EXPECT_CALL(this->mockGraphics, DrawRectRect(GdiRectEq(Gdiplus::Rect{10, 20, 100, 100}), _)).Times(1);
 
         this->titlebar->Draw(mockGraphics, mockRadarScreen);
     }

@@ -23,6 +23,9 @@ namespace UKControllerPlugin {
         class DepartureReleaseRequest;
         class DepartureReleaseEventHandler;
     } // namespace Releases
+    namespace Windows {
+        class GdiGraphicsInterface;
+    } // namespace Windows
 } // namespace UKControllerPlugin
 
 namespace UKControllerPlugin::Departure {
@@ -79,6 +82,7 @@ namespace UKControllerPlugin::Departure {
         const Controller::ActiveCallsignCollection& activeCallsigns;
 
         // Drawing RECTs
+        Gdiplus::Rect contentArea{0, 0, 435, 400};
         const Gdiplus::Rect typeColumnHeader{5, 5, 40, 25};
         const Gdiplus::Rect callsignColumnHeader{50, 5, 100, 25};
         const Gdiplus::Rect controllerColumnHeader{160, 5, 100, 25};
@@ -86,25 +90,17 @@ namespace UKControllerPlugin::Departure {
         const Gdiplus::Rect sidColumnHeader{320, 5, 65, 25};
         const Gdiplus::Rect destColumnHeader{395, 5, 40, 25};
 
-        // Some colours
-        const Gdiplus::Color OFF_WHITE_COLOUR = Gdiplus::Color(255, 255, 255);
-        const Gdiplus::Color TITLE_BAR_BASE_COLOUR = Gdiplus::Color(130, 50, 154);
-        const Gdiplus::Color TITLE_BAR_FLASH_COLOUR = Gdiplus::Color(179, 3, 0);
-
-        // Brushes
-        const Gdiplus::SolidBrush textBrush;
-
         // Clickspot identifier
         const int screenObjectId;
 
         // Is the window visible
-        bool visible;
+        bool visible = false;
 
         // Is the content collapsed
-        bool contentCollapsed;
+        bool contentCollapsed = false;
 
         // Height of title bar
-        const int titleBarHeight = 20;
+        const int titleBarHeight = 15;
 
         // Width of title bar
         const int titleBarWidth = 435;

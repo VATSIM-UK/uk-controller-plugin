@@ -144,6 +144,9 @@ namespace UKControllerPlugin {
     namespace TaskManager {
         class TaskRunnerInterface;
     } // namespace TaskManager
+    namespace Theme {
+        class ThemeSettings;
+    } // namespace Theme
     namespace TimedEvent {
         class TimedEventCollection;
     } // namespace TimedEvent
@@ -152,7 +155,6 @@ namespace UKControllerPlugin {
         class WakeSchemeCollection;
     } // namespace Wake
     namespace Windows {
-        struct GdiplusBrushes;
         class GdiGraphicsWrapper;
         class WinApiInterface;
     } // namespace Windows
@@ -237,12 +239,14 @@ namespace UKControllerPlugin::Bootstrap {
         std::shared_ptr<UKControllerPlugin::Notifications::NotificationsMenuItem> notificationsMenuItem;
         std::shared_ptr<UKControllerPlugin::Releases::DepartureReleaseEventHandler> departureReleaseHandler;
 
+        // Settings interfaces
+        std::shared_ptr<Theme::ThemeSettings> themeSettings;
+
         // Collections that are spawned multiple times.
         std::vector<std::shared_ptr<UKControllerPlugin::RadarScreen::RadarRenderableCollection>> allRadarRenders;
         std::unique_ptr<UKControllerPlugin::Plugin::FunctionCallEventHandler> pluginFunctionHandlers;
 
         // Graphics things
-        std::unique_ptr<UKControllerPlugin::Windows::GdiplusBrushes> brushes;
         std::unique_ptr<UKControllerPlugin::Windows::GdiGraphicsWrapper> graphics;
 
         // Large collections that we don't want to go onto the stack

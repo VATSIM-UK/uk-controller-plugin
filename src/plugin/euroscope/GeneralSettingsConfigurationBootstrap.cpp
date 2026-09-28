@@ -1,15 +1,16 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
-#include "euroscope/GeneralSettingsConfiguration.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
-#include "plugin/FunctionCallEventHandler.h"
-#include "dialog/DialogManager.h"
-#include "dialog/DialogData.h"
-#include "euroscope/CallbackFunction.h"
+#include "bootstrap/PersistenceContainer.h"
 #include "command/CommandHandlerCollection.h"
+#include "dialog/DialogData.h"
+#include "dialog/DialogManager.h"
+#include "euroscope/CallbackFunction.h"
+#include "euroscope/GeneralSettingsConfiguration.h"
 #include "euroscope/GeneralSettingsDialog.h"
 #include "euroscope/UserSettingAwareCollection.h"
-#include "setting/SettingRepository.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
 #include "setting/JsonFileSettingProvider.h"
+#include "setting/SettingRepository.h"
 #include "update/BootstrapReleaseChannelSettings.h"
 
 using UKControllerPlugin::Command::CommandHandlerCollection;
@@ -28,17 +29,11 @@ using UKControllerPluginUtils::Update::BootstrapReleaseChannelSettings;
 namespace UKControllerPlugin {
     namespace Euroscope {
 
-        void GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
-            DialogManager& dialogManager,
-            UserSetting& userSettings,
-            UserSettingAwareCollection& userSettingsHandlers,
-            Setting::SettingRepository& settings,
-            WinApiInterface& windows)
+        void GeneralSettingsConfigurationBootstrap::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
         {
-            BootstrapReleaseChannelSettings(settings, windows);
-            std::shared_ptr<GeneralSettingsDialog> dialog =
-                std::make_shared<GeneralSettingsDialog>(userSettings, userSettingsHandlers, settings);
-            dialogManager.AddDialog(
+            BootstrapReleaseChannelSettings(*container.settingsRepository, *container.windows);
+            std::shared_ptr<GeneralSettingsDialog> dialog = std::make_shared<GeneralSettingsDialog>(container);
+            container.dialogManager->AddDialog(
                 {IDD_GENERAL_SETTINGS,
                  "General Settings",
                  reinterpret_cast<DLGPROC>(dialog->WndProc),

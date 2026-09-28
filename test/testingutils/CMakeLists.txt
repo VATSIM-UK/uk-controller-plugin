@@ -8,6 +8,7 @@ set(helper
     "helper/ApiRequestHelperFunctions.h"
     "helper/InitTests.cpp"
     "helper/Matchers.h"
+    "helper/TestEnvironment.cpp"
     "helper/TestEnvironment.h"
     "helper/TestingFunctions.cpp"
     "helper/TestingFunctions.h"

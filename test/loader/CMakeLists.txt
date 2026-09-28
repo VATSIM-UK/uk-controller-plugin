@@ -9,6 +9,7 @@ set(loader
 source_group("loader" FILES ${loader})
 
 set(ALL_FILES
+    TestEnvironment.cpp
     ${loader}
     $<TARGET_OBJECTS:UKControllerPluginLoader>
 )

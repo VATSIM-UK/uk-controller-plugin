@@ -14,7 +14,6 @@ namespace UKControllerPlugin {
 
     namespace Windows {
         class GdiGraphicsInterface;
-        struct GdiplusBrushes;
     } // namespace Windows
 } // namespace UKControllerPlugin
 // END
@@ -37,7 +36,6 @@ namespace UKControllerPlugin::MinStack {
             int menuBarClickspotId,
             int mslClickspotId,
             int toggleCallbackFunctionId,
-            const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
             const UKControllerPlugin::Dialog::DialogManager& dialogManager);
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
@@ -108,9 +106,6 @@ namespace UKControllerPlugin::MinStack {
         // The rectangle to render for the hide clickspot
         Gdiplus::Rect hideSpotRender;
 
-        // Brushes
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
-
         // The configuration for the renderer
         UKControllerPlugin::MinStack::MinStackRendererConfiguration config;
 
@@ -133,7 +128,7 @@ namespace UKControllerPlugin::MinStack {
         const int leftColumnWidth = 75;
 
         // Width of the right column
-        const int rowHeight = 20;
+        const int rowHeight = 15;
 
         // Width of the hide clickspot
         const int hideClickspotWidth = 25;

@@ -1,11 +1,11 @@
+#include "MinStackRenderer.h"
 #include "MinStackLevel.h"
 #include "MinStackManager.h"
-#include "MinStackRenderer.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
-#include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
+#include "theme/ThemeManager.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Dialog::DialogManager;
@@ -14,8 +14,9 @@ using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::MinStack::MinStackManager;
 using UKControllerPlugin::MinStack::MinStackRenderer;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Theme::PaletteKey;
+using UKControllerPlugin::Theme::ThemeManager;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::MinStack {
 
@@ -25,10 +26,9 @@ namespace UKControllerPlugin::MinStack {
         int menuBarClickspotId,
         int mslClickspotId,
         int toggleCallbackFunctionId,
-        const GdiplusBrushes& brushes,
         const UKControllerPlugin::Dialog::DialogManager& dialogManager)
-        : brushes(brushes), minStackModule(minStackModule), dialogManager(dialogManager),
-          hideClickspotId(closeClickspotId), menuBarClickspotId(menuBarClickspotId), mslClickspotId(mslClickspotId),
+        : minStackModule(minStackModule), dialogManager(dialogManager), hideClickspotId(closeClickspotId),
+          menuBarClickspotId(menuBarClickspotId), mslClickspotId(mslClickspotId),
           toggleCallbackFunctionId(toggleCallbackFunctionId)
     {
     }
@@ -212,17 +212,17 @@ namespace UKControllerPlugin::MinStack {
             const MinStackLevel& mslData = this->minStackModule.GetMinStackLevel(minStack.key);
 
             // Draw the TMA title and rectangles
-            graphics.FillRect(tma, *this->brushes.greyBrush);
-            graphics.DrawRect(tma, *this->brushes.blackPen);
+            graphics.FillRect(tma, ThemeManager::Brush(PaletteKey::Background));
+            graphics.DrawRect(tma, ThemeManager::Pen(PaletteKey::Border));
 
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(MinStackManager::GetNameFromKey(minStack.key)),
                 tma,
-                mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush);
+                ThemeManager::Brush(mslData.IsAcknowledged() ? PaletteKey::TextHighlight : PaletteKey::Text));
 
             // Draw the MSL itself and associated rectangles
-            graphics.FillRect(msl, *this->brushes.greyBrush);
-            graphics.DrawRect(msl, *this->brushes.blackPen);
+            graphics.FillRect(msl, ThemeManager::Brush(PaletteKey::Background));
+            graphics.DrawRect(msl, ThemeManager::Pen(PaletteKey::Border));
 
             std::string mslString =
                 mslData == this->minStackModule.InvalidMsl() ? "-" : std::to_string(mslData.msl).substr(0, 2);
@@ -230,7 +230,7 @@ namespace UKControllerPlugin::MinStack {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(mslString),
                 msl,
-                mslData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush);
+                ThemeManager::Brush(mslData.IsAcknowledged() ? PaletteKey::TextHighlight : PaletteKey::Text));
 
             // Add the clickable area.
             radarScreen.RegisterScreenObject(
@@ -259,7 +259,7 @@ namespace UKControllerPlugin::MinStack {
             this->topBarArea.top,
             this->leftColumnWidth + this->hideClickspotWidth,
             1 + ((numMinStacks) * this->rowHeight)};
-        graphics.DrawRect(area, *this->brushes.blackPen);
+        graphics.DrawRect(area, ThemeManager::Pen(PaletteKey::Border));
     }
 
     /*
@@ -268,15 +268,15 @@ namespace UKControllerPlugin::MinStack {
     void MinStackRenderer::RenderTopBar(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
     {
         // The title bar - the draggable bit
-        graphics.DrawRect(this->topBarRender, *this->brushes.blackPen);
-        graphics.FillRect(this->topBarRender, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawString(L"MSL", this->topBarRender, *this->brushes.whiteBrush);
+        graphics.DrawRect(this->topBarRender, ThemeManager::Pen(PaletteKey::Border));
+        graphics.FillRect(this->topBarRender, ThemeManager::Brush(PaletteKey::Header));
+        graphics.DrawString(L"MSL", this->topBarRender, ThemeManager::Brush(PaletteKey::Text));
         radarScreen.RegisterScreenObject(this->menuBarClickspotId, "", this->topBarArea, true);
 
         // The toggle button - no draggable
-        graphics.DrawRect(this->hideSpotRender, *this->brushes.blackPen);
-        graphics.FillRect(this->hideSpotRender, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawString(L"X", this->hideSpotRender, *this->brushes.whiteBrush);
+        graphics.DrawRect(this->hideSpotRender, ThemeManager::Pen(PaletteKey::Border));
+        graphics.FillRect(this->hideSpotRender, ThemeManager::Brush(PaletteKey::Header));
+        graphics.DrawString(L"X", this->hideSpotRender, ThemeManager::Brush(PaletteKey::Text));
         radarScreen.RegisterScreenObject(this->hideClickspotId, "", this->hideClickspotArea, false);
     }
 

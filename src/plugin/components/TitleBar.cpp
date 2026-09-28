@@ -1,7 +1,11 @@
-#include "ClickableArea.h"
 #include "TitleBar.h"
+#include "ClickableArea.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "theme/ThemeManager.h"
+
+using UKControllerPlugin::Theme::PaletteKey;
+using UKControllerPlugin::Theme::ThemeManager;
 
 namespace UKControllerPlugin::Components {
     TitleBar::~TitleBar() = default;
@@ -11,21 +15,21 @@ namespace UKControllerPlugin::Components {
         return std::shared_ptr<TitleBar>(new TitleBar(title, area));
     }
 
-    std::shared_ptr<TitleBar> TitleBar::WithBackgroundBrush(std::shared_ptr<Gdiplus::Brush> brush)
+    std::shared_ptr<TitleBar> TitleBar::WithBackground(PaletteKey key)
     {
-        this->backgroundBrush = brush;
+        background = key;
         return shared_from_this();
     }
 
-    std::shared_ptr<TitleBar> TitleBar::WithTextBrush(std::shared_ptr<Gdiplus::Brush> brush)
+    std::shared_ptr<TitleBar> TitleBar::WithText(PaletteKey key)
     {
-        this->textBrush = brush;
+        text = key;
         return shared_from_this();
     }
 
-    std::shared_ptr<TitleBar> TitleBar::WithBorder(std::shared_ptr<Gdiplus::Pen> pen)
+    std::shared_ptr<TitleBar> TitleBar::WithBorder(PaletteKey key)
     {
-        this->borderPen = pen;
+        border = key;
         return shared_from_this();
     }
 
@@ -53,17 +57,9 @@ namespace UKControllerPlugin::Components {
     void TitleBar::Draw(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen) const
     {
-        if (this->backgroundBrush) {
-            graphics.FillRect(this->area, *this->backgroundBrush);
-        }
-
-        if (this->textBrush) {
-            graphics.DrawString(this->title, this->area, *this->textBrush);
-        }
-
-        if (this->borderPen) {
-            graphics.DrawRect(this->area, *this->borderPen);
-        }
+        graphics.FillRect(this->area, ThemeManager::Brush(background));
+        graphics.DrawString(this->title, this->area, ThemeManager::Brush(text));
+        graphics.DrawRect(this->area, ThemeManager::Pen(border));
 
         if (this->clickableArea != nullptr) {
             this->clickableArea->Apply(graphics, radarScreen);
@@ -72,20 +68,5 @@ namespace UKControllerPlugin::Components {
 
     TitleBar::TitleBar(std::wstring title, Gdiplus::Rect area) : title(std::move(title)), area(area)
     {
-    }
-
-    std::shared_ptr<TitleBar> TitleBar::WithDefaultBackgroundBrush()
-    {
-        return this->WithBackgroundBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(130, 50, 154)));
-    }
-
-    std::shared_ptr<TitleBar> TitleBar::WithDefaultTextBrush()
-    {
-        return this->WithTextBrush(std::make_shared<Gdiplus::SolidBrush>(Gdiplus::Color(227, 227, 227)));
-    }
-
-    std::shared_ptr<TitleBar> TitleBar::WithDefaultBorder()
-    {
-        return this->WithBorder(std::make_shared<Gdiplus::Pen>(Gdiplus::Color(255, 255, 255)));
     }
 } // namespace UKControllerPlugin::Components

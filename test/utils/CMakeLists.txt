@@ -105,6 +105,7 @@ set(test__update
 source_group("test\\update" FILES ${test__update})
 
 set(ALL_FILES
+    TestEnvironment.cpp
     ${test__api}
     ${test__collection}
     ${test__curl}

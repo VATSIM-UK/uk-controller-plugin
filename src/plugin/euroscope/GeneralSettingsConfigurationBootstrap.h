@@ -1,22 +1,25 @@
 #pragma once
 
 namespace UKControllerPlugin {
-    namespace Plugin {
-        class FunctionCallEventHandler;
-    } // namespace Plugin
+    namespace Bootstrap {
+        struct PersistenceContainer;
+    } // namespace Bootstrap
     namespace Command {
         class CommandHandlerCollection;
     } // namespace Command
-    namespace RadarScreen {
-        class ConfigurableDisplayCollection;
-    } // namespace RadarScreen
+    namespace Dialog {
+        class DialogManager;
+    } // namespace Dialog
     namespace Euroscope {
         class UserSetting;
         class UserSettingAwareCollection;
     } // namespace Euroscope
-    namespace Dialog {
-        class DialogManager;
-    } // namespace Dialog
+    namespace Plugin {
+        class FunctionCallEventHandler;
+    } // namespace Plugin
+    namespace RadarScreen {
+        class ConfigurableDisplayCollection;
+    } // namespace RadarScreen
     namespace Setting {
         class SettingRepository;
     } // namespace Setting
@@ -34,12 +37,7 @@ namespace UKControllerPlugin {
         class GeneralSettingsConfigurationBootstrap
         {
             public:
-            static void BootstrapPlugin(
-                UKControllerPlugin::Dialog::DialogManager& dialogManager,
-                UKControllerPlugin::Euroscope::UserSetting& userSettings,
-                UKControllerPlugin::Euroscope::UserSettingAwareCollection& userSettingsHandlers,
-                Setting::SettingRepository& settings,
-                Windows::WinApiInterface& windows);
+            static void BootstrapPlugin(Bootstrap::PersistenceContainer& container);
 
             static void BootstrapRadarScreen(
                 UKControllerPlugin::Plugin::FunctionCallEventHandler& functionCalls,

@@ -34,12 +34,13 @@ using std::min;
 #include <winsock2.h>
 #include <Windows.h>
 #include <CommCtrl.h>
-#include <CommDlg.h>
+#include <commdlg.h>
 #include <KnownFolders.h>
-#include <Shlobj.h>
-#include <Shobjidl.h>
+#include <shlobj.h>
+#include <shobjidl.h>
 #include <algorithm>
 #include <any>
+#include <array>
 #include <cctype>
 #include <codecvt>
 #include <ctime>

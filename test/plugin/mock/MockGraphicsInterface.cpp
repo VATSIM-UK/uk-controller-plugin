@@ -1,4 +1,7 @@
 #include "MockGraphicsInterface.h"
+#include "theme/ThemeManager.h"
+
+using UKControllerPlugin::Theme::ThemeManager;
 
 namespace UKControllerPluginTest::Windows {
     MockGraphicsInterface::MockGraphicsInterface() = default;

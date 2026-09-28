@@ -10,7 +10,6 @@ namespace UKControllerPlugin {
 
     namespace Windows {
         class GdiGraphicsInterface;
-        struct GdiplusBrushes;
     } // namespace Windows
 } // namespace UKControllerPlugin
 
@@ -25,8 +24,7 @@ namespace UKControllerPlugin::RadarScreen {
         public:
         ScreenControls(
             int toggleboxIdEuroscope,
-            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection configurableDisplays,
-            const UKControllerPlugin::Windows::GdiplusBrushes& brushes);
+            UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection configurableDisplays);
         [[nodiscard]] auto IsVisible() const -> bool override;
         void LeftClick(
             UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface& radarScreen,
@@ -45,9 +43,6 @@ namespace UKControllerPlugin::RadarScreen {
         void ResetPosition() override;
 
         private:
-        // Brushes for drawing
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
-
         // Configurable displays
         const UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection configurableDisplays;
 

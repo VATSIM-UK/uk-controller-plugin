@@ -1,10 +1,9 @@
-#include "MinStackConfigurationDialog.h"
 #include "MinStackModule.h"
+#include "MinStackConfigurationDialog.h"
 #include "MinStackRenderer.h"
 #include "api/ApiException.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
-#include "graphics/GdiplusBrushes.h"
 #include "metar/MetarEventHandlerCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "push/PushEventProcessorCollection.h"
@@ -25,7 +24,6 @@ using UKControllerPlugin::Push::PushEventProcessorCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::TaskManager::TaskRunnerInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::MinStack {
 
@@ -70,7 +68,6 @@ namespace UKControllerPlugin::MinStack {
         MinStackManager& minStackManager,
         RadarRenderableCollection& radarRender,
         ConfigurableDisplayCollection& configurableDisplays,
-        const GdiplusBrushes& brushes,
         AsrEventHandlerCollection& userSettingHandlers,
         const DialogManager& dialogManager)
     {
@@ -83,7 +80,6 @@ namespace UKControllerPlugin::MinStack {
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             configureFunctionId,
-            brushes,
             dialogManager));
 
         // Add to the handlers.

@@ -1,8 +1,8 @@
+#include "ApproachSequencerDisplay.h"
 #include "AirfieldApproachOptions.h"
 #include "ApproachSequence.h"
 #include "ApproachSequencedAircraft.h"
 #include "ApproachSequencer.h"
-#include "ApproachSequencerDisplay.h"
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSequencerOptions.h"
 #include "ApproachSpacingCalculator.h"
@@ -17,10 +17,13 @@
 #include "helper/HelperFunctions.h"
 #include "list/PopupListInterface.h"
 #include "number/NumberFormat.h"
+#include "theme/ThemeManager.h"
 
 using UKControllerPlugin::Components::CollapsibleWindowTitleBar;
 using UKControllerPlugin::Number::To1Dp;
 using UKControllerPlugin::Number::To1DpWide;
+using UKControllerPlugin::Theme::PaletteKey;
+using UKControllerPlugin::Theme::ThemeManager;
 
 namespace UKControllerPlugin::Approach {
 
@@ -53,10 +56,7 @@ namespace UKControllerPlugin::Approach {
           airfieldTargetClickspot(Components::ClickableArea::Create(
               this->airfieldTargetTextArea, screenObjectId, AIRFIELD_TARGET_CLICKSPOT, false)),
           airfieldSeparationClickspot(Components::ClickableArea::Create(
-              this->airfieldSeparationTextArea, screenObjectId, AIRFIELD_SEPARATION_CLICKSPOT, false)),
-          backgroundBrush(std::make_shared<Gdiplus::SolidBrush>(BACKGROUND_COLOUR)),
-          textBrush(std::make_shared<Gdiplus::SolidBrush>(TEXT_COLOUR)),
-          dividingPen(std::make_shared<Gdiplus::Pen>(TEXT_COLOUR))
+              this->airfieldSeparationTextArea, screenObjectId, AIRFIELD_SEPARATION_CLICKSPOT, false))
     {
     }
 
@@ -173,7 +173,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             L"Airfield:",
             airfieldStaticArea,
-            *textBrush,
+            ThemeManager::Brush(PaletteKey::Text),
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
 
@@ -181,7 +181,7 @@ namespace UKControllerPlugin::Approach {
             HelperFunctions::ConvertToWideString(
                 displayOptions->Airfield().empty() ? "--" : displayOptions->Airfield()),
             airfieldTextArea,
-            *textBrush,
+            ThemeManager::Brush(PaletteKey::Text),
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->airfieldClickspot->Apply(graphics, radarScreen);
@@ -189,23 +189,24 @@ namespace UKControllerPlugin::Approach {
 
     void ApproachSequencerDisplay::RenderDivider(Windows::GdiGraphicsInterface& graphics)
     {
-        graphics.DrawLine(*dividingPen, dividerLeft, dividerRight);
+        graphics.DrawLine(ThemeManager::Pen(PaletteKey::Text), dividerLeft, dividerRight);
     }
 
     void ApproachSequencerDisplay::RenderHeaders(Windows::GdiGraphicsInterface& graphics)
     {
-        graphics.DrawString(L"#", numberHeader, *textBrush);
-        graphics.DrawString(L"Callsign", callsignHeader, *textBrush);
-        graphics.DrawString(L"Target", targetHeader, *textBrush);
-        graphics.DrawString(L"Actual", actualHeader, *textBrush);
-        graphics.DrawString(L"Actions", actionsHeader, *textBrush);
+        const auto& brush = ThemeManager::Brush(PaletteKey::Text);
+        graphics.DrawString(L"#", numberHeader, brush);
+        graphics.DrawString(L"Callsign", callsignHeader, brush);
+        graphics.DrawString(L"Target", targetHeader, brush);
+        graphics.DrawString(L"Actual", actualHeader, brush);
+        graphics.DrawString(L"Actions", actionsHeader, brush);
     }
 
     void ApproachSequencerDisplay::RenderAddButton(
         Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
     {
-        graphics.DrawRect(addButton, *dividingPen);
-        graphics.DrawString(L"Add Aircraft", addButton, *textBrush);
+        graphics.DrawRect(addButton, ThemeManager::Pen(PaletteKey::Text));
+        graphics.DrawString(L"Add Aircraft", addButton, ThemeManager::Brush(PaletteKey::Text));
         addClickspot->Apply(graphics, radarScreen);
     }
 
@@ -247,16 +248,18 @@ namespace UKControllerPlugin::Approach {
             actionsHeader.Height - INSETS};
         int sequenceNumber = 1;
 
+        const auto& brush = ThemeManager::Brush(PaletteKey::Text);
+
         while (aircraftToProcess != nullptr) {
-            graphics.DrawString(std::to_wstring(sequenceNumber), numberRect, *textBrush);
+            graphics.DrawString(std::to_wstring(sequenceNumber), numberRect, brush);
             graphics.DrawString(
-                HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()), callsignRect, *textBrush);
+                HelperFunctions::ConvertToWideString(aircraftToProcess->Callsign()), callsignRect, brush);
 
             // The target distance / wake
             if (aircraftToProcess->Mode() == ApproachSequencingMode::WakeTurbulence) {
-                graphics.DrawString(L"Wake", targetRect, *textBrush);
+                graphics.DrawString(L"Wake", targetRect, brush);
             } else {
-                graphics.DrawString(To1DpWide(aircraftToProcess->ExpectedDistance()), targetRect, *textBrush);
+                graphics.DrawString(To1DpWide(aircraftToProcess->ExpectedDistance()), targetRect, brush);
             }
             Components::ClickableArea::Create(
                 targetRect, screenObjectId, "approachTarget" + aircraftToProcess->Callsign(), false)
@@ -264,46 +267,40 @@ namespace UKControllerPlugin::Approach {
 
             double requiredSpacing = spacingCalculator.Calculate(displayOptions->Airfield(), *aircraftToProcess);
             if (requiredSpacing == spacingCalculator.NoSpacing()) {
-                graphics.DrawString(L"--", actualRect, *textBrush);
+                graphics.DrawString(L"--", actualRect, brush);
             } else {
-                graphics.DrawString(To1DpWide(requiredSpacing), actualRect, *textBrush);
+                graphics.DrawString(To1DpWide(requiredSpacing), actualRect, brush);
             }
 
             auto upButton = Components::Button::Create(
-                upButtonRect,
-                screenObjectId,
-                "moveUp" + aircraftToProcess->Callsign(),
-                Components::UpArrow(TEXT_COLOUR));
+                upButtonRect, screenObjectId, "moveUp" + aircraftToProcess->Callsign(), Components::UpArrow());
             upButton->Draw(graphics, radarScreen);
 
             auto downButton = Components::Button::Create(
-                downButtonRect,
-                screenObjectId,
-                "moveDown" + aircraftToProcess->Callsign(),
-                Components::DownArrow(TEXT_COLOUR));
+                downButtonRect, screenObjectId, "moveDown" + aircraftToProcess->Callsign(), Components::DownArrow());
             downButton->Draw(graphics, radarScreen);
 
             auto deleteButton = Components::Button::Create(
                 deleteButtonRect,
                 screenObjectId,
                 "deleteButton" + aircraftToProcess->Callsign(),
-                Components::DeleteButton(TEXT_COLOUR));
+                Components::DeleteButton());
             deleteButton->Draw(graphics, radarScreen);
 
             auto toggleButton = Components::Button::Create(
                 toggleButtonRect,
                 screenObjectId,
                 "toggleDraw" + aircraftToProcess->Callsign(),
-                [&aircraftToProcess, &radarScreen, this](
+                [&aircraftToProcess, &radarScreen, &brush, this](
                     Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect& area) {
                     Gdiplus::Rect drawArea = {0, 0, area.Width, area.Height};
-                    graphics.FillCircle(drawArea, *textBrush);
+                    graphics.FillCircle(drawArea, brush);
                     if (!aircraftToProcess->ShouldDraw()) {
                         Components::Button::Create(
                             drawArea,
                             screenObjectId,
                             "toggleDraw" + aircraftToProcess->Callsign(),
-                            Components::DeleteButton(BACKGROUND_COLOUR))
+                            Components::DeleteButton(PaletteKey::Background))
                             ->Draw(graphics, radarScreen);
                     }
                 });
@@ -332,7 +329,7 @@ namespace UKControllerPlugin::Approach {
             TITLE_BAR_HEIGHT,
             WINDOW_WIDTH,
             static_cast<INT>(callsignHeader.GetBottom() + INSETS + (numberOfCallsigns * callsignHeader.Height))};
-        graphics.FillRect(contentArea, *backgroundBrush);
+        graphics.FillRect(contentArea, ThemeManager::Brush(PaletteKey::Background));
     }
 
     void ApproachSequencerDisplay::RenderAirfieldTarget(
@@ -341,7 +338,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             L"Target:",
             airfieldTargetStatic,
-            *textBrush,
+            ThemeManager::Brush(PaletteKey::Text),
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
 
@@ -356,7 +353,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             targetString,
             airfieldTargetTextArea,
-            *textBrush,
+            ThemeManager::Brush(PaletteKey::Text),
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->airfieldTargetClickspot->Apply(graphics, radarScreen);
@@ -368,7 +365,7 @@ namespace UKControllerPlugin::Approach {
         graphics.DrawString(
             L"Separation:",
             airfieldSeparationStatic,
-            *textBrush,
+            ThemeManager::Brush(PaletteKey::Text),
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
 
@@ -377,7 +374,7 @@ namespace UKControllerPlugin::Approach {
                 ? L"--"
                 : To1DpWide(options.Get(displayOptions->Airfield()).minimumSeparationRequirement),
             airfieldSeparationTextArea,
-            *textBrush,
+            ThemeManager::Brush(PaletteKey::Text),
             Graphics::StringFormatManager::Instance().GetLeftAlign(),
             Graphics::FontManager::Instance().GetDefault());
         this->airfieldSeparationClickspot->Apply(graphics, radarScreen);

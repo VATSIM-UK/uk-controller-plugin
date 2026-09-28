@@ -4,7 +4,6 @@
 #include "dialog/DialogManager.h"
 #include "euroscope/GeneralSettingsDialog.h"
 #include "graphics/GdiGraphicsWrapper.h"
-#include "graphics/GdiplusBrushes.h"
 #include "windows/WinApi.h"
 
 using UKControllerPlugin::Bootstrap::PersistenceContainer;
@@ -12,7 +11,6 @@ using UKControllerPlugin::Curl::CurlApi;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::GeneralSettingsDialog;
 using UKControllerPlugin::Windows::GdiGraphicsWrapper;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPlugin::Windows::WinApi;
 using UKControllerPlugin::Windows::WinApiInterface;
 
@@ -27,7 +25,6 @@ namespace UKControllerPlugin::Bootstrap {
         std::unique_ptr<WinApi> winApi = std::make_unique<WinApi>(instance, GetPluginFileRoot());
         persistence.dialogManager = std::make_unique<DialogManager>(*winApi);
         persistence.windows = std::move(winApi);
-        persistence.brushes = std::make_unique<GdiplusBrushes>();
         persistence.graphics = std::make_unique<GdiGraphicsWrapper>();
     }
 

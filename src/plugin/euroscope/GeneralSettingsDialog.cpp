@@ -1,9 +1,12 @@
 #include "GeneralSettingsDialog.h"
 #include "GeneralSettingsEntries.h"
-#include "UserSettingAwareCollection.h"
 #include "UserSetting.h"
+#include "UserSettingAwareCollection.h"
+#include "bootstrap/PersistenceContainer.h"
 #include "dialog/DialogCallArgument.h"
 #include "setting/SettingRepository.h"
+#include "theme/Palette.h"
+#include "theme/ThemeSettings.h"
 
 using UKControllerPlugin::Dialog::DialogCallArgument;
 using UKControllerPlugin::Euroscope::GeneralSettingsEntries;
@@ -13,17 +16,9 @@ using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 namespace UKControllerPlugin {
     namespace Euroscope {
 
-        GeneralSettingsDialog::GeneralSettingsDialog(
-            UserSetting& userSettings,
-            const UserSettingAwareCollection& userSettingsHandlers,
-            Setting::SettingRepository& settings)
-            : userSettings(userSettings), userSettingsHandlers(userSettingsHandlers), settings(settings)
-        {
-        }
-
-        GeneralSettingsDialog::GeneralSettingsDialog(const GeneralSettingsDialog& newObject)
-            : userSettings(newObject.userSettings), userSettingsHandlers(newObject.userSettingsHandlers),
-              settings(newObject.settings)
+        GeneralSettingsDialog::GeneralSettingsDialog(Bootstrap::PersistenceContainer& container)
+            : userSettings(*container.pluginUserSettingHandler), themeSettings(*container.themeSettings),
+              userSettingsHandlers(*container.userSettingHandlers), settings(*container.settingsRepository)
         {
         }
 
@@ -70,12 +65,12 @@ namespace UKControllerPlugin {
                 this->GetCheckboxStateFromSettings(GeneralSettingsEntries::unknownTimeFormatBlankKey));
 
             auto selectedChannel = this->settings.GetSetting("release_channel", DEFAULT_RELEASE_CHANNEL);
-            if (this->releaseChannelMap.count(selectedChannel) == 0) {
+            if (!this->releaseChannelMap.contains(selectedChannel)) {
                 selectedChannel = DEFAULT_RELEASE_CHANNEL;
             }
 
-            for (const auto& releaseChannel : this->releaseChannelMap) {
-                const auto channel = releaseChannel.second.c_str();
+            for (const auto& [channelKey, channelValue] : this->releaseChannelMap) {
+                const auto channel = channelValue.c_str();
                 int insertIndex = SendDlgItemMessage(
                     hwnd, IDC_RELEASE_CHANNEL, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(channel));
 
@@ -84,10 +79,25 @@ namespace UKControllerPlugin {
                     IDC_RELEASE_CHANNEL,
                     CB_SETITEMDATA,
                     insertIndex,
-                    reinterpret_cast<LPARAM>(releaseChannel.first.c_str()));
+                    reinterpret_cast<LPARAM>(channelKey.c_str()));
 
-                if (releaseChannel.first == selectedChannel) {
+                if (channelKey == selectedChannel) {
                     SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_SETCURSEL, insertIndex, NULL);
+                }
+            }
+
+            // Colour Palette
+            auto selectedColourPalette = themeSettings.Palette();
+
+            for (const Theme::Palette* palette : Theme::Palette::GetPalettes()) {
+                int insertIndex = SendDlgItemMessage(
+                    hwnd, IDC_COLOUR_PALETTE, CB_INSERTSTRING, NULL, reinterpret_cast<LPARAM>(palette->GetName()));
+
+                SendDlgItemMessage(
+                    hwnd, IDC_COLOUR_PALETTE, CB_SETITEMDATA, insertIndex, reinterpret_cast<LPARAM>(palette->GetId()));
+
+                if (palette->GetId() == selectedColourPalette) {
+                    SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_SETCURSEL, insertIndex, NULL);
                 }
             }
 
@@ -147,11 +157,16 @@ namespace UKControllerPlugin {
                 this->GetSettingFromCheckboxState(hwnd, GS_TIME_FORMAT_CHECK));
 
             const auto selectedReleaseChannelIndex = SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETCURSEL, 0, 0);
-
-            const std::string selectedChannel = reinterpret_cast<const char*>(
+            const std::string selectedChannel = std::bit_cast<const char*>(
                 SendDlgItemMessage(hwnd, IDC_RELEASE_CHANNEL, CB_GETITEMDATA, selectedReleaseChannelIndex, 0));
-
             this->settings.UpdateSetting("release_channel", selectedChannel);
+
+            // Colour Palette
+            const auto selectedColourPaletteIndex = SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETCURSEL, 0, 0);
+            const std::string selectedColourPalette = std::bit_cast<const char*>(
+                SendDlgItemMessage(hwnd, IDC_COLOUR_PALETTE, CB_GETITEMDATA, selectedColourPaletteIndex, 0));
+            themeSettings.SetPalette(selectedColourPalette);
+
             this->userSettingsHandlers.UserSettingsUpdateEvent(this->userSettings);
         }
 

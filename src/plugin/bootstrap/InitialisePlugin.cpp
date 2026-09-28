@@ -1,17 +1,17 @@
+#include "bootstrap/InitialisePlugin.h"
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
 #include "api/ApiFactory.h"
 #include "api/ApiRequestFactory.h"
 #include "api/BootstrapApi.h"
-#include "api/FirstTimeApiConfigLoader.h"
 #include "api/FirstTimeApiAuthorisationChecker.h"
+#include "api/FirstTimeApiConfigLoader.h"
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/HelperBootstrap.h"
-#include "bootstrap/InitialisePlugin.h"
 #include "bootstrap/ModuleBootstrap.h"
 #include "bootstrap/PostInit.h"
 #include "controller/ControllerBootstrap.h"
@@ -22,6 +22,7 @@
 #include "dependency/UpdateDependencies.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
+#include "euroscope/UserSetting.h"
 #include "eventhandler/EventBusBootstrap.h"
 #include "filestatus/FileStatusModule.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
@@ -63,6 +64,8 @@
 #include "stands/StandModule.h"
 #include "task/RunAsyncTask.h"
 #include "task/TaskRunnerInterface.h"
+#include "theme/ThemeManager.h"
+#include "theme/ThemeModule.h"
 #include "update/PluginVersion.h"
 #include "wake/WakeModule.h"
 
@@ -93,6 +96,8 @@ using UKControllerPlugin::Plugin::PluginVersion;
 using UKControllerPlugin::Prenote::PrenoteModule;
 using UKControllerPlugin::Regional::RegionalPressureModule;
 using UKControllerPlugin::Squawk::SquawkModule;
+using UKControllerPlugin::Theme::ThemeManager;
+using UKControllerPlugin::Theme::ThemeModule;
 
 namespace UKControllerPlugin {
     /*
@@ -105,6 +110,8 @@ namespace UKControllerPlugin {
         UnsetTaskRunner();
         this->container.reset();
         this->duplicatePlugin.reset();
+
+        ThemeManager::UnsetInstance();
 
         // Shut down winsock
         if (this->winsockInitialised) {
@@ -240,13 +247,10 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         SectorFile::BootstrapPlugin(*this->container);
 
+        ThemeModule::BootstrapPlugin(*this->container);
+
         // General settings config bootstrap
-        GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
-            *this->container->dialogManager,
-            *this->container->pluginUserSettingHandler,
-            *this->container->userSettingHandlers,
-            *this->container->settingsRepository,
-            *this->container->windows);
+        GeneralSettingsConfigurationBootstrap::BootstrapPlugin(*this->container);
 
         // Bootstrap the modules
         Metar::BootstrapPlugin(*this->container);
