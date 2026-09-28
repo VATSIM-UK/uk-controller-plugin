@@ -7,6 +7,7 @@ ARG XWIN_TRIPLE=x86_64-unknown-linux-musl
 ARG WINDOWS_CRT_VERSION=14.29.16.11
 # Old known working = 10.0.20348
 ARG WINDOWS_SDK_VERSION=10.0.26100
+ARG NODE_VERSION=24
 
 ADD "https://github.com/Jake-Shadle/xwin/releases/download/${XWIN_VERSION}/xwin-${XWIN_VERSION}-${XWIN_TRIPLE}.tar.gz" \
 	/tmp/xwin.tar.gz
@@ -133,6 +134,21 @@ EOF
 ENV CURL_INCLUDEDIR=/opt/curl/include/
 ENV CURL_LIBRARYDIR=/opt/curl/build/lib/
 ENV CURL_DEBUG_LIBRARYDIR=/opt/curl/build/lib/
+
+# Node.js and Yarn (classic), used by semantic-release and to refresh yarn.lock.
+RUN <<-EOF
+	set -eux
+
+	export DEBIAN_FRONTEND=noninteractive
+	apt update
+	apt install -y --no-install-recommends curl ca-certificates gnupg
+	curl -fsSL "https://deb.nodesource.com/setup_${NODE_VERSION}.x" | bash -
+	apt install -y nodejs
+	npm install -g yarn@1.22.22
+	apt autoremove -y
+	apt clean -y
+	rm -rf /var/lib/apt/lists/*
+EOF
 
 USER ubuntu
 

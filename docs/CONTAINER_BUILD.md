@@ -67,3 +67,7 @@ that the line endings in the Dockerfile are LF, and are not converted to CRLF.
 
 By default, Git is not installed within the container. Git operations should be
 performed on the host machine, or Git installed in the container.
+
+The container includes Node.js 24 and Yarn 1.22.22, used by the release tooling
+(`semantic-release`) and to refresh `yarn.lock`. In the Dev Container, `yarn
+install` runs automatically after the container is created.

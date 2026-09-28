@@ -10,7 +10,7 @@
 	"build": {
 		"dockerfile": "../dockerfile"
 	},
-	"postCreateCommand": "git config --global --add safe.directory /workspaces/uk-controller-plugin",
+	"postCreateCommand": "git config --global --add safe.directory /workspaces/uk-controller-plugin && yarn install",
 	"containerUser": "ubuntu",
 	"remoteUser": "ubuntu"
 }
