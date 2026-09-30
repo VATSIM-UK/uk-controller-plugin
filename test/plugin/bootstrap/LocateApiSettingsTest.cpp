@@ -51,7 +51,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillRepeatedly(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(
@@ -85,7 +85,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             LocateApiSettings(this->mockWindows, this->settings);
@@ -109,7 +109,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillRepeatedly(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(
@@ -134,7 +134,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_TRUE(ReplaceApiSettings(this->mockWindows));
@@ -179,7 +179,7 @@ namespace UKControllerPluginTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(
@@ -228,7 +228,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillRepeatedly(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(
@@ -253,7 +253,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillRepeatedly(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             UserRequestedKeyUpdateNoPrompts(this->mockWindows, this->settings);
@@ -277,7 +277,7 @@ namespace UKControllerPluginTest {
             EXPECT_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillRepeatedly(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             // Set settings

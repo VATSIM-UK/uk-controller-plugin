@@ -17,16 +17,16 @@ namespace UKControllerPlugin::Windows {
         virtual auto CreateFolderRecursive(std::wstring folder) -> bool = 0;
         virtual auto CreateLocalFolderRecursive(std::wstring folder) -> bool = 0;
         virtual auto DeleteGivenFile(std::wstring filename) -> bool = 0;
-        virtual auto FileExists(std::wstring filename) -> bool = 0;
+        virtual auto FileExists(std::wstring filename, bool relativePath = true) -> bool = 0;
         virtual auto FileOpenDialog(std::wstring title, UINT numFileTypes, const COMDLG_FILTERSPEC* fileTypes) const
             -> std::wstring = 0;
         [[nodiscard]] auto GetDllInstance() const -> HINSTANCE;
         [[nodiscard]] virtual auto GetFullPathToLocalFile(std::wstring relativePath) const -> std::wstring = 0;
-        [[nodiscard]] virtual auto ListAllFilenamesInDirectory(std::wstring relativePath) const
-            -> std::set<std::wstring> = 0;
+        [[nodiscard]] virtual auto
+        ListAllFilenamesInDirectory(std::wstring relativePath) const -> std::set<std::wstring> = 0;
         [[nodiscard]] virtual auto LoadLibraryRelative(std::wstring relativePath) const -> HINSTANCE = 0;
-        virtual auto GetFunctionPointerFromLibrary(HINSTANCE libraryHandle, std::string functionName) const
-            -> FARPROC = 0;
+        virtual auto
+        GetFunctionPointerFromLibrary(HINSTANCE libraryHandle, std::string functionName) const -> FARPROC = 0;
         virtual auto MoveFileToNewLocation(std::wstring oldName, std::wstring newName) -> bool = 0;
         virtual void UnloadLibrary(HINSTANCE handle) const = 0;
         virtual auto OpenMessageBox(LPCWSTR message, LPCWSTR title, int options) -> int = 0;

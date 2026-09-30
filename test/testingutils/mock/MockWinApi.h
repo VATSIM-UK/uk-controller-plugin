@@ -16,7 +16,7 @@ namespace UKControllerPluginTest {
             MOCK_METHOD1(PlayWave, void(LPCTSTR));
             MOCK_METHOD4(WriteToFile, void(std::wstring, std::string, bool, bool));
             MOCK_METHOD2(ReadFromFileMock, std::string(std::wstring, bool));
-            MOCK_METHOD1(FileExists, bool(std::wstring));
+            MOCK_METHOD2(FileExistsMock, bool(std::wstring, bool));
             MOCK_METHOD1(CreateFolder, bool(std::wstring folder));
             MOCK_METHOD1(CreateFolderRecursive, bool(std::wstring folder));
             MOCK_METHOD1(CreateLocalFolderRecursive, bool(std::wstring folder));
@@ -30,6 +30,7 @@ namespace UKControllerPluginTest {
             MOCK_METHOD2(MoveFileToNewLocation, bool(std::wstring, std::wstring));
             MOCK_CONST_METHOD1(OpenExplorer, void(const std::wstring&));
             std::string ReadFromFile(std::wstring path, bool relative) override;
+            bool FileExists(std::wstring path, bool relative) override;
         };
     } // namespace Windows
 } // namespace UKControllerPluginTest

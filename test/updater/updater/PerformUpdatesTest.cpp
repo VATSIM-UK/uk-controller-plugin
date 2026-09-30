@@ -53,7 +53,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
     {
         nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(false));
 
         EXPECT_TRUE(UpdateRequired(mockWindows, version));
@@ -63,7 +63,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
     {
         nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(true));
 
         HINSTANCE handle = nullptr;
@@ -78,7 +78,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
     {
         nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(true));
 
         HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
@@ -99,7 +99,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
     {
         nlohmann::json version{{"version", "3.0.1"}, {"not_version", "3.0.2"}};
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(true));
 
         HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
@@ -123,7 +123,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
     {
         nlohmann::json version{{"version", "3.0.0"}, {"not_version", "3.0.2"}};
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(true));
 
         HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
@@ -182,7 +182,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(true));
 
         HINSTANCE handle = reinterpret_cast<HINSTANCE>(123);
@@ -214,7 +214,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(false));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))
@@ -241,7 +241,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(false));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))
@@ -295,7 +295,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(false));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))
@@ -349,7 +349,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(false));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))
@@ -402,7 +402,7 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(false));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))
@@ -453,10 +453,10 @@ namespace UKControllerPluginUpdaterTest::Updater {
 
         ON_CALL(this->mockApi, GetUpdateDetails("beta")).WillByDefault(testing::Return(apiData));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
             .WillByDefault(testing::Return(false));
 
-        ON_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+        ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
             .WillByDefault(testing::Return(true));
 
         EXPECT_CALL(this->mockWindows, OpenMessageBox(testing::_, testing::_, MB_YESNO | MB_ICONINFORMATION))

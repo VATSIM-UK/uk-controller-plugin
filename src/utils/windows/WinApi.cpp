@@ -74,10 +74,10 @@ namespace UKControllerPlugin {
         /*
             Returns true if a file exists, false otherwise.
         */
-        bool WinApi::FileExists(std::wstring filename)
+        bool WinApi::FileExists(std::wstring filename, bool relativePath)
         {
             try {
-                return std::filesystem::exists(this->GetFullPathToLocalFile(filename));
+                return std::filesystem::exists(relativePath ? this->GetFullPathToLocalFile(filename) : filename);
             } catch (std::filesystem::filesystem_error e) {
                 std::wstring message =
                     L"Unable to check if file exists: " + HelperFunctions::ConvertToWideString(e.what());

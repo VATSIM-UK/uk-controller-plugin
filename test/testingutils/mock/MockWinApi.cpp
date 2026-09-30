@@ -11,4 +11,9 @@ namespace UKControllerPluginTest::Windows {
     {
         return ReadFromFileMock(path, relative);
     }
+
+    bool MockWinApi::FileExists(std::wstring path, bool relative)
+    {
+        return FileExistsMock(path, relative);
+    }
 } // namespace UKControllerPluginTest::Windows

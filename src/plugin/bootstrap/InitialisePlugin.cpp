@@ -23,7 +23,6 @@
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
 #include "eventhandler/EventBusBootstrap.h"
-#include "filestatus/FileStatusModule.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
 #include "flightrule/FlightRuleModule.h"
@@ -64,6 +63,7 @@
 #include "task/RunAsyncTask.h"
 #include "task/TaskRunnerInterface.h"
 #include "update/PluginVersion.h"
+#include "versionchecker/VersionCheckerModule.h"
 #include "wake/WakeModule.h"
 
 using UKControllerPlugin::Bootstrap::CollectionBootstrap;
@@ -168,9 +168,6 @@ namespace UKControllerPlugin {
             LoggerBootstrap::Bootstrap(*this->container->windows, L"plugin");
             LogInfo("Plugin loaded as primary instance");
         }
-
-        LogInfo("Checking UK Controller Pack is up to date");
-        UKControllerPlugin::FileStatus::FileStatusModule::BootstrapPlugin(*this->container);
 
         // User messager
         UserMessagerBootstrap::BootstrapPlugin(*this->container);
@@ -287,6 +284,9 @@ namespace UKControllerPlugin {
 
         // Pressure monitor
         Metar::PressureMonitorBootstrap(*this->container);
+
+        // Version checker
+        VersionChecker::VersionCheckerModule::BootstrapPlugin(*this->container);
 
         // Run the module bootstraps
         this->container->bootstrapProviders->BootstrapPlugin(*this->container);

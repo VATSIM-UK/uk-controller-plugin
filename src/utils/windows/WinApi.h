@@ -20,7 +20,7 @@ namespace UKControllerPlugin {
             bool CreateFolderRecursive(std::wstring folder) override;
             bool CreateLocalFolderRecursive(std::wstring folder) override;
             bool DeleteGivenFile(std::wstring filename) override;
-            bool FileExists(std::wstring filename) override;
+            bool FileExists(std::wstring filename, bool relativePath = true) override;
             std::wstring GetFullPathToLocalFile(std::wstring relativePath) const override;
             std::wstring
             FileOpenDialog(std::wstring title, UINT numFileTypes, const COMDLG_FILTERSPEC* fileTypes) const override;

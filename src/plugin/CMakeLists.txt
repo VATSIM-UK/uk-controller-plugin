@@ -249,12 +249,6 @@ set(src__eventhandler
         eventhandler/ProcessEventBusEventsOnTimer.cpp eventhandler/ProcessEventBusEventsOnTimer.h eventhandler/EventBusBootstrap.cpp eventhandler/EventBusBootstrap.h)
 source_group("src\\eventhandler" FILES ${src__eventhandler})
 
-set(src__filestatus
-    "filestatus/FileStatusModule.cpp"
-    "filestatus/FileStatusModule.h"
-)
-source_group("src\\filestatus" FILES ${src__filestatus})
-
 set(src__flightinformationservice
     "flightinformationservice/FlightInformationServiceModule.cpp"
     "flightinformationservice/FlightInformationServiceModule.h"
@@ -954,6 +948,23 @@ set(src__timer
 )
 source_group("src\\timer" FILES ${src__timer})
 
+set(src__versionchecker
+    "versionchecker/ControllerPackVersion.cpp"
+    "versionchecker/ControllerPackVersion.h"
+    "versionchecker/EuroscopeVersion.cpp"
+    "versionchecker/EuroscopeVersion.h"
+    "versionchecker/SectorFileProviderVersion.cpp"
+    "versionchecker/SectorFileProviderVersion.h"
+    "versionchecker/SendUpdateRequiredUserMessage.cpp"
+    "versionchecker/SendUpdateRequiredUserMessage.h"
+    "versionchecker/UpdateRequiredEvent.h"
+    "versionchecker/VersionCheckerModule.cpp"
+    "versionchecker/VersionCheckerModule.h"
+    "versionchecker/VersionInterface.cpp"
+    "versionchecker/VersionInterface.h"
+)
+source_group("src\\versionchecker" FILES ${src__versionchecker})
+
 set(src__wake
     "wake/CacheItem.h"
     "wake/WakeCategoryEventHandler.cpp"
@@ -1000,7 +1011,6 @@ set(ALL_FILES
     ${src__ecfmp}
     ${src__euroscope}
     ${src__eventhandler}
-    ${src__filestatus}
     ${src__flightinformationservice}
     ${src__flightplan}
     ${src__flightrule}
@@ -1043,6 +1053,7 @@ set(ALL_FILES
     ${src__time}
     ${src__timedevent}
     ${src__timer}
+    ${src__versionchecker}
     ${src__wake} prenote/PrenoteMessageEventHandlerCollection.cpp prenote/PrenoteMessageEventHandlerCollection.h handoff/DepartureHandoffResolutionStrategy.h)
 
 ################################################################################
@@ -1215,7 +1226,8 @@ set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "Winmm;"
     "Dwmapi;"
     "gdiplus;"
-    "comctl32"
+    "comctl32;"
+    "version"
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC "${ADDITIONAL_LIBRARY_DEPENDENCIES}")
 

@@ -215,7 +215,7 @@ namespace UKControllerPluginLoaderTest {
 
         TEST_F(LoaderTest, FirstTimeDownloadDoesNothingIfUpdaterExists)
         {
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .Times(1)
                 .WillOnce(Return(true));
 
@@ -224,7 +224,7 @@ namespace UKControllerPluginLoaderTest {
 
         TEST_F(LoaderTest, FirstTimeDownloadDoesNothingIfUserDoesNotConsent)
         {
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -239,7 +239,7 @@ namespace UKControllerPluginLoaderTest {
 
         TEST_F(LoaderTest, FirstTimeDownloadDownloadsTheUpdater)
         {
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .Times(2)
                 .WillRepeatedly(Return(false));
 
@@ -276,7 +276,7 @@ namespace UKControllerPluginLoaderTest {
 
         TEST_F(LoaderTest, FirstTimeDownloadHandlesFailureToDownloadUpdater)
         {
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .Times(1)
                 .WillOnce(Return(false));
 
@@ -315,7 +315,7 @@ namespace UKControllerPluginLoaderTest {
 
         TEST_F(LoaderTest, FirstTimeDownloadBadUpdateData)
         {
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .Times(1)
                 .WillOnce(Return(false));
 
