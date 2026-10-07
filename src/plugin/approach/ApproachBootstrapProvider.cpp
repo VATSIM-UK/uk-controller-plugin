@@ -1,7 +1,8 @@
+#include "ApproachBootstrapProvider.h"
+#include "aircraft/CallsignSelectionListFactory.h"
 #include "AircraftSelectionProvider.h"
 #include "AirfieldMinimumSeparationSelectorList.h"
 #include "AirfieldTargetSelectorList.h"
-#include "ApproachBootstrapProvider.h"
 #include "ApproachFlightplanEventHandler.h"
 #include "ApproachModuleFactory.h"
 #include "ApproachSequencerDisplay.h"
@@ -9,30 +10,33 @@
 #include "ApproachSequencerDisplayOptions.h"
 #include "ApproachSequencerOptionsLoader.h"
 #include "ApproachSpacingRingRenderer.h"
-#include "GlideslopeDeviationEstimator.h"
-#include "GlideslopeDeviationTagItem.h"
-#include "RemoveLandedAircraft.h"
-#include "SequencerAirfieldSelector.h"
-#include "TargetSelectorList.h"
-#include "ToggleApproachSequencerDisplay.h"
-#include "aircraft/CallsignSelectionListFactory.h"
 #include "bootstrap/ModuleFactories.h"
 #include "bootstrap/PersistenceContainer.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/PluginSettingsProviderCollection.h"
 #include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "GlideslopeDeviationEstimator.h"
+#include "GlideslopeDeviationTagItem.h"
+#include "graphics/GdiplusBrushes.h"
 #include "list/PopupListFactory.h"
 #include "radarscreen/MenuToggleableDisplayFactory.h"
 #include "radarscreen/RadarRenderableCollection.h"
+#include "RemoveLandedAircraft.h"
+#include "SequencerAirfieldSelector.h"
 #include "tag/TagItemCollection.h"
+#include "TargetSelectorList.h"
 #include "timedevent/TimedEventCollection.h"
+#include "ToggleApproachSequencerDisplay.h"
+
+using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::Approach {
 
     void ApproachBootstrapProvider::BootstrapPlugin(Bootstrap::PersistenceContainer& container)
     {
-        container.pluginSettingsProviders->AddProvider(std::make_shared<ApproachSequencerOptionsLoader>(
-            container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
+        container.pluginSettingsProviders->AddProvider(
+            std::make_shared<ApproachSequencerOptionsLoader>(
+                container.moduleFactories->Approach().SequencerOptions(), *container.airfields));
 
         container.timedHandler->RegisterEvent(
             std::make_shared<RemoveLandedAircraft>(
@@ -92,6 +96,7 @@ namespace UKControllerPlugin::Approach {
                         container.moduleFactories->Approach().SequencerOptions(), displayOptions),
                     "Toggle sequencer airfield separation selector"),
                 *container.plugin,
+                *container.brushes,
                 sequencerScreenObjectId),
             RadarScreen::RadarRenderableCollection::beforeTags);
 

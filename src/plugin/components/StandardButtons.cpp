@@ -1,5 +1,6 @@
 #include "StandardButtons.h"
 #include "graphics/GdiGraphicsInterface.h"
+#include "graphics/GdiplusBrushes.h"
 
 namespace UKControllerPlugin::Components {
 
@@ -13,7 +14,7 @@ namespace UKControllerPlugin::Components {
     Gdiplus::Point collapsePoints[3] = {Gdiplus::Point(0, -5), Gdiplus::Point(5, 5), Gdiplus::Point(-5, 5)};
 
     // The standard button sizing
-    Gdiplus::REAL buttonSize(10);
+    Gdiplus::REAL buttonSize(15);
 
     /*
      * Draws a standard X-shaped close button of the specified colour.
@@ -38,9 +39,10 @@ namespace UKControllerPlugin::Components {
         };
     }
 
-    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> CloseButton()
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    CloseButton(const Windows::GdiplusBrushes& brushes)
     {
-        return CloseButton(Gdiplus::Color(227, 227, 227));
+        return CloseButton(brushes.text);
     }
 
     /*
@@ -71,10 +73,10 @@ namespace UKControllerPlugin::Components {
         };
     }
 
-    std::function<void(Windows::GdiGraphicsInterface& graphics, const Gdiplus::Rect&)>
-    CollapseButton(std::function<bool()> stateFunction)
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    CollapseButton(const Windows::GdiplusBrushes& brushes, std::function<bool()> stateFunction)
     {
-        return CollapseButton(Gdiplus::Color(227, 227, 227), stateFunction);
+        return CollapseButton(brushes.text, std::move(stateFunction));
     }
 
     void ScalePen(const std::shared_ptr<Gdiplus::Pen>& pen, Gdiplus::REAL& scaleX, Gdiplus::REAL& scaleY)
@@ -88,9 +90,10 @@ namespace UKControllerPlugin::Components {
         return CloseButton(colour);
     }
 
-    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> DeleteButton()
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    DeleteButton(const Windows::GdiplusBrushes& brushes)
     {
-        return CloseButton();
+        return CloseButton(brushes);
     }
 
     std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> UpArrow(Gdiplus::Color colour)
@@ -98,8 +101,20 @@ namespace UKControllerPlugin::Components {
         return CollapseButton(colour, []() { return false; });
     }
 
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    UpArrow(const Windows::GdiplusBrushes& brushes)
+    {
+        return CollapseButton(brushes, []() { return false; });
+    }
+
     std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)> DownArrow(Gdiplus::Color colour)
     {
         return CollapseButton(colour, []() { return true; });
+    }
+
+    std::function<void(Windows::GdiGraphicsInterface&, const Gdiplus::Rect&)>
+    DownArrow(const Windows::GdiplusBrushes& brushes)
+    {
+        return CollapseButton(brushes, []() { return true; });
     }
 } // namespace UKControllerPlugin::Components

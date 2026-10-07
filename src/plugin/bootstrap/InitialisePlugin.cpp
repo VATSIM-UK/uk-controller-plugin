@@ -1,17 +1,17 @@
+#include "bootstrap/InitialisePlugin.h"
 #include "aircraft/AircraftModule.h"
 #include "aircraft/CallsignSelectionListFactoryBootstrap.h"
 #include "airfield/AirfieldModule.h"
 #include "api/ApiFactory.h"
 #include "api/ApiRequestFactory.h"
 #include "api/BootstrapApi.h"
-#include "api/FirstTimeApiConfigLoader.h"
 #include "api/FirstTimeApiAuthorisationChecker.h"
+#include "api/FirstTimeApiConfigLoader.h"
 #include "bootstrap/BootstrapProviderCollection.h"
 #include "bootstrap/CollectionBootstrap.h"
 #include "bootstrap/EventHandlerCollectionBootstrap.h"
 #include "bootstrap/ExternalsBootstrap.h"
 #include "bootstrap/HelperBootstrap.h"
-#include "bootstrap/InitialisePlugin.h"
 #include "bootstrap/ModuleBootstrap.h"
 #include "bootstrap/PostInit.h"
 #include "controller/ControllerBootstrap.h"
@@ -22,11 +22,14 @@
 #include "dependency/UpdateDependencies.h"
 #include "euroscope/GeneralSettingsConfigurationBootstrap.h"
 #include "euroscope/PluginUserSettingBootstrap.h"
+#include "euroscope/UserSetting.h"
 #include "eventhandler/EventBusBootstrap.h"
 #include "filestatus/FileStatusModule.h"
 #include "flightinformationservice/FlightInformationServiceModule.h"
 #include "flightplan/FlightplanStorageBootstrap.h"
 #include "flightrule/FlightRuleModule.h"
+#include "graphics/GdiplusBrushes.h"
+#include "graphics/Theme.h"
 #include "handoff/HandoffModule.h"
 #include "historytrail/HistoryTrailModule.h"
 #include "hold/HoldModule.h"
@@ -83,6 +86,7 @@ using UKControllerPlugin::Duplicate::DuplicatePlugin;
 using UKControllerPlugin::Euroscope::GeneralSettingsConfigurationBootstrap;
 using UKControllerPlugin::Euroscope::PluginUserSettingBootstrap;
 using UKControllerPlugin::Flightplan::FlightplanStorageBootstrap;
+using UKControllerPlugin::Graphics::ThemeFromKey;
 using UKControllerPlugin::HistoryTrail::HistoryTrailModule;
 using UKControllerPlugin::InitialAltitude::InitialAltitudeModule;
 using UKControllerPlugin::Log::LoggerBootstrap;
@@ -240,13 +244,21 @@ namespace UKControllerPlugin {
         LoginModule::BootstrapPlugin(*this->container);
         SectorFile::BootstrapPlugin(*this->container);
 
+        // Apply the saved colour palette theme
+        {
+            auto& userSettings = *this->container->pluginUserSettingHandler;
+            std::string palette = userSettings.GetStringEntry("colourPalette", "default");
+            this->container->brushes->LoadTheme(ThemeFromKey(palette));
+        }
+
         // General settings config bootstrap
         GeneralSettingsConfigurationBootstrap::BootstrapPlugin(
             *this->container->dialogManager,
             *this->container->pluginUserSettingHandler,
             *this->container->userSettingHandlers,
             *this->container->settingsRepository,
-            *this->container->windows);
+            *this->container->windows,
+            *this->container->brushes);
 
         // Bootstrap the modules
         Metar::BootstrapPlugin(*this->container);

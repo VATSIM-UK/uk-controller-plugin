@@ -1,18 +1,19 @@
+#include "hold/HoldRenderer.h"
 #include "aircraft/CallsignSelectionListFactory.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
+#include "graphics/GdiplusBrushes.h"
 #include "hold/AbstractHoldLevelRestriction.h"
 #include "hold/DeemedSeparatedHold.h"
-#include "hold/HoldRenderer.h"
 #include "hold/HoldDisplay.h"
+#include "hold/HoldDisplayFactory.h"
 #include "hold/HoldDisplayManager.h"
 #include "hold/HoldManager.h"
-#include "hold/HoldDisplayFactory.h"
+#include "hold/PublishedHoldCollection.h"
 #include "list/PopupListFactory.h"
+#include "navaids/NavaidCollection.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "plugin/PopupMenuItem.h"
-#include "navaids/NavaidCollection.h"
-#include "hold/PublishedHoldCollection.h"
-#include "dialog/DialogManager.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -29,6 +30,7 @@ using UKControllerPlugin::List::PopupListFactory;
 using UKControllerPlugin::Navaids::NavaidCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Api::MockApiInterface;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -45,7 +47,8 @@ namespace UKControllerPluginTest {
             HoldRendererTest()
                 : popupFactory(functionHandlers, mockPlugin), callsignSelectionFactory(popupFactory),
                   dialogManager(mockDialog), userSetting(mockUserSettingProvider), holdManager(mockApi, mockTaskRunner),
-                  displayFactory(mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory),
+                  displayFactory(
+                      mockPlugin, holdManager, navaids, holds, dialogManager, callsignSelectionFactory, brushes),
                   displayManager(new HoldDisplayManager(displayFactory)), renderer(displayManager, 1, 2)
             {
                 this->holds.Add({1, "WILLO", "WILLO", 8000, 15000, 209, "left", {}});
@@ -80,6 +83,7 @@ namespace UKControllerPluginTest {
             HoldManager holdManager;
             NavaidCollection navaids;
             PublishedHoldCollection holds;
+            GdiplusBrushes brushes;
             HoldDisplayFactory displayFactory;
             std::shared_ptr<HoldDisplayManager> displayManager;
             HoldRenderer renderer;

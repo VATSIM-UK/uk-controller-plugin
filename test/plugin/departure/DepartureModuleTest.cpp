@@ -1,23 +1,24 @@
 #include "departure/DepartureModule.h"
+#include "bootstrap/PersistenceContainer.h"
+#include "controller/HandoffEventHandlerCollection.h"
 #include "departure/AircraftDepartedEvent.h"
 #include "departure/UserShouldClearDepartureDataEvent.h"
 #include "departure/UserShouldClearDepartureDataMonitor.h"
-#include "flightplan/FlightPlanEventHandlerCollection.h"
-#include "mock/MockDepartureHandoffResolver.h"
-#include "timedevent/TimedEventCollection.h"
-#include "bootstrap/PersistenceContainer.h"
-#include "push/PushEventProcessorCollection.h"
-#include "tag/TagItemCollection.h"
-#include "plugin/FunctionCallEventHandler.h"
-#include "controller/HandoffEventHandlerCollection.h"
 #include "dialog/DialogManager.h"
 #include "euroscope/AsrEventHandlerCollection.h"
-#include "radarscreen/RadarRenderableCollection.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
-#include "ownership/AirfieldServiceProviderCollection.h"
-#include "test/EventBusTestCase.h"
 #include "eventhandler/EventBus.h"
 #include "eventhandler/EventStream.h"
+#include "flightplan/FlightPlanEventHandlerCollection.h"
+#include "graphics/GdiplusBrushes.h"
+#include "mock/MockDepartureHandoffResolver.h"
+#include "ownership/AirfieldServiceProviderCollection.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "push/PushEventProcessorCollection.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
+#include "tag/TagItemCollection.h"
+#include "test/EventBusTestCase.h"
+#include "timedevent/TimedEventCollection.h"
 #include <gmock/gmock-nice-strict.h>
 
 using ::testing::NiceMock;
@@ -36,6 +37,7 @@ using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
 using UKControllerPlugin::Tag::TagItemCollection;
 using UKControllerPlugin::TimedEvent::TimedEventCollection;
+using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Dependency::MockDependencyLoader;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopePluginLoopbackInterface;
@@ -58,6 +60,7 @@ namespace UKControllerPluginTest::Departure {
                 std::make_shared<testing::NiceMock<Handoff::MockDepartureHandoffResolver>>();
             container.airfieldOwnership =
                 std::make_shared<UKControllerPlugin::Ownership::AirfieldServiceProviderCollection>();
+            this->container.brushes = std::make_unique<GdiplusBrushes>();
         }
 
         PersistenceContainer container;
