@@ -15,6 +15,11 @@ set(test__aircraft
         aircraft/FlightplanAircraftTypeMapperTest.cpp)
 source_group("test\\aircraft" FILES ${test__aircraft})
 
+set(test__aircraftstate
+    "aircraftstate/AircraftStateEventHandlerTest.cpp"
+)
+source_group("test\\aircraftstate" FILES ${test__aircraftstate})
+
 set(test__airfield
     "airfield/AirfieldCollectionFactoryTest.cpp"
     "airfield/AirfieldCollectionTest.cpp"
@@ -622,6 +627,7 @@ source_group("test\\wake" FILES ${test__wake})
 
 set(ALL_FILES
     ${test__aircraft}
+    ${test__aircraftstate}
     ${test__airfield}
     ${test__api}
     ${test__approach}
