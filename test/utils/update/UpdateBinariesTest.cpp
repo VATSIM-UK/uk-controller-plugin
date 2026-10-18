@@ -202,7 +202,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
-            ON_CALL(mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+            ON_CALL(mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
                 .WillByDefault(testing::Return(true));
 
             EXPECT_CALL(
@@ -332,7 +332,7 @@ namespace UKControllerPluginUtilsTest {
 
             EXPECT_CALL(this->mockCurl, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(testing::Return(response));
 
-            ON_CALL(mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            ON_CALL(mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .WillByDefault(testing::Return(true));
 
             EXPECT_CALL(

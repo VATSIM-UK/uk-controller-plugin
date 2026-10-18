@@ -8,7 +8,7 @@ namespace UKControllerPluginTest::Setting {
         public:
         JsonFileSettingProviderTest()
         {
-            ON_CALL(windows, FileExists(std::wstring(L"settings/setting-file.json")))
+            ON_CALL(windows, FileExistsMock(std::wstring(L"settings/setting-file.json"), true))
                 .WillByDefault(testing::Return(true));
 
             nlohmann::json settings{
@@ -79,7 +79,8 @@ namespace UKControllerPluginTest::Setting {
 
     TEST_F(JsonFileSettingProviderTest, ItLoadsNoSettingsIfSettingFileDoesNotExist)
     {
-        ON_CALL(windows, FileExists(std::wstring(L"settings/setting-file.json"))).WillByDefault(testing::Return(false));
+        ON_CALL(windows, FileExistsMock(std::wstring(L"settings/setting-file.json"), true))
+            .WillByDefault(testing::Return(false));
         auto provider = GetProvider();
         EXPECT_TRUE(provider.Get("setting1").empty());
         EXPECT_TRUE(provider.Get("setting2").empty());

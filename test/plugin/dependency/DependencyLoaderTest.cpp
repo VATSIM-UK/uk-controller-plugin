@@ -41,19 +41,19 @@ namespace UKControllerPluginTest {
                     {"uri", "test2"},
                 }};
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(dependencyList.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(this->dependency1.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
@@ -78,19 +78,19 @@ namespace UKControllerPluginTest {
                     {"uri", "test2"},
                 }};
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(false));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(dependencyList.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(this->dependency1.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
@@ -103,19 +103,19 @@ namespace UKControllerPluginTest {
 
         TEST_F(DependencyLoaderTest, ItDoesntLoadIfDependencyListInvalid)
         {
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return("{]"));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(this->dependency1.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
@@ -140,19 +140,19 @@ namespace UKControllerPluginTest {
                     {"uri", "test2"},
                 }};
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(dependencyList.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(this->dependency1.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
@@ -177,19 +177,19 @@ namespace UKControllerPluginTest {
                     {"uri", "test2"},
                 }};
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(dependencyList.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(this->dependency1.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
@@ -213,19 +213,19 @@ namespace UKControllerPluginTest {
                     {"uri", "test2"},
                 }};
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(dependencyList.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(false));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(this->dependency1.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))
@@ -249,19 +249,19 @@ namespace UKControllerPluginTest {
                     {"uri", "test2"},
                 }};
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/dependency-list.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/dependency-list.json"), true))
                 .WillByDefault(Return(dependencyList.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test1.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test1.json"), true))
                 .WillByDefault(Return("{]"));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"dependencies/test2.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"dependencies/test2.json"), true))
                 .WillByDefault(Return(true));
 
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"dependencies/test2.json"), true))

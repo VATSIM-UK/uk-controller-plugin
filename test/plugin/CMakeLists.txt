@@ -535,11 +535,6 @@ set(test__sectorfile
 )
 source_group("test\\sectorfile" FILES ${test__sectorfile})
 
-set(test__filestatus
-    "filestatus/FileStatusModuleTest.cpp"
-)
-source_group("test\\filestatus" FILES ${test__filestatus})
-
 set(test__selcal
         selcal/ParsedSelcalTest.cpp
         selcal/SelcalParserTest.cpp selcal/SelcalTagItemTest.cpp selcal/SelcalModuleTest.cpp)
@@ -669,7 +664,6 @@ set(ALL_FILES
     ${test__releases}
     ${test__runway}
     ${test__sectorfile}
-    ${test__filestatus}
     ${test__selcal}
     ${test__sid}
     ${test__squawk}
