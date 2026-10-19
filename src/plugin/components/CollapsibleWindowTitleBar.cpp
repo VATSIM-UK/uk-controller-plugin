@@ -1,11 +1,11 @@
-#include "Button.h"
 #include "CollapsibleWindowTitleBar.h"
+#include "Button.h"
 #include "StandardButtons.h"
 
 namespace UKControllerPlugin::Components {
 
     CollapsibleWindowTitleBar::CollapsibleWindowTitleBar(
-        std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId)
+        const std::wstring& title, Gdiplus::Rect area, const std::function<bool()>& collapseState, int screenObjectId)
         : TitleBar(title, area)
     {
         this->closeButton = Button::Create(
@@ -22,11 +22,10 @@ namespace UKControllerPlugin::Components {
     }
 
     std::shared_ptr<CollapsibleWindowTitleBar> CollapsibleWindowTitleBar::Create(
-        std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId)
+        const std::wstring& title, Gdiplus::Rect area, const std::function<bool()>& collapseState, int screenObjectId)
     {
-        auto titlebar = std::shared_ptr<CollapsibleWindowTitleBar>(
-            new CollapsibleWindowTitleBar(title, area, collapseState, screenObjectId));
-        titlebar->WithDefaultBorder()->WithDefaultTextBrush()->WithDefaultBackgroundBrush()->WithDrag(screenObjectId);
+        auto titlebar = std::make_shared<CollapsibleWindowTitleBar>(title, area, collapseState, screenObjectId);
+        titlebar->WithDrag(screenObjectId);
 
         return titlebar;
     }

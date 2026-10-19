@@ -12,7 +12,6 @@ namespace UKControllerPlugin {
 
     namespace Windows {
         class GdiGraphicsInterface;
-        struct GdiplusBrushes;
     } // namespace Windows
 } // namespace UKControllerPlugin
 
@@ -39,8 +38,7 @@ namespace UKControllerPlugin::Countdown {
             int functionsClickspotId,
             int timeDisplayClickspotId,
             int closeClickspotId,
-            int toogleCallbackFunctionId,
-            const UKControllerPlugin::Windows::GdiplusBrushes& brushes);
+            int toogleCallbackFunctionId);
         void AsrLoadedEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void AsrClosingEvent(UKControllerPlugin::Euroscope::UserSetting& userSetting) override;
         void Configure(int functionId, std::string subject, RECT screenObjectArea) override;
@@ -93,9 +91,6 @@ namespace UKControllerPlugin::Countdown {
 
         // The countdown module that we're rendering
         UKControllerPlugin::Countdown::CountdownTimer& countdownModule;
-
-        // A set of brushes to use for rendering.
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes;
 
         // Handles the timer configurations
         const UKControllerPlugin::Countdown::TimerConfigurationManager& configManager;

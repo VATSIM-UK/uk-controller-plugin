@@ -1,18 +1,19 @@
-#include "RegionalPressureManager.h"
 #include "RegionalPressureRenderer.h"
+#include "RegionalPressureManager.h"
 #include "euroscope/EuroscopeRadarLoopbackInterface.h"
 #include "euroscope/UserSetting.h"
 #include "graphics/GdiGraphicsInterface.h"
-#include "graphics/GdiplusBrushes.h"
 #include "helper/HelperFunctions.h"
+#include "theme/ThemeManager.h"
 
 using UKControllerPlugin::HelperFunctions;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::EuroscopeRadarLoopbackInterface;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Plugin::PopupMenuItem;
+using UKControllerPlugin::Theme::PaletteKey;
+using UKControllerPlugin::Theme::ThemeManager;
 using UKControllerPlugin::Windows::GdiGraphicsInterface;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::Regional {
 
@@ -22,9 +23,8 @@ namespace UKControllerPlugin::Regional {
         int menuBarClickspotId,
         int rpsClickspotId,
         int toggleCallbackFunctionId,
-        const GdiplusBrushes& brushes,
         const UKControllerPlugin::Dialog::DialogManager& dialogManager)
-        : brushes(brushes), manager(manager), dialogManager(dialogManager), hideClickspotId(closeClickspotId),
+        : manager(manager), dialogManager(dialogManager), hideClickspotId(closeClickspotId),
           menuBarClickspotId(menuBarClickspotId), rpsClickspotId(rpsClickspotId),
           toggleCallbackFunctionId(toggleCallbackFunctionId)
     {
@@ -211,17 +211,17 @@ namespace UKControllerPlugin::Regional {
             const RegionalPressure& pressureData = this->manager.GetRegionalPressure(it->key);
 
             // Draw the TMA title and rectangles
-            graphics.FillRect(asr, *this->brushes.greyBrush);
-            graphics.DrawRect(asr, *this->brushes.blackPen);
+            graphics.FillRect(asr, ThemeManager::Brush(PaletteKey::Background));
+            graphics.DrawRect(asr, ThemeManager::Pen(PaletteKey::Border));
 
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(this->manager.GetNameFromKey(it->key)),
                 asr,
-                pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush);
+                ThemeManager::Brush(pressureData.IsAcknowledged() ? PaletteKey::TextHighlight : PaletteKey::Text));
 
             // Draw the RPS itself and associated rectangles
-            graphics.FillRect(rps, *this->brushes.greyBrush);
-            graphics.DrawRect(rps, *this->brushes.blackPen);
+            graphics.FillRect(rps, ThemeManager::Brush(PaletteKey::Background));
+            graphics.DrawRect(rps, ThemeManager::Pen(PaletteKey::Border));
 
             std::string rpsString;
             if (pressureData == this->manager.invalidPressure) {
@@ -235,7 +235,7 @@ namespace UKControllerPlugin::Regional {
             graphics.DrawString(
                 HelperFunctions::ConvertToWideString(rpsString),
                 rps,
-                pressureData.IsAcknowledged() ? *this->brushes.whiteBrush : *this->brushes.yellowBrush);
+                ThemeManager::Brush(pressureData.IsAcknowledged() ? PaletteKey::TextHighlight : PaletteKey::Text));
 
             // Add the clickable area.
             radarScreen.RegisterScreenObject(
@@ -261,7 +261,7 @@ namespace UKControllerPlugin::Regional {
             this->topBarArea.top,
             LEFT_COLUMN_WIDTH + HIDE_CLICKSPOT_WIDTH,
             1 + ((numRegionalPressures)*ROW_HEIGHT)};
-        graphics.DrawRect(area, *this->brushes.blackPen);
+        graphics.DrawRect(area, ThemeManager::Pen(PaletteKey::Border));
     }
 
     /*
@@ -271,15 +271,15 @@ namespace UKControllerPlugin::Regional {
     RegionalPressureRenderer::RenderTopBar(GdiGraphicsInterface& graphics, EuroscopeRadarLoopbackInterface& radarScreen)
     {
         // The title bar - the draggable bit
-        graphics.DrawRect(this->topBarRender, *this->brushes.blackPen);
-        graphics.FillRect(this->topBarRender, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawString(L"ASR", this->topBarRender, *this->brushes.whiteBrush);
+        graphics.DrawRect(this->topBarRender, ThemeManager::Pen(PaletteKey::Border));
+        graphics.FillRect(this->topBarRender, ThemeManager::Brush(PaletteKey::Header));
+        graphics.DrawString(L"ASR", this->topBarRender, ThemeManager::Brush(PaletteKey::Text));
         radarScreen.RegisterScreenObject(this->menuBarClickspotId, "", this->topBarArea, true);
 
         // The toggle button - no draggable
-        graphics.DrawRect(this->hideSpotRender, *this->brushes.blackPen);
-        graphics.FillRect(this->hideSpotRender, *this->brushes.euroscopeBackgroundBrush);
-        graphics.DrawString(L"X", this->hideSpotRender, *this->brushes.whiteBrush);
+        graphics.DrawRect(this->hideSpotRender, ThemeManager::Pen(PaletteKey::Border));
+        graphics.FillRect(this->hideSpotRender, ThemeManager::Brush(PaletteKey::Header));
+        graphics.DrawString(L"X", this->hideSpotRender, ThemeManager::Brush(PaletteKey::Text));
         radarScreen.RegisterScreenObject(this->hideClickspotId, "", this->hideClickspotArea, false);
     }
 

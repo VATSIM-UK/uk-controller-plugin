@@ -11,14 +11,19 @@ namespace UKControllerPlugin::Components {
     class CollapsibleWindowTitleBar : public TitleBar
     {
         public:
-        static std::shared_ptr<CollapsibleWindowTitleBar>
-        Create(std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId);
+        static std::shared_ptr<CollapsibleWindowTitleBar> Create(
+            const std::wstring& title,
+            Gdiplus::Rect area,
+            const std::function<bool()>& collapseState,
+            int screenObjectId);
         void Draw(Windows::GdiGraphicsInterface& graphics, Euroscope::EuroscopeRadarLoopbackInterface& radarScreen)
             const override;
 
-        protected:
         CollapsibleWindowTitleBar(
-            std::wstring title, Gdiplus::Rect area, std::function<bool()> collapseState, int screenObjectId);
+            const std::wstring& title,
+            Gdiplus::Rect area,
+            const std::function<bool()>& collapseState,
+            int screenObjectId);
 
         private:
         // The close button

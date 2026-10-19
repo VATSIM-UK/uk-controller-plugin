@@ -1,7 +1,7 @@
+#include "RadarScreenFactory.h"
 #include "ConfigurableDisplayCollection.h"
 #include "MenuToggleableDisplayFactory.h"
 #include "PositionResetCommand.h"
-#include "RadarScreenFactory.h"
 #include "ScreenControlsBootstrap.h"
 #include "UKRadarScreen.h"
 #include "api/BootstrapApi.h"
@@ -83,7 +83,6 @@ namespace UKControllerPlugin::RadarScreen {
             *persistence.minStack,
             renderers,
             configurableDisplays,
-            *persistence.brushes,
             userSettingHandlers,
             *persistence.dialogManager);
 
@@ -92,7 +91,6 @@ namespace UKControllerPlugin::RadarScreen {
             *persistence.regionalPressureManager,
             renderers,
             configurableDisplays,
-            *persistence.brushes,
             userSettingHandlers,
             *persistence.dialogManager);
 
@@ -102,7 +100,6 @@ namespace UKControllerPlugin::RadarScreen {
             persistence.timerConfigurationManager,
             renderers,
             configurableDisplays,
-            *persistence.brushes,
             userSettingHandlers);
 
         Hold::BootstrapRadarScreen(
@@ -126,7 +123,7 @@ namespace UKControllerPlugin::RadarScreen {
         UKControllerPlugin::Plugin::BootstrapPluginInformationMessage(this->persistence, configurableDisplays);
 
         // Last thing we do is ScreenControls
-        ScreenControlsBootstrap::BootstrapRadarScreen(configurableDisplays, renderers, *persistence.brushes);
+        ScreenControlsBootstrap::BootstrapRadarScreen(configurableDisplays, renderers);
         return new UKRadarScreen(
             userSettingHandlers,
             renderers,
