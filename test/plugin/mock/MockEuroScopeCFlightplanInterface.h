@@ -26,6 +26,7 @@ namespace UKControllerPluginTest {
             MOCK_CONST_METHOD0(
                 GetParsedFlightplan, std::shared_ptr<UKControllerPlugin::Flightplan::ParsedFlightplan>(void));
             MOCK_CONST_METHOD0(GetFlightRules, std::string(void));
+            MOCK_CONST_METHOD0(GetClearanceFlag, bool(void));
             MOCK_CONST_METHOD0(GetGroundState, std::string(void));
             MOCK_CONST_METHOD0(GetIcaoWakeCategory, std::string(void));
             MOCK_CONST_METHOD0(GetOrigin, std::string(void));
@@ -47,6 +48,8 @@ namespace UKControllerPluginTest {
             MOCK_METHOD1(SetClearedAltitude, void(int));
             MOCK_METHOD1(SetHeading, void(int));
             MOCK_METHOD1(SetSquawk, void(std::string));
+            MOCK_METHOD1(SetClearanceFlag, void(bool));
+            MOCK_METHOD1(SetGroundState, void(std::string));
             MOCK_CONST_METHOD0(GetEuroScopeObject, EuroScopePlugIn::CFlightPlan&(void));
         };
     } // namespace Euroscope

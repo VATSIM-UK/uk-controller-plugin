@@ -24,6 +24,15 @@ set(src__aircraft
         aircraft/AircraftTypeMapperInterface.h approach/AirfieldMinimumSeparationSelectorList.cpp approach/AirfieldMinimumSeparationSelectorList.h)
 source_group("src\\aircraft" FILES ${src__aircraft})
 
+set(src__aircraftstate
+    "aircraftstate/AircraftState.h"
+    "aircraftstate/AircraftStateEventHandler.cpp"
+    "aircraftstate/AircraftStateEventHandler.h"
+    "aircraftstate/AircraftStateModule.cpp"
+    "aircraftstate/AircraftStateModule.h"
+)
+source_group("src\\aircraftstate" FILES ${src__aircraftstate})
+
 set(src__airfield
     "airfield/AirfieldCollection.cpp"
     "airfield/AirfieldCollection.h"
@@ -83,7 +92,7 @@ set(src__bootstrap
 source_group("src\\bootstrap" FILES ${src__bootstrap})
 
 set(src__collection
-        
+
         collection/PluginCollectionTypesFwd.h)
 source_group("src\\collection" FILES ${src__collection})
 
@@ -985,6 +994,7 @@ source_group("src\\wake" FILES ${src__wake})
 set(ALL_FILES
     ${resource}
     ${src__aircraft}
+    ${src__aircraftstate}
     ${src__airfield}
     ${src__api}
     ${src__approach}

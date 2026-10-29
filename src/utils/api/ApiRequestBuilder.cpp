@@ -124,6 +124,25 @@ namespace UKControllerPlugin::Api {
     }
 
     /*
+        Builds a request for every aircraft that has a controller-assigned state.
+    */
+    auto ApiRequestBuilder::BuildGetAircraftStatesRequest() const -> CurlRequest
+    {
+        return this->AddCommonHeaders(CurlRequest(BuildUrl("/aircraft-state"), CurlRequest::METHOD_GET));
+    }
+
+    /*
+        Builds a request to update aircraft states in bulk. Each entry is partial.
+    */
+    auto ApiRequestBuilder::BuildUpdateAircraftStatesRequest(nlohmann::json updates) const -> CurlRequest
+    {
+        CurlRequest request(BuildUrl("/aircraft-state"), CurlRequest::METHOD_PUT);
+        request.SetBody(nlohmann::json{{"updates", std::move(updates)}}.dump());
+
+        return this->AddCommonHeaders(request);
+    }
+
+    /*
         Builds a request to check whether or not the given aircraft has been assigned a squawk.
     */
     auto ApiRequestBuilder::BuildSquawkAssignmentCheckRequest(const std::string& callsign) const -> CurlRequest

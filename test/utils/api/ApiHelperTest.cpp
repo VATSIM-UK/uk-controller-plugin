@@ -560,6 +560,36 @@ namespace UKControllerPluginUtilsTest::Api {
         EXPECT_NO_THROW(this->helper.DeleteStandAssignmentForAircraft("BAW123"));
     }
 
+    TEST_F(ApiHelperTest, GetAircraftStatesReturnsData)
+    {
+        nlohmann::json responseData;
+        responseData["bla"] = "bla";
+        CurlResponse response(responseData.dump(), false, 200);
+
+        CurlRequest expectedRequest(GetApiCurlRequest("/aircraft-state", CurlRequest::METHOD_GET));
+
+        EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
+
+        EXPECT_EQ(responseData, this->helper.GetAircraftStates());
+    }
+
+    TEST_F(ApiHelperTest, UpdateAircraftStatesGeneratesRequest)
+    {
+        nlohmann::json responseData;
+        responseData["bla"] = "bla";
+        CurlResponse response(responseData.dump(), false, 200);
+
+        const nlohmann::json updates = nlohmann::json::array(
+            {{{"callsign", "BAW123"}, {"clearance_flag", true}, {"clearance_flag_at", "2026-08-29 12:00:00"}}});
+
+        CurlRequest expectedRequest(
+            GetApiCurlRequest("/aircraft-state", CurlRequest::METHOD_PUT, nlohmann::json{{"updates", updates}}));
+
+        EXPECT_CALL(this->mockCurlApi, MakeCurlRequest(expectedRequest)).Times(1).WillOnce(Return(response));
+
+        EXPECT_NO_THROW(this->helper.UpdateAircraftStates(updates));
+    }
+
     TEST_F(ApiHelperTest, GetAllNotificationsMakesRequest)
     {
         nlohmann::json responseData;

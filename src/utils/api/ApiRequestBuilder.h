@@ -45,6 +45,9 @@ namespace UKControllerPlugin::Api {
             -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildDeleteStandAssignmentForAircraftRequest(const std::string& callsign) const
             -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildGetAircraftStatesRequest() const -> UKControllerPlugin::Curl::CurlRequest;
+        [[nodiscard]] auto BuildUpdateAircraftStatesRequest(nlohmann::json updates) const
+            -> UKControllerPlugin::Curl::CurlRequest;
         [[nodiscard]] auto BuildEnrouteReleaseRequest(
             std::string aircraftCallsign,
             std::string sendingController,

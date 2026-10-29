@@ -40,6 +40,8 @@ namespace UKControllerPlugin::Api {
         [[nodiscard]] virtual auto GetAssignedStands() const -> nlohmann::json = 0;
         virtual void AssignStandToAircraft(std::string callsign, int standId) const = 0;
         virtual void DeleteStandAssignmentForAircraft(std::string callsign) const = 0;
+        [[nodiscard]] virtual auto GetAircraftStates() const -> nlohmann::json = 0;
+        virtual void UpdateAircraftStates(nlohmann::json updates) const = 0;
         virtual void SendEnrouteRelease(
             std::string aircraftCallsign,
             std::string sendingController,
