@@ -56,7 +56,7 @@ namespace UKControllerPluginUtilsTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(mockWindows, OpenMessageBox(_, testing::StrEq(L"UKCP API Authentication Warning"), _))
@@ -85,7 +85,7 @@ namespace UKControllerPluginUtilsTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(mockWindows, OpenMessageBox(_, testing::StrEq(L"UKCP API Authentication Warning"), _))
@@ -114,7 +114,7 @@ namespace UKControllerPluginUtilsTest {
             ON_CALL(this->mockWindows, ReadFromFileMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(testJson.dump()));
 
-            ON_CALL(this->mockWindows, FileExists(std::wstring(L"settings/api-settings.json")))
+            ON_CALL(this->mockWindows, FileExistsMock(std::wstring(L"settings/api-settings.json"), true))
                 .WillByDefault(Return(true));
 
             EXPECT_CALL(mockWindows, OpenMessageBox(_, testing::StrEq(L"UKCP API Authentication Warning"), _))

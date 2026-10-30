@@ -68,7 +68,7 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(testing::Return(IDYES));
 
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .Times(1)
                 .WillOnce(testing::Return(true));
 
@@ -79,7 +79,7 @@ namespace UKControllerPluginTest {
                     std::wstring(L"bin/UKControllerPluginUpdater.dll.old")))
                 .Times(1);
 
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
                 .Times(1)
                 .WillOnce(testing::Return(true));
 
@@ -103,11 +103,11 @@ namespace UKControllerPluginTest {
                 .Times(1)
                 .WillOnce(testing::Return(IDYES));
 
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginUpdater.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginUpdater.dll"), true))
                 .Times(1)
                 .WillOnce(testing::Return(false));
 
-            EXPECT_CALL(this->mockWindows, FileExists(std::wstring(L"bin/UKControllerPluginCore.dll")))
+            EXPECT_CALL(this->mockWindows, FileExistsMock(std::wstring(L"bin/UKControllerPluginCore.dll"), true))
                 .Times(1)
                 .WillOnce(testing::Return(false));
 
