@@ -9,6 +9,7 @@ set(updater
 source_group("updater" FILES ${updater})
 
 set(ALL_FILES
+    TestEnvironment.cpp
     ${updater}
     $<TARGET_OBJECTS:UKControllerPluginUpdater>
 )

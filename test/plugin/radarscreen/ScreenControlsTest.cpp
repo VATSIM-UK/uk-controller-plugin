@@ -1,10 +1,9 @@
-#include "graphics/GdiplusBrushes.h"
+#include "radarscreen/ScreenControls.h"
 #include "helper/Matchers.h"
 #include "helper/TestingFunctions.h"
 #include "plugin/PopupMenuItem.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/ConfigurableDisplayInterface.h"
-#include "radarscreen/ScreenControls.h"
 
 using ::testing::Return;
 using ::testing::StrictMock;
@@ -12,16 +11,14 @@ using UKControllerPlugin::Plugin::PopupMenuItem;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayInterface;
 using UKControllerPlugin::RadarScreen::ScreenControls;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 
 namespace UKControllerPluginTest::RadarScreen {
 
     TEST(ScreenControls, LeftClickDoesNothingIfWrongIdPassed)
     {
-        GdiplusBrushes brushes;
         ConfigurableDisplayCollection configurables;
-        ScreenControls controls(1, configurables, brushes);
+        ScreenControls controls(1, configurables);
         StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadar;
 
         controls.LeftClick(mockRadar, 2, "", {}, {});
@@ -29,7 +26,6 @@ namespace UKControllerPluginTest::RadarScreen {
 
     TEST(ScreenControls, LeftClickOpensAPopup)
     {
-        GdiplusBrushes brushes;
         ConfigurableDisplayCollection configurables;
         std::shared_ptr<ConfigurableDisplayInterface> display1 =
             std::make_shared<MockConfigurableDisplay>("firstValue1", "secondValue1");
@@ -38,7 +34,7 @@ namespace UKControllerPluginTest::RadarScreen {
         configurables.RegisterDisplay(display1);
         configurables.RegisterDisplay(display2);
 
-        ScreenControls controls(1, configurables, brushes);
+        ScreenControls controls(1, configurables);
         StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadar;
 
         RECT radarArea = {0, 0, 1024, 768};
@@ -57,9 +53,8 @@ namespace UKControllerPluginTest::RadarScreen {
 
     TEST(ScreenControls, RightClickDoesNothingIfWrongIdPassed)
     {
-        GdiplusBrushes brushes;
         ConfigurableDisplayCollection configurables;
-        ScreenControls controls(1, configurables, brushes);
+        ScreenControls controls(1, configurables);
         StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadar;
 
         controls.RightClick(2, "", mockRadar);
@@ -67,7 +62,6 @@ namespace UKControllerPluginTest::RadarScreen {
 
     TEST(ScreenControls, RightClickOpensAPopup)
     {
-        GdiplusBrushes brushes;
         ConfigurableDisplayCollection configurables;
         std::shared_ptr<ConfigurableDisplayInterface> display1 =
             std::make_shared<MockConfigurableDisplay>("firstValue1", "secondValue1");
@@ -76,7 +70,7 @@ namespace UKControllerPluginTest::RadarScreen {
         configurables.RegisterDisplay(display1);
         configurables.RegisterDisplay(display2);
 
-        ScreenControls controls(1, configurables, brushes);
+        ScreenControls controls(1, configurables);
         StrictMock<MockEuroscopeRadarScreenLoopbackInterface> mockRadar;
 
         RECT radarArea = {0, 0, 1024, 768};

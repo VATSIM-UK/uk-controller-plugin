@@ -10,7 +10,6 @@
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/CallbackFunction.h"
 #include "euroscope/UserSetting.h"
-#include "graphics/GdiplusBrushes.h"
 #include "plugin/FunctionCallEventHandler.h"
 #include "radarscreen/ConfigurableDisplayCollection.h"
 #include "radarscreen/RadarRenderableCollection.h"
@@ -28,7 +27,6 @@ using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 
 namespace UKControllerPlugin::Countdown {
 
@@ -85,7 +83,6 @@ namespace UKControllerPlugin::Countdown {
         const std::shared_ptr<TimerConfigurationManager>& configManager,
         RadarRenderableCollection& radarRender,
         ConfigurableDisplayCollection& configurableDisplays,
-        const UKControllerPlugin::Windows::GdiplusBrushes& brushes,
         AsrEventHandlerCollection& userSettingHandlers)
     {
         // Create the renderer and get the ids for screen objects
@@ -97,8 +94,7 @@ namespace UKControllerPlugin::Countdown {
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             radarRender.ReserveScreenObjectIdentifier(rendererId),
             radarRender.ReserveScreenObjectIdentifier(rendererId),
-            configureFunctionId,
-            brushes));
+            configureFunctionId));
 
         // Add to the relevant handlers
         radarRender.RegisterRenderer(rendererId, renderer, radarRender.beforeTags);

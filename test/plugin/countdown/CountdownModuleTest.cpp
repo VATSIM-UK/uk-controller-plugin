@@ -1,14 +1,13 @@
-#include "bootstrap/PersistenceContainer.h"
 #include "countdown/CountdownModule.h"
+#include "bootstrap/PersistenceContainer.h"
 #include "countdown/CountdownTimer.h"
+#include "countdown/GlobalCountdownSettingFunctions.h"
 #include "countdown/TimerConfigurationManager.h"
-#include "plugin/FunctionCallEventHandler.h"
-#include "radarscreen/RadarRenderableCollection.h"
-#include "radarscreen/ConfigurableDisplayCollection.h"
-#include "graphics/GdiplusBrushes.h"
 #include "euroscope/AsrEventHandlerCollection.h"
 #include "euroscope/UserSettingAwareCollection.h"
-#include "countdown/GlobalCountdownSettingFunctions.h"
+#include "plugin/FunctionCallEventHandler.h"
+#include "radarscreen/ConfigurableDisplayCollection.h"
+#include "radarscreen/RadarRenderableCollection.h"
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -29,7 +28,6 @@ using UKControllerPlugin::Euroscope::UserSettingAwareCollection;
 using UKControllerPlugin::Plugin::FunctionCallEventHandler;
 using UKControllerPlugin::RadarScreen::ConfigurableDisplayCollection;
 using UKControllerPlugin::RadarScreen::RadarRenderableCollection;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
 using UKControllerPluginTest::Windows::MockWinApi;
@@ -56,7 +54,6 @@ namespace UKControllerPluginTest {
             PersistenceContainer container;
             RadarRenderableCollection renderables;
             ConfigurableDisplayCollection configurables;
-            GdiplusBrushes brushes;
             AsrEventHandlerCollection asrEvents;
             FunctionCallEventHandler functions;
             CountdownTimer countdown;
@@ -106,28 +103,28 @@ namespace UKControllerPluginTest {
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToRendererCollection)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
+                functions, countdown, configManager, renderables, configurables, asrEvents);
             EXPECT_EQ(1, renderables.CountRenderers());
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenSetsRenderPhaseToBeforeTags)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
+                functions, countdown, configManager, renderables, configurables, asrEvents);
             EXPECT_EQ(1, renderables.CountRenderersInPhase(renderables.beforeTags));
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenRegistersScreenObject)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
+                functions, countdown, configManager, renderables, configurables, asrEvents);
             EXPECT_EQ(3, renderables.CountScreenObjects());
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToFunctionCallCollection)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
+                functions, countdown, configManager, renderables, configurables, asrEvents);
             EXPECT_EQ(1, functions.CountCallbacks());
             EXPECT_EQ(0, functions.CountTagFunctions());
         }
@@ -135,14 +132,14 @@ namespace UKControllerPluginTest {
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToConfigurableDisplays)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
+                functions, countdown, configManager, renderables, configurables, asrEvents);
             EXPECT_EQ(2, configurables.CountDisplays());
         }
 
         TEST_F(CountdownModuleTest, BootstrapRadarScreenAddsToasrEventsEvents)
         {
             CountdownModule::BootstrapRadarScreen(
-                functions, countdown, configManager, renderables, configurables, brushes, asrEvents);
+                functions, countdown, configManager, renderables, configurables, asrEvents);
             EXPECT_EQ(1, asrEvents.CountHandlers());
         }
 

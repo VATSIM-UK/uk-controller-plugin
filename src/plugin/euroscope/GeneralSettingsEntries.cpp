@@ -36,5 +36,6 @@ namespace UKControllerPlugin {
         const std::string GeneralSettingsEntries::initialHeadingToggleSettingsKey = "autoAssignInitialHeadings";
         const std::string GeneralSettingsEntries::initialHeadingToggleSettingsDescription =
             "Automatically assign initial headings";
+
     } // namespace Euroscope
 } // namespace UKControllerPlugin

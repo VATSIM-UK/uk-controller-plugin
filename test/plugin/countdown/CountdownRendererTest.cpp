@@ -1,11 +1,10 @@
 #include "countdown/CountdownRenderer.h"
-#include "graphics/GdiplusBrushes.h"
 #include "countdown/CountdownTimer.h"
+#include "countdown/TimerConfigurationManager.h"
+#include "dialog/DialogManager.h"
 #include "euroscope/UserSetting.h"
 #include "helper/TestingFunctions.h"
 #include "plugin/PopupMenuItem.h"
-#include "countdown/TimerConfigurationManager.h"
-#include "dialog/DialogManager.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -16,7 +15,6 @@ using UKControllerPlugin::Countdown::TimerConfigurationManager;
 using UKControllerPlugin::Dialog::DialogManager;
 using UKControllerPlugin::Euroscope::UserSetting;
 using UKControllerPlugin::Plugin::PopupMenuItem;
-using UKControllerPlugin::Windows::GdiplusBrushes;
 using UKControllerPluginTest::Dialog::MockDialogProvider;
 using UKControllerPluginTest::Euroscope::MockEuroscopeRadarScreenLoopbackInterface;
 using UKControllerPluginTest::Euroscope::MockUserSettingProviderInterface;
@@ -30,7 +28,7 @@ namespace UKControllerPluginTest {
             public:
             CountdownRendererTest()
                 : userSetting(mockUserSettingProvider), dialogManager(dialogProvider), timer(mockWindows),
-                  configManager(dialogManager, 1), renderer(timer, configManager, 1, 2, 3, 4, brushes)
+                  configManager(dialogManager, 1), renderer(timer, configManager, 1, 2, 3, 4)
 
             {
                 this->configManager.AddTimer({1, true, 10});
@@ -46,7 +44,6 @@ namespace UKControllerPluginTest {
             NiceMock<MockUserSettingProviderInterface> mockUserSettingProvider;
             UserSetting userSetting;
             DialogManager dialogManager;
-            GdiplusBrushes brushes;
             CountdownTimer timer;
             TimerConfigurationManager configManager;
             CountdownRenderer renderer;
